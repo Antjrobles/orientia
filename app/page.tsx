@@ -4,11 +4,11 @@ import ClientPage from "./ClientPage"
 export const metadata: Metadata = {
   title: "Sistema de Informes Psicopedagógicos",
   description:
-    "Plataforma oficial de la Junta de Andalucía para orientadores educativos. Genera informes psicopedagógicos profesionales con IA. Ahorra tiempo, garantiza calidad y cumple normativa.",
+    "Plataforma para orientadores educativos. Genera informes psicopedagógicos profesionales con IA. Ahorra tiempo, garantiza calidad y cumple normativa.",
   openGraph: {
     title: "Sistema de Informes Psicopedagógicos",
     description: "Plataforma oficial para orientadores educativos. Genera informes con IA.",
-    url: "https://informes-psicopedagogicos.juntadeandalucia.es",
+    url: "https://orientia.es",
     images: [
       {
         url: "/og-home.jpg",

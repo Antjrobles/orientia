@@ -25,7 +25,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
 
 // Datos estructurados específicos para la organización
 export const organizationStructuredData = {
-  name: "Junta de Andalucía",
+  name: "Orientia",
   alternateName: "Consejería de Desarrollo Educativo y Formación Profesional",
   url: "https://www.juntadeandalucia.es",
   logo: "https://informes-psicopedagogicos.juntadeandalucia.es/logo.png",

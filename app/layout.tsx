@@ -11,15 +11,14 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Sistema de Informes Psicopedagógicos - Junta de Andalucía",
-    template: "%s | Sistema de Informes Psicopedagógicos - Junta de Andalucía",
+    default: "Sistema de Informes Psicopedagógicos - ",
+    template: "%s | Sistema de Informes Psicopedagógicos - ",
   },
   description:
-    "Plataforma oficial para orientadores educativos de la Junta de Andalucía. Genera informes psicopedagógicos profesionales con asistencia de IA, optimizando tiempo y garantizando calidad técnica.",
+    "Plataforma oficial para orientadores educativos de la . Genera informes psicopedagógicos profesionales con asistencia de IA, optimizando tiempo y garantizando calidad técnica.",
   keywords: [
     "informes psicopedagógicos",
     "orientadores educativos",
-    "Junta de Andalucía",
     "inteligencia artificial",
     "educación",
     "psicopedagogía",
@@ -45,9 +44,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_ES",
-    url: "https://informes-psicopedagogicos.juntadeandalucia.es",
-    siteName: "Sistema de Informes Psicopedagógicos - Junta de Andalucía",
-    title: "Sistema de Informes Psicopedagógicos - Junta de Andalucía",
+    url: "https://orientia.es",
+    siteName: "Sistema de Informes Psicopedagógicos",
+    title: "Sistema de Informes Psicopedagógicos - ",
     description:
       "Plataforma oficial para orientadores educativos. Genera informes psicopedagógicos con IA, optimiza tiempo y garantiza calidad profesional.",
     images: [
@@ -55,13 +54,13 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Sistema de Informes Psicopedagógicos - Junta de Andalucía",
+        alt: "Sistema de Informes Psicopedagógicos - ",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sistema de Informes Psicopedagógicos - Junta de Andalucía",
+    title: "Sistema de Informes Psicopedagógicos - ",
     description: "Plataforma oficial para orientadores educativos. Genera informes psicopedagógicos con IA.",
     images: ["/twitter-image.jpg"],
     creator: "@JuntaDeAndalucia",
@@ -70,9 +69,9 @@ export const metadata: Metadata = {
     google: "google-site-verification-code",
   },
   alternates: {
-    canonical: "https://informes-psicopedagogicos.juntadeandalucia.es",
+    canonical: "https://orientia.es",
     languages: {
-      "es-ES": "https://informes-psicopedagogicos.juntadeandalucia.es",
+      "es-ES": "https://orientia.es",
     },
   },
   category: "education",
