@@ -58,12 +58,10 @@ export default function LandingPage() {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-green-600 rounded flex items-center justify-center" aria-hidden="true">
-                  <span className="text-white font-bold text-lg">A</span>
+                  <span className="text-white font-bold text-lg">O</span>
                 </div>
                 <div className="text-sm">
-                  <div className="font-semibold text-gray-900">Junta de Andalucía</div>
-                  <div className="text-gray-600">Consejería de Desarrollo Educativo</div>
-                  <div className="text-gray-600">y Formación Profesional</div>
+                  <p>Orientia</p>
                 </div>
               </div>
             </div>
