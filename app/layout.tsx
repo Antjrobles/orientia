@@ -10,73 +10,71 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://orientia.es'),
   title: {
-    default: "Sistema de Informes Psicopedagógicos - ",
-    template: "%s | Sistema de Informes Psicopedagógicos - ",
+    default: 'Sistema de Informes Psicopedagógicos - ',
+    template: '%s | Sistema de Informes Psicopedagógicos - ',
   },
   description:
-    "Plataforma oficial para orientadores educativos de la . Genera informes psicopedagógicos profesionales con asistencia de IA, optimizando tiempo y garantizando calidad técnica.",
+    'Plataforma para orientadores educativos. Genera informes psicopedagógicos profesionales con asistencia de IA, optimizando tiempo y garantizando calidad técnica.',
   keywords: [
-    "informes psicopedagógicos",
-    "orientadores educativos",
-    "inteligencia artificial",
-    "educación",
-    "psicopedagogía",
-    "orientación escolar",
-    "informes escolares",
-    "evaluación psicopedagógica",
-    "sistema educativo andaluz",
+    'informes psicopedagógicos',
+    'orientadores educativos',
+    'inteligencia artificial',
+    'educación',
+    'psicopedagogía',
+    'orientación escolar',
+    'informes escolares',
+    'evaluación psicopedagógica',
+    'sistema educativo andaluz',
   ],
-  authors: [{ name: "Junta de Andalucía - Consejería de Desarrollo Educativo y Formación Profesional" }],
-  creator: "Junta de Andalucía",
-  publisher: "Junta de Andalucía",
+  authors: [{ name: 'Antonio José Robles Muñoz' }],
   robots: {
     index: true,
     follow: true,
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
   openGraph: {
-    type: "website",
-    locale: "es_ES",
-    url: "https://orientia.es",
-    siteName: "Sistema de Informes Psicopedagógicos",
-    title: "Sistema de Informes Psicopedagógicos - ",
+    type: 'website',
+    locale: 'es_ES',
+    url: 'https://orientia.es',
+    siteName: 'Sistema de Informes Psicopedagógicos',
+    title: 'Sistema de Informes Psicopedagógicos - ',
     description:
-      "Plataforma oficial para orientadores educativos. Genera informes psicopedagógicos con IA, optimiza tiempo y garantiza calidad profesional.",
+      'Plataforma oficial para orientadores educativos. Genera informes psicopedagógicos con IA, optimiza tiempo y garantiza calidad profesional.',
     images: [
       {
-        url: "/og-image.jpg",
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: "Sistema de Informes Psicopedagógicos - ",
+        alt: 'Sistema de Informes Psicopedagógicos - ',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Sistema de Informes Psicopedagógicos - ",
-    description: "Plataforma oficial para orientadores educativos. Genera informes psicopedagógicos con IA.",
-    images: ["/twitter-image.jpg"],
-    creator: "@JuntaDeAndalucia",
+    card: 'summary_large_image',
+    title: 'Sistema de Informes Psicopedagógicos - ',
+    description: 'Plataforma oficial para orientadores educativos. Genera informes psicopedagógicos con IA.',
+    images: ['/twitter-image.jpg'],
   },
   verification: {
-    google: "google-site-verification-code",
+    google: 'google-site-verification-code',
   },
   alternates: {
-    canonical: "https://orientia.es",
+    canonical: 'https://orientia.es',
     languages: {
-      "es-ES": "https://orientia.es",
+      'es-ES': 'https://orientia.es',
     },
   },
-  category: "education",
-    generator: 'v0.dev'
-}
+  category: 'education',
+  generator: 'v0.dev',
+};
 
 export default function RootLayout({
   children,
