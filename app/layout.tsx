@@ -87,16 +87,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className={inter.variable}>
+    <html lang='es' className={inter.variable}>
       <head>
-        <link rel="icon" href="/icons/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#16a34a" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel='icon' href='/icons/favicon.ico' sizes='any' />
+        <link rel='icon' href='/favicon.svg' type='image/svg+xml' />
+        <link rel='icon' type='image/png' href='/icons/logo-205.png' sizes='205x205' />
+        <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
+        <link rel='manifest' href='/manifest.json' />
+        <meta name='theme-color' content='#16a34a' />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
       </head>
       <body className={inter.className}>{children}</body>
     </html>
-  )
+  );
 }
