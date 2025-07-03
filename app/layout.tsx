@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: '%s | Sistema de Informes Psicopedagógicos - ',
   },
   icons: {
-    icon: [{ url: '/favicon.ico', sizes: 'any' }],
+    icon: [{ url: '/icons/favicon.ico', sizes: 'any' }],
     shortcut: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
@@ -89,7 +89,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={inter.variable}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icons/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
