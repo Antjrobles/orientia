@@ -15,6 +15,11 @@ export const metadata: Metadata = {
     default: 'Sistema de Informes Psicopedagógicos - ',
     template: '%s | Sistema de Informes Psicopedagógicos - ',
   },
+  icons: {
+    icon: [{ url: '/favicon.ico', sizes: 'any' }],
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
   description:
     'Plataforma para orientadores educativos. Genera informes psicopedagógicos profesionales con asistencia de IA, optimizando tiempo y garantizando calidad técnica.',
   keywords: [
