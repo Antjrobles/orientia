@@ -18,7 +18,10 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import Image from 'next/image';
-import AuthButtons from "./AuthButtons"
+import AuthButtons from "./AuthButtons";
+import { ShimmerButton } from "@/components/magicui/shimmer-button";
+
+
 
 export default function Header() {
   return (
@@ -26,15 +29,16 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
-
-            <img
-              src="/icons/logo4.svg"
-              alt="Logo Orientia"
-              width={150}
-              height={150}
-              className="transform transition-transform hover:scale-110 mt-8"
-            />
-
+            <Link href="/" aria-label="Volver a la página de inicio">
+              <Image
+                src="/icons/logo4.svg"
+                alt="Logo Orientia"
+                width={150}
+                height={40}
+                className="transform transition-transform hover:scale-110 mt-8"
+                priority
+              />
+            </Link>
           </div>
           <nav className="hidden md:flex space-x-6" role="navigation" aria-label="Navegación principal">
             <Link href="#inicio" className="text-green-600 font-medium" aria-current="page">
@@ -53,13 +57,8 @@ export default function Header() {
               Contacto
             </Link>
           </nav>
-          <div className="flex items-center space-x-3">
-            <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
-              Iniciar Sesión
-            </Button>
-            <Button className="bg-green-600 hover:bg-green-700">Acceder al Sistema</Button>
-            <AuthButtons />
-
+          <div className="flex items-center">
+            <AuthButtons className="text-gray-900 hover:text-white transition-colors"/>
           </div>
         </div>
       </div>

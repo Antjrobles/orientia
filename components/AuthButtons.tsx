@@ -4,14 +4,21 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { LogIn, LogOut } from 'lucide-react'
 import Image from 'next/image'
+import { ShimmerButton } from '@/components/magicui/shimmer-button'
+import { cn } from '@/lib/utils'
 
-export default function AuthButtons() {
+
+interface AuthButtonsProps {
+  className?: string
+}
+
+export default function AuthButtons({ className }: AuthButtonsProps) {
   const { data: session, status } = useSession()
 
   // Muestra un estado de carga para evitar parpadeos (flickering)
   if (status === 'loading') {
     return (
-      <Button variant='outline' size='sm' disabled>
+      <Button variant='outline' size='sm' disabled className={className}>
         ...
       </Button>
     )
@@ -20,7 +27,7 @@ export default function AuthButtons() {
   // Si el usuario ha iniciado sesión
   if (session && session.user) {
     return (
-      <div className='flex items-center gap-3'>
+      <div className={cn('flex items-center gap-3', className)}>
         {session.user.image && (
           <Image
             src={session.user.image}
@@ -40,9 +47,10 @@ export default function AuthButtons() {
 
   // Si el usuario no ha iniciado sesión
   return (
-    <Button onClick={() => signIn('google')} variant='default'>
+    <ShimmerButton onClick={() => signIn('google')} className={className}>
       <LogIn className='mr-2 h-4 w-4' />
       Acceder
-    </Button>
+    </ShimmerButton>
+
   )
 }
