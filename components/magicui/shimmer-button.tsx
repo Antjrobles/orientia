@@ -21,7 +21,8 @@ export const ShimmerButton = React.forwardRef<
       shimmerColor = "#ffffff",
       shimmerSize = "0.05em",
       shimmerDuration = "3s",
-      borderRadius = "100px",
+      // Cambiado para coincidir con el radio de borde estándar de la app (0.5rem)
+      borderRadius = "0.5rem",
       background = "#16a34a", // Verde principal de la app
       className,
       children,
@@ -42,7 +43,8 @@ export const ShimmerButton = React.forwardRef<
           } as CSSProperties
         }
         className={cn(
-          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap border border-transparent px-6 py-3 text-primary-foreground bg-green-500 [border-radius:var(--radius)]",
+          // Limpiado: se elimina bg-green-500 porque el fondo ya se controla con --bg
+          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap border border-transparent px-6 py-3 text-primary-foreground [background:var(--bg)] [border-radius:var(--radius)]",
           "transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px",
           className,
         )}
@@ -68,15 +70,12 @@ export const ShimmerButton = React.forwardRef<
         <div
           className={cn(
             "insert-0 absolute size-full",
-
-            "rounded-2xl px-4 py-1.5 text-sm font-medium shadow-[inset_0_-8px_10px_#ffffff1f]",
-
+            // Corregido: se elimina rounded-2xl para que el radio del borde sea consistente
+            "px-4 py-1.5 text-sm font-medium shadow-[inset_0_-8px_10px_#ffffff1f]",
             // transition
             "transform-gpu transition-all duration-300 ease-in-out",
-
             // on hover
             "group-hover:shadow-[inset_0_-6px_10px_#ffffff3f]",
-
             // on click
             "group-active:shadow-[inset_0_-10px_10px_#ffffff3f]",
           )}
