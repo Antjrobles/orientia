@@ -1,13 +1,14 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
+import type React from 'react';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import '../styles/globals.css';
+import Providers from '@/components/Providers';
 
 const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-})
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://orientia.es'),
@@ -81,11 +82,7 @@ export const metadata: Metadata = {
   generator: 'v0.dev',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='es' className={inter.variable}>
       <head>
@@ -97,7 +94,9 @@ export default function RootLayout({
         <meta name='theme-color' content='#16a34a' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

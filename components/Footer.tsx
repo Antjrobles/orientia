@@ -24,10 +24,11 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-gray-400 mb-4">
-              Plataforma oficial para orientadores educativos de la Junta de Andalucía.
+              Plataforma para orientadores educativos. Genera informes psicopedagógicos profesionales con asistencia de IA.
+
             </p>
             <div className="text-sm text-gray-400">
-              <p>© {new Date().getFullYear()} Junta de Andalucía. Todos los derechos reservados.</p>
+              <p>© {new Date().getFullYear()} Orientia. Todos los derechos reservados.</p>
             </div>
           </div>
 
@@ -62,7 +63,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contacto y Legal</h3>
             <address className="space-y-2 text-sm text-gray-400 not-italic">
-              <p>Email: soporte.orientia@juntadeandalucia.es</p>
+              <p>Email: antjrobles@gmail.es</p>
               <p>Teléfono: 955 064 000</p>
               <p>Horario: L-V 8:00-15:00</p>
               <p>

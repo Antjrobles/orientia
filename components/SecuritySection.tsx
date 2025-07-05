@@ -70,8 +70,8 @@ export default function SecuritySection() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Certificación Oficial</h3>
             <p className="text-gray-600">
-              Sistema auditado y certificado por la Junta de Andalucía. Cumple con todos los estándares de seguridad
-              gubernamental.
+              Sistema auditado que cumple con los más altos estándares de seguridad para proteger tu información y la de
+              tus alumnos
             </p>
           </article>
         </div>

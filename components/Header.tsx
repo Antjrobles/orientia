@@ -18,6 +18,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import Image from 'next/image';
+import AuthButtons from "./AuthButtons"
 
 export default function Header() {
   return (
@@ -57,6 +58,8 @@ export default function Header() {
               Iniciar Sesión
             </Button>
             <Button className="bg-green-600 hover:bg-green-700">Acceder al Sistema</Button>
+            <AuthButtons />
+
           </div>
         </div>
       </div>

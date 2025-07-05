@@ -27,12 +27,12 @@ export function StructuredData({ type, data }: StructuredDataProps) {
 export const organizationStructuredData = {
   name: "Orientia",
   alternateName: "Consejería de Desarrollo Educativo y Formación Profesional",
-  url: "https://www.juntadeandalucia.es",
-  logo: "https://informes-psicopedagogicos.juntadeandalucia.es/logo.png",
+  url: "https://www.orientia.es",
+  logo: "https://orientia.es/icons/logo2.svg",
   contactPoint: {
     "@type": "ContactPoint",
-    telephone: "+34-955-064-000",
-    contactType: "customer service",
+    telephone: "+34-955-000-555",
+    contactType: "technical support",
     availableLanguage: "Spanish",
     areaServed: "ES-AN",
   },
@@ -43,11 +43,12 @@ export const organizationStructuredData = {
     addressRegion: "Andalucía",
     postalCode: "41071",
     addressCountry: "ES",
+    email: "antjrobles@gmail.es",
   },
   sameAs: [
-    "https://www.facebook.com/JuntaDeAndalucia",
-    "https://twitter.com/JuntaDeAndalucia",
-    "https://www.youtube.com/user/JuntaDeAndalucia",
+    "https://www.facebook.com/",
+    "https://twitter.com/",
+    "https://www.youtube.com/user/",
   ],
 }
 
@@ -59,7 +60,8 @@ export const faqStructuredData = {
       name: "¿Qué es el Sistema de Informes Psicopedagógicos?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Es una plataforma oficial de la Junta de Andalucía que utiliza inteligencia artificial para ayudar a los orientadores educativos a generar informes psicopedagógicos profesionales de manera eficiente.",
+        text: "Orientia es una plataforma que utiliza inteligencia artificial para ayudar a los orientadores educativos a generar informes psicopedagógicos profesionales de manera eficiente.",
+",
       },
     },
     {
@@ -67,7 +69,8 @@ export const faqStructuredData = {
       name: "¿Quién puede usar el sistema?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "El sistema está diseñado exclusivamente para orientadores educativos oficiales de la Junta de Andalucía que trabajen en centros educativos públicos.",
+        text: "El sistema está diseñado para orientadores educativos, psicopedagogos y profesionales del sector que deseen optimizar su flujo de trabajo y la calidad de sus informes.",
+",
       },
     },
     {

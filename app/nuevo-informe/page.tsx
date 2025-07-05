@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Nuevo Informe Psicopedagógico - Junta de Andalucía",
     description: "Crear informes psicopedagógicos con IA de forma rápida y profesional",
-    url: "https://informes-psicopedagogicos.juntadeandalucia.es/nuevo-informe",
+    url: "https://orientia/nuevo-informe",
   },
   robots: {
     index: true,

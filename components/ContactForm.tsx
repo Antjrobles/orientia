@@ -107,7 +107,7 @@ const ContactForm: React.FC = () => {
         setSubmitStatus('success');
         setForm({ name: '', email: '', province: '', municipality: '', locality: '', school: '', message: '' });
         // Auto-hide success message after 5 seconds
-        setTimeout(() => setSubmitStatus('idle'), 5000);
+        setTimeout(() => setSubmitStatus('idle'), 3000);
       } else {
         throw new Error(result.message || 'El envío del formulario falló.');
       }

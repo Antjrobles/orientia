@@ -40,9 +40,8 @@ export default function Hero() {
               <span className="block text-green-200">Inteligente</span>
             </h1>
             <p className="text-xl mb-8 text-green-100 leading-relaxed">
-              Plataforma oficial para orientadores educativos de la Junta de Andalucía. Genera informes
-              psicopedagógicos profesionales con asistencia de IA, optimizando tu tiempo y garantizando la calidad
-              técnica.
+              Genera informes psicopedagógicos profesionales con asistencia de IA, optimizando tu tiempo y
+              garantizando la calidad técnica
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 font-semibold">
