@@ -11,7 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, FileText } from "lucide-react"
-import { supabase } from "@/lib/supabase/client"
 import { useToast } from "@/components/ui/use-toast"
 
 export default function NuevoInformePage() {
@@ -64,7 +63,6 @@ export default function NuevoInformePage() {
       },
     }
 
-    const { data, error } = await supabase.from("informes").insert(informeData).select().single()
 
     setIsSaving(false)
 
