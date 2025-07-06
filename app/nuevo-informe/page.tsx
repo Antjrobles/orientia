@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -9,9 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, FileText } from "lucide-react"
+import { supabase } from "@/lib/supabase/client"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function NuevoInformePage() {
-  const [isGenerating, setIsGenerating] = useState(false)
+  const router = useRouter()
+  const { data: session } = useSession()
+  const { toast } = useToast()
+  const [isSaving, setIsSaving] = useState(false)
   const [formData, setFormData] = useState({
     alumno: "",
     nie: "",
@@ -20,23 +27,54 @@ export default function NuevoInformePage() {
     centro: "",
     tutor: "",
     motivoConsulta: "",
-    antecedentes: "",
-    observaciones: "",
-    pruebasAplicadas: "",
-    conclusiones: "",
-    recomendaciones: "",
   })
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleGenerateReport = async () => {
-    setIsGenerating(true)
-    // Simular llamada a API de IA
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-    setIsGenerating(false)
-    // Aquí iría la lógica real de generación con IA
+  const handleSaveDraft = async () => {
+    if (!session?.user?.id) {
+      toast({
+        title: "Error de autenticación",
+        description: "Debes iniciar sesión para guardar un informe.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setIsSaving(true)
+
+    const informeData = {
+      autor_id: session.user.id,
+      estado: "borrador" as const,
+      datos_identificativos: {
+        alumno: {
+          nombre: formData.alumno,
+          fecha_nacimiento: formData.fechaNacimiento,
+          nie: formData.nie,
+          curso: formData.curso,
+        },
+        centro: { nombre: formData.centro, localidad: "Desconocida" }, // Localidad por defecto
+        tutores: formData.tutor ? [formData.tutor] : [],
+        etapa_escolar: formData.curso, // Usamos el curso como etapa por ahora
+      },
+      evaluacion_psicopedagogica: {
+        motivo: formData.motivoConsulta,
+      },
+    }
+
+    const { data, error } = await supabase.from("informes").insert(informeData).select().single()
+
+    setIsSaving(false)
+
+    if (error) {
+      toast({ title: "Error al guardar", description: error.message, variant: "destructive" })
+    } else {
+      toast({ title: "Borrador guardado", description: "El informe se ha guardado correctamente." })
+      // Redirigir a la página de edición del informe (que crearemos después)
+      router.push(`/profile/informes/${data.id}`)
+    }
   }
 
   return (
@@ -47,7 +85,7 @@ export default function NuevoInformePage() {
           <span>Nuevo Informe Psicopedagógico</span>
         </CardTitle>
         <CardDescription>
-          Complete los datos del alumno para generar un informe psicopedagógico asistido por IA
+          Rellena los datos iniciales para crear un borrador del informe.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -154,17 +192,17 @@ export default function NuevoInformePage() {
         {/* Buttons */}
         <div className="flex justify-end pt-6">
           <Button
-            onClick={handleGenerateReport}
-            disabled={isGenerating || !formData.alumno || !formData.nie || !formData.motivoConsulta}
+            onClick={handleSaveDraft}
+            disabled={isSaving || !formData.alumno || !formData.nie || !formData.motivoConsulta}
             className="bg-green-600 hover:bg-green-700"
           >
-            {isGenerating ? (
+            {isSaving ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Generando Informe...
+                Guardando Borrador...
               </>
             ) : (
-              "Generar Informe con IA"
+              "Guardar Borrador"
             )}
           </Button>
         </div>
@@ -172,4 +210,3 @@ export default function NuevoInformePage() {
     </Card>
   )
 }
-

@@ -1,36 +1,73 @@
-import NextAuth, { type AuthOptions } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
+import NextAuth, { type AuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: AuthOptions = {
-  // Configure one or more authentication providers
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
-      },
     }),
-    // ...add more providers here
   ],
+
+  secret: process.env.NEXTAUTH_SECRET,
+
   callbacks: {
-    async signIn({ account, profile }) {
-      // Si el proveedor es Google, solo comprueba que el email esté verificado.
-      // Esto permite iniciar sesión con cualquier cuenta de Google para hacer pruebas.
+    async signIn({ account, profile, user, credentials }) {
+      console.log("Callback signIn called");
+      console.log("Account:", account);
+      console.log("Profile:", profile);
+      console.log("User:", user);
+      console.log("Credentials:", credentials);
+
       if (account?.provider === "google") {
-        return profile?.email_verified ?? false
+        const emailVerified = profile?.email_verified ?? false;
+        console.log("Google email verified:", emailVerified);
+        return emailVerified;
       }
-      // Permite otros proveedores si los añades en el futuro
-      return true
+      return true;
+    },
+
+    async redirect({ url, baseUrl }) {
+      console.log("Callback redirect called");
+      console.log("url:", url);
+      console.log("baseUrl:", baseUrl);
+      // Puedes personalizar la redirección aquí
+      return baseUrl;
+    },
+
+    async session({ session, token, user }) {
+      console.log("Callback session called");
+      console.log("Session:", session);
+      console.log("Token:", token);
+      console.log("User:", user);
+      return session;
+    },
+
+    async jwt({ token, user, account, profile, isNewUser }) {
+      console.log("Callback jwt called");
+      console.log("Token:", token);
+      if (user) {
+        console.log("User:", user);
+      }
+      return token;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
-}
 
-const handler = NextAuth(authOptions)
+  events: {
+    signIn(message) {
+      console.log("Event signIn:", message);
+    },
+    signOut(message) {
+      console.log("Event signOut:", message);
+    },
+    error(message) {
+      console.error("Event error:", message);
+    },
+  },
 
-export { handler as GET, handler as POST }
+  debug: true, // Activa logs detallados de NextAuth
+};
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };

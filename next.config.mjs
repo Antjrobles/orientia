@@ -9,6 +9,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-}
+  experimental: {
+    allowedDevOrigins: ['orientia.antjrobles.tech'],
+  },
+  assetPrefix: 'https://orientia.antjrobles.tech',
+};
 
-export default nextConfig
+export default nextConfig;

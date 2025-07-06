@@ -1,8 +1,9 @@
-import type React from 'react';
+import React from 'react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/Providers';
+import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -79,23 +80,21 @@ export const metadata: Metadata = {
     },
   },
   category: 'education',
-  generator: 'v0.dev',
+  generator: 'Antonio Robles',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='es' className={inter.variable}>
+    <html lang='es'>
       <head>
         <link rel='icon' href='/icons/favicon.ico' sizes='any' />
-        <link rel='icon' href='/favicon.svg' type='image/svg+xml' />
-        <link rel='icon' type='image/png' href='/icons/logo-205.png' sizes='205x205' />
-        <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
         <link rel='manifest' href='/manifest.json' />
         <meta name='theme-color' content='#16a34a' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );
