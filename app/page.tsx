@@ -58,7 +58,7 @@ export default function Page() {
             '@context': 'https://schema.org',
             '@type': 'WebApplication',
             name: 'Sistema de Informes Psicopedagógicos',
-            description: 'Plataforma oficial para orientadores educativos de la Junta de Andalucía',
+            description: 'Plataforma oficial para orientadores educativos',
             url: 'https://orientia.es',
             applicationCategory: 'EducationalApplication',
             operatingSystem: 'Web',

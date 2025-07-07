@@ -29,7 +29,7 @@ export default function Header() {
   const { data: session, status } = useSession(); // Obtenemos el estado de la sesión
 
   return (
-    <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
+    <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200  sticky top-0 z-50" role="banner">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
@@ -44,7 +44,7 @@ export default function Header() {
               />
             </Link>
           </div>
-          <nav className="hidden md:flex items-center space-x-1" role="navigation" aria-label="Navegación principal">
+          <nav className="hidden md:flex items-center space-x-4" role="navigation" aria-label="Navegación principal">
             <Link href="#inicio" className="px-3 py-2 rounded-md text-sm font-medium text-green-600 bg-green-50" aria-current="page">
               Inicio
             </Link>

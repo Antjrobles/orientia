@@ -21,7 +21,6 @@ export default function ProfileHeader() {
                 alt="Logo Orientia"
                 width={150}
                 height={40}
-                // El mt-8 sigue aquí, no se ha tocado.
                 className="transform transition-transform hover:scale-105 mt-8"
                 priority
               />
@@ -29,7 +28,7 @@ export default function ProfileHeader() {
           </div>
 
           {/* Columna Central: Navegación */}
-          <nav className="hidden md:flex items-center space-x-1" role="navigation" aria-label="Navegación de perfil">
+          <nav className="hidden md:flex items-center space-x-6" role="navigation" aria-label="Navegación de perfil">
             <Link
               href="/profile"
               className={cn(

@@ -61,7 +61,6 @@ export const faqStructuredData = {
       acceptedAnswer: {
         "@type": "Answer",
         text: "Orientia es una plataforma que utiliza inteligencia artificial para ayudar a los orientadores educativos a generar informes psicopedagógicos profesionales de manera eficiente.",
-",
       },
     },
     {
@@ -70,7 +69,6 @@ export const faqStructuredData = {
       acceptedAnswer: {
         "@type": "Answer",
         text: "El sistema está diseñado para orientadores educativos, psicopedagogos y profesionales del sector que deseen optimizar su flujo de trabajo y la calidad de sus informes.",
-",
       },
     },
     {

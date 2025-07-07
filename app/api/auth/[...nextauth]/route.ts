@@ -20,6 +20,13 @@ export const authOptions: AuthOptions = {
       }
       return true;
     },
+    async session({ session, token }) {
+      // Añade el ID del usuario (del token JWT) al objeto de la sesión del cliente.
+      if (token && session.user) {
+        session.user.id = token.sub as string;
+      }
+      return session;
+    },
   },
 };
 

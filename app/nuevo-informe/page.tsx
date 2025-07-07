@@ -63,16 +63,14 @@ export default function NuevoInformePage() {
       },
     }
 
-
     setIsSaving(false)
 
-    if (error) {
-      toast({ title: "Error al guardar", description: error.message, variant: "destructive" })
-    } else {
-      toast({ title: "Borrador guardado", description: "El informe se ha guardado correctamente." })
-      // Redirigir a la página de edición del informe (que crearemos después)
-      router.push(`/profile/informes/${data.id}`)
-    }
+    // Lógica de guardado pendiente de implementar
+    console.log("Datos del informe a guardar:", informeData)
+    toast({
+      title: "Función de guardado en desarrollo",
+      description: "Los datos se han mostrado en la consola.",
+    })
   }
 
   return (

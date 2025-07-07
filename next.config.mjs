@@ -1,17 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
     unoptimized: true,
   },
   experimental: {
     allowedDevOrigins: [
       'https://orientia.antjrobles.tech',
+      'https://192.168.0.32:3003',
     ],
   },
 };

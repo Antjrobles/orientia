@@ -1,9 +1,11 @@
 import React from 'react';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import { getServerSession } from 'next-auth/next';
 import './globals.css';
 import Providers from '@/components/Providers';
 import { Toaster } from '@/components/ui/toaster';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,6 +24,7 @@ export const metadata: Metadata = {
     shortcut: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
+  manifest: '/manifest.json',
   description:
     'Plataforma para orientadores educativos. Genera informes psicopedagógicos profesionales con asistencia de IA, optimizando tiempo y garantizando calidad técnica.',
   keywords: [
@@ -83,17 +86,20 @@ export const metadata: Metadata = {
   generator: 'Antonio Robles',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const viewport: Viewport = {
+  themeColor: '#16a34a',
+};
+
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getServerSession(authOptions);
   return (
     <html lang='es'>
-      <head>
-        <link rel='icon' href='/icons/favicon.ico' sizes='any' />
-        <link rel='manifest' href='/manifest.json' />
-        <meta name='theme-color' content='#16a34a' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-      </head>
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <Providers session={session}>{children}</Providers>
         <Toaster />
       </body>
     </html>

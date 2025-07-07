@@ -1,13 +1,16 @@
-"use client"
+'use client'
 
-import { SessionProvider } from "next-auth/react"
-import { type ReactNode } from "react"
+import type { Session } from 'next-auth'
+import { SessionProvider } from 'next-auth/react'
+import React from 'react'
 
-interface Props {
-  children: ReactNode
+interface ProvidersProps {
+  children: React.ReactNode
+  session: Session | null
 }
 
-export default function Providers({ children }: Props) {
-  return <SessionProvider>{children}</SessionProvider>
+export default function Providers({ children, session }: ProvidersProps) {
+  // El SessionProvider provee el contexto de la sesión a todos los componentes hijos.
+  // Es crucial que este sea un componente 'use client'.
+  return <SessionProvider session={session}>{children}</SessionProvider>
 }
-
