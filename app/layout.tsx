@@ -97,7 +97,7 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession(authOptions);
   return (
-    <html lang='es'>
+    <html lang='es' suppressHydrationWarning>
       <body className={inter.className}>
         <Providers session={session}>{children}</Providers>
         <Toaster />
