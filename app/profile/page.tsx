@@ -1,27 +1,30 @@
-import { getServerSession } from "next-auth/next"
-import { redirect } from "next/navigation"
-import { FileText, FolderKanban, Clock, AlertCircle } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { authOptions } from '../../lib/auth'
+import { Suspense } from 'react';
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
+import { FileText, FolderKanban, Clock, AlertCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { authOptions } from '../../lib/auth';
+import Spinner from '../components/Spinner';
 
-export default async function ProfilePage() {
-  const session = await getServerSession(authOptions)
+async function ProfileContent() {
+  const session = await getServerSession(authOptions);
 
   if (!session || !session.user) {
-    redirect("/")
+    redirect("/");
   }
 
-  const { user } = session
-  const firstName = user.name?.split(' ')[0] || 'usuario'
+  const { user } = session;
+  const firstName = user.name?.split(' ')[0] || 'usuario';
 
   return (
     <div className="space-y-8">
       {/* Cabecera de Bienvenida */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">¡Bienvenido de nuevo, {firstName}!</h1>
+        <h1 className="text-3 font-bold tracking-tight text-gray-900">
+          ¡Bienvenido de nuevo, {firstName}!
+        </h1>
         <p className="text-muted-foreground mt-1">
-          Aquí tienes un resumen de tu actividad y accesos directos.
-        </p>
+          Aquí tienes un resumen de tu actividad y accesos directos </p>
       </div>
 
       {/* Tarjetas de Estadísticas */}
@@ -81,5 +84,13 @@ export default async function ProfilePage() {
         </Card>
       </div>
     </div>
-  )
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <ProfileContent />
+    </Suspense>
+  );
 }
