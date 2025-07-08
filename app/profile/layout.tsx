@@ -1,6 +1,7 @@
 import ProfileHeader from "@/components/ProfileHeader"
 import { ProfileSidebar } from "@/components/ProfileSidebar"
 
+
 export default function ProfileLayout({
   children,
 }: {

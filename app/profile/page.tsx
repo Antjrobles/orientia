@@ -1,10 +1,8 @@
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { redirect } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { FileText, FolderKanban, ArrowRight, Clock, AlertCircle } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { FileText, FolderKanban, Clock, AlertCircle } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { authOptions } from '../../lib/auth'
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions)
