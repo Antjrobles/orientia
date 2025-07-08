@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { FileText, FolderKanban, Clock, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { authOptions } from '../../lib/auth';
-import Spinner from '../components/Spinner';
+import Spinner from '@/components/Spinner';
 
 async function ProfileContent() {
   const session = await getServerSession(authOptions);
