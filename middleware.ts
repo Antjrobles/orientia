@@ -14,7 +14,11 @@ const PROTECTED_ROUTES = ['/profile', '/nuevo-informe']
 const PUBLIC_ROUTES = ['/']
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === "production"
+  })
   const { pathname } = req.nextUrl
   const isUserAuthenticated = !!token
 
