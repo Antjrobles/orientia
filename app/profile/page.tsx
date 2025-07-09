@@ -19,8 +19,8 @@ async function ProfileContent() {
   return (
     <div className="space-y-8">
       {/* Cabecera de Bienvenida */}
-      <div>
-        <h1 className="text-3 font-bold tracking-tight text-gray-900">
+      <div className='text-center space-y-2'>
+        <h1 className="text-3 font-bold tracking-tight text-gray-900 text-center">
           ¡Bienvenido de nuevo, {firstName}!
         </h1>
         <p className="text-muted-foreground mt-1">

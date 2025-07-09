@@ -1,83 +1,183 @@
 'use client'
-import { useSession } from 'next-auth/react'; // Importamos useSession para saber si el usuario está logueado
-
+import { useSession } from 'next-auth/react';
+import { useState, useEffect } from "react"
+import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import {
-  Brain,
-  FileText,
-  Shield,
-  Users,
-  Clock,
-  CheckCircle,
-  ArrowRight,
-  Sparkles,
-  Lock,
-  Database,
-  Award,
-  BookOpen,
-} from "lucide-react"
-import { User } from "lucide-react" // Importamos el icono de usuario para el botón de perfil
+import { User } from "lucide-react"
 import Link from "next/link"
 import Image from 'next/image';
 import AuthButtons from "./AuthButtons";
-import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { cn } from "@/lib/utils";
 
-
 export default function Header() {
-  const { data: session, status } = useSession(); // Obtenemos el estado de la sesión
+  const { data: session, status } = useSession();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Prevenir scroll cuando el menú móvil está abierto
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen]);
 
   return (
-    <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200  sticky top-0 z-50" role="banner">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-4">
-            <Link href="/" aria-label="Volver a la página de inicio">
-              <Image
-                src="/icons/logo4.svg"
-                alt="Logo Orientia"
-                width={150}
-                height={40}
-                className="transform transition-transform hover:scale-105 mt-8"
-                priority
-              />
-            </Link>
-          </div>
-          <nav className="hidden md:flex items-center space-x-4" role="navigation" aria-label="Navegación principal">
-            <Link href="#inicio" className="px-3 py-2 rounded-md text-sm font-medium text-green-600 bg-green-50" aria-current="page">
-              Inicio
-            </Link>
-            <Link href="#caracteristicas" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
-              Características
-            </Link>
-            <Link href="#beneficios" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
-              Beneficios
-            </Link>
-            <Link href="#seguridad" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
-              Seguridad
-            </Link>
-            <Link href="#ContactForm" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
-              Contacto
-            </Link>
-          </nav>
-          <div className="flex items-center">
-            {/* Si el usuario está autenticado, mostramos el botón de Perfil */}
-            {status === 'authenticated' && (
-              <Link href="/profile" passHref>
-                <Button
-                  variant="ghost" // Usamos un estilo ghost para que se integre bien
-                  className="mr-2" // Un pequeño margen para separarlo del AuthButtons
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  Perfil
-                </Button>
+    <>
+      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-4">
+              <Link href="/" aria-label="Volver a la página de inicio">
+                <Image
+                  src="/icons/logo4.svg"
+                  alt="Logo Orientia"
+                  width={150}
+                  height={40}
+                  className="transform transition-transform hover:scale-105 mt-8"
+                  priority
+                />
               </Link>
-            )}
-            <AuthButtons />
+            </div>
+
+            {/* Botón menú móvil */}
+            <button
+              className="md:hidden p-2 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+              aria-label="Abrir menú"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+
+            {/* Navegación desktop */}
+            <nav className="hidden md:flex items-center space-x-4" role="navigation" aria-label="Navegación principal">
+              <Link href="#inicio" className="px-3 py-2 rounded-md text-sm font-medium text-green-600 bg-green-50" aria-current="page">
+                Inicio
+              </Link>
+              <Link href="#caracteristicas" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+                Características
+              </Link>
+              <Link href="#beneficios" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+                Beneficios
+              </Link>
+              <Link href="#seguridad" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+                Seguridad
+              </Link>
+              <Link href="#contacto" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+                Contacto
+              </Link>
+            </nav>
+
+            {/* Botones de autenticación desktop */}
+            <div className="hidden md:flex items-center">
+              {status === 'authenticated' && (
+                <Link href="/profile" passHref>
+                  <Button variant="ghost" className="mr-2">
+                    <User className="h-4 w-4 mr-2" />
+                    Perfil
+                  </Button>
+                </Link>
+              )}
+              <AuthButtons />
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Menú móvil */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] md:hidden">
+          {/* Overlay oscuro */}
+          <div
+            className="fixed inset-0 bg-black/60 transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+
+          {/* Panel del menú */}
+          <div className={cn(
+            "fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out",
+            mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          )}>
+            <div className="flex flex-col h-full">
+              {/* Header del menú */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Menú</h2>
+                <button
+                  className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  aria-label="Cerrar menú"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <X className="h-6 w-6 text-gray-600" />
+                </button>
+              </div>
+
+              {/* Contenido del menú */}
+              <div className="flex-1 px-4 py-6 overflow-y-auto">
+                <nav className="space-y-2" role="navigation" aria-label="Navegación móvil">
+                  <Link
+                    href="#inicio"
+                    className="block px-4 py-3 rounded-md text-base font-medium text-green-600 bg-green-50 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Inicio
+                  </Link>
+                  <Link
+                    href="#caracteristicas"
+                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Características
+                  </Link>
+                  <Link
+                    href="#beneficios"
+                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Beneficios
+                  </Link>
+                  <Link
+                    href="#seguridad"
+                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Seguridad
+                  </Link>
+                  <Link
+                    href="#contacto"
+                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Contacto
+                  </Link>
+
+
+                  {status === 'authenticated' && (
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <User className="h-4 w-4 inline-block mr-2" />
+                      Perfil
+                    </Link>
+                  )}
+                </nav>
+              </div>
+
+              {/* Footer del menú con botones de autenticación */}
+              <div className="border-t border-gray-200 p-4">
+                <AuthButtons />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }

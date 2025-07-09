@@ -5,64 +5,156 @@ import Image from 'next/image'
 import AuthButtons from "./AuthButtons"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { useState, useEffect } from "react"
+import { Menu, X } from "lucide-react"
 
 export default function ProfileHeader() {
   const pathname = usePathname()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Bloquear scroll al abrir menú móvil
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : 'unset'
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [mobileMenuOpen])
 
   return (
-    <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Columna Izquierda: Logo */}
-          <div className="flex items-center">
-            <Link href="/" aria-label="Volver a la página de inicio">
-              <Image
-                src="/icons/logo4.svg"
-                alt="Logo Orientia"
-                width={150}
-                height={40}
-                className="transform transition-transform hover:scale-105 mt-8"
-                priority
-              />
-            </Link>
-          </div>
+    <>
+      <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center">
+              <Link href="/" aria-label="Volver a la página de inicio">
+                <Image
+                  src="/icons/logo4.svg"
+                  alt="Logo Orientia"
+                  width={150}
+                  height={40}
+                  className="transform transition-transform hover:scale-105 mt-8"
+                  priority
+                />
+              </Link>
+            </div>
 
-          {/* Columna Central: Navegación */}
-          <nav className="hidden md:flex items-center space-x-6" role="navigation" aria-label="Navegación de perfil">
-            <Link
-              href="/profile"
-              className={cn(
-                "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                pathname === "/profile"
-                  ? "text-green-600 bg-green-50 font-semibold"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-              )}
-            >
-              Panel Principal
-            </Link>
-            <Link
-              href="/nuevo-informe"
-              className={cn(
-                "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                pathname.startsWith("/nuevo-informe")
-                  ? "text-green-600 bg-green-50 font-semibold"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-              )}
-            >
-              Nuevo Informe
-            </Link>
-            {/* Enlace deshabilitado, con padding para alinear */}
-            <span className="px-3 py-2 rounded-md text-sm font-medium text-gray-400 cursor-not-allowed" aria-disabled="true">
-              Mis Informes
-            </span>
-          </nav>
+            {/* Navegación escritorio (solo visible en md o más) */}
+            <nav className="hidden md:flex items-center space-x-6" role="navigation" aria-label="Navegación de perfil">
+              <Link
+                href="/profile"
+                className={cn(
+                  "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  pathname === "/profile"
+                    ? "text-green-600 bg-green-50 font-semibold"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                )}
+              >
+                Panel Principal
+              </Link>
+              <Link
+                href="/nuevo-informe"
+                className={cn(
+                  "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  pathname.startsWith("/nuevo-informe")
+                    ? "text-green-600 bg-green-50 font-semibold"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                )}
+              >
+                Nuevo Informe
+              </Link>
+              <span className="px-3 py-2 rounded-md text-sm font-medium text-gray-400 cursor-not-allowed">
+                Mis Informes
+              </span>
+            </nav>
 
-          {/* Columna Derecha: Menú de usuario */}
-          <div className="flex items-center">
-            <AuthButtons />
+            {/* Parte derecha */}
+            <div className="flex items-center">
+              {/* Botón menú móvil */}
+              <button
+                className="md:hidden p-2 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+                aria-label="Abrir menú"
+                onClick={() => setMobileMenuOpen(true)}
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+
+              {/* Botones usuario escritorio */}
+              <div className="hidden md:flex items-center">
+                <AuthButtons />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Menú móvil */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] md:hidden">
+          {/* Fondo oscuro */}
+          <div
+            className="fixed inset-0 bg-black/60"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+          {/* Panel lateral */}
+          <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transform transition-transform">
+            <div className="flex flex-col h-full">
+              {/* Cabecera menú móvil */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Menú</h2>
+                <button
+                  className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <X className="h-6 w-6 text-gray-600" />
+                </button>
+              </div>
+
+              {/* Navegación móvil */}
+              <div className="flex-1 px-4 py-6 overflow-y-auto">
+                <nav className="space-y-2" role="navigation">
+                  <Link
+                    href="/profile"
+                    className={cn(
+                      "block px-4 py-3 rounded-md text-base font-medium transition-colors",
+                      pathname === "/profile"
+                        ? "text-green-600 bg-green-50 font-semibold"
+                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Panel Principal
+                  </Link>
+                  <Link
+                    href="/nuevo-informe"
+                    className={cn(
+                      "block px-4 py-3 rounded-md text-base font-medium transition-colors",
+                      pathname.startsWith("/nuevo-informe")
+                        ? "text-green-600 bg-green-50 font-semibold"
+                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Nuevo Informe
+                  </Link>
+                  <span
+                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-400 cursor-not-allowed"
+                    aria-disabled="true"
+                  >
+                    Mis Informes
+                  </span>
+                </nav>
+              </div>
+
+              {/* Botones usuario */}
+              <div className="border-t border-gray-200 p-4">
+                <AuthButtons />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
