@@ -61,7 +61,7 @@ async function ProfileContent() {
         </Card>
         <Card className="border-orange-500/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold  text-orange-600">Novedades</CardTitle>
+            <CardTitle className="text-sm font-bold  text-green-600">Novedades</CardTitle>
             <AlertCircle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
