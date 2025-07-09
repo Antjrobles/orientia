@@ -17,7 +17,7 @@ async function ProfileContent() {
   const firstName = user.name?.split(' ')[0] || 'usuario';
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-center">
       {/* Cabecera de Bienvenida */}
       <div className='text-center space-y-2'>
         <h1 className="text-3 font-bold tracking-tight text-gray-900 text-center">
@@ -30,8 +30,8 @@ async function ProfileContent() {
       {/* Tarjetas de Estadísticas */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Informes Creados</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 ">
+            <CardTitle className="text-sm font-bold text-gray-900">Informes Creados</CardTitle>
             <FolderKanban className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -41,7 +41,7 @@ async function ProfileContent() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tiempo Ahorrado</CardTitle>
+            <CardTitle className="text-sm font-bold  text-gray-900">Tiempo Ahorrado</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -51,7 +51,7 @@ async function ProfileContent() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Borradores</CardTitle>
+            <CardTitle className="text-sm font-bold  text-gray-900">Borradores</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -61,7 +61,7 @@ async function ProfileContent() {
         </Card>
         <Card className="border-orange-500/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-orange-600">Novedades</CardTitle>
+            <CardTitle className="text-sm font-bold  text-orange-600">Novedades</CardTitle>
             <AlertCircle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
@@ -73,7 +73,7 @@ async function ProfileContent() {
 
       {/* Actividad Reciente */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Actividad Reciente</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center">Actividad Reciente</h2>
         <Card>
           <CardContent className="p-6">
             <div className="text-center py-10 border-2 border-dashed rounded-lg">
