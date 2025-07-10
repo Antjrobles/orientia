@@ -2,8 +2,6 @@
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { User } from "lucide-react"
 import Link from "next/link"
 import Image from 'next/image';
 import AuthButtons from "./AuthButtons";
@@ -75,14 +73,6 @@ export default function Header() {
 
             {/* Botones de autenticación desktop */}
             <div className="hidden md:flex items-center">
-              {status === 'authenticated' && (
-                <Link href="/profile" passHref>
-                  <Button variant="ghost" className="mr-2">
-                    <User className="h-4 w-4 mr-2" />
-                    Perfil
-                  </Button>
-                </Link>
-              )}
               <AuthButtons />
             </div>
           </div>
@@ -155,18 +145,6 @@ export default function Header() {
                   >
                     Contacto
                   </Link>
-
-
-                  {status === 'authenticated' && (
-                    <Link
-                      href="/profile"
-                      className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <User className="h-4 w-4 inline-block mr-2" />
-                      Perfil
-                    </Link>
-                  )}
                 </nav>
               </div>
 
