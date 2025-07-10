@@ -15,12 +15,12 @@ export default function Footer() {
               <Image
                 src="/icons/logo2.svg" // Asegúrate que la ruta a tu logo es correcta
                 alt="Logo de Orientia en versión para fondos oscuros"
-                width={80}
-                height={80}
+                width={110}
+                height={110}
               />
               <div>
-                <h2 className="text-xl font-bold">Orientia</h2>
-                <p className="text-gray-400 text-sm">Sistema de Informes Psicopedagógicos</p>
+                <h2 className="text-4xl font-bold">Orientia</h2>
+                <p className="text-gray-400 text-sm">Informes Psicopedagógicos</p>
               </div>
             </div>
             <p className="text-gray-400 mb-4">
@@ -63,7 +63,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contacto y Legal</h3>
             <address className="space-y-2 text-sm text-gray-400 not-italic">
-              <p>Email: antjrobles@gmail.es</p>
+              <Link href={"mailto:info@orientia.es"} className="hover:text-white transition-colors">Email: info@orientia.es</Link>
               <p>Teléfono: 955 064 000</p>
               <p>Horario: L-V 8:00-15:00</p>
               <p>
