@@ -85,9 +85,15 @@ export default function AuthButtons({ className }: AuthButtonsProps) {
   }
 
   return (
-    <ShimmerButton onClick={() => router.push('/login')} className={className}>
-      <LogIn className='mr-2 h-4 w-4' />
-      Acceder
-    </ShimmerButton>
+    <div className={cn("flex items-center gap-2", className)}>
+      <ShimmerButton onClick={() => router.push('/login')}>
+        <LogIn className='mr-2 h-4 w-4' />
+        Acceder
+      </ShimmerButton>
+      <Button variant="outline" onClick={() => router.push('/register')}>
+        Registrarse
+      </Button>
+
+    </div>
   )
 }
