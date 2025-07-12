@@ -63,7 +63,7 @@ export default function RegisterPage() {
         <div className='w-full lg:w-1/2 flex flex-col h-full pt-20'>
 
 
-            <div class='h-32 w-full px-80 pt-20'>
+            <div className='h-32 w-full px-80 pt-20'>
               <Image
                 src='/icons/orientia.svg'
                 alt='Logo Orientia'
