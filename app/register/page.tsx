@@ -20,6 +20,7 @@ import {
   Lightbulb,
   BarChart2,
   Shield,
+  Home,
 } from 'lucide-react';
 
 export default function RegisterPage() {
@@ -49,26 +50,37 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className='h-screen bg-gradient-to-br from-gray-50 to-emerald-50 font-sans flex overflow-hidden relative'>
-      <div className='flex flex-col lg:flex-row w-full h-full'>
+    <div className='min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50 font-sans flex overflow-hidden relative'>
+      {/* Enlace a página principal - esquina superior izquierda */}
+      <Link
+        href='/'
+        className='absolute top-4 left-4 z-50 flex items-center gap-2 px-3 py-2 bg-white/80 backdrop-blur-sm rounded-lg border border-gray-200 hover:bg-white transition-all duration-200 shadow-sm'
+      >
+        <Home className='w-4 h-4 text-emerald-600' />
+        <span className='text-sm font-medium text-gray-700'>Inicio</span>
+      </Link>
+
+      <div className='flex flex-col lg:flex-row w-full min-h-screen'>
         {/* Left Side - Form */}
-        <div className='w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 bg-white relative'>
-          <div className='absolute -top-20 -left-20 w-64 h-64 bg-emerald-200/20 rounded-full blur-3xl'></div>
-          <div className='absolute -bottom-20 -right-20 w-64 h-64 bg-teal-200/20 rounded-full blur-3xl'></div>
-          <div className='w-full max-w-md space-y-4 z-10'>
-            <div className='flex flex-col items-center mb-4'>
-              <Link href='/' aria-label='Volver a la página de inicio' className='inline-block mb-2'>
-                <Image
-                  src='/icons/logo4.svg'
-                  alt='Logo Orientia'
-                  width={200}
-                  height={190}
-                  className='transform transition-all hover:scale-105 hover:rotate-3 duration-500 ease-in-out drop-shadow-sm animate-pulse-once'
-                  priority
-                />
-              </Link>
-              <h1 className='text-2xl font-bold text-gray-900 tracking-tight'>Orientia</h1>
-              <p className='text-xs text-emerald-600 font-medium mt-1'>Tu aliado en psicopedagogía</p>
+        <div className='w-full lg:w-1/2 flex flex-col items-center justify-center p-4 sm:p-6 bg-white relative'>
+          {/* Logo GRANDE y ANCHO, fuera del max-w-md */}
+          <div className="w-full h-32 flex items-end justify-center mb-2 animate-pulse-once">
+            <Image
+              src="/icons/orientia.svg"
+              alt="Logo Orientia"
+              fill={false}
+              width={600}
+              height={128}
+              className="object-contain w-full h-full"
+              priority
+            />
+          </div>
+          <p className='text-xs text-emerald-600 font-medium mt-0 mb-2 text-center'>Tu aliado en psicopedagogía</p>
+
+          <div className='w-full max-w-md space-y-4 z-10 pt-4 mx-auto'>
+            <div className='flex flex-col items-center mb-0'>
+              {/* LOGO OCUPANDO TODA LA COLUMNA */}
+
             </div>
             <div className='bg-white p-6 rounded-lg shadow-sm border border-gray-200 relative overflow-hidden'>
               <div className='absolute inset-0 border-2 border-transparent rounded-lg animate-glow'></div>
