@@ -61,19 +61,9 @@ export default function RegisterPage() {
         {/*           COLUMNA IZQUIERDA - ESTRUCTURA FINAL             */}
         {/* ========================================================== */}
         <div className='w-full lg:w-1/2 flex flex-col h-full pt-20'>
-
-
-            <div className='h-32 w-full px-80 pt-20'>
-              <Image
-                src='/icons/orientia.svg'
-                alt='Logo Orientia'
-                width={0}
-                height={0}
-                className='w-80 h-10'
-                priority
-              />
-            </div>
-
+          <div className='h-32 w-full px-80 pt-20'>
+            <Image src='/icons/orientia.svg' alt='Logo Orientia' width={0} height={0} className='w-80 h-10' priority />
+          </div>
 
           {/* ---- EL FORMULARIO DEBAJO, CON SU PROPIO SCROLL SI ES NECESARIO ---- */}
           <div className='w-full flex-grow overflow-y-auto p-1'>
@@ -197,10 +187,23 @@ export default function RegisterPage() {
         {/* ========================================================== */}
         {/*                      COLUMNA DERECHA                       */}
         {/* ========================================================== */}
-        <div className='hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-gradient-to-br from-emerald-600 to-teal-800 text-white p-6 relative h-full'>
-          <div className='absolute -top-5 -right-20 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl'></div>
 
-          <div className='w-full max-w-md space-y-10 z-50 mb-12'>
+        <div className='hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-gradient-to-br from-emerald-600 to-teal-800 text-white p-6 relative h-full'>
+          {/* --- IMAGEN DE FONDO AÑADIDA --- */}
+          {/* Esta es la nueva pieza de código que añade la imagen de fondo */}
+          <Image
+            src='/images/background.jpg' // <-- ¡CAMBIA ESTO A LA RUTA DE TU IMAGEN!
+            alt='Fondo de la plataforma de psicopedagogía'
+            fill // Hace que la imagen llene el contenedor padre.
+            className='object-cover  z-0 opacity-40 blur-xs' //
+          />
+
+          {/* El blur del círculo decorativo también ayuda al efecto */}
+          <div className='absolute -top-5 -right-20 w-64 h-64 bg-teal-500/20 rounded-full blur-xs'></div>
+
+          {/* --- CONTENIDO SUPERPUESTO --- */}
+          {/* Envolvemos todo el contenido en un div con z-10 para que esté por encima de la imagen */}
+          <div className='relative z-10 w-full max-w-md space-y-10 mb-12'>
             <div className='text-center'>
               <Link href='/' aria-label='Volver a la página de inicio' className='inline-block mb-1'>
                 <Image
