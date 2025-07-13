@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -16,6 +17,7 @@ import {
   AlertCircle,
   Loader2,
   BookOpen,
+  Key,
   UserPlus,
   Lightbulb,
   BarChart2,
@@ -26,30 +28,46 @@ import {
 export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    const res = await signIn('email', {
-      email,
-      callbackUrl: '/profile',
-      redirect: false,
-    });
-    setLoading(false);
-    if (res?.error) {
-      setError('No se pudo enviar el enlace. Intenta de nuevo.');
-    } else {
-      setSent(true);
+    setSuccess(false);
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (res.ok) {
+        setSuccess(true);
+        setError('');
+        // Redirigir al login después de 2 segundos para que el usuario vea el mensaje.
+        setTimeout(() => {
+          router.push('/login?registered=true');
+        }, 2000);
+      } else {
+        const errorText = await res.text();
+        setError(errorText || 'Ocurrió un error durante el registro.');
+      }
+    } catch (err) {
+      setError('No se pudo conectar con el servidor. Intenta de nuevo más tarde.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    // CAMBIO: Se usa `min-h-screen` en lugar de `h-screen` y `overflow-hidden`
-    // para permitir que el contenido crezca en pantallas pequeñas (ej. al abrir el teclado)
     <div className='min-h-screen bg-white font-sans'>
       <Link
         href='/'
@@ -60,17 +78,13 @@ export default function RegisterPage() {
 
       <div className='flex flex-col lg:flex-row w-full min-h-screen'>
 
-        {/* Eañade espacion en la parte superior  EN modo MÓVIL */}
         <div className='pt-16 lg:hidden'></div>
 
         {/* ========================================================== */}
-        {/*           COLUMNA IZQUIERDA - ESTRUCTURA FINAL             */}
         {/* ========================================================== */}
 
         <div className='w-full lg:w-1/2 flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8 flex-1'>
-          {/* CAMBIO: Contenedor para el logo y el formulario con ancho máximo y centrado */}
           <div className='w-full max-w-md mx-auto'>
-            {/* Contenedor del logo con padding responsivo y centrado */}
             <div className='w-full px-4 sm:px-0 mb-8 flex justify-center'>
               <Image
                 src='/icons/orientia.svg'
@@ -82,7 +96,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* ---- EL FORMULARIO DEBAJO ---- */}
             <div className='w-full space-y-4'>
               <div className='text-center'>
                 <h2 className='text-2xl lg:text-3xl font-bold text-gray-900 tracking-tight'>
@@ -94,7 +107,7 @@ export default function RegisterPage() {
                 <div className='space-y-3'>
                   <Button
                     onClick={() => signIn('google', { callbackUrl: '/profile' })}
-                    disabled={loading || sent}
+                    disabled={loading || success}
                     className='w-full h-10 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
                     <User className='w-5 h-5 text-emerald-600' />
                     <span>Registrarse con Google</span>
@@ -118,7 +131,7 @@ export default function RegisterPage() {
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        disabled={loading || sent}
+                        disabled={loading || success}
                         className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
                       />
                     </div>
@@ -135,23 +148,40 @@ export default function RegisterPage() {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        disabled={loading || sent}
+                        disabled={loading || success}
+                        className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
+                      />
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor='password'
+                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'>
+                        <Key className='w-4 h-4 text-emerald-600' /> Contraseña
+                      </Label>
+                      <Input
+                        id='password'
+                        type='password'
+                        placeholder='Mínimo 6 caracteres'
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        disabled={loading || success}
                         className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
                       />
                     </div>
                     <Button
                       type='submit'
-                      disabled={loading || sent}
+                      disabled={loading || success}
                       className='w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm'>
                       {loading ? (
                         <>
                           <Loader2 className='w-4 h-4 animate-spin' />
                           <span>Creando...</span>
                         </>
-                      ) : sent ? (
+                      ) : success ? (
                         <>
                           <CheckCircle className='w-4 h-4' />
-                          <span>Revisa correo</span>
+                          <span>¡Registrado!</span>
                         </>
                       ) : (
                         <>
@@ -167,17 +197,16 @@ export default function RegisterPage() {
                       <AlertDescription className='text-red-700 text-sm font-medium'>{error}</AlertDescription>
                     </Alert>
                   )}
-                  {sent && (
+                  {success && (
                     <Alert className='bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2 px-3 py-2'>
                       <CheckCircle className='h-4 w-4 text-emerald-600' />
                       <AlertDescription className='text-emerald-700 text-sm font-medium'>
-                        ¡Revisa tu correo!
+                        ¡Registro completado! Redirigiendo al login...
                       </AlertDescription>
                     </Alert>
                   )}
                 </div>
               </div>
-              {/* CAMBIO: Se usa flex-wrap para que los enlaces se apilen en pantallas muy pequeñas si es necesario */}
               <div className='text-center text-xs text-gray-400 flex flex-wrap justify-center items-center gap-x-2 gap-y-1'>
                 <Link href='/login' className='text-emerald-600 hover:underline font-medium'>
                   ¿Ya tienes cuenta? Inicia sesión
@@ -202,8 +231,6 @@ export default function RegisterPage() {
         {/* ========================================================== */}
         {/*                      COLUMNA DERECHA                       */}
         {/* ========================================================== */}
-        {/* CAMBIO: `hidden lg:flex` se mantiene para ocultar en móvil.
-            `h-screen` asegura que ocupe toda la altura en la vista de escritorio. */}
         <div className='hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-gradient-to-br from-emerald-600 to-teal-800 text-white p-6 relative h-screen'>
           <Image
             src='/images/background.jpg' // <-- ¡CAMBIA ESTO A LA RUTA DE TU IMAGEN!

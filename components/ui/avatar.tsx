@@ -47,4 +47,30 @@ const AvatarFallback = React.forwardRef<
 ))
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
-export { Avatar, AvatarImage, AvatarFallback }
+const getInitials = (name: string | null | undefined): string => {
+  if (!name) return "?";
+  const names = name.split(" ").filter(Boolean);
+  if (names.length === 0) return "?";
+  if (names.length === 1) return names[0].charAt(0).toUpperCase();
+  return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+};
+
+interface UserAvatarProps extends React.ComponentPropsWithoutRef<typeof Avatar> {
+  name: string | null | undefined;
+  image: string | null | undefined;
+}
+
+const UserAvatar = React.forwardRef<
+  React.ElementRef<typeof Avatar>,
+  UserAvatarProps
+>(({ name, image, className, ...props }, ref) => (
+  <Avatar ref={ref} className={className} {...props}>
+    <AvatarImage src={image ?? ""} alt={name ?? "Avatar"} />
+    <AvatarFallback>
+      {getInitials(name)}
+    </AvatarFallback>
+  </Avatar>
+));
+UserAvatar.displayName = "UserAvatar";
+
+export { Avatar, AvatarImage, AvatarFallback, UserAvatar }

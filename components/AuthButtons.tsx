@@ -2,8 +2,7 @@
 
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
-import { LogIn, LogOut, User, Settings, LayoutDashboard, FilePlus2 } from 'lucide-react'
-import Image from 'next/image'
+import { FilePlus2, LayoutDashboard, LogIn, LogOut, Settings, User } from 'lucide-react'
 import { ShimmerButton } from '@/components/magicui/shimmer-button'
 import { cn } from '@/lib/utils'
 import {
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { UserAvatar } from './ui/avatar'
 
 
 interface AuthButtonsProps {
@@ -43,15 +43,11 @@ export default function AuthButtons({ className }: AuthButtonsProps) {
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-              <Image
-                src={session.user.image || '/default-avatar.png'}
-                alt={session.user.name || 'Avatar del usuario'}
-                fill
-                sizes="36px"
-                className='rounded-full object-cover'
-              />
-            </Button>
+            <UserAvatar
+              name={session.user.name}
+              image={session.user.image}
+              className="h-9 w-9 cursor-pointer"
+            />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 z-[110]" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
