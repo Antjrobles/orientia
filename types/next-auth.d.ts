@@ -9,6 +9,8 @@ declare module "next-auth" {
    */
   interface Session {
     user: {
+      /** El ID del usuario en tu base de datos (UUID) */
+      id?: string;
       /** El rol del usuario */
       role?: string;
     } & DefaultSession["user"]; // Mantiene las propiedades por defecto (name, email, image)
