@@ -41,6 +41,7 @@ export async function POST(request: Request) {
       name,
       email,
       hashed_password: hashedPassword,
+      role: 'usuario', // USUARIO POR DEFECTO 
     });
 
     if (insertError) {

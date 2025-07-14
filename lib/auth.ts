@@ -83,40 +83,64 @@ export const authOptions: AuthOptions = {
           return false; // Bloquea el inicio de sesión si no hay email
         }
         try {
-          // Intenta crear o actualizar el usuario en tu tabla 'users'
-          const { error } = await supabase.from('users').upsert(
-            {
-              // El ID se omite para que Supabase lo genere automáticamente para nuevos usuarios.
-              // El objeto 'user' de NextAuth para Google no tiene un ID compatible con UUID.
-              name: user.name,
-              email: user.email,
-              image: user.image,
-            },
-            {
-              onConflict: 'email', // Si el email ya existe, actualiza los datos en lugar de fallar
-            }
-          );
+          const { data: existingUser, error: selectError } = await supabase
+            .from('users')
+            .select('id')
+            .eq('email', user.email)
+            .single();
 
-          if (error) throw error; // Lanza el error si la operación de BD falla
+          // Ignoramos el error que indica que no se encontró el usuario, que es lo esperado para nuevos registros.
+          if (selectError && selectError.code !== 'PGRST116') {
+            throw selectError;
+          }
+
+          if (existingUser) {
+            // El usuario ya existe, no hacemos nada con su rol.
+            // Opcional: podríamos actualizar su nombre o imagen si han cambiado en Google.
+            return true;
+          } else {
+            // El usuario es nuevo, lo insertamos con el rol por defecto.
+            const { error: insertError } = await supabase
+              .from('users')
+              .insert({
+                name: user.name,
+                email: user.email,
+                image: user.image,
+                role: 'usuario', // Asignamos el rol por defecto
+              });
+
+            if (insertError) throw insertError;
+          }
         } catch (error) {
-          console.error('Error al guardar el usuario de Google en la BD:', error);
+          console.error('Error al guardar/actualizar el usuario de Google en la BD:', error);
           return false; // Bloquea el inicio de sesión si hay un error de base de datos
         }
       }
       return true; // Permite el inicio de sesión para todos los demás casos
     },
     async jwt({ token, user }) {
-      console.log('[JWT Callback] Token recibido:', token);
-      console.log('[JWT Callback] Usuario recibido:', user);
+      // Al iniciar sesión (cuando el objeto 'user' está disponible),
+      // buscamos al usuario en nuestra base de datos para obtener el ID (UUID) y el rol correctos.
       if (user) {
-        token.sub = user.id;
+        const { data: dbUser } = await supabase
+          .from('users')
+          .select('id, role') // Obtenemos el ID de la BD y el rol
+          .eq('email', user.email!)
+          .single();
+
+        // Si encontramos al usuario, enriquecemos el token con los datos de la BD.
+        if (dbUser) {
+          token.sub = dbUser.id; // ¡Esta es la corrección clave! Usamos el UUID de la base de datos.
+          token.role = dbUser.role;
+        }
       }
-      console.log('[JWT Callback] Token devuelto:', token);
       return token;
     },
     async session({ session, token }) {
-      if (token?.sub && session.user) {
-        session.user.id = token.sub;
+      // Pasamos los datos del token (id y rol) al objeto de sesión
+      if (session.user) {
+        if (token.sub) session.user.id = token.sub;
+        if (token.role) session.user.role = token.role as string;
       }
       return session;
     },

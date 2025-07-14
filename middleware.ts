@@ -6,7 +6,7 @@ import { getToken } from 'next-auth/jwt'
  * Rutas que requieren que el usuario esté autenticado.
  * Cualquier ruta que comience con estos prefijos estará protegida.
  */
-const PROTECTED_ROUTES = ['/profile', '/nuevo-informe']
+const PROTECTED_ROUTES = ['/profile', '/nuevo-informe', '/admin']
 
 const AUTH_ROUTES = ['/login', '/register']
 
@@ -41,7 +41,15 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // 3. Si no se cumple ninguna de las condiciones anteriores, dejamos que continúe.
+  // 3. Si el usuario está logueado pero intenta acceder a /admin SIN ser admin,
+  // lo mandamos a su perfil.
+  if (pathname.startsWith('/admin') && token?.role !== 'admin') {
+    const url = req.nextUrl.clone()
+    url.pathname = '/profile' // O a la home '/' si lo prefieres
+    return NextResponse.redirect(url)
+  }
+
+  // 4. Si no se cumple ninguna de las condiciones anteriores, dejamos que continúe.
   return NextResponse.next()
 }
 
