@@ -26,6 +26,8 @@ export default function AuthButtons({ className }: AuthButtonsProps) {
   const { data: session, status } = useSession()
   const router = useRouter()
 
+
+
   if (status === 'loading') {
     return (
       <div className="h-9 w-9 rounded-full bg-gray-200 animate-pulse" />
@@ -66,6 +68,11 @@ export default function AuthButtons({ className }: AuthButtonsProps) {
             <DropdownMenuItem asChild>
               <Link href="/nuevo-informe"><FilePlus2 className="mr-2 h-4 w-4" /><span>Nuevo Informe</span></Link>
             </DropdownMenuItem>
+            {session.user.role === 'admin' && (
+              <DropdownMenuItem asChild>
+                <Link href="/admin" className="text-red-600"><Settings className="mr-2 h-4 w-4" /><span>Administración</span></Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem asChild>
               <Link href="/profile/settings" className="cursor-not-allowed opacity-50"><Settings className="mr-2 h-4 w-4" /><span>Configuración</span></Link>
             </DropdownMenuItem>

@@ -6,11 +6,15 @@ import AuthButtons from "./AuthButtons"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
-import { Menu, X } from "lucide-react"
+import { Menu, X, Shield } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 export default function ProfileHeader() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { data: session } = useSession()
+
+  const isAdmin = session?.user?.role === 'admin'
 
   // Bloquear scroll al abrir menú móvil
   useEffect(() => {
@@ -66,6 +70,20 @@ export default function ProfileHeader() {
               <span className="px-3 py-2 rounded-md text-sm font-medium text-gray-400 cursor-not-allowed">
                 Mis Informes
               </span>
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className={cn(
+                    "inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                    pathname.startsWith("/admin")
+                      ? "text-red-600 bg-red-50 font-semibold"
+                      : "text-red-600 hover:bg-red-50 hover:text-red-700"
+                  )}
+                >
+                  <Shield className="w-4 h-4 mr-1" />
+                  Admin
+                </Link>
+              )}
             </nav>
 
             {/* Parte derecha */}
@@ -144,6 +162,21 @@ export default function ProfileHeader() {
                   >
                     Mis Informes
                   </span>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className={cn(
+                        "flex items-center px-4 py-3 rounded-md text-base font-medium transition-colors",
+                        pathname.startsWith("/admin")
+                          ? "text-red-600 bg-red-50 font-semibold"
+                          : "text-red-600 hover:bg-red-50 hover:text-red-700"
+                      )}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Shield className="w-4 h-4 mr-2" />
+                      Administración
+                    </Link>
+                  )}
                 </nav>
               </div>
 
