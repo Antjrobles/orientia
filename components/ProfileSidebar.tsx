@@ -2,9 +2,10 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
-import { LayoutDashboard, FilePlus2, FolderKanban, Settings } from "lucide-react"
+import { LayoutDashboard, FilePlus2, FolderKanban, Settings, Shield } from "lucide-react"
 
 const sidebarNavItems = [
   {
@@ -23,16 +24,12 @@ const sidebarNavItems = [
     icon: <FolderKanban className="h-4 w-4 mr-2" />,
     disabled: true, // Deshabilitado por ahora
   },
-  {
-    title: "Configuración",
-    href: "/profile/settings",
-    icon: <Settings className="h-4 w-4 mr-2" />,
-    disabled: true, // Deshabilitado por ahora
-  },
 ]
 
 export function ProfileSidebar() {
   const pathname = usePathname()
+  const { data: session } = useSession()
+  const isAdmin = session?.user?.role === 'admin'
 
   return (
     <aside>
@@ -59,6 +56,22 @@ export function ProfileSidebar() {
             {item.title}
           </Link>
         ))}
+        {isAdmin && (
+          <Link
+            key="/admin"
+            href="/admin"
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              pathname.startsWith("/admin")
+                ? "bg-red-50 text-red-600 hover:bg-red-100 font-semibold"
+                : "text-red-600 hover:bg-red-50 hover:text-red-700",
+              "w-full justify-start"
+            )}
+          >
+            <Shield className="h-4 w-4 mr-2" />
+            Administración
+          </Link>
+        )}
       </nav>
     </aside>
   )
