@@ -17,30 +17,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import {
-  Users,
-  FileText,
-  Activity,
-  CreditCard,
-} from "lucide-react";
+import { Users, FileText } from "lucide-react";
 import Link from "next/link";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { format, getDay, subDays, isAfter } from "date-fns";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
+import { ResumenCards } from "@/components/admin/ResumenCards";
+import { AnalyticsChart } from "@/components/admin/AnalyticsChart";
 
-// Creamos un cliente de Supabase para uso en el servidor.
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Tipos para asegurar los datos que vienen de Supabase
 interface InformeReciente {
   id: string;
-  // El nombre del estudiante podría estar en el JSONB
   informacion_alumno: { nombre_apellidos?: string } | null;
-  // El creador ahora es un ID, necesitaríamos un JOIN para el nombre
   autor_id: string;
   estado: string;
   creado_en: string;
@@ -49,28 +41,22 @@ interface InformeReciente {
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
 
-  // --- Obtención de datos desde Supabase (Corregido) ---
   const [
     { count: totalUsers, error: usersCountError },
     { count: totalReports, error: reportsCountError },
-    { data: recentReports, error: recentReportsError },
+    { data: allReports, error: recentReportsError },
     { data: allUsers, error: allUsersError },
   ] = await Promise.all([
-    // 1. Contar total de usuarios (Correcto)
     supabase.from("users").select("*", { count: "exact", head: true }),
-    // 2. Contar total de informes (Corregido: "reports" -> "informes")
     supabase.from("informes").select("*", { count: "exact", head: true }),
-    // 3. Obtener los 5 informes más recientes (Corregido)
     supabase
       .from("informes")
-      .select("id, informacion_alumno, autor_id, estado, creado_en") // Columnas corregidas
-      .order("creado_en", { ascending: false }) // Columna de fecha corregida
-      .limit(5),
-    // 4. Obtener TODOS los usuarios para la tabla (Corregido)
+      .select("id, informacion_alumno, autor_id, estado, creado_en")
+      .order("creado_en", { ascending: false }),
     supabase
       .from("users")
-      .select("id, name, email, image, role") // Se eliminó "created_at" que no existe
-      .order("name", { ascending: true }), // Ordenamos por nombre como alternativa
+      .select("id, name, email, image, role")
+      .order("name", { ascending: true }),
   ]);
 
   if (
@@ -87,42 +73,25 @@ export default async function AdminPage() {
     });
   }
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "completado": // Ajustado a minúsculas como es común en enums de DB
-        return (
-          <Badge
-            variant="default"
-            className="bg-green-100 text-green-800 hover:bg-green-200"
-          >
-            {status}
-          </Badge>
-        );
-      case "en_progreso": // Ajustado a minúsculas
-        return (
-          <Badge
-            variant="secondary"
-            className="bg-blue-100 text-blue-800 hover:bg-blue-200"
-          >
-            {status}
-          </Badge>
-        );
-      case "borrador": // Ajustado a minúsculas
-        return (
-          <Badge
-            variant="outline"
-            className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
-          >
-            {status}
-          </Badge>
-        );
-      default:
-        return <Badge variant="destructive">{status}</Badge>;
-    }
-  };
+  const informesRecientesSeguros = (allReports || []) as InformeReciente[];
 
-  // Hacemos un type assertion para mayor seguridad
-  const informesRecientesSeguros = (recentReports || []) as InformeReciente[];
+  // Datos para el gráfico (últimos 7 días)
+  const hace7Dias = subDays(new Date(), 7);
+  const resumenSemanal = Array(7).fill(0); // D, L, M, X, J, V, S
+
+  informesRecientesSeguros.forEach((informe) => {
+    const fecha = new Date(informe.creado_en);
+    if (isAfter(fecha, hace7Dias)) {
+      const dia = getDay(fecha); // 0 = domingo
+      resumenSemanal[dia]++;
+    }
+  });
+
+  const dias = ["D", "L", "M", "X", "J", "V", "S"];
+  const datosGrafico = resumenSemanal.map((total, index) => ({
+    dia: dias[index],
+    total,
+  }));
 
   return (
     <div className="flex flex-col gap-8">
@@ -137,62 +106,22 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Usuarios Totales
-            </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalUsers ?? 0}</div>
-            <p className="text-xs text-muted-foreground">
-              Total de usuarios registrados
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Informes Generados
-            </CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalReports ?? 0}</div>
-            <p className="text-xs text-muted-foreground">
-              Total de informes en el sistema
-            </p>
-          </CardContent>
-        </Card>
-        {/* Cards de ejemplo que no dependen de los datos con error */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Suscripciones</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">+350</div>
-            <p className="text-xs text-muted-foreground">+12 desde ayer</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Actividad Reciente
-            </CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">+573</div>
-            <p className="text-xs text-muted-foreground">
-              +20 desde la última hora
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      {/* TARJETAS DE RESUMEN */}
+      <ResumenCards
+        totalUsuarios={totalUsers ?? 0}
+        totalInformes={totalReports ?? 0}
+        informesCompletados={
+          informesRecientesSeguros.filter((i) => i.estado === "completado").length
+        }
+        informesEnProgreso={
+          informesRecientesSeguros.filter((i) => i.estado === "en_progreso").length
+        }
+      />
 
+      {/* GRÁFICO DE ACTIVIDAD */}
+      <AnalyticsChart data={datosGrafico} />
+
+      {/* INFORMES RECIENTES */}
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-7">
         <Card className="lg:col-span-4">
           <CardHeader>
@@ -207,23 +136,25 @@ export default async function AdminPage() {
                 <TableRow>
                   <TableHead>Estudiante</TableHead>
                   <TableHead className="hidden sm:table-cell">Estado</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    ID Autor
-                  </TableHead>
+                  <TableHead className="hidden md:table-cell">ID Autor</TableHead>
                   <TableHead className="text-right">Fecha</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {informesRecientesSeguros.map((report) => (
+                {informesRecientesSeguros.slice(0, 5).map((report) => (
                   <TableRow key={report.id}>
                     <TableCell>
-                      <div className="font-medium">{report.informacion_alumno?.nombre_apellidos || 'No especificado'}</div>
+                      <div className="font-medium">
+                        {report.informacion_alumno?.nombre_apellidos || "No especificado"}
+                      </div>
                       <div className="hidden text-sm text-muted-foreground md:inline">
                         ID: {report.id.substring(0, 8)}...
                       </div>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {getStatusBadge(report.estado)}
+                      <Badge variant="outline" className="capitalize">
+                        {report.estado}
+                      </Badge>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {report.autor_id.substring(0, 8)}...
@@ -238,6 +169,7 @@ export default async function AdminPage() {
           </CardContent>
         </Card>
 
+        {/* TABLA DE USUARIOS */}
         <Card className="lg:col-span-7">
           <CardHeader>
             <CardTitle>Gestión de Usuarios</CardTitle>
