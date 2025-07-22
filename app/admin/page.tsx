@@ -246,7 +246,6 @@ export default async function AdminPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* La data-table ahora recibirá los datos correctos */}
             <DataTable columns={columns} data={allUsers || []} />
           </CardContent>
         </Card>
