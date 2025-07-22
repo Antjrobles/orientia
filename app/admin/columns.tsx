@@ -1,20 +1,13 @@
 'use client'
 
-import { ColumnDef } from '@tanstack/react-table'
-import { MoreHorizontal, ArrowUpDown } from 'lucide-react'
+import { Column, ColumnDef } from '@tanstack/react-table'
+import { ArrowUpDown } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { UserAvatar } from '@/components/ui/avatar'
+import { UserActions } from './user-actions'
 
 // Tipo actualizado para coincidir con el esquema de la tabla 'users'.
 // Se ha eliminado 'created_at'.
@@ -27,7 +20,10 @@ export type User = {
 }
 
 // Componente reutilizable para cabeceras de columna con ordenación
-const DataTableColumnHeader = ({ column, title }: { column: any; title: string }) => {
+const DataTableColumnHeader = <TData, TValue>({
+  column,
+  title,
+}: { column: Column<TData, TValue>; title: string }) => {
   return (
     <Button
       variant="ghost"
@@ -94,29 +90,7 @@ export const columns: ColumnDef<User>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const user = row.original
-      return (
-        <div className="text-right">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Abrir menú</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user.id)}>
-                Copiar ID de usuario
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Ver perfil</DropdownMenuItem>
-              <DropdownMenuItem>Editar rol</DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600">Eliminar usuario</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )
+      return <UserActions user={row.original} />
     },
   },
 ]

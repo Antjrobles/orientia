@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google';
 import { getServerSession } from 'next-auth/next';
 import './globals.css';
 import Providers from '@/components/Providers';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from 'sonner';
 import { authOptions } from '../lib/auth';
 
 const inter = Inter({
@@ -100,7 +100,7 @@ export default async function RootLayout({
     <html lang='es' suppressHydrationWarning>
       <body className={inter.className}>
         <Providers session={session}>{children}</Providers>
-        <Toaster />
+        <Toaster richColors position='top-center' expand={true} />
       </body>
     </html>
   );
