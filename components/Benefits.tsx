@@ -19,21 +19,24 @@ import {
 import Link from "next/link"
 import Image from 'next/image';
 
-
 export default function Benefits() {
   return (
     <section id="beneficios" className="py-20 bg-white" aria-labelledby="benefits-title">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 id="benefits-title" className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-              Beneficios para Orientadores
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
-              Diseñado por y para profesionales de la orientación educativa, nuestro sistema comprende las
-              necesidades específicas de tu trabajo diario.
-            </p>
+        {/* Título centrado para toda la sección */}
+        <div className="text-center mb-16">
+          <h2 id="benefits-title" className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            Beneficios para Orientadores
+          </h2>
+          <p className="text-lg text-gray-600 mb-8 mx-auto max-w-2xl">
+            Diseñado por y para profesionales de la orientación educativa, nuestro sistema comprende las
+            necesidades específicas de tu trabajo diario.
+          </p>
+        </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Contenedor de beneficios */}
+          <div>
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
                 <div

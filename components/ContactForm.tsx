@@ -130,7 +130,7 @@ const ContactForm: React.FC = () => {
             id='province'
             value={form.province}
             onChange={handleChange}
-            className='w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500'
             required>
             <option value=''>Selecciona provincia...</option>
             {locations
@@ -151,7 +151,7 @@ const ContactForm: React.FC = () => {
             value={form.municipality}
             onChange={handleChange}
             disabled={!form.province}
-            className='w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50'
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500 disabled:opacity-50'
             required>
             <option value=''>Selecciona municipio...</option>
             {municipalities
@@ -172,7 +172,7 @@ const ContactForm: React.FC = () => {
             value={form.locality}
             onChange={handleChange}
             disabled={!form.municipality}
-            className='w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50'
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500 disabled:opacity-50'
             required>
             <option value=''>Selecciona localidad...</option>
             {localities
@@ -193,7 +193,7 @@ const ContactForm: React.FC = () => {
             value={form.school}
             onChange={handleChange}
             disabled={!form.locality}
-            className='w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50'
+            className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500 disabled:opacity-50'
             required>
             <option value=''>Selecciona un centro...</option>
             {schools
@@ -210,22 +210,22 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <section id='ContactForm' className='py-8 bg-primary-600 text-white'>
+    <section id='contacto' className='py-10 bg-primary-300 text-white scroll-mt-16'>
       <div className='container mx-auto px-4 md:px-6'>
-        {/* Added 'text-center' here to center the introductory text */}
-        <div className='max-w-4xl mx-auto text-center'>
-          <div className='text-center mb-6'>
+        <div className='max-w-4xl mx-auto'>
+          <div className='text-center mb-8'> {/* Increased margin */}
             <h2 className='text-3xl md:text-4xl text-black font-bold mb-4'>Comienza a transformar tus clases hoy mismo</h2>
             <p className='text-xl text-gray-700 mb-4'>
               Únete a miles de profesores en Andalucía que ya están mejorando la experiencia educativa de sus alumnos
             </p>
           </div>
-          {/* The form container remains centered with mx-auto */}
-          <div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden max-w-2xl mx-auto'>
+          {/* Subtle shadow and slightly less rounded corners for a modern feel */}
+          <div className='bg-white dark:bg-gray-800 rounded-lg  shadow-md overflow-hidden border-2 border-green-600'>
             <div className='p-8 md:p-10'>
-              {/* Added 'text-center' to the title itself for robust centering */}
-              <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 text-center'>Solicita información</h2>
-              <p className='text-gray-600 dark:text-gray-300 mb-6 text-center'>
+              <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 text-center'> {/* Centered title */}
+                Solicita información
+              </h2>
+              <p className='text-gray-600 dark:text-gray-300 mb-6 text-center'> {/* Centered subtitle */}
                 Déjanos tus datos y te contactaremos para mostrarte cómo nuestra plataforma puede ayudarte.
               </p>
               <form onSubmit={handleSubmit}>
@@ -239,7 +239,7 @@ const ContactForm: React.FC = () => {
                       id='name'
                       value={form.name}
                       onChange={handleChange}
-                      className='w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                      className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500'
                       placeholder='Tu nombre'
                       required
                     />
@@ -253,7 +253,7 @@ const ContactForm: React.FC = () => {
                       id='email'
                       value={form.email}
                       onChange={handleChange}
-                      className='w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                      className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500'
                       placeholder='correo@ejemplo.com'
                       required
                     />
@@ -269,19 +269,20 @@ const ContactForm: React.FC = () => {
                     rows={4}
                     value={form.message}
                     onChange={handleChange}
-                    className='w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500'
                     placeholder='Cuéntanos lo que necesitas...'></textarea>
                 </div>
+                {/* Slightly refined button padding and rounded corners */}
                 <button
                   type='submit'
-                  className='w-full bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed'
+                  className='w-full bg-green-600 text-white px-5 py-3 rounded-md font-medium hover:bg-primary-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 focus:ring-offset-white dark:focus:ring-offset-gray-800'
                   disabled={submitStatus === 'loading'}>
                   {submitStatus === 'loading' ? 'Enviando...' : 'Solicitar información'}{' '}
                   <Send className='ml-2 w-5 h-5' />
                 </button>
                 {/* Success Message */}
                 {submitStatus === 'success' && (
-                  <div className='mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg'>
+                  <div className='mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md'>
                     <p className='font-medium'>¡Gracias por tu interés!</p>
                     <p className='text-sm'>
                       Hemos recibido tu solicitud y te contactaremos pronto. También te hemos enviado un email de
@@ -291,7 +292,7 @@ const ContactForm: React.FC = () => {
                 )}
                 {/* Error Message */}
                 {submitStatus === 'error' && (
-                  <div className='mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg'>
+                  <div className='mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md'>
                     <p className='font-medium'>Error al enviar el formulario</p>
                     <p className='text-sm'>Por favor, inténtalo de nuevo o contacta con nosotros directamente.</p>
                   </div>
@@ -301,7 +302,7 @@ const ContactForm: React.FC = () => {
           </div>
           <div className='mt-8 text-center'>
             <p className='text-primary-100 mb-4'>¿Prefieres hablar directamente con nosotros?</p>
-            <a href='tel:+34900123456' className='inline-flex items-center text-white font-medium hover:underline'>
+            <a href='tel:+34900123456' className='inline-flex items-center text-white font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600 rounded'>
               Llámanos al 900 123 456 <ArrowRight className='ml-1 w-4 h-4' />
             </a>
           </div>
