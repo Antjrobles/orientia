@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Send } from 'lucide-react';
 
@@ -32,7 +31,6 @@ const ContactForm: React.FC = () => {
   const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
   const [localities, setLocalities] = useState<Locality[]>([]);
   const [schools, setSchools] = useState<string[]>([]);
-
   const [dataStatus, setDataStatus] = useState<'loading' | 'error' | 'success'>('loading');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -88,21 +86,17 @@ const ContactForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitStatus('loading');
-
     const submissionData = {
       ...form,
       school: `${form.school} (${form.locality}, ${form.municipality}, ${form.province})`,
     };
-
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submissionData),
       });
-
       const result = await res.json();
-
       if (res.ok) {
         setSubmitStatus('success');
         setForm({ name: '', email: '', province: '', municipality: '', locality: '', school: '', message: '' });
@@ -216,19 +210,22 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <section id='ContactForm' className='py-16 md:py-24 bg-primary-600 text-white'>
+    <section id='ContactForm' className='py-8 bg-primary-600 text-white'>
       <div className='container mx-auto px-4 md:px-6'>
-        <div className='max-w-4xl mx-auto'>
-          <div className='text-center mb-8'>
-            <h2 className='text-3xl md:text-4xl font-bold mb-4'>Comienza a transformar tus clases hoy mismo</h2>
-            <p className='text-xl text-primary-100 mb-8'>
+        {/* Added 'text-center' here to center the introductory text */}
+        <div className='max-w-4xl mx-auto text-center'>
+          <div className='text-center mb-6'>
+            <h2 className='text-3xl md:text-4xl text-black font-bold mb-4'>Comienza a transformar tus clases hoy mismo</h2>
+            <p className='text-xl text-gray-700 mb-4'>
               Únete a miles de profesores en Andalucía que ya están mejorando la experiencia educativa de sus alumnos
             </p>
           </div>
-          <div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden'>
+          {/* The form container remains centered with mx-auto */}
+          <div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden max-w-2xl mx-auto'>
             <div className='p-8 md:p-10'>
-              <h3 className='text-2xl font-bold text-gray-900 dark:text-white mb-2'>Solicita información</h3>
-              <p className='text-gray-600 dark:text-gray-300 mb-6'>
+              {/* Added 'text-center' to the title itself for robust centering */}
+              <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 text-center'>Solicita información</h2>
+              <p className='text-gray-600 dark:text-gray-300 mb-6 text-center'>
                 Déjanos tus datos y te contactaremos para mostrarte cómo nuestra plataforma puede ayudarte.
               </p>
               <form onSubmit={handleSubmit}>
@@ -282,7 +279,6 @@ const ContactForm: React.FC = () => {
                   {submitStatus === 'loading' ? 'Enviando...' : 'Solicitar información'}{' '}
                   <Send className='ml-2 w-5 h-5' />
                 </button>
-
                 {/* Success Message */}
                 {submitStatus === 'success' && (
                   <div className='mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg'>
@@ -293,7 +289,6 @@ const ContactForm: React.FC = () => {
                     </p>
                   </div>
                 )}
-
                 {/* Error Message */}
                 {submitStatus === 'error' && (
                   <div className='mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg'>
@@ -304,7 +299,7 @@ const ContactForm: React.FC = () => {
               </form>
             </div>
           </div>
-          <div className='mt-12 text-center'>
+          <div className='mt-8 text-center'>
             <p className='text-primary-100 mb-4'>¿Prefieres hablar directamente con nosotros?</p>
             <a href='tel:+34900123456' className='inline-flex items-center text-white font-medium hover:underline'>
               Llámanos al 900 123 456 <ArrowRight className='ml-1 w-4 h-4' />

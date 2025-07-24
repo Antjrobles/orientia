@@ -43,18 +43,13 @@ export default function Hero() {
               Genera informes psicopedagógicos profesionales con asistencia de IA, optimizando tu tiempo y
               garantizando la calidad técnica
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 font-semibold">
-                Comenzar Ahora
-                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-green-700"
-              >
-                Ver Demostración
-              </Button>
+            <div className="flex justify-center sm:justify-start">
+              <Link href="/register">
+                <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 font-semibold">
+                  Comenzar Ahora
+                  <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
+                </Button>
+              </Link>
             </div>
             <div className="mt-8 flex items-center space-x-6 text-sm text-green-200">
               <div className="flex items-center">
