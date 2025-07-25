@@ -52,7 +52,6 @@ export default function RegisterPage() {
       if (res.ok) {
         setSuccess(true);
         setError('');
-        // Redirigir al login después de 2 segundos para que el usuario vea el mensaje.
         setTimeout(() => {
           router.push('/login?registered=true');
         }, 2000);
@@ -68,7 +67,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className='min-h-screen bg-white font-sans'>
+    <div className='h-screen bg-white font-sans overflow-hidden'>
       <Link
         href='/'
         className='absolute top-4 left-4 z-50 flex items-center gap-2 px-3 py-2 bg-white/80 backdrop-blur-sm rounded-lg border border-gray-200 hover:bg-white transition-all duration-200 shadow-sm'>
@@ -76,40 +75,40 @@ export default function RegisterPage() {
         <span className='text-sm font-medium text-gray-700'>Inicio</span>
       </Link>
 
-      <div className='flex flex-col lg:flex-row w-full min-h-screen'>
+      <div className='flex flex-col lg:flex-row w-full h-full'>
 
-        <div className='pt-16 lg:hidden'></div>
+        <div className='pt-8 lg:hidden'></div>
 
-        {/* ========================================================== */}
-        {/* ========================================================== */}
-
-        <div className='w-full lg:w-1/2 flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8 flex-1'>
+        {/* COLUMNA IZQUIERDA CON MEJORAS SUTILES */}
+        <div className='w-full lg:w-1/2 flex flex-col justify-center items-center p-1 sm:p-2 lg:p-4 flex-1'>
           <div className='w-full max-w-md mx-auto'>
-            <div className='w-full px-4 sm:px-0 mb-8 flex justify-center'>
+            <div className='w-full px-4 sm:px-0 mb-2 flex justify-center'>
               <Image
                 src='/icons/orientia.svg'
                 alt='Logo Orientia'
-                width={240}
-                height={40}
-                className='w-60 h-auto'
+                width={180}
+                height={28}
+                className='w-40 h-auto'
                 priority
               />
             </div>
 
-            <div className='w-full space-y-4'>
+            <div className='w-full space-y-2 transition-all duration-300'>
               <div className='text-center'>
-                <h2 className='text-2xl lg:text-3xl font-bold text-gray-900 tracking-tight'>
+                <h2 className='text-lg lg:text-xl font-bold text-gray-900 tracking-tight'>
                   Crea tu cuenta profesional
                 </h2>
-                <p className='text-gray-500 mt-2'>Tu aliado en psicopedagogía</p>
+                <p className='text-gray-500 mt-0.5 text-sm'>Tu aliado en psicopedagogía</p>
               </div>
-              <div className='bg-white p-6 rounded-lg shadow-sm border border-gray-200'>
-                <div className='space-y-3'>
+
+              {/* BLOQUE DE FORMULARIO CON EFECTO DESTACADO */}
+              <div className='bg-white/90 p-3 rounded-xl shadow-md border border-gray-100 ring-1 ring-transparent hover:ring-emerald-100 focus-within:ring-emerald-200 transition-all'>
+                <div className='space-y-2'>
                   <Button
                     onClick={() => signIn('google', { callbackUrl: '/profile' })}
                     disabled={loading || success}
-                    className='w-full h-10 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
-                    <User className='w-5 h-5 text-emerald-600' />
+                    className='w-full h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
+                    <User className='w-4 h-4 text-emerald-600' />
                     <span>Registrarse con Google</span>
                   </Button>
                   <div className='flex items-center'>
@@ -117,11 +116,11 @@ export default function RegisterPage() {
                     <span className='px-3 text-xs text-gray-400'>o con tu correo</span>
                     <div className='flex-grow border-t border-gray-200'></div>
                   </div>
-                  <form onSubmit={handleRegister} className='space-y-3'>
+                  <form onSubmit={handleRegister} className='space-y-1.5'>
                     <div>
                       <Label
                         htmlFor='name'
-                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'>
+                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-0.5'>
                         <UserPlus className='w-4 h-4 text-emerald-600' /> Nombre completo
                       </Label>
                       <Input
@@ -132,13 +131,13 @@ export default function RegisterPage() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         disabled={loading || success}
-                        className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
+                        className='h-8 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
                       />
                     </div>
                     <div>
                       <Label
                         htmlFor='email'
-                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'>
+                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-0.5'>
                         <Mail className='w-4 h-4 text-emerald-600' /> Correo electrónico
                       </Label>
                       <Input
@@ -149,13 +148,13 @@ export default function RegisterPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         disabled={loading || success}
-                        className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
+                        className='h-8 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
                       />
                     </div>
                     <div>
                       <Label
                         htmlFor='password'
-                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'>
+                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-0.5'>
                         <Key className='w-4 h-4 text-emerald-600' /> Contraseña
                       </Label>
                       <Input
@@ -166,13 +165,13 @@ export default function RegisterPage() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         disabled={loading || success}
-                        className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
+                        className='h-8 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
                       />
                     </div>
                     <Button
                       type='submit'
                       disabled={loading || success}
-                      className='w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm'>
+                      className='w-full h-8 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm'>
                       {loading ? (
                         <>
                           <Loader2 className='w-4 h-4 animate-spin' />
@@ -207,7 +206,7 @@ export default function RegisterPage() {
                   )}
                 </div>
               </div>
-              <div className='text-center text-xs text-gray-400 flex flex-wrap justify-center items-center gap-x-2 gap-y-1'>
+              <div className='text-center text-xs text-gray-400 flex flex-wrap justify-center items-center gap-x-1 gap-y-1'>
                 <Link href='/login' className='text-emerald-600 hover:underline font-medium'>
                   ¿Ya tienes cuenta? Inicia sesión
                 </Link>
@@ -228,18 +227,16 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* ========================================================== */}
-        {/*                      COLUMNA DERECHA                       */}
-        {/* ========================================================== */}
-        <div className='hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-gradient-to-br from-emerald-600 to-teal-800 text-white p-6 relative h-screen'>
+        {/* COLUMNA DERECHA INTACTA */}
+        <div className='hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-gradient-to-br from-emerald-600 to-teal-800 text-white p-6 relative h-full'>
           <Image
-            src='/images/background.jpg' // <-- ¡CAMBIA ESTO A LA RUTA DE TU IMAGEN!
+            src='/images/background.jpg'
             alt='Fondo de la plataforma de psicopedagogía'
             fill
             className='object-cover z-0 opacity-40 blur-xs'
           />
           <div className='absolute -top-5 -right-20 w-64 h-64 bg-teal-500/20 rounded-full blur-xs'></div>
-          <div className='relative z-10 w-full max-w-md space-y-10'>
+          <div className='relative z-10 w-full max-w-md space-y-6'>
             <div className='text-center'>
               <Link href='/' aria-label='Volver a la página de inicio' className='inline-block mb-1'>
                 <Image
@@ -247,7 +244,7 @@ export default function RegisterPage() {
                   alt='Logo Orientia'
                   width={169}
                   height={46}
-                  className='w-[200px] h-auto mx-auto'
+                  className='w-[180px] h-auto mx-auto'
                 />
               </Link>
               <p className='text-sm font-medium text-emerald-100'>
@@ -255,35 +252,30 @@ export default function RegisterPage() {
               </p>
             </div>
             <div className='text-center'>
-              <h2 className='text-2xl font-bold leading-tight mb-2'>Transforma tu manera de evaluar y orientar</h2>
+              <h2 className='text-xl font-bold leading-tight mb-2'>Transforma tu manera de evaluar y orientar</h2>
               <p className='text-emerald-100/90 text-sm leading-relaxed'>
                 Crea reportes psicopedagógicos completos, realiza análisis profundos y sigue el progreso de tus
                 estudiantes con herramientas diseñadas para ti.
               </p>
             </div>
             <div className='grid grid-cols-2 gap-3'>
-              {[
-                {
-                  icon: <BookOpen className='w-5 h-5 text-emerald-300' />,
-                  title: 'Reportes Inteligentes',
-                  description: 'Genera informes completos y personalizados.',
-                },
-                {
-                  icon: <Lightbulb className='w-5 h-5 text-emerald-300' />,
-                  title: 'Análisis Profundo',
-                  description: 'Obtén insights valiosos para cada estudiante.',
-                },
-                {
-                  icon: <BarChart2 className='w-5 h-5 text-emerald-300' />,
-                  title: 'Seguimiento de Progreso',
-                  description: 'Visualiza la evolución académica y conductual.',
-                },
-                {
-                  icon: <Shield className='w-5 h-5 text-emerald-300' />,
-                  title: 'Seguridad y Privacidad',
-                  description: 'Tus datos y los de tus estudiantes, protegidos.',
-                },
-              ].map(({ icon, title, description }, i) => (
+              {[{
+                icon: <BookOpen className='w-5 h-5 text-emerald-300' />,
+                title: 'Reportes Inteligentes',
+                description: 'Genera informes completos y personalizados.',
+              }, {
+                icon: <Lightbulb className='w-5 h-5 text-emerald-300' />,
+                title: 'Análisis Profundo',
+                description: 'Obtén insights valiosos para cada estudiante.',
+              }, {
+                icon: <BarChart2 className='w-5 h-5 text-emerald-300' />,
+                title: 'Seguimiento de Progreso',
+                description: 'Visualiza la evolución académica y conductual.',
+              }, {
+                icon: <Shield className='w-5 h-5 text-emerald-300' />,
+                title: 'Seguridad y Privacidad',
+                description: 'Tus datos y los de tus estudiantes, protegidos.',
+              }].map(({ icon, title, description }, i) => (
                 <div
                   key={i}
                   className='bg-white/10 backdrop-blur-sm p-3 rounded-lg border border-white/20 transition-all hover:bg-white/15'>
