@@ -15,14 +15,13 @@ const sidebarNavItems = [
   },
   {
     title: "Nuevo Informe",
-    href: "/nuevo-informe",
+    href: "/profile/nuevo-informe",
     icon: <FilePlus2 className="h-4 w-4 mr-2" />,
   },
   {
     title: "Mis Informes",
     href: "/profile/informes",
     icon: <FolderKanban className="h-4 w-4 mr-2" />,
-    disabled: true, // Deshabilitado por ahora
   },
 ]
 
@@ -43,14 +42,11 @@ export function ProfileSidebar() {
                 variant: "ghost",
               }),
               // Mejora: El botón activo ahora es verde para ser consistente con el tema.
-              pathname === item.href
+              pathname === item.href || (item.href !== "/profile" && pathname.startsWith(item.href))
                 ? "bg-green-600 text-white hover:bg-green-700"
                 : "hover:bg-gray-100",
-              "w-full justify-start",
-              item.disabled && "cursor-not-allowed opacity-50"
+              "w-full justify-start"
             )}
-            aria-disabled={item.disabled}
-            onClick={(e) => item.disabled && e.preventDefault()}
           >
             {item.icon}
             {item.title}

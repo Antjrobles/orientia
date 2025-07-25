@@ -31,3 +31,5 @@ CLAUDE.md
 # Vscode
 /.vscode/settings.json
 
+# Kiro
+./kiro/*

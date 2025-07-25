@@ -57,19 +57,27 @@ export default function ProfileHeader() {
                 Panel Principal
               </Link>
               <Link
-                href="/nuevo-informe"
+                href="/profile/nuevo-informe"
                 className={cn(
                   "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                  pathname.startsWith("/nuevo-informe")
+                  pathname.startsWith("/profile/nuevo-informe")
                     ? "text-green-600 bg-green-50 font-semibold"
                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 )}
               >
                 Nuevo Informe
               </Link>
-              <span className="px-3 py-2 rounded-md text-sm font-medium text-gray-400 cursor-not-allowed">
+              <Link
+                href="/profile/informes"
+                className={cn(
+                  "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  pathname.startsWith("/profile/informes")
+                    ? "text-green-600 bg-green-50 font-semibold"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                )}
+              >
                 Mis Informes
-              </span>
+              </Link>
               {isAdmin && (
                 <Link
                   href="/admin"
@@ -145,10 +153,10 @@ export default function ProfileHeader() {
                     Panel Principal
                   </Link>
                   <Link
-                    href="/nuevo-informe"
+                    href="/profile/nuevo-informe"
                     className={cn(
                       "block px-4 py-3 rounded-md text-base font-medium transition-colors",
-                      pathname.startsWith("/nuevo-informe")
+                      pathname.startsWith("/profile/nuevo-informe")
                         ? "text-green-600 bg-green-50 font-semibold"
                         : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                     )}
@@ -156,12 +164,18 @@ export default function ProfileHeader() {
                   >
                     Nuevo Informe
                   </Link>
-                  <span
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-400 cursor-not-allowed"
-                    aria-disabled="true"
+                  <Link
+                    href="/profile/informes"
+                    className={cn(
+                      "block px-4 py-3 rounded-md text-base font-medium transition-colors",
+                      pathname.startsWith("/profile/informes")
+                        ? "text-green-600 bg-green-50 font-semibold"
+                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Mis Informes
-                  </span>
+                  </Link>
                   {isAdmin && (
                     <Link
                       href="/admin"
