@@ -32,4 +32,4 @@ CLAUDE.md
 /.vscode/settings.json
 
 # Kiro
-./kiro/*
+.kiro/
