@@ -75,9 +75,24 @@ export function InformeCompletoForm({ onSubmit, isLoading }: InformeCompletoForm
   const handleInputChange = (field: string, value: string | number) => {
     const keys = field.split('.');
 
-    // Protección contra prototype pollution
-    const dangerousKeys = ['__proto__', 'constructor', 'prototype'];
-    if (keys.some(k => dangerousKeys.includes(k.trim().toLowerCase()))) {
+    // Protección robusta contra prototype pollution
+    function isPrototypePollutingKeyChain(keys: string[]): boolean {
+      const dangerous = ['__proto__', 'constructor', 'prototype'];
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i].trim().toLowerCase();
+        if (dangerous.includes(key)) return true;
+        // Check for dangerous property chains like constructor.prototype
+        if (
+          i < keys.length - 1 &&
+          key === 'constructor' &&
+          keys[i + 1].trim().toLowerCase() === 'prototype'
+        ) {
+          return true;
+        }
+      }
+      return false;
+    }
+    if (isPrototypePollutingKeyChain(keys)) {
       console.warn('Intento de prototype pollution bloqueado:', keys);
       return;
     }
