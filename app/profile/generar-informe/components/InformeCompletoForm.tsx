@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 export interface InformeCompletoData {
-  // Datos identificativos
   alumno: {
     nombre: string;
     fecha_nacimiento: string;
@@ -21,8 +20,6 @@ export interface InformeCompletoData {
   };
   tutores: string[];
   etapa_escolar: string;
-
-  // Información adicional
   edad: number;
   motivo_consulta: string;
   observaciones: string;
@@ -57,37 +54,14 @@ export function InformeCompletoForm({ onSubmit, isLoading }: InformeCompletoForm
   const validateForm = (): boolean => {
     const newErrors: any = {};
 
-    if (!formData.alumno.nombre.trim()) {
-      newErrors.nombre = 'El nombre es requerido';
-    }
-
-    if (!formData.alumno.fecha_nacimiento) {
-      newErrors.fecha_nacimiento = 'La fecha de nacimiento es requerida';
-    }
-
-    if (!formData.alumno.curso.trim()) {
-      newErrors.curso = 'El curso es requerido';
-    }
-
-    if (!formData.centro.nombre.trim()) {
-      newErrors.centro_nombre = 'El nombre del centro es requerido';
-    }
-
-    if (!formData.centro.localidad.trim()) {
-      newErrors.centro_localidad = 'La localidad es requerida';
-    }
-
-    if (!formData.etapa_escolar.trim()) {
-      newErrors.etapa_escolar = 'La etapa escolar es requerida';
-    }
-
-    if (!formData.edad || formData.edad < 3 || formData.edad > 25) {
-      newErrors.edad = 'La edad debe estar entre 3 y 25 años';
-    }
-
-    if (!formData.motivo_consulta.trim()) {
-      newErrors.motivo_consulta = 'El motivo de consulta es requerido';
-    }
+    if (!formData.alumno.nombre.trim()) newErrors.nombre = 'El nombre es requerido';
+    if (!formData.alumno.fecha_nacimiento) newErrors.fecha_nacimiento = 'La fecha de nacimiento es requerida';
+    if (!formData.alumno.curso.trim()) newErrors.curso = 'El curso es requerido';
+    if (!formData.centro.nombre.trim()) newErrors.centro_nombre = 'El nombre del centro es requerido';
+    if (!formData.centro.localidad.trim()) newErrors.centro_localidad = 'La localidad es requerida';
+    if (!formData.etapa_escolar.trim()) newErrors.etapa_escolar = 'La etapa escolar es requerida';
+    if (!formData.edad || formData.edad < 3 || formData.edad > 25) newErrors.edad = 'La edad debe estar entre 3 y 25 años';
+    if (!formData.motivo_consulta.trim()) newErrors.motivo_consulta = 'El motivo de consulta es requerido';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -95,14 +69,18 @@ export function InformeCompletoForm({ onSubmit, isLoading }: InformeCompletoForm
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (validateForm()) {
-      onSubmit(formData);
-    }
+    if (validateForm()) onSubmit(formData);
   };
 
   const handleInputChange = (field: string, value: string | number) => {
     const keys = field.split('.');
+
+    // Protección contra prototype pollution
+    const dangerousKeys = ['__proto__', 'constructor', 'prototype'];
+    if (keys.some(k => dangerousKeys.includes(k))) {
+      console.warn('Intento de prototype pollution bloqueado:', keys);
+      return;
+    }
 
     setFormData(prev => {
       const newData = { ...prev };
@@ -116,7 +94,6 @@ export function InformeCompletoForm({ onSubmit, isLoading }: InformeCompletoForm
       return newData;
     });
 
-    // Limpiar error del campo
     if (errors[field]) {
       setErrors((prev: any) => ({
         ...prev,
@@ -153,7 +130,6 @@ export function InformeCompletoForm({ onSubmit, isLoading }: InformeCompletoForm
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
-
           {/* Datos del Alumno */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">Datos del Alumno</h3>
