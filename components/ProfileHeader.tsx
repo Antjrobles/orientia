@@ -57,10 +57,10 @@ export default function ProfileHeader() {
                 Panel Principal
               </Link>
               <Link
-                href="/profile/nuevo-informe"
+                href="/profile/generar-informe"
                 className={cn(
                   "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                  pathname.startsWith("/profile/nuevo-informe")
+                  pathname.startsWith("/profile/generar-informe")
                     ? "text-green-600 bg-green-50 font-semibold"
                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 )}
@@ -153,10 +153,10 @@ export default function ProfileHeader() {
                     Panel Principal
                   </Link>
                   <Link
-                    href="/profile/nuevo-informe"
+                    href="/profile/generar-informe"
                     className={cn(
                       "block px-4 py-3 rounded-md text-base font-medium transition-colors",
-                      pathname.startsWith("/profile/nuevo-informe")
+                      pathname.startsWith("/profile/generar-informe")
                         ? "text-green-600 bg-green-50 font-semibold"
                         : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                     )}

@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${baseUrl}/nuevo-informe`,
+      url: `${baseUrl}/profile/generar-informe`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,

@@ -1,8 +1,7 @@
 'use client'
 
-import { Suspense, useState } from 'react';
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
+import { Suspense, useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { Search, Filter, FileText, Eye, Edit, Copy, Trash2, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,55 +9,55 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
-import Spinner from '@/components/Spinner';
 
-// Datos de ejemplo - en producción vendrían de la base de datos
-const informesEjemplo = [
-  {
-    id: '1',
-    alumno: 'María García López',
-    centro: 'CEIP San José',
-    curso: '3º Primaria',
-    estado: 'completado',
-    fechaCreacion: '2024-01-15',
-    fechaModificacion: '2024-01-20',
-    motivoConsulta: 'Dificultades en el aprendizaje de la lectoescritura. La alumna presenta problemas para...'
-  },
-  {
-    id: '2',
-    alumno: 'Carlos Ruiz Martín',
-    centro: 'IES Andalucía',
-    curso: '1º ESO',
-    estado: 'borrador',
-    fechaCreacion: '2024-01-22',
-    fechaModificacion: '2024-01-22',
-    motivoConsulta: 'Problemas de conducta en el aula. El alumno muestra comportamientos disruptivos...'
-  },
-  {
-    id: '3',
-    alumno: 'Ana Fernández Silva',
-    centro: 'CEIP Cervantes',
-    curso: '5º Primaria',
-    estado: 'completado',
-    fechaCreacion: '2024-01-10',
-    fechaModificacion: '2024-01-18',
-    motivoConsulta: 'Evaluación de altas capacidades. La alumna destaca significativamente en...'
-  }
-];
 
 function InformesContent() {
+  const { data: session } = useSession();
   const [busqueda, setBusqueda] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('todos');
-  const [informes] = useState(informesEjemplo);
+  const [informes, setInformes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchInformes = async () => {
+      try {
+        const response = await fetch('/api/informes/list');
+        const data = await response.json();
+
+        if (data.success) {
+          setInformes(data.informes);
+        }
+      } catch (error) {
+        console.error('Error al cargar informes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (session) {
+      fetchInformes();
+    }
+  }, [session]);
 
   // Filtrar informes
   const informesFiltrados = informes.filter(informe => {
-    const coincideBusqueda = informe.alumno.toLowerCase().includes(busqueda.toLowerCase()) ||
-      informe.centro.toLowerCase().includes(busqueda.toLowerCase());
+    const alumnoNombre = informe.datos_identificativos?.alumno?.nombre || '';
+    const centroNombre = informe.datos_identificativos?.centro?.nombre || '';
+
+    const coincideBusqueda = alumnoNombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+      centroNombre.toLowerCase().includes(busqueda.toLowerCase());
     const coincideEstado = filtroEstado === 'todos' || informe.estado === filtroEstado;
 
     return coincideBusqueda && coincideEstado;
   });
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   const getEstadoBadge = (estado: string) => {
     switch (estado) {
@@ -88,7 +87,7 @@ function InformesContent() {
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">No tienes informes creados</h3>
           <p className="text-gray-500 mb-6">Comienza creando tu primer informe psicopedagógico</p>
-          <Link href="/profile/nuevo-informe">
+          <Link href="/profile/generar-informe">
             <Button className="bg-green-600 hover:bg-green-700">
               <Plus className="h-4 w-4 mr-2" />
               Crear Nuevo Informe
@@ -110,7 +109,7 @@ function InformesContent() {
               Gestiona todos tus informes psicopedagógicos
             </p>
           </div>
-          <Link href="/profile/nuevo-informe">
+          <Link href="/profile/generar-informe">
             <Button className="bg-green-600 hover:bg-green-700">
               <Plus className="h-4 w-4 mr-2" />
               Nuevo Informe
@@ -166,10 +165,10 @@ function InformesContent() {
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-1">
-                        {informe.alumno}
+                        {informe.datos_identificativos?.alumno?.nombre || 'Sin nombre'}
                       </CardTitle>
                       <p className="text-sm text-muted-foreground mt-1">
-                        {informe.centro} • {informe.curso}
+                        {informe.datos_identificativos?.centro?.nombre || 'Sin centro'} • {informe.datos_identificativos?.alumno?.curso || 'Sin curso'}
                       </p>
                     </div>
                     <div className="ml-2">
@@ -180,12 +179,12 @@ function InformesContent() {
                 <CardContent className="pt-0">
                   <div className="space-y-3">
                     <p className="text-sm text-gray-600 line-clamp-2">
-                      {informe.motivoConsulta}
+                      {informe.evaluacion_psicopedagogica?.motivo_consulta || 'Sin motivo especificado'}
                     </p>
 
                     <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>Creado: {formatearFecha(informe.fechaCreacion)}</span>
-                      <span>Modificado: {formatearFecha(informe.fechaModificacion)}</span>
+                      <span>Creado: {formatearFecha(informe.creado_en)}</span>
+                      <span>Modificado: {formatearFecha(informe.actualizado_en)}</span>
                     </div>
 
                     <div className="flex gap-2 pt-2">
@@ -217,7 +216,11 @@ function InformesContent() {
 
 export default function InformesPage() {
   return (
-    <Suspense fallback={<Spinner />}>
+    <Suspense fallback={
+      <div className="flex justify-center items-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    }>
       <InformesContent />
     </Suspense>
   );

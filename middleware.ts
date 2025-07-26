@@ -6,7 +6,7 @@ import { getToken } from 'next-auth/jwt'
  * Rutas que requieren que el usuario esté autenticado.
  * Cualquier ruta que comience con estos prefijos estará protegida.
  */
-const PROTECTED_ROUTES = ['/profile', '/nuevo-informe']
+const PROTECTED_ROUTES = ['/profile', '/profile/generar-informe']
 
 const AUTH_ROUTES = ['/login', '/register']
 

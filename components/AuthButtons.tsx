@@ -66,10 +66,10 @@ export default function AuthButtons({ className }: AuthButtonsProps) {
             </DropdownMenuItem>
             {/* Añadido: Acción principal dentro del menú */}
             <DropdownMenuItem asChild>
-              <Link href="/nuevo-informe"><FilePlus2 className="mr-2 h-4 w-4" /><span>Nuevo Informe</span></Link>
+              <Link href="/profile/generar-informe"><FilePlus2 className="mr-2 h-4 w-4" /><span>Nuevo Informe</span></Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/#" className="cursor-not-allowed opacity-50"><FolderKanban className="mr-2 h-4 w-4" /><span>Mis Informes</span></Link>
+              <Link href="/profile/informes"><FolderKanban className="mr-2 h-4 w-4" /><span>Mis Informes</span></Link>
             </DropdownMenuItem>
             {session.user.role === 'admin' && (
               <DropdownMenuItem asChild>

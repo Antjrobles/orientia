@@ -15,7 +15,7 @@ const sidebarNavItems = [
   },
   {
     title: "Nuevo Informe",
-    href: "/profile/nuevo-informe",
+    href: "/profile/generar-informe",
     icon: <FilePlus2 className="h-4 w-4 mr-2" />,
   },
   {
