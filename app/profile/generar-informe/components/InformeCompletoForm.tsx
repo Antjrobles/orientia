@@ -75,24 +75,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: InformeCompletoForm
   const handleInputChange = (field: string, value: string | number) => {
     const keys = field.split('.');
 
-    // Protección robusta contra prototype pollution
-    function isPrototypePollutingKeyChain(keys: string[]): boolean {
-      const dangerous = ['__proto__', 'constructor', 'prototype'];
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i].trim().toLowerCase();
-        if (dangerous.includes(key)) return true;
-        // Check for dangerous property chains like constructor.prototype
-        if (
-          i < keys.length - 1 &&
-          key === 'constructor' &&
-          keys[i + 1].trim().toLowerCase() === 'prototype'
-        ) {
-          return true;
-        }
-      }
-      return false;
-    }
-    if (isPrototypePollutingKeyChain(keys)) {
+    const isPollutingKey = (key: string) => {
+      const normalized = key.toLowerCase().replace(/[\s\u0000]/g, '');
+      return (
+        normalized === '__proto__' ||
+        normalized === 'prototype' ||
+        normalized === 'constructor'
+      );
+    };
+
+    if (keys.some(isPollutingKey)) {
       console.warn('Intento de prototype pollution bloqueado:', keys);
       return;
     }
@@ -102,10 +94,21 @@ export function InformeCompletoForm({ onSubmit, isLoading }: InformeCompletoForm
       let current: any = newData;
 
       for (let i = 0; i < keys.length - 1; i++) {
-        current = current[keys[i]];
+        const k = keys[i];
+        if (isPollutingKey(k)) {
+          console.warn('Prototype pollution bloqueado durante la asignación:', k);
+          return prev;
+        }
+        current = current[k];
       }
 
-      current[keys[keys.length - 1]] = value;
+      const lastKey = keys[keys.length - 1];
+      if (isPollutingKey(lastKey)) {
+        console.warn('Prototype pollution bloqueado en la última clave:', lastKey);
+        return prev;
+      }
+
+      current[lastKey] = value;
       return newData;
     });
 
@@ -145,6 +148,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: InformeCompletoForm
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
+
           {/* Datos del Alumno */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">Datos del Alumno</h3>
