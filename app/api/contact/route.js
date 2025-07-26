@@ -1,4 +1,5 @@
 import Plunk from '@plunk/node';
+import validator from 'validator';
 import { NextResponse } from 'next/server';
 
 const plunk = new Plunk(process.env.PLUNK_API_KEY);
@@ -13,8 +14,9 @@ export async function POST(request) {
     }
 
     // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    //const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!validator.isEmail(email)) {
       return NextResponse.json({ message: 'El email proporcionado no es válido' }, { status: 400 });
     }
 
