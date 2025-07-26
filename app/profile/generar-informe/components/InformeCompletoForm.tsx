@@ -77,7 +77,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: InformeCompletoForm
 
     // Protección contra prototype pollution
     const dangerousKeys = ['__proto__', 'constructor', 'prototype'];
-    if (keys.some(k => dangerousKeys.includes(k))) {
+    if (keys.some(k => dangerousKeys.includes(k.trim().toLowerCase()))) {
       console.warn('Intento de prototype pollution bloqueado:', keys);
       return;
     }
