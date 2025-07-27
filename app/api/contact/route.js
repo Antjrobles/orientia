@@ -14,8 +14,6 @@ export async function POST(request) {
     }
 
     // Email validation
-    //const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!validator.isEmail(email)) {
       return NextResponse.json({ message: 'El email proporcionado no es válido' }, { status: 400 });
     }

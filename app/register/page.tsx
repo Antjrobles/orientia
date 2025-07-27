@@ -23,15 +23,21 @@ import {
   BarChart2,
   Shield,
   Home,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(true);
   const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -39,6 +45,18 @@ export default function RegisterPage() {
     setLoading(true);
     setError('');
     setSuccess(false);
+
+    if (!passwordMatch) {
+      setError('Las contraseñas no coinciden');
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch('/api/register', {
@@ -76,24 +94,23 @@ export default function RegisterPage() {
       </Link>
 
       <div className='flex flex-col lg:flex-row w-full h-full'>
+        <div className='pt-16 lg:hidden'></div>
 
-        <div className='pt-8 lg:hidden'></div>
-
-        {/* COLUMNA IZQUIERDA CON MEJORAS SUTILES */}
+        {/* COLUMNA IZQUIERDA */}
         <div className='w-full lg:w-1/2 flex flex-col justify-center items-center p-1 sm:p-2 lg:p-4 flex-1'>
           <div className='w-full max-w-md mx-auto'>
-            <div className='w-full px-4 sm:px-0 mb-2 flex justify-center'>
+            <div className='w-full px-4 sm:px-0 mb-4 sm:mb-2 flex justify-center'>
               <Image
                 src='/icons/orientia.svg'
                 alt='Logo Orientia'
                 width={180}
                 height={28}
-                className='w-40 h-auto'
+                className='w-32 sm:w-40 h-auto'
                 priority
               />
             </div>
 
-            <div className='w-full space-y-2 transition-all duration-300'>
+            <div className='w-full space-y-1 sm:space-y-2 transition-all duration-300'>
               <div className='text-center'>
                 <h2 className='text-lg lg:text-xl font-bold text-gray-900 tracking-tight'>
                   Crea tu cuenta profesional
@@ -101,77 +118,129 @@ export default function RegisterPage() {
                 <p className='text-gray-500 mt-0.5 text-sm'>Tu aliado en psicopedagogía</p>
               </div>
 
-              {/* BLOQUE DE FORMULARIO CON EFECTO DESTACADO */}
-              <div className='bg-white/90 p-3 rounded-xl shadow-md border border-gray-100 ring-1 ring-transparent hover:ring-emerald-100 focus-within:ring-emerald-200 transition-all'>
-                <div className='space-y-2'>
+              <div className='bg-white/90 p-2 sm:p-3 rounded-xl shadow-md border border-gray-100 ring-1 ring-transparent hover:ring-emerald-100 focus-within:ring-emerald-200 transition-all'>
+                <div className='space-y-1 sm:space-y-2'>
                   <Button
                     onClick={() => signIn('google', { callbackUrl: '/profile' })}
                     disabled={loading || success}
-                    className='w-full h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
+                    className='w-full h-7 sm:h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
                     <User className='w-4 h-4 text-emerald-600' />
                     <span>Registrarse con Google</span>
                   </Button>
+
                   <div className='flex items-center'>
                     <div className='flex-grow border-t border-gray-200'></div>
                     <span className='px-3 text-xs text-gray-400'>o con tu correo</span>
                     <div className='flex-grow border-t border-gray-200'></div>
                   </div>
-                  <form onSubmit={handleRegister} className='space-y-1.5'>
+
+                  <form onSubmit={handleRegister} className='space-y-1 sm:space-y-1.5'>
                     <div>
                       <Label
                         htmlFor='name'
-                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-0.5'>
+                        className='text-gray-900 text-sm font-bold flex items-center gap-1.5 mb-0.5'>
                         <UserPlus className='w-4 h-4 text-emerald-600' /> Nombre completo
                       </Label>
                       <Input
                         id='name'
                         type='text'
-                        placeholder='Tu nombre y apellidos'
+                        placeholder='Escribe tu nombre...'
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         disabled={loading || success}
-                        className='h-8 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
+                        className='h-9 sm:h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400/50 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
                       />
                     </div>
+
                     <div>
                       <Label
                         htmlFor='email'
-                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-0.5'>
+                        className='text-gray-900 text-sm font-bold flex items-center gap-1.5 mb-0.5'>
                         <Mail className='w-4 h-4 text-emerald-600' /> Correo electrónico
                       </Label>
                       <Input
                         id='email'
                         type='email'
-                        placeholder='tu@institucion.edu'
+                        placeholder='ejemplo@correo.com'
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         disabled={loading || success}
-                        className='h-8 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
+                        className='h-9 sm:h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400/50 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
                       />
                     </div>
+
                     <div>
                       <Label
                         htmlFor='password'
-                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-0.5'>
+                        className='text-gray-900 text-sm font-bold flex items-center gap-1.5 mb-0.5'>
                         <Key className='w-4 h-4 text-emerald-600' /> Contraseña
                       </Label>
-                      <Input
-                        id='password'
-                        type='password'
-                        placeholder='Mínimo 6 caracteres'
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        disabled={loading || success}
-                        className='h-8 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
-                      />
+                      <div className="relative">
+                        <Input
+                          id='password'
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder='••••••••'
+                          required
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                            if (confirmPassword) {
+                              setPasswordMatch(e.target.value === confirmPassword);
+                            }
+                          }}
+                          disabled={loading || success}
+                          className='h-9 sm:h-10 bg-gray-50 border-gray-200 rounded-lg px-3 pr-10 text-gray-800 placeholder-gray-400/50 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
                     </div>
+
+                    <div>
+                      <Label
+                        htmlFor='confirmPassword'
+                        className='text-gray-900 text-sm font-bold flex items-center gap-1.5 mb-0.5'>
+                        <Key className='w-4 h-4 text-emerald-600' /> Confirmar contraseña
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id='confirmPassword'
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          placeholder='••••••••'
+                          required
+                          value={confirmPassword}
+                          onChange={(e) => {
+                            setConfirmPassword(e.target.value);
+                            setPasswordMatch(password === e.target.value);
+                          }}
+                          disabled={loading || success}
+                          className={`h-9 sm:h-10 bg-gray-50 border-gray-200 rounded-lg px-3 pr-10 text-gray-800 placeholder-gray-400/50 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm ${confirmPassword && !passwordMatch ? 'border-red-300 focus:border-red-400 focus:ring-red-300' : ''
+                            }`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                      {confirmPassword && !passwordMatch && (
+                        <p className="text-xs text-red-500 mt-1">Las contraseñas no coinciden</p>
+                      )}
+                    </div>
+
                     <Button
                       type='submit'
                       disabled={loading || success}
-                      className='w-full h-8 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm'>
+                      className='w-full h-9 sm:h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm'>
                       {loading ? (
                         <>
                           <Loader2 className='w-4 h-4 animate-spin' />
@@ -190,12 +259,14 @@ export default function RegisterPage() {
                       )}
                     </Button>
                   </form>
+
                   {error && (
                     <Alert variant='destructive' className='rounded-lg flex items-center gap-2 px-3 py-2'>
                       <AlertCircle className='h-4 w-4 text-red-600' />
                       <AlertDescription className='text-red-700 text-sm font-medium'>{error}</AlertDescription>
                     </Alert>
                   )}
+
                   {success && (
                     <Alert className='bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2 px-3 py-2'>
                       <CheckCircle className='h-4 w-4 text-emerald-600' />
@@ -206,6 +277,7 @@ export default function RegisterPage() {
                   )}
                 </div>
               </div>
+
               <div className='text-center text-xs text-gray-400 flex flex-wrap justify-center items-center gap-x-1 gap-y-1'>
                 <Link href='/login' className='text-emerald-600 hover:underline font-medium'>
                   ¿Ya tienes cuenta? Inicia sesión
@@ -218,16 +290,12 @@ export default function RegisterPage() {
                 <a href='#' className='hover:underline'>
                   Privacidad
                 </a>
-                <span className='hidden sm:inline'>•</span>
-                <a href='#' className='hover:underline'>
-                  Ayuda
-                </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* COLUMNA DERECHA INTACTA */}
+        {/* COLUMNA DERECHA - SOLO EN DESKTOP */}
         <div className='hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-gradient-to-br from-emerald-600 to-teal-800 text-white p-6 relative h-full'>
           <Image
             src='/images/background.jpg'
