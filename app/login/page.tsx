@@ -22,6 +22,8 @@ import {
   BarChart2,
   Shield,
   Home,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -32,6 +34,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [justRegistered, setJustRegistered] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     // Comprobar si el usuario viene de la página de registro
@@ -56,9 +59,11 @@ export default function LoginPage() {
     setLoading(false);
 
     if (result?.error) {
-      // NextAuth devuelve "CredentialsSignin" como error genérico.
-      // Mostramos un mensaje más amigable.
-      setError('Email o contraseña incorrectos. Por favor, verifica tus datos.');
+      if (result.error === 'EMAIL_NOT_VERIFIED') {
+        setError('Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.');
+      } else {
+        setError('Email o contraseña incorrectos. Por favor, verifica tus datos.');
+      }
     } else if (result?.ok) {
       // El inicio de sesión fue exitoso, redirigir al perfil.
       router.push('/profile');
@@ -141,16 +146,25 @@ export default function LoginPage() {
                         className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'>
                         <Key className='w-4 h-4 text-emerald-600' /> Contraseña
                       </Label>
-                      <Input
-                        id='password'
-                        type='password'
-                        placeholder='Tu contraseña'
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        disabled={loading}
-                        className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
-                      />
+                      <div className="relative">
+                        <Input
+                          id='password'
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder='Tu contraseña'
+                          required
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          disabled={loading}
+                          className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 pr-10 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
                     </div>
                     <Button
                       type='submit'

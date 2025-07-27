@@ -72,7 +72,7 @@ export default function RegisterPage() {
         setError('');
         setTimeout(() => {
           router.push('/login?registered=true');
-        }, 2000);
+        }, 5000);
       } else {
         const errorText = await res.text();
         setError(errorText || 'Ocurrió un error durante el registro.');

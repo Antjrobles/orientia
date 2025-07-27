@@ -28,7 +28,7 @@ export const authOptions: AuthOptions = {
 
         const { data: user } = await supabase
           .from('users')
-          .select('*, hashed_password') // Asegúrate de seleccionar la nueva columna
+          .select('*, hashed_password, emailVerified') // Incluir emailVerified
           .eq('email', credentials.email)
           .single();
 
@@ -37,6 +37,12 @@ export const authOptions: AuthOptions = {
         if (!user || !user.hashed_password) {
           console.log('[Authorize] Usuario no encontrado o sin contraseña.');
           return null;
+        }
+
+        // Verificar si el email está verificado (solo para usuarios con contraseña)
+        if (!user.emailVerified) {
+          console.log('[Authorize] Email no verificado.');
+          throw new Error('EMAIL_NOT_VERIFIED');
         }
 
         const passwordsMatch = await bcrypt.compare(credentials.password, user.hashed_password);
