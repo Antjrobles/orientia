@@ -17,14 +17,17 @@ export default async function AdminLayout({
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <ProfileHeader />
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col space-y-8 pb-12 pt-6 md:flex-row md:space-x-8 md:space-y-0">
-          <aside className="md:w-1/4 lg:w-1/5"><ProfileSidebar /></aside>
-          <main className="flex-1">{children}</main>
+      <div className="container mx-auto flex-1 py-10">
+        <div className="grid md:grid-cols-[220px_1fr] lg:grid-cols-[250px_1fr] gap-10">
+          {/* Sidebar solo visible en escritorio */}
+          <div className="hidden md:block">
+            <ProfileSidebar />
+          </div>
+          <main>{children}</main>
         </div>
       </div>
-    </>
+    </div>
   );
 }

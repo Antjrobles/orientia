@@ -6,7 +6,7 @@ import AuthButtons from "./AuthButtons"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
-import { Menu, X, Shield } from "lucide-react"
+import { Menu, X, Shield, LayoutDashboard, FilePlus2, FolderKanban } from "lucide-react"
 import { useSession } from "next-auth/react"
 
 export default function ProfileHeader() {
@@ -124,7 +124,7 @@ export default function ProfileHeader() {
             aria-hidden="true"
           />
           {/* Panel lateral */}
-          <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transform transition-transform">
+          <div className="fixed inset-y-0 left-0 w-full max-w-sm bg-white shadow-xl transform transition-transform">
             <div className="flex flex-col h-full">
               {/* Cabecera menú móvil */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -139,55 +139,58 @@ export default function ProfileHeader() {
 
               {/* Navegación móvil */}
               <div className="flex-1 px-4 py-6 overflow-y-auto">
-                <nav className="space-y-2" role="navigation">
+                <nav className="space-y-1" role="navigation">
                   <Link
                     href="/profile"
                     className={cn(
-                      "block px-4 py-3 rounded-md text-base font-medium transition-colors",
+                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
                       pathname === "/profile"
                         ? "text-green-600 bg-green-50 font-semibold"
-                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                        : "text-gray-700 hover:bg-gray-50"
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
+                    <LayoutDashboard className="w-5 h-5 mr-3 flex-shrink-0" />
                     Panel Principal
                   </Link>
                   <Link
                     href="/profile/generar-informe"
                     className={cn(
-                      "block px-4 py-3 rounded-md text-base font-medium transition-colors",
+                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
                       pathname.startsWith("/profile/generar-informe")
                         ? "text-green-600 bg-green-50 font-semibold"
-                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                        : "text-gray-700 hover:bg-gray-50"
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
+                    <FilePlus2 className="w-5 h-5 mr-3 flex-shrink-0" />
                     Nuevo Informe
                   </Link>
                   <Link
                     href="/profile/informes"
                     className={cn(
-                      "block px-4 py-3 rounded-md text-base font-medium transition-colors",
+                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
                       pathname.startsWith("/profile/informes")
                         ? "text-green-600 bg-green-50 font-semibold"
-                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                        : "text-gray-700 hover:bg-gray-50"
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
+                    <FolderKanban className="w-5 h-5 mr-3 flex-shrink-0" />
                     Mis Informes
                   </Link>
                   {isAdmin && (
                     <Link
                       href="/admin"
                       className={cn(
-                        "flex items-center px-4 py-3 rounded-md text-base font-medium transition-colors",
+                        "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
                         pathname.startsWith("/admin")
                           ? "text-red-600 bg-red-50 font-semibold"
-                          : "text-red-600 hover:bg-red-50 hover:text-red-700"
+                          : "text-red-600 hover:bg-red-50"
                       )}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Shield className="w-4 h-4 mr-2" />
+                      <Shield className="w-5 h-5 mr-3 flex-shrink-0" />
                       Administración
                     </Link>
                   )}

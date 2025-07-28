@@ -38,7 +38,7 @@ export default function AuthButtons({ className }: AuthButtonsProps) {
     return (
       <div className={cn("flex items-center gap-2", className)}>
         <Link href="/profile" passHref >
-          <Button variant="ghost" className="mr-2">
+          <Button variant="ghost" className="mr-2 hidden sm:flex">
             <User className="h-4 w-4 mr-2" />
             Mi Cuenta
           </Button>
@@ -51,7 +51,7 @@ export default function AuthButtons({ className }: AuthButtonsProps) {
               className="h-9 w-9 cursor-pointer"
             />
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56 z-[110]" align="end" forceMount>
+          <DropdownMenuContent className="w-56 z-[110]" align="end" forceMount sideOffset={5}>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">{session.user.name}</p>
@@ -61,25 +61,28 @@ export default function AuthButtons({ className }: AuthButtonsProps) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/profile"><LayoutDashboard className="mr-2 h-4 w-4" /><span>Panel</span></Link>
+            <DropdownMenuItem onClick={() => router.push('/profile')} className="flex items-center cursor-pointer">
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              <span>Panel</span>
             </DropdownMenuItem>
-            {/* Añadido: Acción principal dentro del menú */}
-            <DropdownMenuItem asChild>
-              <Link href="/profile/generar-informe"><FilePlus2 className="mr-2 h-4 w-4" /><span>Nuevo Informe</span></Link>
+            <DropdownMenuItem onClick={() => router.push('/profile/generar-informe')} className="flex items-center cursor-pointer">
+              <FilePlus2 className="mr-2 h-4 w-4" />
+              <span>Nuevo Informe</span>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/profile/informes"><FolderKanban className="mr-2 h-4 w-4" /><span>Mis Informes</span></Link>
+            <DropdownMenuItem onClick={() => router.push('/profile/informes')} className="flex items-center cursor-pointer">
+              <FolderKanban className="mr-2 h-4 w-4" />
+              <span>Mis Informes</span>
             </DropdownMenuItem>
             {session.user.role === 'admin' && (
-              <DropdownMenuItem asChild>
-                <Link href="/admin" className="text-red-600"><Settings className="mr-2 h-4 w-4" /><span>Administración</span></Link>
+              <DropdownMenuItem onClick={() => router.push('/admin')} className="flex items-center cursor-pointer text-red-600">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Administración</span>
               </DropdownMenuItem>
             )}
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>
-              <LogOut className="mr-2 h-4 w-4" />
+            <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })} className="flex items-center cursor-pointer">
+              <LogOut className="mr-2 h-4 w-4 flex-shrink-0" />
               <span>Cerrar Sesión</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -60,7 +60,7 @@ export function DataTable<TData extends { name?: string; email?: string }, TValu
 
   return (
     <div>
-      <div className="flex items-center gap-2 py-4">
+      <div className="flex items-center gap-2 ml-6 py-4">
         <Input
           placeholder="Buscar por nombre o email..."
           value={globalFilter}
