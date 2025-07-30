@@ -12,7 +12,6 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Mail,
-  User,
   CheckCircle,
   AlertCircle,
   Loader2,
@@ -124,7 +123,14 @@ export default function RegisterPage() {
                     onClick={() => signIn('google', { callbackUrl: '/profile' })}
                     disabled={loading || success}
                     className='w-full h-7 sm:h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
-                    <User className='w-4 h-4 text-emerald-600' />
+                    <Image
+                      src="/icons/google.svg"
+                      alt="Google"
+                      width={16}
+                      height={16}
+                      className="w-4 h-4"
+                    />
+
                     <span>Registrarse con Google</span>
                   </Button>
 

@@ -39,5 +39,3 @@
 - [ ] **Logs de auditoría** - Registro de acciones importantes
 
 ---
-
-_Documento creado: Enero 2025_
