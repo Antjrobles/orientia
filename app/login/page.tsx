@@ -74,9 +74,9 @@ export default function LoginPage() {
     <div className='min-h-screen bg-white font-sans'>
       <Link
         href='/'
-        className='absolute top-4 left-4 z-50 flex items-center gap-2 px-3 py-2 bg-white/80 backdrop-blur-sm rounded-lg border border-gray-200 hover:bg-white transition-all duration-200 shadow-sm'>
-        <Home className='w-4 h-4 text-emerald-600' />
-        <span className='text-sm font-medium text-gray-700'>Inicio</span>
+        className='absolute top-4 left-4 z-50 flex items-center gap-2 px-3 py-2 bg-white/80 backdrop-blur-sm rounded-lg border border-gray-200 hover:bg-emerald-50 hover:border-emerald-200 hover:shadow-md transition-all duration-300 shadow-sm group'>
+        <Home className='w-4 h-4 text-emerald-600 group-hover:text-emerald-700 transition-colors duration-300' />
+        <span className='text-sm font-medium text-gray-700 group-hover:text-emerald-800 transition-colors duration-300'>Inicio</span>
       </Link>
 
       <div className='flex flex-col lg:flex-row w-full min-h-screen'>
