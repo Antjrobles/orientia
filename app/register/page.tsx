@@ -287,23 +287,6 @@ export default function RegisterPage() {
             </div>
           </div>
         </div>
-
-        {/* Columna derecha - Imagen con transición solo en el borde izquierdo */}
-        <div className='hidden lg:flex lg:w-1/2 relative'>
-          {/* Máscara de transición solo en el borde izquierdo */}
-          <div className='absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-white to-transparent z-20'></div>
-
-
-          {/* Imagen de fondo con gradiente */}
-          <div className='absolute inset-0 bg-gradient-to-br from-cyan-500 to-emerald-500'>
-            <Image
-              src='/images/background.jpg'
-              alt='Fondo de la plataforma de psicopedagogía'
-              fill
-              className='object-cover opacity-40'
-            />
-          </div>
-        </div>
       </div>
 
       {/* Botón de inicio */}
