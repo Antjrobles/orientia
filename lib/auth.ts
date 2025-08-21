@@ -1,5 +1,6 @@
 import { type AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import FacebookProvider from 'next-auth/providers/facebook';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { createClient } from '@supabase/supabase-js';
 import bcrypt from 'bcryptjs';
@@ -13,6 +14,10 @@ export const authOptions: AuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID as string,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
     }),
     CredentialsProvider({
       name: 'Credentials',
@@ -83,7 +88,7 @@ export const authOptions: AuthOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider === 'google') {
+      if (account?.provider === 'google' || account?.provider === 'facebook') {
         if (!user.email) {
           console.error('No se encontró un email en el perfil de Google.');
           return false; // Bloquea el inicio de sesión si no hay email
@@ -118,7 +123,7 @@ export const authOptions: AuthOptions = {
             if (insertError) throw insertError;
           }
         } catch (error) {
-          console.error('Error al guardar/actualizar el usuario de Google en la BD:', error);
+          console.error(`Error al guardar/actualizar el usuario de ${account?.provider} en la BD:`, error);
           return false; // Bloquea el inicio de sesión si hay un error de base de datos
         }
       }

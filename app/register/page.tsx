@@ -35,7 +35,7 @@ export default function RegisterPage() {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const router = useRouter();
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -120,12 +120,12 @@ export default function RegisterPage() {
                     </Button>
 
                     <Button
-                      onClick={() => signIn('google', { callbackUrl: '/profile' })}
+                      onClick={() => signIn('facebook', { callbackUrl: '/profile' })}
                       disabled={loading || success}
                       className='h-7 sm:h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
                       <Image
                         src="/icons/facebook.svg"
-                        alt="Google"
+                        alt="Facebook"
                         width={16}
                         height={16}
                         className="w-4 h-4"
@@ -219,9 +219,7 @@ export default function RegisterPage() {
                             setPasswordMatch(password === e.target.value);
                           }}
                           disabled={loading || success}
-                          className={`h - 9 sm: h - 10 bg - gray - 50 border - gray - 200 rounded - lg px - 3 pr - 10 text - gray - 800 placeholder - gray - 400 / 50 focus: ring - 2 focus: ring - emerald - 300 focus: border - emerald - 400 text - sm ${
-  confirmPassword && !passwordMatch ? 'border-red-300 focus:border-red-400 focus:ring-red-300' : ''
-} `}
+                          className={`h-9 sm:h-10 bg-gray-50 border-gray-200 rounded-lg px-3 pr-10 text-gray-800 placeholder-gray-400/50 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm ${confirmPassword && !passwordMatch ? 'border-red-300 focus:border-red-400 focus:ring-red-300' : ''}`}
                         />
                         <button
                           type="button"
