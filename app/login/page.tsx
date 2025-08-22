@@ -110,13 +110,64 @@ export default function LoginPage() {
                   </Alert>
                 )}
                 <div className='space-y-3'>
-                  <Button
-                    onClick={() => signIn('google', { callbackUrl: '/profile' })}
-                    disabled={loading}
-                    className='w-full h-10 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
-                    <User className='w-5 h-5 text-emerald-600' />
-                    <span>Continuar con Google</span>
-                  </Button>
+                  <div className='flex flex-wrap justify-center gap-8 sm:gap-8'>
+                    <Button
+                      onClick={() => signIn('google', { callbackUrl: '/profile' })}
+                      disabled={loading}
+                      className='h-7 sm:h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
+                      <Image
+                        src="/icons/google.svg"
+                        alt="Google"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                    </Button>
+
+                    <Button
+                      onClick={async () => {
+                        setLoading(true);
+                        try {
+                          const result = await signIn('facebook', {
+                            callbackUrl: '/profile',
+                            redirect: false
+                          });
+
+                          if (result?.ok) {
+                            router.push('/profile');
+                          } else if (result?.error) {
+                            setError('Error al iniciar sesión con Facebook. Inténtalo de nuevo.');
+                          }
+                        } catch (error) {
+                          setError('Error al conectar con Facebook.');
+                        } finally {
+                          setLoading(false);
+                        }
+                      }}
+                      disabled={loading}
+                      className='h-7 sm:h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
+                      <Image
+                        src="/icons/facebook.svg"
+                        alt="Facebook"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                    </Button>
+
+                    <Button
+                      onClick={() => signIn('apple', { callbackUrl: '/profile' })}
+                      disabled={loading}
+                      className='h-7 sm:h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
+                      <Image
+                        src="/icons/apple.svg"
+                        alt="Apple"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                    </Button>
+                  </div>
                   <div className='flex items-center'>
                     <div className='flex-grow border-t border-gray-200'></div>
                     <span className='px-3 text-xs text-gray-400'>o con tu correo</span>

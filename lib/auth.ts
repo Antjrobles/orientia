@@ -86,8 +86,15 @@ export const authOptions: AuthOptions = {
       },
     },
   },
+  pages: {
+    signIn: '/login',
+    error: '/login', // Redirige errores de OAuth al login
+  },
   callbacks: {
     async signIn({ user, account }) {
+      console.log('[SignIn Callback] Provider:', account?.provider);
+      console.log('[SignIn Callback] User:', user);
+
       if (account?.provider === 'google' || account?.provider === 'facebook') {
         if (!user.email) {
           console.error('No se encontró un email en el perfil de Google.');

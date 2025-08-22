@@ -132,12 +132,12 @@ export default function RegisterPage() {
                       />
                     </Button>
                     <Button
-                      onClick={() => signIn('google', { callbackUrl: '/profile' })}
+                      onClick={() => signIn('apple', { callbackUrl: '/profile' })}
                       disabled={loading || success}
                       className='h-7 sm:h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
                       <Image
                         src="/icons/apple.svg"
-                        alt="Google"
+                        alt="Apple"
                         width={16}
                         height={16}
                         className="w-4 h-4"
