@@ -86,7 +86,8 @@ export default function Footer() {
                   { href: "/privacidad", label: "Privacidad" },
                   { href: "/terminos", label: "Términos" },
                   { href: "/cookies", label: "Cookies" },
-                  { href: "/accesibilidad", label: "Accesibilidad" }
+                  { href: "/accesibilidad", label: "Accesibilidad" },
+                  { href: "/eliminacion-de-datos-de-usuario", label: "Eliminación de datos de usuario" }
                 ].map((link) => (
                   <li key={link.href}>
                     <Link
