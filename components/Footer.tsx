@@ -127,10 +127,10 @@ export default function Footer() {
               © {currentYear} Orientia. Todos los derechos reservados.
             </div>
             <div className="flex items-center space-x-4 text-xs text-gray-400">
-              <span>Hecho con ❤️ para educadores</span>
+              <span>Hecho con ❤️ para Orientadores</span>
               <div className="flex items-center space-x-1">
                 <MapPin className="w-3 h-3" />
-                <span>España</span>
+                <span>Andalucía</span>
               </div>
             </div>
           </div>

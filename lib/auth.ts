@@ -31,7 +31,6 @@ export const authOptions: AuthOptions = {
         password: { label: 'Contraseña', type: 'password' },
       },
       async authorize(credentials) {
-        console.log('[Authorize] Intentando autorizar:', credentials?.email);
         if (!credentials?.email || !credentials.password) {
           return null;
         }
@@ -42,25 +41,20 @@ export const authOptions: AuthOptions = {
           .eq('email', credentials.email)
           .single();
 
-        console.log('[Authorize] Usuario de la BD:', user);
 
         if (!user || !user.hashed_password) {
-          console.log('[Authorize] Usuario no encontrado o sin contraseña.');
           return null;
         }
 
         // Verificar si el email está verificado (solo para usuarios con contraseña)
         if (!user.emailVerified) {
-          console.log('[Authorize] Email no verificado.');
           throw new Error('EMAIL_NOT_VERIFIED');
         }
 
         const passwordsMatch = await bcrypt.compare(credentials.password, user.hashed_password);
-        console.log('[Authorize] Las contraseñas coinciden:', passwordsMatch);
 
         if (passwordsMatch) {
           // Devuelve solo los datos necesarios para la sesión, excluyendo la contraseña
-          console.log('[Authorize] Éxito, devolviendo objeto de usuario.');
           return { id: user.id, name: user.name, email: user.email, image: user.image };
         }
 
@@ -97,8 +91,7 @@ export const authOptions: AuthOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      console.log('[SignIn Callback] Provider:', account?.provider);
-      console.log('[SignIn Callback] User:', user);
+   
 
       if (account?.provider === 'google' || account?.provider === 'facebook') {
         if (!user.email) {

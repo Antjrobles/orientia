@@ -133,37 +133,44 @@ export default function LegalHeader() {
                   <Link
                     href='/'
                     className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
-                    aria-current='page'>
+                    aria-current='page'
+                    onClick={() => setMobileMenuOpen(false)}>
                     Inicio
                   </Link>
                   <Link
                     href='/privacidad'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'>
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
+                    onClick={() => setMobileMenuOpen(false)}>
                     Privacidad
                   </Link>
                   <Link
                     href='/terminos'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'>
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
+                    onClick={() => setMobileMenuOpen(false)}>
                     Términos
                   </Link>
                   <Link
                     href='/cookies'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'>
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
+                    onClick={() => setMobileMenuOpen(false)}>
                     Cookies
                   </Link>
                   <Link
                     href='/accesibilidad'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'>
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
+                    onClick={() => setMobileMenuOpen(false)}>
                     Accesibilidad
                   </Link>
                   <Link
                     href='/rgpd'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'>
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
+                    onClick={() => setMobileMenuOpen(false)}>
                     RGPD
                   </Link>
                   <Link
                     href='/eliminacion-de-datos-de-usuario'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'>
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
+                    onClick={() => setMobileMenuOpen(false)}>
                     Eliminación de Datos
                   </Link>
                 </nav>

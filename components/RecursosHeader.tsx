@@ -7,7 +7,7 @@ import Image from 'next/image';
 import AuthButtons from './AuthButtons';
 import { cn } from '@/lib/utils';
 
-export default function Header() {
+export default function LegalHeader() {
   const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -52,37 +52,32 @@ export default function Header() {
             </button>
 
             {/* Navegación desktop */}
-            <nav className='hidden md:flex items-center space-x-4' role='navigation' aria-label='Navegación principal'>
+            <nav className='hidden md:flex items-center space-x-2' role='navigation' aria-label='Navegación principal'>
               <Link
-                href='#inicio'
-                className='px-3 py-2 rounded-md text-sm font-medium text-green-600 bg-green-50'
+                href='/'
+                className='px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'
                 aria-current='page'>
                 Inicio
               </Link>
               <Link
-                href='#caracteristicas'
+                href='/manual'
                 className='px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'>
-                Características
+                Manual
               </Link>
               <Link
-                href='#beneficios'
+                href='/faq'
                 className='px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'>
-                Beneficios
+                FAQ
               </Link>
               <Link
-                href='#seguridad'
+                href='/soporte'
                 className='px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'>
-                Seguridad
+                Soporte
               </Link>
               <Link
-                href='#pricing'
+                href='/formacion'
                 className='px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'>
-                Precios
-              </Link>
-              <Link
-                href='#contacto'
-                className='px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'>
-                Contacto
+                Formación
               </Link>
             </nav>
 
@@ -126,40 +121,35 @@ export default function Header() {
               <div className='flex-1 px-4 py-6 overflow-y-auto'>
                 <nav className='space-y-2' role='navigation' aria-label='Navegación móvil'>
                   <Link
-                    href='#inicio'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-green-600 bg-green-50 transition-colors'
+                    href='/'
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
+                    aria-current='page'
                     onClick={() => setMobileMenuOpen(false)}>
                     Inicio
                   </Link>
                   <Link
-                    href='#caracteristicas'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'
+                    href='/manual'
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
                     onClick={() => setMobileMenuOpen(false)}>
-                    Características
+                    Manual
                   </Link>
                   <Link
-                    href='#beneficios'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'
+                    href='/faq'
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
                     onClick={() => setMobileMenuOpen(false)}>
-                    Beneficios
+                    FAQ
                   </Link>
                   <Link
-                    href='#seguridad'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'
+                    href='/soporte'
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
                     onClick={() => setMobileMenuOpen(false)}>
-                    Seguridad
+                    Soporte
                   </Link>
                   <Link
-                    href='#pricing'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'
+                    href='/formacion'
+                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100'
                     onClick={() => setMobileMenuOpen(false)}>
-                    Precios
-                  </Link>
-                  <Link
-                    href='#contacto'
-                    className='block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'
-                    onClick={() => setMobileMenuOpen(false)}>
-                    Contacto
+                    Formación
                   </Link>
                 </nav>
               </div>

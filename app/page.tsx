@@ -27,6 +27,7 @@ import Hero from '@/components/Hero';
 import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
 import ContactForm from '@/components/ContactForm';
+import Pricing from '@/components/Pricing';
 
 export const metadata: Metadata = {
   title: 'Sistema de Informes Psicopedagógicos',
@@ -99,6 +100,9 @@ export default function Page() {
 
         {/* Security Section */}
         <SecuritySection />
+
+        {/* Pricing Section */}
+        <Pricing/>
 
         {/* Contact Form */}
         <ContactForm />
