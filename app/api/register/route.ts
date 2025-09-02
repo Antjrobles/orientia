@@ -2,21 +2,28 @@ import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import { z } from 'zod';
 
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
+// Esquema de validación con Zod
+const registerSchema = z.object({
+  name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
+  email: z.string().email('Email no válido'),
+  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
+});
+
 export async function POST(request: Request) {
   try {
-    const { name, email, password } = await request.json();
+    const body = await request.json();
+    const validation = registerSchema.safeParse(body);
 
-    // 1. Validar los datos de entrada
-    if (!name || !email || !password) {
-      return new NextResponse('Faltan nombre, email o contraseña', { status: 400 });
+    if (!validation.success) {
+      return NextResponse.json({ error: validation.error.errors[0].message }, { status: 400 });
     }
-    if (password.length < 6) {
-      return new NextResponse('La contraseña debe tener al menos 6 caracteres', { status: 400 });
-    }
+
+    const { name, email, password } = validation.data;
 
     // 2. Comprobar si el usuario ya existe
     const { data: existingUser, error: existingUserError } = await supabase
@@ -26,7 +33,7 @@ export async function POST(request: Request) {
       .single();
 
     if (existingUser) {
-      return new NextResponse('Ya existe un usuario con este email', { status: 409 }); // 409 Conflict
+      return NextResponse.json({ error: 'Ya existe un usuario con este email' }, { status: 409 }); // 409 Conflict
     }
 
     // Ignoramos el error específico que indica que no se encontró ninguna fila, que es lo esperado.
@@ -51,7 +58,7 @@ export async function POST(request: Request) {
 
     if (insertError) {
       console.error('Error al insertar en Supabase:', insertError);
-      return new NextResponse('No se pudo crear el usuario', { status: 500 });
+      return NextResponse.json({ error: 'No se pudo crear el usuario' }, { status: 500 });
     }
 
     // 6. Guardar token de verificación
@@ -88,6 +95,6 @@ export async function POST(request: Request) {
     }, { status: 201 });
   } catch (error) {
     console.error('Error de registro:', error);
-    return new NextResponse('Error Interno del Servidor', { status: 500 });
+    return NextResponse.json({ error: 'Error Interno del Servidor' }, { status: 500 });
   }
 }
