@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '@/components/Header';
+import LegalHeader from '@/components/LegalHeader';
 import Footer from '@/components/Footer';
 
 /**
@@ -14,12 +14,8 @@ export default function LegalLayout({
 }) {
   return (
     <>
-      <Header />
-      <main className="bg-gray-50 py-2 sm:py-4">
-        <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-lg max-w-none">{children}</div>
-        </article>
-      </main>
+      <LegalHeader />
+      <main className="flex-grow bg-gray-50 dark:bg-gray-900">{children}</main>
       <Footer />
     </>
   );

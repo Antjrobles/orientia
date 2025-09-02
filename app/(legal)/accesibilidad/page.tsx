@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function AccesibilidadPage() {
   return (
-    <div className="container mx-auto px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
+    <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <div className="bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-xl shadow-lg">
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-6">Declaración de Accesibilidad</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">Última actualización: {new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
