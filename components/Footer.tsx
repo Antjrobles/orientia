@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Phone, Clock, MapPin, ExternalLink } from 'lucide-react';
+import BackToTopButton from './BackToTopButton';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
+    <>
     <footer id="contacto" className="bg-gray-900 text-white py-8" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -135,5 +137,7 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+   <BackToTopButton />
+   </>
   );
 }
