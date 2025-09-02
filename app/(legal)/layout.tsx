@@ -15,8 +15,8 @@ export default function LegalLayout({
   return (
     <>
       <Header />
-      <main className="bg-gray-50 py-16 sm:py-24">
-        <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="bg-gray-50 py-2 sm:py-4">
+        <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="prose prose-lg max-w-none">{children}</div>
         </article>
       </main>
