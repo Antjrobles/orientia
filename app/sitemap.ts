@@ -1,92 +1,60 @@
-import type { MetadataRoute } from "next"
+import { MetadataRoute } from 'next';
 
+function getBaseUrl() {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'https://www.orientia.es';
+  return raw.endsWith('/') ? raw.slice(0, -1) : raw;
+}
+
+/**
+ * sitemap.xml moderno:
+ * - rutas públicas y legales
+ * - campos opcionales: changeFrequency, priority
+ * - preparado para i18n y futuras rutas dinámicas
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://orientia.es"
+  const baseUrl = getBaseUrl();
+  const lastmod = new Date().toISOString();
 
-  return [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/profile/generar-informe`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/alumnos`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/informes`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/centros`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/manual`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/faq`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/soporte`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.4,
-    },
-    {
-      url: `${baseUrl}/privacidad`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/terminos`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/cookies`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/accesibilidad`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/rgpd`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/eliminacion-de-datos-de-usuario`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
-  ]
+  const publicRoutes = [
+    '/',
+    '/manual',
+    '/faq',
+    '/soporte',
+    '/formacion',
+  ];
+
+  const legalRoutes = [
+    '/privacidad',
+    '/terminos',
+    '/cookies',
+    '/accesibilidad',
+    '/rgpd',
+    '/eliminacion-de-datos-de-usuario',
+  ];
+
+  // Si usas i18n, define aquí tus locales:
+  // const locales = ['es', 'en']; // ejemplo
+  // const makeAlternates = (path: string) => ({
+  //   languages: Object.fromEntries(locales.map((l) => [l, `${baseUrl}/${l}${path === '/' ? '' : path}`])),
+  // });
+
+  const mapEntry = (route: string, priority: number, changeFrequency: MetadataRoute.Sitemap[0]['changeFrequency']) => ({
+    url: `${baseUrl}${route}`,
+    lastModified: lastmod,
+    changeFrequency,
+    priority,
+    // alternates: makeAlternates(route), // habilita si usas i18n
+  });
+
+  const publicUrls = publicRoutes.map((r) =>
+    mapEntry(r, r === '/' ? 1.0 : 0.7, r === '/' ? 'daily' : 'weekly')
+  );
+
+  const legalUrls = legalRoutes.map((r) => mapEntry(r, 0.3, 'yearly'));
+
+  // 👉 ejemplo para añadir rutas dinámicas (blog, docs, etc.)
+  // const posts = await fetchPostsSomehow();
+  // const postUrls = posts.map((p) => mapEntry(`/blog/${p.slug}`, 0.6, 'weekly'));
+
+  return [...publicUrls, ...legalUrls /*, ...postUrls */];
 }
