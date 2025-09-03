@@ -9,15 +9,15 @@ export const metadata: Metadata = {
 export default function AccesibilidadPage() {
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-      <div className="bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-xl shadow-lg">
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-6">Declaración de Accesibilidad</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">Última actualización: {new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <div className="bg-white p-8 sm:p-10 rounded-xl shadow-lg">
+          <h1 className="text-3xl font-extrabold text-gray-900 mb-6">Declaración de Accesibilidad</h1>
+          <p className="text-sm text-gray-500 mb-8">Última actualización: {new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
 
           {/* Índice navegable */}
           <nav aria-label="Tabla de contenidos" className="mb-10">
-            <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700">
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Contenido</p>
-              <ul className="grid gap-2 text-sm text-gray-600 dark:text-gray-300 sm:grid-cols-2">
+            <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+              <p className="text-sm font-semibold text-gray-700 mb-3">Contenido</p>
+              <ul className="grid gap-2 text-sm text-gray-600 sm:grid-cols-2">
                 <li><a href="#compromiso" className="hover:underline">1. Nuestro Compromiso</a></li>
                 <li><a href="#conformidad" className="hover:underline">2. Estado de Conformidad</a></li>
                 <li><a href="#medidas" className="hover:underline">3. Medidas de Soporte</a></li>
@@ -32,12 +32,12 @@ export default function AccesibilidadPage() {
             </div>
           </nav>
 
-          <div className="prose prose-lg dark:prose-invert max-w-none">
-            <div className="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 dark:bg-blue-900/20 dark:border-blue-600 dark:text-blue-300 mb-8">
+          <div className="prose prose-lg max-w-none">
+            <div className="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 mb-8">
               <strong>Nuestra Misión:</strong> Creemos que la tecnología educativa debe ser inclusiva y accesible para todos. Trabajamos continuamente para mejorar la experiencia de todos los usuarios, independientemente de sus capacidades.
             </div>
 
-            <h2 id="compromiso" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="compromiso" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               1. Nuestro Compromiso con la Accesibilidad
             </h2>
             <p>
@@ -47,7 +47,7 @@ export default function AccesibilidadPage() {
               Nuestro objetivo es alcanzar el nivel de conformidad <strong>Doble-A (AA)</strong> de las Pautas de Accesibilidad para el Contenido Web (WCAG) 2.1, desarrolladas por el World Wide Web Consortium (W3C). Estas pautas son el estándar internacional para crear contenido web accesible.
             </p>
 
-            <h2 id="conformidad" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="conformidad" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               2. Estado de Conformidad
             </h2>
             <p>
@@ -57,7 +57,7 @@ export default function AccesibilidadPage() {
               Estamos trabajando activamente para solucionar los problemas de accesibilidad detectados y mejorar la experiencia para todos los usuarios.
             </p>
 
-            <h2 id="medidas" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="medidas" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               3. Medidas para Apoyar la Accesibilidad
             </h2>
             <p>
@@ -72,7 +72,7 @@ export default function AccesibilidadPage() {
               <li><strong>Formación continua:</strong> Nuestro equipo de desarrollo recibe formación periódica en materia de accesibilidad web.</li>
             </ul>
 
-            <h2 id="compatibilidad" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="compatibilidad" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               4. Compatibilidad con Navegadores y Tecnologías de Apoyo
             </h2>
             <p>
@@ -87,7 +87,7 @@ export default function AccesibilidadPage() {
               La plataforma puede no funcionar de manera óptima en navegadores obsoletos o con tecnologías de apoyo no actualizadas.
             </p>
 
-            <h2 id="especificaciones" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="especificaciones" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               5. Especificaciones Técnicas
             </h2>
             <p>
@@ -100,7 +100,7 @@ export default function AccesibilidadPage() {
               <li>JavaScript (ECMAScript)</li>
             </ul>
 
-            <h2 id="limitaciones" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="limitaciones" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               6. Limitaciones y Alternativas
             </h2>
             <p>
@@ -114,7 +114,7 @@ export default function AccesibilidadPage() {
               Nos comprometemos a solucionar cualquier problema de accesibilidad que se nos comunique.
             </p>
 
-            <h2 id="evaluacion" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="evaluacion" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               7. Evaluación y Pruebas
             </h2>
             <p>
@@ -126,7 +126,7 @@ export default function AccesibilidadPage() {
               <li>Pruebas con usuarios reales, incluyendo personas con diferentes tipos de discapacidad.</li>
             </ul>
 
-            <h2 id="contacto" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="contacto" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               8. Comentarios y Contacto
             </h2>
             <p>
@@ -141,7 +141,7 @@ export default function AccesibilidadPage() {
               Intentamos responder a los comentarios sobre accesibilidad en un plazo de 5 días hábiles.
             </p>
 
-            <h2 id="aplicacion" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="aplicacion" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               9. Procedimiento de Aplicación
             </h2>
             <p>
@@ -151,12 +151,12 @@ export default function AccesibilidadPage() {
               La reclamación puede ser presentada a través de la instancia de contacto correspondiente.
             </p>
 
-            <h2 id="faq" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="faq" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               Preguntas Frecuentes
             </h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   ¿Cómo puedo aumentar o disminuir el tamaño del texto?
                 </h3>
                 <p>
@@ -164,7 +164,7 @@ export default function AccesibilidadPage() {
                 </p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   ¿El sitio es compatible con lectores de pantalla?
                 </h3>
                 <p>
@@ -172,7 +172,7 @@ export default function AccesibilidadPage() {
                 </p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   ¿Qué hago si encuentro un problema de accesibilidad?
                 </h3>
                 <p>
@@ -181,11 +181,11 @@ export default function AccesibilidadPage() {
               </div>
             </div>
 
-            <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            <div className="mt-12 p-6 bg-gray-50 border border-gray-200 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 Mejora Continua
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-gray-600">
                 La accesibilidad es un viaje, no un destino. Estamos comprometidos con la mejora continua y valoramos su colaboración para hacer de Orientia una herramienta accesible para todos.
               </p>
             </div>

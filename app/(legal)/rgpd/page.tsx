@@ -14,20 +14,20 @@ export const metadata: Metadata = {
 export default function RGPDPage() {
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-      <div className="bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-xl shadow-xl">
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-6 text-center sm:text-left">
+      <div className="bg-white p-8 sm:p-10 rounded-xl shadow-xl">
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-6 text-center sm:text-left">
           RGPD – Cumplimiento y Protección de Datos
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+        <p className="text-sm text-gray-500 mb-8">
           Última actualización:{' '}
           {new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
 
         {/* Índice navegable */}
         <nav aria-label="Tabla de contenidos" className="mb-10">
-          <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700">
-            <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Contenido</p>
-            <ul className="grid gap-2 text-sm text-gray-600 dark:text-gray-300 sm:grid-cols-2">
+          <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+            <p className="text-sm font-semibold text-gray-700 mb-3">Contenido</p>
+            <ul className="grid gap-2 text-sm text-gray-600 sm:grid-cols-2">
               <li><a href="#marco" className="hover:underline">1. Marco normativo y alcance</a></li>
               <li><a href="#roles" className="hover:underline">2. Roles: Responsable vs. Encargado</a></li>
               <li><a href="#bases" className="hover:underline">3. Bases legales del tratamiento</a></li>
@@ -53,8 +53,8 @@ export default function RGPDPage() {
           </div>
         </nav>
 
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          <div className="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 dark:bg-blue-900/20 dark:border-blue-600 dark:text-blue-300 mb-8">
+        <div className="prose prose-lg max-w-none">
+          <div className="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 mb-8">
             Esta página explica de forma práctica cómo Orientia cumple el RGPD y la LOPDGDD en el contexto educativo andaluz.
             Completa y complementa la{' '}
             <Link href="/privacidad" className="text-primary-600 hover:underline">Política de Privacidad</Link>, la{' '}
@@ -62,7 +62,7 @@ export default function RGPDPage() {
             <Link href="/terminos" className="text-primary-600 hover:underline">Términos de Servicio</Link>.
           </div>
 
-          <h2 id="marco" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="marco" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             1. Marco normativo y alcance
           </h2>
           <p>
@@ -71,7 +71,7 @@ export default function RGPDPage() {
             por parte de docentes y centros educativos en Andalucía para la creación y gestión de informes psicopedagógicos y documentación asociada.
           </p>
 
-          <h2 id="roles" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="roles" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             2. Roles: Responsable vs. Encargado
           </h2>
           <p>
@@ -83,19 +83,19 @@ export default function RGPDPage() {
             actúa como <strong>Responsable del tratamiento</strong>, y Orientia ejecuta las instrucciones del Responsable conforme al art. 28 RGPD.
           </p>
 
-          <h2 id="bases" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="bases" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             3. Bases legales del tratamiento
           </h2>
           <div className="overflow-x-auto not-prose">
-            <table className="w-full text-left text-sm border border-gray-200 dark:border-gray-700 rounded-lg">
-              <thead className="bg-gray-50 dark:bg-gray-900/40">
+            <table className="w-full text-left text-sm border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="p-3">Finalidad</th>
                   <th className="p-3">Base jurídica (art. 6)</th>
                   <th className="p-3">Observaciones (art. 9 si aplica)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-200">
                 <tr>
                   <td className="p-3">Gestión de cuentas y prestación del servicio</td>
                   <td className="p-3">Ejecución de contrato (6.1.b)</td>
@@ -125,7 +125,7 @@ export default function RGPDPage() {
             </table>
           </div>
 
-          <h2 id="categorias" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="categorias" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             4. Categorías de datos tratados
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -136,7 +136,7 @@ export default function RGPDPage() {
             <li><strong>Alumnado (encargo):</strong> identificativos, académicos, <em>y en su caso</em> datos especiales vinculados a valoración psicopedagógica.</li>
           </ul>
 
-          <h2 id="ropa" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="ropa" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             5. Registros de Actividades de Tratamiento (RoPA)
           </h2>
           <p>
@@ -145,7 +145,7 @@ export default function RGPDPage() {
             <a href="mailto:privacidad@orientia.es" className="text-primary-600 hover:underline">privacidad@orientia.es</a>.
           </p>
 
-          <h2 id="aet" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="aet" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             6. Acuerdo de Encargo de Tratamiento (art. 28)
           </h2>
           <p>
@@ -153,12 +153,12 @@ export default function RGPDPage() {
             naturaleza y fines del tratamiento; tipo de datos y categorías de interesados; medidas de seguridad; régimen de subencargados;
             asistencia en el ejercicio de derechos; notificación de brechas; retorno/supresión al finalizar el servicio; y auditorías razonables.
           </p>
-          <div className="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-600 dark:text-yellow-300 mb-6">
+          <div className="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 mb-6">
             Si necesita un modelo de AET: <Link href="/descargas/aet-orientia.pdf" className="text-primary-600 hover:underline">descarga aquí</Link>
             (sustituir por tu ruta real) o solicítelo a <a href="mailto:privacidad@orientia.es" className="text-primary-600 hover:underline">privacidad@orientia.es</a>.
           </div>
 
-          <h2 id="eipd" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="eipd" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             7. EIPD/DPIA (Evaluación de Impacto, art. 35)
           </h2>
           <p>
@@ -166,8 +166,8 @@ export default function RGPDPage() {
             uso de tecnologías nuevas. Cuando aplica, realizamos evaluación de riesgos y plan de mitigación (pseudonimización, controles de acceso reforzados, etc.).
           </p>
           <div className="overflow-x-auto not-prose mt-3">
-            <table className="w-full text-left text-sm border border-gray-200 dark:border-gray-700 rounded-lg">
-              <thead className="bg-gray-50 dark:bg-gray-900/40">
+            <table className="w-full text-left text-sm border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="p-3">Riesgo</th>
                   <th className="p-3">Prob.</th>
@@ -175,7 +175,7 @@ export default function RGPDPage() {
                   <th className="p-3">Medidas de mitigación</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-200">
                 <tr>
                   <td className="p-3">Acceso no autorizado a informes</td>
                   <td className="p-3">Media</td>
@@ -198,7 +198,7 @@ export default function RGPDPage() {
             </table>
           </div>
 
-          <h2 id="minimizacion" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="minimizacion" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             8. Minimización, exactitud y limitación de la finalidad
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -207,7 +207,7 @@ export default function RGPDPage() {
             <li><strong>Limitación:</strong> bloqueos lógicos que evitan usos no previstos (p. ej., exportaciones restringidas).</li>
           </ul>
 
-          <h2 id="conservacion" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="conservacion" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             9. Conservación y supresión
           </h2>
           <p>
@@ -215,15 +215,15 @@ export default function RGPDPage() {
             las instrucciones del Responsable (devolución o borrado al fin del servicio, art. 28.3.g).
           </p>
           <div className="overflow-x-auto not-prose mt-3">
-            <table className="w-full text-left text-sm border border-gray-200 dark:border-gray-700 rounded-lg">
-              <thead className="bg-gray-50 dark:bg-gray-900/40">
+            <table className="w-full text-left text-sm border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="p-3">Categoría</th>
                   <th className="p-3">Plazo orientativo</th>
                   <th className="p-3">Observaciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-200">
                 <tr>
                   <td className="p-3">Cuenta/servicio</td>
                   <td className="p-3">Vida de la cuenta + bloqueo 3–6 años</td>
@@ -252,7 +252,7 @@ export default function RGPDPage() {
             <Link href="/eliminacion-datos-usuario" className="text-primary-600 hover:underline">Eliminación de Datos de Usuario</Link>.
           </p>
 
-          <h2 id="medidas" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="medidas" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             10. Medidas técnicas y organizativas (art. 32)
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -265,7 +265,7 @@ export default function RGPDPage() {
             <li><strong>Políticas internas:</strong> control de dispositivos, acuerdos de confidencialidad, baja segura de personal.</li>
           </ul>
 
-          <h2 id="brechas" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="brechas" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             11. Brechas de seguridad (arts. 33–34)
           </h2>
           <p>
@@ -273,15 +273,15 @@ export default function RGPDPage() {
             y a las personas afectadas sin dilación si el riesgo es alto. Registro interno de incidentes y medidas correctivas.
           </p>
           <div className="overflow-x-auto not-prose mt-3">
-            <table className="w-full text-left text-sm border border-gray-200 dark:border-gray-700 rounded-lg">
-              <thead className="bg-gray-50 dark:bg-gray-900/40">
+            <table className="w-full text-left text-sm border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="p-3">Tipo</th>
                   <th className="p-3">Ejemplo</th>
                   <th className="p-3">Comunicación</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-200">
                 <tr>
                   <td className="p-3">Confidencialidad</td>
                   <td className="p-3">Acceso indebido a informe</td>
@@ -301,7 +301,7 @@ export default function RGPDPage() {
             </table>
           </div>
 
-          <h2 id="derechos" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="derechos" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             12. Derechos de las personas (SLA y flujo)
           </h2>
           <p>
@@ -315,7 +315,7 @@ export default function RGPDPage() {
             <li><strong>Datos de alumnado:</strong> tramitación a través del Responsable (centro); Orientia apoya como Encargado.</li>
           </ul>
 
-          <h2 id="transferencias" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="transferencias" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             13. Transferencias internacionales
           </h2>
           <p>
@@ -324,7 +324,7 @@ export default function RGPDPage() {
             <a href="mailto:privacidad@orientia.es" className="text-primary-600 hover:underline">privacidad@orientia.es</a>.
           </p>
 
-          <h2 id="subencargados" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="subencargados" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             14. Subencargados y control de proveedores
           </h2>
           <p>
@@ -332,8 +332,8 @@ export default function RGPDPage() {
             La lista vigente puede variar por razones operativas; comunicamos cambios materiales con antelación razonable.
           </p>
           <div className="overflow-x-auto not-prose mt-3">
-            <table className="w-full text-left text-sm border border-gray-200 dark:border-gray-700 rounded-lg">
-              <thead className="bg-gray-50 dark:bg-gray-900/40">
+            <table className="w-full text-left text-sm border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="p-3">Proveedor</th>
                   <th className="p-3">Función</th>
@@ -341,7 +341,7 @@ export default function RGPDPage() {
                   <th className="p-3">Garantías</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-200">
                 <tr>
                   <td className="p-3">Clerk</td>
                   <td className="p-3">Autenticación/gestión de sesión</td>
@@ -376,7 +376,7 @@ export default function RGPDPage() {
             </table>
           </div>
 
-          <h2 id="menores" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="menores" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             15. Tratamiento de datos de menores
           </h2>
           <p>
@@ -384,7 +384,7 @@ export default function RGPDPage() {
             determinados por el Responsable. Se aplican salvaguardas reforzadas, minimización y restricciones de acceso.
           </p>
 
-          <h2 id="diseno" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="diseno" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             16. Privacidad desde el diseño y por defecto (art. 25)
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -393,7 +393,7 @@ export default function RGPDPage() {
             <li>Pseudonimización y separación lógica de datos sensibles cuando procede.</li>
           </ul>
 
-          <h2 id="automatizacion" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="automatizacion" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             17. Perfiles y decisiones automatizadas
           </h2>
           <p>
@@ -402,7 +402,7 @@ export default function RGPDPage() {
             con fines de mejora del servicio.
           </p>
 
-          <h2 id="formacion" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="formacion" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             18. Formación, confidencialidad y auditoría
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -411,7 +411,7 @@ export default function RGPDPage() {
             <li>Auditorías internas y revisiones de proveedores con base de riesgo.</li>
           </ul>
 
-          <h2 id="documentacion" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="documentacion" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             19. Documentación, evidencias y versionado
           </h2>
           <p>
@@ -419,7 +419,7 @@ export default function RGPDPage() {
             políticas y acuerdos. Las versiones vigentes están publicadas en el sitio y disponibles bajo solicitud.
           </p>
 
-          <h2 id="contacto" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="contacto" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             20. Contacto, DPO y autoridad de control
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -429,7 +429,7 @@ export default function RGPDPage() {
             <li><strong>Autoridad de control:</strong> <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">AEPD</a></li>
           </ul>
 
-          <h2 id="glosario" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b dark:border-primary-800">
+          <h2 id="glosario" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
             Glosario RGPD
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-2">
@@ -441,9 +441,9 @@ export default function RGPDPage() {
             <li><strong>CCT/SCC:</strong> cláusulas contractuales tipo para transferencias.</li>
           </ul>
 
-          <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Resumen práctico</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+          <div className="mt-12 p-6 bg-gray-50 border border-gray-200 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Resumen práctico</h3>
+            <p className="text-sm text-gray-600">
               Orientia actúa como Responsable para cuentas y facturación y como Encargado para datos de alumnado.
               Hay AET art. 28, medidas art. 32, respuesta a brechas en 72 h, EIPD cuando procede, RoPA actualizado,
               subencargados controlados, transferencias con garantías, y derechos atendidos con SLA claros.

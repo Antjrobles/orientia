@@ -15,7 +15,7 @@ export default function LegalLayout({
   return (
     <>
       <LegalHeader />
-      <main className="flex-grow bg-gray-50 dark:bg-gray-900">{children}</main>
+      <main className="flex-grow bg-gray-50">{children}</main>
       <Footer />
     </>
   );

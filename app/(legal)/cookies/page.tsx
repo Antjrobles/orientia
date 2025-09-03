@@ -14,20 +14,20 @@ export const metadata: Metadata = {
 export default function PoliticaCookiesPage() {
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-      <div className="bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-xl shadow-xl">
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-6 text-center sm:text-left">
+      <div className="bg-white p-8 sm:p-10 rounded-xl shadow-xl">
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-6 text-center sm:text-left">
           Política de Cookies
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+        <p className="text-sm text-gray-500 mb-8">
           Última actualización:{' '}
           {new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
 
         {/* Índice navegable */}
         <nav aria-label="Tabla de contenidos" className="mb-10">
-          <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700">
-            <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Contenido</p>
-            <ul className="grid gap-2 text-sm text-gray-600 dark:text-gray-300 sm:grid-cols-2">
+          <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+            <p className="text-sm font-semibold text-gray-700 mb-3">Contenido</p>
+            <ul className="grid gap-2 text-sm text-gray-600 sm:grid-cols-2">
               <li><a href="#que-son" className="hover:underline">1. ¿Qué son las cookies?</a></li>
               <li><a href="#tecnologias" className="hover:underline">2. Tecnologías similares</a></li>
               <li><a href="#tipos" className="hover:underline">3. Tipos de cookies</a></li>
@@ -46,15 +46,15 @@ export default function PoliticaCookiesPage() {
           </div>
         </nav>
 
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          <div className="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 dark:bg-blue-900/20 dark:border-blue-600 dark:text-blue-300 mb-8">
+        <div className="prose prose-lg max-w-none">
+          <div className="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 mb-8">
             En Orientia utilizamos cookies y tecnologías similares para garantizar el funcionamiento del servicio, recordar sus preferencias,
             mejorar la experiencia, obtener estadísticas de uso y, cuando lo consienta, ofrecer funcionalidades avanzadas. Esta política
             complementa la <Link href="/privacidad" className="text-primary-600 hover:underline">Política de Privacidad</Link> y los{' '}
             <Link href="/terminos" className="text-primary-600 hover:underline">Términos de Servicio</Link>.
           </div>
 
-          <h2 id="que-son" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="que-son" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             1. ¿Qué son las cookies?
           </h2>
           <p>
@@ -64,7 +64,7 @@ export default function PoliticaCookiesPage() {
             (permanecen durante un tiempo definido).
           </p>
 
-          <h2 id="tecnologias" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="tecnologias" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             2. Tecnologías similares
           </h2>
           <p>
@@ -81,7 +81,7 @@ export default function PoliticaCookiesPage() {
             lo indicaríamos expresamente y lo limitaríamos a intereses legítimos estrictos.
           </p>
 
-          <h2 id="tipos" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="tipos" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             3. Tipos de cookies (clasificación)
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -93,7 +93,7 @@ export default function PoliticaCookiesPage() {
             <li><strong>Publicidad/remarketing (si aplica):</strong> no las empleamos por defecto; solo con consentimiento explícito.</li>
           </ul>
 
-          <h2 id="bases-legales" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="bases-legales" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             4. Bases legales y obtención del consentimiento
           </h2>
           <p>
@@ -106,7 +106,7 @@ export default function PoliticaCookiesPage() {
             <Link href="/ajustes-cookies" className="text-primary-600 hover:underline">Ajustes de Cookies</Link> (enlace también disponible en el pie de página).
           </p>
 
-          <h2 id="como-usamos" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="como-usamos" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             5. Cómo usamos las cookies en Orientia
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -116,19 +116,19 @@ export default function PoliticaCookiesPage() {
             <li><strong>Rendimiento:</strong> cachear recursos y acelerar navegación entre páginas (Next.js/Vercel, estrategias de caché).</li>
             <li><strong>Seguridad:</strong> detectar accesos sospechosos y mitigar abusos.</li>
           </ul>
-          <div className="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-600 dark:text-yellow-300 mb-6">
+          <div className="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 mb-6">
             Nota: los nombres y duraciones exactos de cookies pueden variar según versiones de nuestros proveedores (Clerk, Supabase, Vercel, Stripe).
             La lista siguiente es orientativa y se actualiza periódicamente.
           </div>
 
-          <h2 id="lista" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="lista" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             6. Listado orientativo de cookies y almacenamiento local
           </h2>
 
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-6">6.1. Cookies propias (first-party)</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mt-6">6.1. Cookies propias (first-party)</h3>
           <div className="overflow-x-auto not-prose">
-            <table className="w-full text-left text-sm border border-gray-200 dark:border-gray-700 rounded-lg">
-              <thead className="bg-gray-50 dark:bg-gray-900/40">
+            <table className="w-full text-left text-sm border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="p-3">Nombre</th>
                   <th className="p-3">Finalidad</th>
@@ -137,7 +137,7 @@ export default function PoliticaCookiesPage() {
                   <th className="p-3">Categoría</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-200">
                 <tr>
                   <td className="p-3">orientia_session</td>
                   <td className="p-3">Mantener la sesión iniciada y asegurar el enrutado autenticado.</td>
@@ -170,13 +170,13 @@ export default function PoliticaCookiesPage() {
             </table>
           </div>
 
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-8">6.2. Cookies de terceros (third-party)</h3>
-          <p className="text-sm text-gray-700 dark:text-gray-300">
+          <h3 className="text-xl font-semibold text-gray-900 mt-8">6.2. Cookies de terceros (third-party)</h3>
+          <p className="text-sm text-gray-700">
             Los siguientes proveedores pueden establecer cookies cuando están habilitadas sus integraciones. Ajusta esta lista según tu stack real.
           </p>
           <div className="overflow-x-auto not-prose mt-3">
-            <table className="w-full text-left text-sm border border-gray-200 dark:border-gray-700 rounded-lg">
-              <thead className="bg-gray-50 dark:bg-gray-900/40">
+            <table className="w-full text-left text-sm border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="p-3">Proveedor</th>
                   <th className="p-3">Ejemplos de cookies</th>
@@ -185,7 +185,7 @@ export default function PoliticaCookiesPage() {
                   <th className="p-3">Categoría</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-200">
                 <tr>
                   <td className="p-3">Clerk (autenticación)</td>
                   <td className="p-3">__client, __session, clerk_session_id</td>
@@ -225,10 +225,10 @@ export default function PoliticaCookiesPage() {
             </table>
           </div>
 
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-8">6.3. Almacenamiento local (ejemplos)</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mt-8">6.3. Almacenamiento local (ejemplos)</h3>
           <div className="overflow-x-auto not-prose">
-            <table className="w-full text-left text-sm border border-gray-200 dark:border-gray-700 rounded-lg">
-              <thead className="bg-gray-50 dark:bg-gray-900/40">
+            <table className="w-full text-left text-sm border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="p-3">Clave</th>
                   <th className="p-3">Ámbito</th>
@@ -237,7 +237,7 @@ export default function PoliticaCookiesPage() {
                   <th className="p-3">Categoría</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-200">
                 <tr>
                   <td className="p-3">filters:lastUsed</td>
                   <td className="p-3">LocalStorage</td>
@@ -256,7 +256,7 @@ export default function PoliticaCookiesPage() {
             </table>
           </div>
 
-          <h2 id="gestionar" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="gestionar" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             7. Cómo gestionar o revocar el consentimiento
           </h2>
           <p>
@@ -268,7 +268,7 @@ export default function PoliticaCookiesPage() {
             Al rechazar categorías no necesarias, desactivamos su carga y borramos cookies previamente instaladas de esas categorías en la medida técnicamente posible.
           </p>
 
-          <h2 id="navegadores" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="navegadores" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             8. Configuración en navegadores
           </h2>
           <p>
@@ -284,7 +284,7 @@ export default function PoliticaCookiesPage() {
             Tenga en cuenta que bloquear todas las cookies puede afectar al funcionamiento del servicio (por ejemplo, no podrá iniciar sesión).
           </p>
 
-          <h2 id="retencion" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="retencion" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             9. Duración y retención
           </h2>
           <p>
@@ -292,7 +292,7 @@ export default function PoliticaCookiesPage() {
             revisamos periódicamente su necesidad y la renovamos solo cuando es imprescindible para la finalidad declarada.
           </p>
 
-          <h2 id="terceros" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="terceros" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             10. Cookies de terceros e integraciones
           </h2>
           <p>
@@ -301,7 +301,7 @@ export default function PoliticaCookiesPage() {
             acuerdos adecuados para su uso conforme a la normativa aplicable.
           </p>
 
-          <h2 id="transferencias" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="transferencias" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             11. Transferencias internacionales
           </h2>
           <p>
@@ -309,7 +309,7 @@ export default function PoliticaCookiesPage() {
             Para más información consulte la <Link href="/privacidad" className="text-primary-600 hover:underline">Política de Privacidad</Link> o contáctenos.
           </p>
 
-          <h2 id="gpc-dnt" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="gpc-dnt" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             12. Señales Global Privacy Control (GPC) y Do Not Track (DNT)
           </h2>
           <p>
@@ -318,7 +318,7 @@ export default function PoliticaCookiesPage() {
             y priorizamos sus elecciones explícitas en nuestro panel de consentimiento.
           </p>
 
-          <h2 id="cambios" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="cambios" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             13. Cambios en esta política
           </h2>
           <p>
@@ -326,7 +326,7 @@ export default function PoliticaCookiesPage() {
             la fecha de última actualización. En caso de cambios sustanciales, mostraremos un aviso destacado y/o solicitaremos nuevamente su consentimiento.
           </p>
 
-          <h2 id="contacto" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="contacto" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             14. Contacto y reclamaciones
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -335,9 +335,9 @@ export default function PoliticaCookiesPage() {
             <li><strong>Autoridad de control (AEPD):</strong> <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">www.aepd.es</a></li>
           </ul>
 
-          <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Resumen operativo</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+          <div className="mt-12 p-6 bg-gray-50 border border-gray-200 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Resumen operativo</h3>
+            <p className="text-sm text-gray-600">
               Usamos cookies necesarias sin consentimiento; para el resto pedimos su permiso por categorías. Puede cambiar su elección en cualquier momento
               desde <Link href="/ajustes-cookies" className="text-primary-600 hover:underline">Ajustes de Cookies</Link>. Respetamos GPC y aplicamos salvaguardas
               para terceros y transferencias internacionales.

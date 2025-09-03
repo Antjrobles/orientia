@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 export default function TerminosCondicionesPage() {
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-      <div className="bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-xl shadow-xl">
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-6 text-center sm:text-left">
+      <div className="bg-white p-8 sm:p-10 rounded-xl shadow-xl">
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-6 text-center sm:text-left">
           Términos y Condiciones de Servicio
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+        <p className="text-sm text-gray-500 mb-8">
           Última actualización:{' '}
           {new Date().toLocaleDateString('es-ES', {
             year: 'numeric',
@@ -29,9 +29,9 @@ export default function TerminosCondicionesPage() {
 
         {/* Índice navegable */}
         <nav aria-label="Tabla de contenidos" className="mb-10">
-          <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700">
-            <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Contenido</p>
-            <ul className="grid gap-2 text-sm text-gray-600 dark:text-gray-300 sm:grid-cols-2">
+          <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+            <p className="text-sm font-semibold text-gray-700 mb-3">Contenido</p>
+            <ul className="grid gap-2 text-sm text-gray-600 sm:grid-cols-2">
               <li><a href="#objeto" className="hover:underline">1. Objeto y aceptación</a></li>
               <li><a href="#definiciones" className="hover:underline">2. Definiciones</a></li>
               <li><a href="#cuenta" className="hover:underline">3. Registro y cuenta</a></li>
@@ -61,12 +61,12 @@ export default function TerminosCondicionesPage() {
           </div>
         </nav>
 
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          <div className="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 dark:bg-blue-900/20 dark:border-blue-600 dark:text-blue-300 mb-8">
+        <div className="prose prose-lg max-w-none">
+          <div className="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 mb-8">
             Al registrarse y utilizar Orientia, usted acepta íntegramente estos Términos y Condiciones de Servicio. Si no está de acuerdo, no utilice la plataforma.
           </div>
 
-          <h2 id="objeto" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="objeto" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             1. Objeto y aceptación
           </h2>
           <p>
@@ -76,7 +76,7 @@ export default function TerminosCondicionesPage() {
             <Link href="/cookies" className="text-primary-600 hover:underline">Política de Cookies</Link>.
           </p>
 
-          <h2 id="definiciones" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="definiciones" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             2. Definiciones
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -87,7 +87,7 @@ export default function TerminosCondicionesPage() {
             <li><strong>Plan:</strong> Modalidad de suscripción con prestaciones y precios específicos.</li>
           </ul>
 
-          <h2 id="cuenta" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="cuenta" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             3. Registro y cuenta
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -97,7 +97,7 @@ export default function TerminosCondicionesPage() {
             <li><strong>Organizaciones:</strong> Si usa el Servicio en nombre de un centro, declara contar con autoridad suficiente.</li>
           </ul>
 
-          <h2 id="licencia" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="licencia" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             4. Licencia de uso
           </h2>
           <p>
@@ -106,7 +106,7 @@ export default function TerminosCondicionesPage() {
             a los educativos/administrativos del centro.
           </p>
 
-          <h2 id="uso-aceptable" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="uso-aceptable" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             5. Uso aceptable
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -117,7 +117,7 @@ export default function TerminosCondicionesPage() {
             <li>Respetar límites técnicos razonables (p. ej., tasa de peticiones, almacenamiento) del Plan contratado.</li>
           </ul>
 
-          <h2 id="contenido-usuario" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="contenido-usuario" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             6. Contenido del usuario
           </h2>
           <p>
@@ -126,7 +126,7 @@ export default function TerminosCondicionesPage() {
             y se compromete a no introducir datos innecesarios o excesivos.
           </p>
 
-          <h2 id="propiedad-intelectual" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="propiedad-intelectual" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             7. Propiedad intelectual
           </h2>
           <p>
@@ -134,7 +134,7 @@ export default function TerminosCondicionesPage() {
             limitada de uso, no se confiere ningún otro derecho. Queda prohibida la copia, modificación o creación de obras derivadas del Servicio.
           </p>
 
-          <h2 id="servicio" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="servicio" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             8. Servicio, disponibilidad y mantenimiento
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -143,7 +143,7 @@ export default function TerminosCondicionesPage() {
             <li><strong>Actualizaciones:</strong> Podemos introducir mejoras, nuevas funciones o cambios que no disminuyan sustancialmente el valor del Plan.</li>
           </ul>
 
-          <h2 id="terceros" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="terceros" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             9. Integraciones y terceros
           </h2>
           <p>
@@ -152,7 +152,7 @@ export default function TerminosCondicionesPage() {
             El uso de dichos servicios puede estar sujeto a sus condiciones. Orientia no es responsable del funcionamiento de servicios ajenos.
           </p>
 
-          <h2 id="pagos" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="pagos" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             10. Planes, facturación y pagos
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -163,7 +163,7 @@ export default function TerminosCondicionesPage() {
             <li><strong>Cambios de Plan:</strong> Las modificaciones se prorratean cuando aplique.</li>
           </ul>
 
-          <h2 id="prueba-desistimiento" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="prueba-desistimiento" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             11. Prueba y derecho de desistimiento
           </h2>
           <p>
@@ -173,7 +173,7 @@ export default function TerminosCondicionesPage() {
             rigen las condiciones contractuales pactadas.
           </p>
 
-          <h2 id="suspension" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="suspension" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             12. Suspensión y cancelación
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -184,7 +184,7 @@ export default function TerminosCondicionesPage() {
             </li>
           </ul>
 
-          <h2 id="seguridad" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="seguridad" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             13. Seguridad y confidencialidad
           </h2>
           <p>
@@ -192,7 +192,7 @@ export default function TerminosCondicionesPage() {
             Usted debe aplicar buenas prácticas (no compartir credenciales, dispositivos protegidos, uso de redes seguras).
           </p>
 
-          <h2 id="proteccion-datos" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="proteccion-datos" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             14. Protección de datos
           </h2>
           <p>
@@ -202,7 +202,7 @@ export default function TerminosCondicionesPage() {
             de encargo de tratamiento conforme al art. 28 GDPR. El Usuario se compromete a introducir únicamente datos pertinentes y necesarios.
           </p>
 
-          <h2 id="educativo" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="educativo" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             15. Uso educativo y contenido sensible
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -211,7 +211,7 @@ export default function TerminosCondicionesPage() {
             <li>Está prohibido usar el Servicio para diagnósticos médicos o finalidades ajenas al contexto educativo legalmente previsto.</li>
           </ul>
 
-          <h2 id="responsabilidad" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="responsabilidad" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             16. Exclusiones y limitación de responsabilidad
           </h2>
           <p>
@@ -221,7 +221,7 @@ export default function TerminosCondicionesPage() {
             el importe pagado por el Usuario en los 12 meses anteriores al hecho que dio lugar a la responsabilidad.
           </p>
 
-          <h2 id="indemnizacion" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="indemnizacion" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             17. Indemnización
           </h2>
           <p>
@@ -229,7 +229,7 @@ export default function TerminosCondicionesPage() {
             la ley o derechos de terceros, incluyendo costes razonables de defensa.
           </p>
 
-          <h2 id="cambios" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="cambios" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             18. Cambios en el servicio y en los términos
           </h2>
           <p>
@@ -238,7 +238,7 @@ export default function TerminosCondicionesPage() {
             sustancialmente el valor del Plan, podrá cancelar antes del siguiente ciclo sin penalización.
           </p>
 
-          <h2 id="enlaces" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="enlaces" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             19. Enlaces externos
           </h2>
           <p>
@@ -246,7 +246,7 @@ export default function TerminosCondicionesPage() {
             El acceso a dichos sitios es bajo su propia responsabilidad.
           </p>
 
-          <h2 id="comunicaciones" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="comunicaciones" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             20. Comunicaciones y notificaciones
           </h2>
           <p>
@@ -256,7 +256,7 @@ export default function TerminosCondicionesPage() {
             <a href="mailto:soporte@orientia.es" className="text-primary-600 hover:underline">soporte@orientia.es</a>.
           </p>
 
-          <h2 id="cesion" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="cesion" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             21. Cesión y subcontratación
           </h2>
           <p>
@@ -264,7 +264,7 @@ export default function TerminosCondicionesPage() {
             autenticación, pagos) manteniendo responsabilidad frente al Usuario.
           </p>
 
-          <h2 id="fuerza-mayor" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="fuerza-mayor" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             22. Fuerza mayor
           </h2>
           <p>
@@ -272,7 +272,7 @@ export default function TerminosCondicionesPage() {
             fallos generalizados de Internet, cortes eléctricos, conflictos laborales, actos gubernamentales).
           </p>
 
-          <h2 id="nulidad" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="nulidad" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             23. Nulidad parcial
           </h2>
           <p>
@@ -280,7 +280,7 @@ export default function TerminosCondicionesPage() {
             que refleje lo más fielmente posible la intención original y sea válida.
           </p>
 
-          <h2 id="ley" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="ley" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             24. Ley aplicable y jurisdicción
           </h2>
           <p>
@@ -288,7 +288,7 @@ export default function TerminosCondicionesPage() {
             de [Málaga] para la resolución de conflictos. Si actúa como consumidor, podrá acudir a los tribunales de su domicilio.
           </p>
 
-          <h2 id="contacto" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+          <h2 id="contacto" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
             25. Contacto
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
@@ -297,9 +297,9 @@ export default function TerminosCondicionesPage() {
             <li><strong>Dirección postal:</strong> [Dirección], [CP] [Ciudad], Andalucía, España</li>
           </ul>
 
-          <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Resumen práctico</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+          <div className="mt-12 p-6 bg-gray-50 border border-gray-200 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Resumen práctico</h3>
+            <p className="text-sm text-gray-600">
               Uso profesional, licencia limitada, seguridad razonable, datos personales conforme a GDPR/LOPDGDD y encargo art. 28;
               integraciones con terceros; suscripción renovable; limitación de responsabilidad; posibilidad de cancelación;
               supresión de datos según la página de Eliminación.
