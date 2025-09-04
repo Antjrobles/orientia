@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useConsent } from '@/components/consent/ConsentProvider';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function CookieBanner() {
   const { consent, loaded, hasCookie, acceptAll, rejectNonEssential, save } = useConsent();
@@ -43,10 +44,10 @@ export default function CookieBanner() {
             )}
           </div>
           <div className="flex flex-col items-stretch gap-2 sm:flex-row">
-            <button onClick={() => rejectNonEssential()} className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50">
+            <button onClick={() => { rejectNonEssential(); toast.success('Preferencias rechazadas'); }} className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50">
               Rechazar todo
             </button>
-            <button onClick={() => acceptAll()} className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700">
+            <button onClick={() => { acceptAll(); toast.success('Preferencias aceptadas'); }} className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700">
               Aceptar todo
             </button>
             <button onClick={() => setOpen((v) => !v)} className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200">

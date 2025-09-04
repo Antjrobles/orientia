@@ -48,7 +48,8 @@ export function writeConsent(state: ConsentState) {
   const expires = new Date(Date.now() + COOKIE_MAX_AGE_DAYS * 24 * 60 * 60 * 1000).toUTCString();
   const value = encodeURIComponent(JSON.stringify(state));
   // Path=/ to make it accessible site-wide
-  document.cookie = `${COOKIE_NAME}=${value}; Expires=${expires}; Path=/; SameSite=Lax`;
+  const secure = typeof location !== 'undefined' && location.protocol === 'https:' ? '; Secure' : '';
+  document.cookie = `${COOKIE_NAME}=${value}; Expires=${expires}; Path=/; SameSite=Lax${secure}`;
 }
 
 export function removeNonEssentialCookies() {
@@ -77,4 +78,3 @@ export function broadcastConsent(state: ConsentState) {
   (window as any).__consent__ = state;
   window.dispatchEvent(new CustomEvent('consent:updated', { detail: state }));
 }
-
