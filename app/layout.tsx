@@ -14,10 +14,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://orientia.es'),
+  metadataBase: new URL('https://www.orientia.es'),
   title: {
-    default: 'Sistema de Informes Psicopedagógicos - ',
-    template: '%s | Sistema de Informes Psicopedagógicos - ',
+    default: 'Sistema de Informes Psicopedagógicos',
+    template: '%s | Sistema de Informes Psicopedagógicos',
   },
   icons: {
     icon: [{ url: '/icons/favicon.ico', sizes: 'any' }],
@@ -53,9 +53,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_ES',
-    url: 'https://orientia.es',
+    url: 'https://www.orientia.es',
     siteName: 'Sistema de Informes Psicopedagógicos',
-    title: 'Sistema de Informes Psicopedagógicos - ',
+    title: 'Sistema de Informes Psicopedagógicos',
     description:
       'Plataforma oficial para orientadores educativos. Genera informes psicopedagógicos con IA, optimiza tiempo y garantiza calidad profesional.',
     images: [
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sistema de Informes Psicopedagógicos - ',
+    title: 'Sistema de Informes Psicopedagógicos',
     description: 'Plataforma oficial para orientadores educativos. Genera informes psicopedagógicos con IA.',
     images: ['/twitter-image.jpg'],
   },
@@ -77,9 +77,9 @@ export const metadata: Metadata = {
     google: 'google-site-verification-code',
   },
   alternates: {
-    canonical: 'https://orientia.es',
+    canonical: 'https://www.orientia.es',
     languages: {
-      'es-ES': 'https://orientia.es',
+      'es-ES': 'https://www.orientia.es',
     },
   },
   category: 'education',

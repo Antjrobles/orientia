@@ -27,6 +27,7 @@ export default function robots(): MetadataRoute.Robots {
           '/informes',
           '/centros',
           '/admin',
+          '/not-permitted',
           // Rutas técnicas que no aportan valor SEO
           '/api',
           '/_next',

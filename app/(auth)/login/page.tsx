@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +11,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Mail, CheckCircle, AlertCircle, Loader2, Key, LogIn } from 'lucide-react';
 import { AuthProviderButtons } from '@/components/auth/AuthProviderButtons';
 import { PasswordInput } from '@/components/auth/PasswordInput';
+import { AuthCard } from '@/components/auth/AuthCard';
+import { AuthHeader } from '@/components/auth/AuthHeader';
+import { AuthDivider } from '@/components/auth/AuthDivider';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -68,51 +70,28 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='min-h-screen bg-white font-sans'>
-      {/* El botón de volver al inicio lo aporta el layout de (auth) */}
+    <AuthCard>
+      {/* El layout de (auth) aporta el botón de volver */}
+      <AuthHeader title="Accede a tu cuenta" subtitle="Bienvenido/a de nuevo" />
+      <div className="space-y-4">
+        <AuthProviderButtons isLoading={loading} callbackUrl={searchParams.get('callbackUrl') || '/profile'} />
+        <AuthDivider>o con tu correo</AuthDivider>
 
-      <div className='flex flex-col lg:flex-row w-full min-h-screen'>
-        <div className='pt-16 lg:hidden'></div>
-
-        <div className='w-full lg:w-1/2 flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8 flex-1'>
-          <div className='w-full max-w-md mx-auto'>
-            <div className='w-full px-4 sm:px-0 mb-8 flex justify-center'>
-              <Image
-                src='/icons/orientia.svg'
-                alt='Logo Orientia'
-                width={240}
-                height={40}
-                className='w-60 h-auto'
-                priority
-              />
-            </div>
-
-            <div className='w-full space-y-4'>
-              <div className='text-center'>
-                <h2 className='text-2xl lg:text-3xl font-bold text-gray-900 tracking-tight'>Accede a tu cuenta</h2>
-                <p className='text-gray-500 mt-2'>Bienvenido/a de nuevo</p>
-              </div>
-              <div className='bg-white p-6 rounded-lg shadow-sm border border-gray-200'>
+        <div className='bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:bg-gray-800 dark:border-gray-700'>
                 {justRegistered && (
-                  <Alert className='mb-4 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2 px-3 py-2'>
+                  <Alert className='mb-4 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2 px-3 py-2 dark:bg-emerald-900/20 dark:border-emerald-700'>
                     <CheckCircle className='h-4 w-4 text-emerald-600' />
-                    <AlertDescription className='text-emerald-700 text-sm font-medium'>
+                    <AlertDescription className='text-emerald-700 text-sm font-medium dark:text-emerald-300'>
                       ¡Registro completado! Ahora puedes iniciar sesión.
                     </AlertDescription>
                   </Alert>
                 )}
-                <div className='space-y-3'>
-                  <AuthProviderButtons isLoading={loading} callbackUrl={searchParams.get('callbackUrl') || '/profile'} />
-                  <div className='flex items-center'>
-                    <div className='flex-grow border-t border-gray-200'></div>
-                    <span className='px-3 text-xs text-gray-400'>o con tu correo</span>
-                    <div className='flex-grow border-t border-gray-200'></div>
-                  </div>
-                  <form onSubmit={handleLogin} className='space-y-3'>
+                <div className='space-y-4'>
+                  <form onSubmit={handleLogin} className='space-y-4'>
                     <div>
                       <Label
                         htmlFor='email'
-                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'
+                        className='text-gray-700 dark:text-gray-300 text-sm font-medium flex items-center gap-1.5 mb-1.5'
                       >
                         <Mail className='w-4 h-4 text-emerald-600' /> Correo electrónico
                       </Label>
@@ -125,13 +104,13 @@ export default function LoginPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         disabled={loading}
                         autoComplete='email'
-                        className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
+                        className='h-10 bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 rounded-lg px-3 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
                       />
                     </div>
                     <div>
                       <Label
                         htmlFor='password'
-                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'
+                        className='text-gray-700 dark:text-gray-300 text-sm font-medium flex items-center gap-1.5 mb-1.5'
                       >
                         <Key className='w-4 h-4 text-emerald-600' /> Contraseña
                       </Label>
@@ -148,7 +127,7 @@ export default function LoginPage() {
                     <Button
                       type='submit'
                       disabled={loading}
-                      className='w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm'
+                      className='w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold transition-all flex items-center justify-center gap-2 text-sm'
                     >
                       {loading ? (
                         <>
@@ -167,7 +146,7 @@ export default function LoginPage() {
                     <div className='space-y-2'>
                       <Alert variant='destructive' className='rounded-lg flex items-center gap-2 px-3 py-2'>
                         <AlertCircle className='h-4 w-4 text-red-600' />
-                        <AlertDescription className='text-red-700 text-sm font-medium'>{error}</AlertDescription>
+                        <AlertDescription className='text-red-700 dark:text-red-300 text-sm font-medium'>{error}</AlertDescription>
                       </Alert>
                       {error.includes('verificar tu email') && (
                         <Button
@@ -194,23 +173,21 @@ export default function LoginPage() {
                       {verificationSent && (
                         <Alert className='rounded-lg flex items-center gap-2 px-3 py-2'>
                           <CheckCircle className='h-4 w-4 text-emerald-600' />
-                          <AlertDescription className='text-emerald-700 text-sm font-medium'>{verificationSent}</AlertDescription>
+                          <AlertDescription className='text-emerald-700 dark:text-emerald-300 text-sm font-medium'>{verificationSent}</AlertDescription>
                         </Alert>
                       )}
                     </div>
                   )}
                 </div>
               </div>
-              <div className='text-center text-xs text-gray-400 flex flex-wrap justify-center items-center gap-x-2 gap-y-1'>
-                <Link href='/register' className='text-emerald-600 hover:underline font-medium'>
-                  ¿No tienes cuenta? Regístrate
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
+
+      <div className='mt-6 text-center text-sm'>
+        <p className='text-gray-500 dark:text-gray-400'>
+          ¿No tienes cuenta?{' '}
+          <Link href='/register' className='font-semibold text-emerald-600 hover:underline'>Regístrate</Link>
+        </p>
+      </div>
+    </AuthCard>
   );
 }
-

@@ -1,23 +1,5 @@
 
 import type { Metadata } from 'next';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Brain,
-  FileText,
-  Shield,
-  Users,
-  Clock,
-  CheckCircle,
-  ArrowRight,
-  Sparkles,
-  Lock,
-  Database,
-  Award,
-  BookOpen,
-} from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
 import Footer from '@/components/Footer';
 import CTASection from '@/components/CTASection';
 import SecuritySection from '@/components/SecuritySection';
@@ -36,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Sistema de Informes Psicopedagógicos',
     description: 'Plataforma oficial para orientadores educativos. Genera informes con IA.',
-    url: 'https://orientia.es',
+    url: 'https://www.orientia.es',
     images: [
       {
         url: '/og-home.jpg',
@@ -51,6 +33,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <div className='min-h-screen bg-white'>
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:text-gray-900 focus:shadow">Saltar al contenido principal</a>
       {/* Structured Data */}
       <script
         type='application/ld+json'
@@ -60,7 +43,7 @@ export default function Page() {
             '@type': 'WebApplication',
             name: 'Sistema de Informes Psicopedagógicos',
             description: 'Plataforma oficial para orientadores educativos',
-            url: 'https://orientia.es',
+            url: 'https://www.orientia.es',
             applicationCategory: 'EducationalApplication',
             operatingSystem: 'Web',
             offers: {
@@ -69,7 +52,7 @@ export default function Page() {
               priceCurrency: 'EUR',
             },
             provider: {
-              '@type': '',
+              '@type': 'Organization',
               name: 'Antonio Robles',
               url: 'https://www.orientia.es',
             },
@@ -88,7 +71,7 @@ export default function Page() {
       <Breadcrumb />
 
       {/* Main Content */}
-      <main role='main'>
+      <main id='main' role='main'>
         {/* Hero Section */}
         <Hero />
 

@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +9,9 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, CheckCircle, AlertCircle, User, Mail, Key, Sparkles } from 'lucide-react';
 import { AuthProviderButtons } from '@/components/auth/AuthProviderButtons';
 import { PasswordInput } from '@/components/auth/PasswordInput';
+import { AuthCard } from '@/components/auth/AuthCard';
+import { AuthHeader } from '@/components/auth/AuthHeader';
+import { AuthDivider } from '@/components/auth/AuthDivider';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -49,17 +50,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="w-full rounded-xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800 sm:p-8">
-      <div className="mb-8 flex flex-col items-center gap-4">
-        <Link href="/">
-          <Image src="/icons/orientia.svg" alt="Logo Orientia" width={200} height={33} priority className="dark:hidden" />
-          <Image src="/icons/orientia-dark.svg" alt="Logo Orientia" width={200} height={33} priority className="hidden dark:block" />
-        </Link>
-        <div className="text-center">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Crea tu cuenta</h1>
-          <p className="mt-1 text-gray-500 dark:text-gray-400">Es rápido, fácil y gratuito para empezar.</p>
-        </div>
-      </div>
+    <AuthCard>
+      <AuthHeader title="Crea tu cuenta" subtitle="Es rápido, fácil y gratuito para empezar." />
 
       {success ? (
         <Alert variant="default" className="rounded-lg bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-700">
@@ -74,27 +66,20 @@ export default function RegisterPage() {
         <div className="space-y-4">
           <AuthProviderButtons isLoading={isLoading} callbackUrl="/profile" />
 
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center" aria-hidden="true">
-              <div className="w-full border-t border-gray-200 dark:border-gray-600" />
-            </div>
-            <div className="relative flex justify-center text-xs">
-              <span className="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400">o regístrate con tu correo</span>
-            </div>
-          </div>
+          <AuthDivider>o regístrate con tu correo</AuthDivider>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="name" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">
                 <User className="h-4 w-4 text-emerald-600" /> Nombre completo
               </Label>
-              <Input id="name" type="text" placeholder="Tu nombre y apellidos" required value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 dark:bg-gray-700/50" />
+              <Input id="name" type="text" placeholder="Tu nombre y apellidos" required value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600" />
             </div>
             <div>
               <Label htmlFor="email" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">
                 <Mail className="h-4 w-4 text-emerald-600" /> Correo electrónico
               </Label>
-              <Input id="email" type="email" placeholder="tu@institucion.edu" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 dark:bg-gray-700/50" autoComplete="email" />
+              <Input id="email" type="email" placeholder="tu@institucion.edu" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600" autoComplete="email" />
             </div>
             <div>
               <Label htmlFor="password" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -128,7 +113,6 @@ export default function RegisterPage() {
           <Link href="/privacidad" className="underline hover:text-gray-600 dark:hover:text-gray-300">Política de Privacidad</Link>.
         </p>
       </div>
-    </div>
+    </AuthCard>
   );
 }
-
