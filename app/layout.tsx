@@ -107,7 +107,7 @@ export default async function RootLayout({
             <CookieBanner />
           </ConsentProvider>
         </Providers>
-        <Toaster richColors position='top-center' expand={true} />
+        <Toaster richColors position='top-right' expand={true} />
       </body>
     </html>
   );

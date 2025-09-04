@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useConsent } from '@/components/consent/ConsentProvider';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -8,6 +8,11 @@ import { toast } from 'sonner';
 export default function CookieBanner() {
   const { consent, loaded, hasCookie, acceptAll, rejectNonEssential, save } = useConsent();
   const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState(consent);
+
+  useEffect(() => {
+    setDraft(consent);
+  }, [consent]);
 
   if (!loaded) return null;
 
@@ -23,23 +28,33 @@ export default function CookieBanner() {
               Puedes cambiar tu elección en cualquier momento desde <Link href="/ajustes-cookies" className="text-primary-600 underline">Ajustes de Cookies</Link>.
             </p>
             {open && (
-              <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {[
-                  { key: 'preferences', label: 'Preferencias' },
-                  { key: 'analytics', label: 'Analítica' },
-                  { key: 'performance', label: 'Rendimiento' },
-                  { key: 'ads', label: 'Publicidad' },
-                ].map((c) => (
-                  <label key={c.key} className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={(consent as any)[c.key]}
-                      onChange={(e) => save({ [c.key]: e.target.checked } as any)}
-                      className="h-4 w-4 rounded border-gray-300"
-                    />
-                    <span className="text-gray-800">{c.label}</span>
-                  </label>
-                ))}
+              <div className="mt-3 space-y-3">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {[
+                    { key: 'preferences', label: 'Preferencias' },
+                    { key: 'analytics', label: 'Analítica' },
+                    { key: 'performance', label: 'Rendimiento' },
+                    { key: 'ads', label: 'Publicidad' },
+                  ].map((c) => (
+                    <label key={c.key} className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={(draft as any)[c.key]}
+                        onChange={(e) => setDraft({ ...(draft as any), [c.key]: e.target.checked } as any)}
+                        className="h-4 w-4 rounded border-gray-300"
+                      />
+                      <span className="text-gray-800">{c.label}</span>
+                    </label>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => { save(draft); toast.success('Preferencias guardadas'); }}
+                    className="rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200"
+                  >
+                    Guardar preferencias
+                  </button>
+                </div>
               </div>
             )}
           </div>
