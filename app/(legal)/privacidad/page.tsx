@@ -185,8 +185,7 @@ export default function PrivacidadPage() {
             <li><strong>Autoridad de control:</strong> Puede reclamar ante la <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">AEPD</a>.</li>
             <li><strong>Dirección postal:</strong> [Dirección postal], [CP] [Ciudad], Andalucía, España.</li>
           </ul>
-
-          <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-lg">
+           <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Resumen rápido</h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Tratamos los datos necesarios para prestar Orientia y cumplir la ley; con datos de alumnado actuamos como Encargado, siguiendo instrucciones del centro.

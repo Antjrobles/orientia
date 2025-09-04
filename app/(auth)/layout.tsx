@@ -1,6 +1,32 @@
 import React from 'react';
 import Link from 'next/link';
 import { Home } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Acceso | Orientia',
+    template: '%s | Orientia',
+  },
+  description:
+    'Inicia sesión o crea tu cuenta para acceder a Orientia y generar informes psicopedagógicos.',
+  robots: {
+    index: false,
+    follow: false,
+  },
+  openGraph: {
+    title: 'Acceso | Orientia',
+    description:
+      'Inicia sesión o crea tu cuenta para acceder a Orientia y generar informes psicopedagógicos.',
+    siteName: 'Orientia',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Acceso | Orientia',
+    description:
+      'Inicia sesión o crea tu cuenta para acceder a Orientia y generar informes psicopedagógicos.',
+  },
+};
 
 /**
  * Este es el layout para todas las rutas de autenticación (login, register, etc.).

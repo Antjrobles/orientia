@@ -8,17 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import {
-  Loader2,
-  CheckCircle,
-  AlertCircle,
-  User,
-  Mail,
-  Key,
-  Eye,
-  EyeOff,
-  Sparkles,
-} from 'lucide-react';
+import { Loader2, CheckCircle, AlertCircle, User, Mail, Key, Sparkles } from 'lucide-react';
+import { AuthProviderButtons } from '@/components/auth/AuthProviderButtons';
+import { PasswordInput } from '@/components/auth/PasswordInput';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -27,7 +19,6 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,17 +72,7 @@ export default function RegisterPage() {
         </Alert>
       ) : (
         <div className="space-y-4">
-          <div className="flex justify-center gap-4">
-            <Button onClick={() => signIn('google', { callbackUrl: '/profile' })} disabled={isLoading} variant="outline" size="icon" aria-label="Registrarse con Google">
-              <Image src="/icons/google.svg" alt="Google" width={20} height={20} />
-            </Button>
-            <Button onClick={() => signIn('facebook', { callbackUrl: '/profile' })} disabled={isLoading} variant="outline" size="icon" aria-label="Registrarse con Facebook">
-              <Image src="/icons/facebook.svg" alt="Facebook" width={20} height={20} />
-            </Button>
-            <Button onClick={() => signIn('apple', { callbackUrl: '/profile' })} disabled={isLoading} variant="outline" size="icon" aria-label="Registrarse con Apple">
-              <Image src="/icons/apple.svg" alt="Apple" width={20} height={20} />
-            </Button>
-          </div>
+          <AuthProviderButtons isLoading={isLoading} callbackUrl="/profile" />
 
           <div className="relative my-4">
             <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -113,18 +94,13 @@ export default function RegisterPage() {
               <Label htmlFor="email" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">
                 <Mail className="h-4 w-4 text-emerald-600" /> Correo electrónico
               </Label>
-              <Input id="email" type="email" placeholder="tu@institucion.edu" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 dark:bg-gray-700/50" />
+              <Input id="email" type="email" placeholder="tu@institucion.edu" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 dark:bg-gray-700/50" autoComplete="email" />
             </div>
             <div>
               <Label htmlFor="password" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">
                 <Key className="h-4 w-4 text-emerald-600" /> Contraseña
               </Label>
-              <div className="relative">
-                <Input id="password" type={showPassword ? 'text' : 'password'} placeholder="Mínimo 6 caracteres" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 pr-10 dark:bg-gray-700/50" />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300" aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}>
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
-              </div>
+              <PasswordInput id="password" placeholder="Mínimo 6 caracteres" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} autoComplete="new-password" />
             </div>
 
             <Button type="submit" disabled={isLoading} className="flex w-full h-10 items-center justify-center gap-2 bg-emerald-600 text-sm font-semibold text-white transition-all hover:bg-emerald-700">
@@ -155,3 +131,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+

@@ -9,22 +9,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Mail,
-  User,
-  CheckCircle,
-  AlertCircle,
-  Loader2,
-  BookOpen,
-  Key,
-  LogIn,
-  Lightbulb,
-  BarChart2,
-  Shield,
-  Home,
-  Eye,
-  EyeOff,
-} from 'lucide-react';
+import { Mail, CheckCircle, AlertCircle, Loader2, Key, LogIn } from 'lucide-react';
+import { AuthProviderButtons } from '@/components/auth/AuthProviderButtons';
+import { PasswordInput } from '@/components/auth/PasswordInput';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,14 +21,23 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [justRegistered, setJustRegistered] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [verificationSent, setVerificationSent] = useState<string | null>(null);
 
   useEffect(() => {
-    // Comprobar si el usuario viene de la página de registro
+    // Mensaje tras registro
     if (searchParams.get('registered') === 'true') {
       setJustRegistered(true);
-      // Opcional: limpiar el parámetro de la URL para que el mensaje no persista si se recarga la página
       router.replace('/login', { scroll: false });
+    }
+    // Errores de NextAuth en query
+    const errorParam = searchParams.get('error');
+    if (errorParam) {
+      const map: Record<string, string> = {
+        OAuthAccountNotLinked: 'Esa cuenta de proveedor ya está vinculada a otro email. Inicia sesión con ese proveedor.',
+        AccessDenied: 'Acceso denegado.',
+        Configuration: 'Error de configuración de autenticación.',
+      };
+      setError(map[errorParam] || 'No se pudo iniciar sesión.');
     }
   }, [searchParams, router]);
 
@@ -50,10 +46,12 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
 
+    const callbackUrl = searchParams.get('callbackUrl') || '/profile';
     const result = await signIn('credentials', {
       redirect: false,
       email,
       password,
+      callbackUrl,
     });
 
     setLoading(false);
@@ -65,19 +63,13 @@ export default function LoginPage() {
         setError('Email o contraseña incorrectos. Por favor, verifica tus datos.');
       }
     } else if (result?.ok) {
-      // El inicio de sesión fue exitoso, redirigir al perfil.
-      router.push('/profile');
+      router.push(callbackUrl);
     }
   };
 
   return (
     <div className='min-h-screen bg-white font-sans'>
-      <Link
-        href='/'
-        className='absolute top-4 left-4 z-50 flex items-center gap-2 px-3 py-2 bg-white/80 backdrop-blur-sm rounded-lg border border-gray-200 hover:bg-emerald-50 hover:border-emerald-200 hover:shadow-md transition-all duration-300 shadow-sm group'>
-        <Home className='w-4 h-4 text-emerald-600 group-hover:text-emerald-700 transition-colors duration-300' />
-        <span className='text-sm font-medium text-gray-700 group-hover:text-emerald-800 transition-colors duration-300'>Inicio</span>
-      </Link>
+      {/* El botón de volver al inicio lo aporta el layout de (auth) */}
 
       <div className='flex flex-col lg:flex-row w-full min-h-screen'>
         <div className='pt-16 lg:hidden'></div>
@@ -110,64 +102,7 @@ export default function LoginPage() {
                   </Alert>
                 )}
                 <div className='space-y-3'>
-                  <div className='flex flex-wrap justify-center gap-8 sm:gap-8'>
-                    <Button
-                      onClick={() => signIn('google', { callbackUrl: '/profile' })}
-                      disabled={loading}
-                      className='h-7 sm:h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
-                      <Image
-                        src="/icons/google.svg"
-                        alt="Google"
-                        width={16}
-                        height={16}
-                        className="w-4 h-4"
-                      />
-                    </Button>
-
-                    <Button
-                      onClick={async () => {
-                        setLoading(true);
-                        try {
-                          const result = await signIn('facebook', {
-                            callbackUrl: '/profile',
-                            redirect: false
-                          });
-
-                          if (result?.ok) {
-                            router.push('/profile');
-                          } else if (result?.error) {
-                            setError('Error al iniciar sesión con Facebook. Inténtalo de nuevo.');
-                          }
-                        } catch (error) {
-                          setError('Error al conectar con Facebook.');
-                        } finally {
-                          setLoading(false);
-                        }
-                      }}
-                      disabled={loading}
-                      className='h-7 sm:h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
-                      <Image
-                        src="/icons/facebook.svg"
-                        alt="Facebook"
-                        width={16}
-                        height={16}
-                        className="w-4 h-4"
-                      />
-                    </Button>
-
-                    <Button
-                      onClick={() => signIn('apple', { callbackUrl: '/profile' })}
-                      disabled={loading}
-                      className='h-7 sm:h-8 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium'>
-                      <Image
-                        src="/icons/apple.svg"
-                        alt="Apple"
-                        width={16}
-                        height={16}
-                        className="w-4 h-4"
-                      />
-                    </Button>
-                  </div>
+                  <AuthProviderButtons isLoading={loading} callbackUrl={searchParams.get('callbackUrl') || '/profile'} />
                   <div className='flex items-center'>
                     <div className='flex-grow border-t border-gray-200'></div>
                     <span className='px-3 text-xs text-gray-400'>o con tu correo</span>
@@ -177,7 +112,8 @@ export default function LoginPage() {
                     <div>
                       <Label
                         htmlFor='email'
-                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'>
+                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'
+                      >
                         <Mail className='w-4 h-4 text-emerald-600' /> Correo electrónico
                       </Label>
                       <Input
@@ -188,39 +124,32 @@ export default function LoginPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         disabled={loading}
+                        autoComplete='email'
                         className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
                       />
                     </div>
                     <div>
                       <Label
                         htmlFor='password'
-                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'>
+                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1'
+                      >
                         <Key className='w-4 h-4 text-emerald-600' /> Contraseña
                       </Label>
-                      <div className="relative">
-                        <Input
-                          id='password'
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder='Tu contraseña'
-                          required
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          disabled={loading}
-                          className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 pr-10 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                        >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                      </div>
+                      <PasswordInput
+                        id='password'
+                        placeholder='Tu contraseña'
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        disabled={loading}
+                        autoComplete='current-password'
+                      />
                     </div>
                     <Button
                       type='submit'
                       disabled={loading}
-                      className='w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm'>
+                      className='w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm'
+                    >
                       {loading ? (
                         <>
                           <Loader2 className='w-4 h-4 animate-spin' />
@@ -235,10 +164,40 @@ export default function LoginPage() {
                     </Button>
                   </form>
                   {error && (
-                    <Alert variant='destructive' className='rounded-lg flex items-center gap-2 px-3 py-2'>
-                      <AlertCircle className='h-4 w-4 text-red-600' />
-                      <AlertDescription className='text-red-700 text-sm font-medium'>{error}</AlertDescription>
-                    </Alert>
+                    <div className='space-y-2'>
+                      <Alert variant='destructive' className='rounded-lg flex items-center gap-2 px-3 py-2'>
+                        <AlertCircle className='h-4 w-4 text-red-600' />
+                        <AlertDescription className='text-red-700 text-sm font-medium'>{error}</AlertDescription>
+                      </Alert>
+                      {error.includes('verificar tu email') && (
+                        <Button
+                          variant='outline'
+                          size='sm'
+                          disabled={loading || !email}
+                          onClick={async () => {
+                            setVerificationSent(null);
+                            try {
+                              const res = await fetch('/api/resend-verification', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ email }),
+                              });
+                              if (res.ok) {
+                                setVerificationSent('Hemos reenviado el email de verificación. Revisa tu bandeja.');
+                              }
+                            } catch {}
+                          }}
+                        >
+                          Reenviar verificación
+                        </Button>
+                      )}
+                      {verificationSent && (
+                        <Alert className='rounded-lg flex items-center gap-2 px-3 py-2'>
+                          <CheckCircle className='h-4 w-4 text-emerald-600' />
+                          <AlertDescription className='text-emerald-700 text-sm font-medium'>{verificationSent}</AlertDescription>
+                        </Alert>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
@@ -254,3 +213,4 @@ export default function LoginPage() {
     </div>
   );
 }
+
