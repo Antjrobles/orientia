@@ -4,6 +4,11 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Declaración de Accesibilidad',
   description: 'Información detallada sobre el compromiso de Orientia con la accesibilidad web para garantizar que la plataforma sea usable por todas las personas.',
+  robots: {
+    index: false,
+    follow: true,
+  },
+  alternates: { canonical: '/accesibilidad' },
 };
 
 export default function AccesibilidadPage() {

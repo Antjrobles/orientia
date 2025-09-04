@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     index: false,
     follow: true,
   },
+  alternates: { canonical: '/terminos' },
 };
 
 export default function TerminosCondicionesPage() {
@@ -180,7 +181,7 @@ export default function TerminosCondicionesPage() {
             <li><strong>Por causa:</strong> Podemos suspender o cancelar el acceso por incumplimiento material de estos Términos.</li>
             <li><strong>Por el Usuario:</strong> Puede cancelar en cualquier momento desde su cuenta o contactando con soporte.</li>
             <li><strong>Efectos:</strong> Tras la cancelación, su acceso cesa. Consulte la página de{' '}
-              <Link href="/eliminacion-datos-usuario" className="text-primary-600 hover:underline">Eliminación de Datos</Link> para la supresión de datos.
+              <Link href="/eliminacion-de-datos-de-usuario" className="text-primary-600 hover:underline">Eliminación de Datos</Link> para la supresión de datos.
             </li>
           </ul>
 

@@ -106,6 +106,7 @@ export default function Footer() {
                   { href: "/privacidad", label: "Privacidad" },
                   { href: "/terminos", label: "Términos" },
                   { href: "/cookies", label: "Cookies" },
+                  { href: "/ajustes-cookies", label: "Ajustes de Cookies" },
                   { href: "/accesibilidad", label: "Accesibilidad" },
                   { href: "/rgpd", label: "RGPD" },
                   { href: "/eliminacion-de-datos-de-usuario", label: "Eliminación de datos de usuario" }

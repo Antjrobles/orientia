@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     index: false,
     follow: true,
   },
+  alternates: { canonical: '/rgpd' },
 };
 
 export default function RGPDPage() {
@@ -154,8 +155,7 @@ export default function RGPDPage() {
             asistencia en el ejercicio de derechos; notificación de brechas; retorno/supresión al finalizar el servicio; y auditorías razonables.
           </p>
           <div className="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 mb-6">
-            Si necesita un modelo de AET: <Link href="/descargas/aet-orientia.pdf" className="text-primary-600 hover:underline">descarga aquí</Link>
-            (sustituir por tu ruta real) o solicítelo a <a href="mailto:privacidad@orientia.es" className="text-primary-600 hover:underline">privacidad@orientia.es</a>.
+            Si necesita un modelo de AET, solicítelo a <a href="mailto:privacidad@orientia.es" className="text-primary-600 hover:underline">privacidad@orientia.es</a>.
           </div>
 
           <h2 id="eipd" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">
@@ -249,7 +249,7 @@ export default function RGPDPage() {
           </div>
           <p className="mt-3">
             Consulte también:{' '}
-            <Link href="/eliminacion-datos-usuario" className="text-primary-600 hover:underline">Eliminación de Datos de Usuario</Link>.
+            <Link href="/eliminacion-de-datos-de-usuario" className="text-primary-600 hover:underline">Eliminación de Datos de Usuario</Link>.
           </p>
 
           <h2 id="medidas" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b">

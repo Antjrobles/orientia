@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     index: false,
     follow: true,
   },
+  alternates: { canonical: '/cookies' },
 };
 
 export default function PoliticaCookiesPage() {

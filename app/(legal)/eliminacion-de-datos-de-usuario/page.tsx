@@ -8,20 +8,21 @@ export const metadata: Metadata = {
     index: false,
     follow: true,
   },
+  alternates: { canonical: '/eliminacion-de-datos-de-usuario' },
 };
 
 export default function EliminacionDatosUsuarioPage() {
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-      <div className="bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-xl shadow-xl">
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-6 text-center sm:text-left">Eliminación de Datos de Usuario</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">Última actualización: 22 de mayo de 2024</p>
+      <div className="bg-white p-8 sm:p-10 rounded-xl shadow-xl">
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-6 text-center sm:text-left">Eliminación de Datos de Usuario</h1>
+          <p className="text-sm text-gray-500 mb-8">Última actualización: 22 de mayo de 2024</p>
 
           {/* Índice navegable */}
           <nav aria-label="Tabla de contenidos" className="mb-10">
-            <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700">
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Contenido</p>
-              <ul className="grid gap-2 text-sm text-gray-600 dark:text-gray-300 sm:grid-cols-2">
+            <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+              <p className="text-sm font-semibold text-gray-700 mb-3">Contenido</p>
+              <ul className="grid gap-2 text-sm text-gray-600 sm:grid-cols-2">
                 <li><a href="#sec-1" className="hover:underline">1. Su derecho a la eliminación</a></li>
                 <li><a href="#sec-2" className="hover:underline">2. Qué datos almacenamos</a></li>
                 <li><a href="#sec-3" className="hover:underline">3. Proceso de eliminación</a></li>
@@ -38,14 +39,14 @@ export default function EliminacionDatosUsuarioPage() {
             </div>
           </nav>
 
-          <div className="prose prose-lg dark:prose-invert max-w-none">
-            <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-800 dark:bg-red-900/20 dark:border-red-600 dark:text-red-300 mb-8">
+          <div className="prose prose-lg max-w-none">
+            <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-800 mb-8">
               <strong>Importante:</strong> La eliminación de sus datos es <strong>irreversible</strong>. Una vez procesada su solicitud,
               no podremos recuperar su cuenta, actividades creadas, o cualquier contenido asociado. Por favor, lea cuidadosamente
               esta información antes de proceder.
             </div>
 
-            <h2 id="sec-1" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-1" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               1. Su derecho a la eliminación
             </h2>
             <p>
@@ -58,7 +59,7 @@ export default function EliminacionDatosUsuarioPage() {
               de manera eficiente y segura.
             </p>
 
-            <h2 id="sec-2" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-2" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               2. Qué datos almacenamos
             </h2>
             <p>
@@ -72,7 +73,7 @@ export default function EliminacionDatosUsuarioPage() {
               <li><strong>Comunicaciones:</strong> Correos electrónicos intercambiados con nuestro soporte.</li>
             </ul>
 
-            <h2 id="sec-3" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-3" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               3. Proceso de eliminación
             </h2>
             <p>
@@ -99,7 +100,7 @@ export default function EliminacionDatosUsuarioPage() {
               </li>
             </ol>
 
-            <h2 id="sec-4" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-4" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               4. Tiempos de procesamiento
             </h2>
             <ul className="list-disc list-outside ml-5 space-y-3">
@@ -109,7 +110,7 @@ export default function EliminacionDatosUsuarioPage() {
               <li><strong>Datos en copias de seguridad:</strong> Hasta 90 días adicionales para eliminación completa de backups.</li>
             </ul>
 
-            <h2 id="sec-5" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-5" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               5. Datos que no podemos eliminar inmediatamente
             </h2>
             <p>
@@ -130,7 +131,7 @@ export default function EliminacionDatosUsuarioPage() {
               </li>
             </ul>
 
-            <h2 id="sec-6" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-6" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               6. Consecuencias de la eliminación
             </h2>
             <p>
@@ -144,7 +145,7 @@ export default function EliminacionDatosUsuarioPage() {
               <li><strong>Soporte limitado:</strong> No podremos proporcionar soporte sobre contenido o configuraciones previas.</li>
             </ul>
 
-            <h2 id="sec-7" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-7" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               7. Eliminación parcial de datos
             </h2>
             <p>
@@ -159,7 +160,7 @@ export default function EliminacionDatosUsuarioPage() {
               <em>Nota:</em> La eliminación parcial puede no estar disponible en todos los casos y dependerá de la viabilidad técnica.
             </p>
 
-            <h2 id="sec-8" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-8" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               8. Verificación de identidad
             </h2>
             <p>
@@ -171,7 +172,7 @@ export default function EliminacionDatosUsuarioPage() {
               <li>En casos dudosos, copia de documento de identidad (DNI/NIE) que será eliminada tras la verificación.</li>
             </ul>
 
-            <h2 id="sec-9" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-9" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               9. Datos en servicios de terceros
             </h2>
             <p>
@@ -184,10 +185,10 @@ export default function EliminacionDatosUsuarioPage() {
               <li><strong>Vercel (hosting):</strong> Purga de logs y métricas que puedan contener datos identificables.</li>
             </ul>
 
-            <h2 id="sec-10" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-10" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               10. Cómo solicitar la eliminación
             </h2>
-            <div className="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 dark:bg-blue-900/20 dark:border-blue-600 dark:text-blue-300 mb-6">
+            <div className="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-800 mb-6">
               <strong>Método principal:</strong> Envíe un correo electrónico a{' '}
               <a href="mailto:eliminacion@orientia.es" className="font-semibold underline">
                 eliminacion@orientia.es
@@ -221,7 +222,7 @@ export default function EliminacionDatosUsuarioPage() {
               </li>
             </ul>
 
-            <h2 id="sec-11" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="sec-11" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               11. Contacto y soporte
             </h2>
             <p>
@@ -251,13 +252,13 @@ export default function EliminacionDatosUsuarioPage() {
               </li>
             </ul>
 
-            <h2 id="preguntas-frecuentes" className="text-2xl font-bold text-gray-900 dark:text-white mt-12 mb-4 pb-2 border-b border-primary-200 dark:border-primary-800">
+            <h2 id="preguntas-frecuentes" className="text-2xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-primary-200">
               Preguntas frecuentes
             </h2>
 
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   ¿Puedo recuperar mi cuenta después de la eliminación?
                 </h3>
                 <p>
@@ -267,7 +268,7 @@ export default function EliminacionDatosUsuarioPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   ¿Qué pasa con mi suscripción activa?
                 </h3>
                 <p>
@@ -277,7 +278,7 @@ export default function EliminacionDatosUsuarioPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   ¿Puedo exportar mis datos antes de eliminarlos?
                 </h3>
                 <p>
@@ -287,7 +288,7 @@ export default function EliminacionDatosUsuarioPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   ¿Cuánto tiempo tardan en eliminar mis datos de las copias de seguridad?
                 </h3>
                 <p>
@@ -297,7 +298,7 @@ export default function EliminacionDatosUsuarioPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   ¿Qué datos conservarán por obligación legal?
                 </h3>
                 <p>
@@ -307,7 +308,7 @@ export default function EliminacionDatosUsuarioPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   ¿Puedo cambiar de opinión después de enviar la solicitud?
                 </h3>
                 <p>
@@ -317,11 +318,11 @@ export default function EliminacionDatosUsuarioPage() {
               </div>
             </div>
 
-            <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            <div className="mt-12 p-6 bg-gray-50 border border-gray-200 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 ⚠️ Recordatorio importante
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-gray-600">
                 La eliminación de datos es una acción permanente e irreversible. Asegúrese de haber exportado cualquier contenido
                 que desee conservar antes de proceder. Nuestro equipo está disponible para resolver cualquier duda antes de que
                 tome esta decisión.
