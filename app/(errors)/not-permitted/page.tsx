@@ -1,6 +1,6 @@
 'use client';
 
-import ErrorView from '@/components/ErrorView';
+import ErrorView from '@/components/errors/ErrorView';
 
 export default function NotPermittedPage() {
   return (
@@ -14,4 +14,3 @@ export default function NotPermittedPage() {
     />
   );
 }
-

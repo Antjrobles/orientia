@@ -1,4 +1,4 @@
-import ErrorView from '@/components/ErrorView';
+import ErrorView from '@/components/errors/ErrorView';
 
 export default function NotFound() {
   return (

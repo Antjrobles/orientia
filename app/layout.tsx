@@ -4,6 +4,8 @@ import { Inter } from 'next/font/google';
 import { getServerSession } from 'next-auth/next';
 import './globals.css';
 import Providers from '@/components/Providers';
+import { ConsentProvider } from '@/components/consent/ConsentProvider';
+import CookieBanner from '@/components/consent/CookieBanner';
 import { Toaster } from 'sonner';
 import { authOptions } from '../lib/auth';
 
@@ -99,7 +101,12 @@ export default async function RootLayout({
   return (
     <html lang='es' suppressHydrationWarning>
       <body className={inter.className}>
-        <Providers session={session}>{children}</Providers>
+        <Providers session={session}>
+          <ConsentProvider>
+            {children}
+            <CookieBanner />
+          </ConsentProvider>
+        </Providers>
         <Toaster richColors position='top-center' expand={true} />
       </body>
     </html>
