@@ -10,7 +10,8 @@ export type SpinnerProps = {
   'aria-label'?: string;
 };
 
-const sizeClassMap: Record<Exclude<Exclude<SpinnerProps['size'], number>, 'responsive'>, string> = {
+type NamedSizes = Exclude<NonNullable<SpinnerProps['size']>, number | 'responsive'>;
+const sizeClassMap: Record<NamedSizes, string> = {
   xs: 'h-3 w-3',
   sm: 'h-4 w-4',
   md: 'h-6 w-6',
@@ -28,7 +29,11 @@ export function Spinner({
   const isNumeric = typeof size === 'number';
   const isResponsive = size === 'responsive';
   const responsiveSize = 'h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24';
-  const sizeClass = isResponsive ? responsiveSize : (!isNumeric ? sizeClassMap[size as Exclude<typeof size, number | 'responsive'>] : undefined);
+  const sizeClass = isResponsive
+    ? responsiveSize
+    : !isNumeric
+    ? sizeClassMap[size as NamedSizes]
+    : undefined;
   const style = isNumeric ? ({ width: size, height: size } as React.CSSProperties) : undefined;
 
   const SpinnerIcon = (
