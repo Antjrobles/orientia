@@ -21,20 +21,22 @@ export default function GoogleAnalytics() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  // Si no hay ID, no renderiza nada
-  if (!GA_MEASUREMENT_ID) return null
-  // Esperar a cargar el provider y sólo cargar si hay consentimiento de analítica
-  if (!loaded || !consent.analytics) return null
-
-  // Enviar page_view en cambios de ruta (App Router)
+  // Mantener los hooks siempre al mismo orden; evitar returns antes de hooks.
+  // Enviar page_view en cambios de ruta si ya está cargado gtag y hay consentimiento.
   useEffect(() => {
+    const allowed = !!GA_MEASUREMENT_ID && loaded && consent.analytics
+    if (!allowed) return
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
     if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-      window.gtag('config', GA_MEASUREMENT_ID, {
+      window.gtag('config', GA_MEASUREMENT_ID as string, {
         page_path: url,
       })
     }
-  }, [pathname, searchParams])
+  }, [pathname, searchParams, loaded, consent.analytics])
+
+  const allowed = !!GA_MEASUREMENT_ID && loaded && consent.analytics
+
+  if (!allowed) return null
 
   return (
     <>
