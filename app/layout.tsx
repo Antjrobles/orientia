@@ -8,6 +8,7 @@ import { ConsentProvider } from '@/components/consent/ConsentProvider';
 import CookieBanner from '@/components/consent/CookieBanner';
 import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { authOptions } from '../lib/auth';
 
 const inter = Inter({
@@ -110,6 +111,7 @@ export default async function RootLayout({
           </ConsentProvider>
         </Providers>
         <Toaster richColors position='top-right' expand={true} />
+        <SpeedInsights />
         <Analytics />
       </body>
     </html>
