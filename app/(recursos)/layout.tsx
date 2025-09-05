@@ -15,7 +15,7 @@ export default function RecursosLayout({
   return (
     <>
       <RecursosHeader />
-      <main className="flex-grow bg-gray-50">{children}</main>
+      <main id="main" role="main" tabIndex={-1} className="flex-grow bg-gray-50">{children}</main>
       <Footer />
     </>
   );

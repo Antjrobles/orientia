@@ -25,7 +25,7 @@ export default async function AdminLayout({
           <div className="hidden md:block">
             <ProfileSidebar />
           </div>
-          <main>{children}</main>
+          <main id="main" role="main" tabIndex={-1}>{children}</main>
         </div>
       </div>
     </div>

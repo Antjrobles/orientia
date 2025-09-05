@@ -33,7 +33,6 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <div className='min-h-screen bg-white'>
-      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:text-gray-900 focus:shadow">Saltar al contenido principal</a>
       {/* Structured Data */}
       <script
         type='application/ld+json'
