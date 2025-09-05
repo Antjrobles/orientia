@@ -1,6 +1,6 @@
 import React from 'react';
-import LegalHeader from '@/components/LegalHeader';
-import Footer from '@/components/Footer';
+import LegalHeader from '@/components/headers/LegalHeader';
+import Footer from '@/components/layout/Footer';
 
 /**
  * Layout para las páginas legales (privacidad, términos, etc.).

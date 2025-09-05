@@ -1,15 +1,15 @@
 
 import type { Metadata } from 'next';
-import Footer from '@/components/Footer';
-import CTASection from '@/components/CTASection';
-import SecuritySection from '@/components/SecuritySection';
-import Benefits from '@/components/Benefits';
-import Features from '@/components/Features';
-import Hero from '@/components/Hero';
-import Header from '@/components/Header';
-import Breadcrumb from '@/components/Breadcrumb';
-import ContactForm from '@/components/ContactForm';
-import Pricing from '@/components/Pricing';
+import Footer from '@/components/layout/Footer';
+import CTASection from '@/components/marketing/CTASection';
+import SecuritySection from '@/components/marketing/SecuritySection';
+import Benefits from '@/components/marketing/Benefits';
+import Features from '@/components/marketing/Features';
+import Hero from '@/components/marketing/Hero';
+import Header from '@/components/headers/Header';
+import Breadcrumb from '@/components/navigation/Breadcrumb';
+import ContactForm from '@/components/forms/ContactForm';
+import Pricing from '@/components/marketing/Pricing';
 
 export const metadata: Metadata = {
   title: 'Sistema de Informes Psicopedagógicos',

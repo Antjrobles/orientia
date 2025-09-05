@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { getServerSession } from 'next-auth/next';
 import './globals.css';
-import Providers from '@/components/Providers';
+import Providers from '@/components/providers/Providers';
 import { ConsentProvider } from '@/components/consent/ConsentProvider';
 import CookieBanner from '@/components/consent/CookieBanner';
 import { Toaster } from 'sonner';

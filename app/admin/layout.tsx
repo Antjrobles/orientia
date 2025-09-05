@@ -1,5 +1,5 @@
-import ProfileHeader from "@/components/ProfileHeader";
-import { ProfileSidebar } from "@/components/ProfileSidebar";
+import ProfileHeader from "@/components/headers/ProfileHeader";
+import { ProfileSidebar } from "@/components/sidebars/ProfileSidebar";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";

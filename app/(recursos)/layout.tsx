@@ -1,6 +1,6 @@
 import React from 'react';
-import RecursosHeader from '@/components/RecursosHeader';
-import Footer from '@/components/Footer';
+import RecursosHeader from '@/components/headers/RecursosHeader';
+import Footer from '@/components/layout/Footer';
 
 /**
  * Layout para las páginas de recursos (FAQ, Manual, Soporte, Formación).
