@@ -109,12 +109,13 @@ export default async function RootLayout({
           <ConsentProvider>
             {children}
             <CookieBanner />
+            {/* Google Analytics solo carga si consent.analytics === true */}
+            <GoogleAnalytics />
           </ConsentProvider>
         </Providers>
         <Toaster richColors position='top-right' expand={true} />
         <SpeedInsights />
         <Analytics />
-        <GoogleAnalytics />
       </body>
     </html>
   );
