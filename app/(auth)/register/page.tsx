@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, CheckCircle, AlertCircle, User, Mail, Key, Sparkles } from 'lucide-react';
+import { CheckCircle, AlertCircle, User, Mail, Key, Sparkles } from 'lucide-react';
+import Spinner from '@/components/ui/Spinner';
 import { AuthProviderButtons } from '@/components/auth/AuthProviderButtons';
 import { PasswordInput } from '@/components/auth/PasswordInput';
 import { AuthCard } from '@/components/auth/AuthCard';
@@ -89,7 +90,7 @@ export default function RegisterPage() {
             </div>
 
             <Button type="submit" disabled={isLoading} className="flex w-full h-10 items-center justify-center gap-2 bg-emerald-600 text-sm font-semibold text-white transition-all hover:bg-emerald-700">
-              {isLoading ? (<><Loader2 className="h-4 w-4 animate-spin" /> Creando cuenta...</>) : (<><Sparkles className="h-4 w-4" /> Crear mi cuenta gratis</>)}
+              {isLoading ? (<><Spinner size="sm" /> Creando cuenta...</>) : (<><Sparkles className="h-4 w-4" /> Crear mi cuenta gratis</>)}
             </Button>
           </form>
 

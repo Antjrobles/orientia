@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle, AlertCircle, Loader2, CornerDownRight, Timer } from 'lucide-react';
+import { CheckCircle, AlertCircle, CornerDownRight, Timer } from 'lucide-react';
+import Spinner from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
@@ -113,7 +114,7 @@ export default function VerifyEmailPage() {
         <AuthHeader title="Verificación de email" subtitle="Procesando tu solicitud de verificación" />
         {status === 'loading' && (
             <div className="space-y-3 sm:space-y-4 text-center">
-              <Loader2 className="mx-auto h-10 w-10 animate-spin text-emerald-600 sm:h-12 sm:w-12" />
+              <Spinner variant="centered" />
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white sm:text-xl">Verificando tu email...</h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">Por favor, espera mientras verificamos tu cuenta.</p>
             </div>
@@ -183,7 +184,7 @@ export default function VerifyEmailPage() {
                 <div className="flex gap-2">
                   <Input id="resend-email" type="email" placeholder="tu@institucion.edu" value={resendEmail} onChange={(e) => setResendEmail(e.target.value)} disabled={resendLoading} className="h-10 bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600" />
                   <Button onClick={handleResend} disabled={resendLoading || !resendEmail} className="bg-emerald-600 text-white hover:bg-emerald-700">
-                    {resendLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Reenviar'}
+                    {resendLoading ? <Spinner size="sm" /> : 'Reenviar'}
                   </Button>
                 </div>
                 {resendNotice && (

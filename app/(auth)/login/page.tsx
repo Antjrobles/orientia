@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Mail, CheckCircle, AlertCircle, Loader2, Key, LogIn } from 'lucide-react';
+import { Mail, CheckCircle, AlertCircle, Key, LogIn } from 'lucide-react';
+import Spinner from '@/components/ui/Spinner';
 import { AuthProviderButtons } from '@/components/auth/AuthProviderButtons';
 import { PasswordInput } from '@/components/auth/PasswordInput';
 import { AuthCard } from '@/components/auth/AuthCard';
@@ -131,7 +132,7 @@ export default function LoginPage() {
                     >
                       {loading ? (
                         <>
-                          <Loader2 className='w-4 h-4 animate-spin' />
+                          <Spinner size="sm" className='mr-1.5' />
                           <span>Iniciando...</span>
                         </>
                       ) : (

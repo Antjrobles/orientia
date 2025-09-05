@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { FileText, FolderKanban, Clock, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { authOptions } from '../../lib/auth';
-import Spinner from '@/components/feedback/Spinner';
+import Spinner from '@/components/ui/Spinner';
 
 async function ProfileContent() {
   const session = await getServerSession(authOptions);
@@ -91,7 +91,7 @@ async function ProfileContent() {
 
 export default function ProfilePage() {
   return (
-    <Suspense fallback={<Spinner />}>
+    <Suspense fallback={<Spinner variant="centered" />}>
       <ProfileContent />
     </Suspense>
   );

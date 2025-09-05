@@ -7,6 +7,7 @@ import Providers from '@/components/providers/Providers';
 import { ConsentProvider } from '@/components/consent/ConsentProvider';
 import CookieBanner from '@/components/consent/CookieBanner';
 import { Toaster } from 'sonner';
+import { Analytics } from '@vercel/analytics/react';
 import { authOptions } from '../lib/auth';
 
 const inter = Inter({
@@ -108,6 +109,7 @@ export default async function RootLayout({
           </ConsentProvider>
         </Providers>
         <Toaster richColors position='top-right' expand={true} />
+        <Analytics />
       </body>
     </html>
   );

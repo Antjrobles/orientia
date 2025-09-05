@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense, useState, useEffect } from 'react';
+import Spinner from '@/components/ui/Spinner';
 import { useSession } from 'next-auth/react';
 import { Search, Filter, FileText, Eye, Edit, Copy, Trash2, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -52,11 +53,7 @@ function InformesContent() {
   });
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <Spinner variant="centered" />;
   }
 
   const getEstadoBadge = (estado: string) => {
@@ -217,9 +214,7 @@ function InformesContent() {
 export default function InformesPage() {
   return (
     <Suspense fallback={
-      <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
+      <Spinner variant="centered" />
     }>
       <InformesContent />
     </Suspense>
