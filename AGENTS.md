@@ -43,3 +43,9 @@
 - Para desarrollo, define las variables antes de `npm run dev`.
 - Revisa `middleware.ts` y `app/api/*` al tocar autenticación o lógica sensible.
 - Despliegue: configura variables en tu plataforma (p.ej. Vercel), verifica con `npm run build` y usa `npm run start` para validar.
+
+## VARIOS
+- Añadir toast al formulario de contacto
+- Añadir validación al formulario de contacto
+- Añadir Vercel Analytics y Google Analytics
+- Añadir más tests (unitarios y de integración)
