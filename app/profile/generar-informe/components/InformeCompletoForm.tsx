@@ -145,7 +145,20 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="edad">Edad</Label>
-                    <Input id="edad" type="number" min={3} max={25} value={form.edad} onChange={(e) => handleChange("edad", e.target.value)} className={errors.edad ? "border-red-500" : ""} placeholder="Ej: 12" />
+                    <Input
+                      id="edad"
+                      type="number"
+                      min={3}
+                      max={25}
+                      value={form.edad}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        const val = raw === "" ? "" : Number(raw);
+                        handleChange("edad", val as number | "");
+                      }}
+                      className={errors.edad ? "border-red-500" : ""}
+                      placeholder="Ej: 12"
+                    />
                     {errors.edad && <p className="text-sm text-red-500">{errors.edad}</p>}
                   </div>
                   <div className="space-y-2">
