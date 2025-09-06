@@ -11,6 +11,7 @@ import { Analytics } from '@vercel/analytics/react';
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { authOptions } from '../lib/auth';
+import UmamiAnalytics from '@/components/consent/UmamiAnalytics';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -111,6 +112,7 @@ export default async function RootLayout({
             <CookieBanner />
             {/* Google Analytics solo carga si consent.analytics === true */}
             <GoogleAnalytics />
+            <UmamiAnalytics />
           </ConsentProvider>
         </Providers>
         <Toaster richColors position='top-right' expand={true} />

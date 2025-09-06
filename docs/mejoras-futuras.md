@@ -131,3 +131,9 @@
 - [ ] **P5** - Implementar página de detalle/edición app/profile/informes/[id] con tabs por sección y autosave
 - [ ] **P6** - Implementar exportación a PDF y guardado de fichero_url
 - [ ] **P7** - Implementar políticas RLS o validación de autoría exhaustiva con service role
+
+## Varios
+- [ ] Añadir toast al formulario de contacto
+- [ ] Añadir validación al formulario de contacto
+- [ ] Añadir Vercel Analytics y Google Analytics
+- [ ] Añadir más tests (unitarios y de integración)
