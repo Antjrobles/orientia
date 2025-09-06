@@ -78,11 +78,11 @@ export default function LoginPage() {
         <AuthProviderButtons isLoading={loading} callbackUrl={searchParams.get('callbackUrl') || '/profile'} />
         <AuthDivider>o con tu correo</AuthDivider>
 
-        <div className='bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:bg-gray-800 dark:border-gray-700'>
+        <div className='bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200'>
                 {justRegistered && (
-                  <Alert className='mb-4 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2 px-3 py-2 dark:bg-emerald-900/20 dark:border-emerald-700'>
+                  <Alert className='mb-4 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2 px-3 py-2'>
                     <CheckCircle className='h-4 w-4 text-emerald-600' />
-                    <AlertDescription className='text-emerald-700 text-sm font-medium dark:text-emerald-300'>
+                    <AlertDescription className='text-emerald-700 text-sm font-medium'>
                       ¡Registro completado! Ahora puedes iniciar sesión.
                     </AlertDescription>
                   </Alert>
@@ -92,7 +92,7 @@ export default function LoginPage() {
                     <div>
                       <Label
                         htmlFor='email'
-                        className='text-gray-700 dark:text-gray-300 text-sm font-medium flex items-center gap-1.5 mb-1.5'
+                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1.5'
                       >
                         <Mail className='w-4 h-4 text-emerald-600' /> Correo electrónico
                       </Label>
@@ -105,13 +105,13 @@ export default function LoginPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         disabled={loading}
                         autoComplete='email'
-                        className='h-10 bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 rounded-lg px-3 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
+                        className='h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm'
                       />
                     </div>
                     <div>
                       <Label
                         htmlFor='password'
-                        className='text-gray-700 dark:text-gray-300 text-sm font-medium flex items-center gap-1.5 mb-1.5'
+                        className='text-gray-700 text-sm font-medium flex items-center gap-1.5 mb-1.5'
                       >
                         <Key className='w-4 h-4 text-emerald-600' /> Contraseña
                       </Label>
@@ -147,7 +147,7 @@ export default function LoginPage() {
                     <div className='space-y-2'>
                       <Alert variant='destructive' className='rounded-lg flex items-center gap-2 px-3 py-2'>
                         <AlertCircle className='h-4 w-4 text-red-600' />
-                        <AlertDescription className='text-red-700 dark:text-red-300 text-sm font-medium'>{error}</AlertDescription>
+                        <AlertDescription className='text-red-700 text-sm font-medium'>{error}</AlertDescription>
                       </Alert>
                       {error.includes('verificar tu email') && (
                         <Button
@@ -174,7 +174,7 @@ export default function LoginPage() {
                       {verificationSent && (
                         <Alert className='rounded-lg flex items-center gap-2 px-3 py-2'>
                           <CheckCircle className='h-4 w-4 text-emerald-600' />
-                          <AlertDescription className='text-emerald-700 dark:text-emerald-300 text-sm font-medium'>{verificationSent}</AlertDescription>
+                          <AlertDescription className='text-emerald-700 text-sm font-medium'>{verificationSent}</AlertDescription>
                         </Alert>
                       )}
                     </div>
@@ -184,7 +184,7 @@ export default function LoginPage() {
       </div>
 
       <div className='mt-6 text-center text-sm'>
-        <p className='text-gray-500 dark:text-gray-400'>
+        <p className='text-gray-500'>
           ¿No tienes cuenta?{' '}
           <Link href='/register' className='font-semibold text-emerald-600 hover:underline'>Regístrate</Link>
         </p>

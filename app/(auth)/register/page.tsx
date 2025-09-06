@@ -55,10 +55,10 @@ export default function RegisterPage() {
       <AuthHeader title="Crea tu cuenta" subtitle="Es rápido, fácil y gratuito para empezar." />
 
       {success ? (
-        <Alert variant="default" className="rounded-lg bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-700">
+        <Alert variant="default" className="rounded-lg bg-emerald-50 border-emerald-200">
           <CheckCircle className="h-5 w-5 text-emerald-600" />
-          <AlertTitle className="font-semibold text-emerald-800 dark:text-emerald-300">¡Registro Exitoso!</AlertTitle>
-          <AlertDescription className="text-emerald-700 dark:text-emerald-400">{success}</AlertDescription>
+          <AlertTitle className="font-semibold text-emerald-800">¡Registro Exitoso!</AlertTitle>
+          <AlertDescription className="text-emerald-700">{success}</AlertDescription>
           <Button asChild className="mt-4 w-full bg-emerald-600 text-white hover:bg-emerald-700">
             <Link href="/login">Ir a Iniciar Sesión</Link>
           </Button>
@@ -71,19 +71,19 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="name" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Label htmlFor="name" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700">
                 <User className="h-4 w-4 text-emerald-600" /> Nombre completo
               </Label>
-              <Input id="name" type="text" placeholder="Tu nombre y apellidos" required value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600" />
+              <Input id="name" type="text" placeholder="Tu nombre y apellidos" required value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 border-gray-200" />
             </div>
             <div>
-              <Label htmlFor="email" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Label htmlFor="email" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700">
                 <Mail className="h-4 w-4 text-emerald-600" /> Correo electrónico
               </Label>
-              <Input id="email" type="email" placeholder="tu@institucion.edu" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600" autoComplete="email" />
+              <Input id="email" type="email" placeholder="tu@institucion.edu" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} className="h-10 bg-gray-50 border-gray-200" autoComplete="email" />
             </div>
             <div>
-              <Label htmlFor="password" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Label htmlFor="password" className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700">
                 <Key className="h-4 w-4 text-emerald-600" /> Contraseña
               </Label>
               <PasswordInput id="password" placeholder="Mínimo 6 caracteres" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} autoComplete="new-password" />
@@ -104,14 +104,14 @@ export default function RegisterPage() {
       )}
 
       <div className="mt-6 text-center text-sm">
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className="text-gray-500">
           ¿Ya tienes una cuenta?{' '}
           <Link href="/login" className="font-semibold text-emerald-600 hover:underline">Inicia sesión aquí</Link>
         </p>
-        <p className="mt-4 px-4 text-xs text-gray-400 dark:text-gray-500">
+        <p className="mt-4 px-4 text-xs text-gray-400">
           Al registrarte, aceptas nuestros{' '}
-          <Link href="/terminos" className="underline hover:text-gray-600 dark:hover:text-gray-300">Términos de Servicio</Link> y nuestra{' '}
-          <Link href="/privacidad" className="underline hover:text-gray-600 dark:hover:text-gray-300">Política de Privacidad</Link>.
+          <Link href="/terminos" className="underline hover:text-gray-600">Términos de Servicio</Link> y nuestra{' '}
+          <Link href="/privacidad" className="underline hover:text-gray-600">Política de Privacidad</Link>.
         </p>
       </div>
     </AuthCard>

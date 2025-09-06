@@ -115,19 +115,19 @@ export default function VerifyEmailPage() {
         {status === 'loading' && (
             <div className="space-y-3 sm:space-y-4 text-center">
               <Spinner variant="centered" />
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white sm:text-xl">Verificando tu email...</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Por favor, espera mientras verificamos tu cuenta.</p>
+              <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">Verificando tu email...</h2>
+              <p className="text-sm text-gray-600">Por favor, espera mientras verificamos tu cuenta.</p>
             </div>
           )}
 
           {status === 'success' && (
             <div className="space-y-3 sm:space-y-4 text-center">
               <CheckCircle className="mx-auto h-10 w-10 text-emerald-600 sm:h-12 sm:w-12" />
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white sm:text-xl">¡Email verificado!</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Tu cuenta ha sido verificada. Te redirigimos al acceso.</p>
-              <Alert className="rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700">
+              <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">¡Email verificado!</h2>
+              <p className="text-sm text-gray-600">Tu cuenta ha sido verificada. Te redirigimos al acceso.</p>
+              <Alert className="rounded-lg bg-emerald-50 border border-emerald-200">
                 <CheckCircle className="h-4 w-4 text-emerald-600" />
-                <AlertDescription className="text-emerald-700 dark:text-emerald-300 text-sm">
+                <AlertDescription className="text-emerald-700 text-sm">
                   Ya puedes iniciar sesión con tu cuenta
                 </AlertDescription>
               </Alert>
@@ -142,7 +142,7 @@ export default function VerifyEmailPage() {
                 )}
               </div>
               {autoRedirectEnabled && typeof redirectSeconds === 'number' && (
-                <p className="mt-1 flex items-center justify-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-1 flex items-center justify-center gap-2 text-xs text-gray-500">
                   <Timer className="h-3.5 w-3.5" /> Redirigiendo en {redirectSeconds}s
                 </p>
               )}
@@ -152,8 +152,8 @@ export default function VerifyEmailPage() {
           {status === 'error' && (
             <div className="space-y-3 sm:space-y-4 text-center">
               <AlertCircle className="mx-auto h-10 w-10 text-red-600 sm:h-12 sm:w-12" />
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white sm:text-xl">Error de verificación</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{message}</p>
+              <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">Error de verificación</h2>
+              <p className="text-sm text-gray-600">{message}</p>
               <Alert variant="destructive" className="rounded-lg">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription className="text-sm">
@@ -169,20 +169,20 @@ export default function VerifyEmailPage() {
           {status === 'expired' && (
             <div className="space-y-3 sm:space-y-4 text-center">
               <AlertCircle className="mx-auto h-10 w-10 text-orange-600 sm:h-12 sm:w-12" />
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white sm:text-xl">Enlace expirado</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">El enlace ha expirado. Solicita uno nuevo.</p>
-              <Alert className="rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700">
+              <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">Enlace expirado</h2>
+              <p className="text-sm text-gray-600">El enlace ha expirado. Solicita uno nuevo.</p>
+              <Alert className="rounded-lg bg-orange-50 border border-orange-200">
                 <AlertCircle className="h-4 w-4 text-orange-600" />
-                <AlertDescription className="text-sm text-orange-700 dark:text-orange-300">
+                <AlertDescription className="text-sm text-orange-700">
                   Los enlaces de verificación expiran tras 24h por seguridad.
                 </AlertDescription>
               </Alert>
               <div className="space-y-2 text-left">
-                <label htmlFor="resend-email" className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <label htmlFor="resend-email" className="text-sm font-medium text-gray-700 flex items-center gap-2">
                   Introduce tu correo para reenviar <CornerDownRight className="h-4 w-4 text-emerald-600" />
                 </label>
                 <div className="flex gap-2">
-                  <Input id="resend-email" type="email" placeholder="tu@institucion.edu" value={resendEmail} onChange={(e) => setResendEmail(e.target.value)} disabled={resendLoading} className="h-10 bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600" />
+                  <Input id="resend-email" type="email" placeholder="tu@institucion.edu" value={resendEmail} onChange={(e) => setResendEmail(e.target.value)} disabled={resendLoading} className="h-10 bg-gray-50 border-gray-200" />
                   <Button onClick={handleResend} disabled={resendLoading || !resendEmail} className="bg-emerald-600 text-white hover:bg-emerald-700">
                     {resendLoading ? <Spinner size="sm" /> : 'Reenviar'}
                   </Button>

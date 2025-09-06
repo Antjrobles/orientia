@@ -43,8 +43,8 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main id="main" role="main" tabIndex={-1} className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gray-50 p-4 dark:bg-gray-900">
-      <Link href="/" className="absolute top-4 left-4 z-10 flex items-center gap-2 rounded-lg border border-gray-200 bg-white/80 px-3 py-2 text-sm font-medium text-gray-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-950/80 dark:text-gray-300 dark:hover:bg-gray-800">
+    <main id="main" role="main" tabIndex={-1} className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gray-50 p-4">
+      <Link href="/" className="absolute top-4 left-4 z-10 flex items-center gap-2 rounded-lg border border-gray-200 bg-white/80 px-3 py-2 text-sm font-medium text-gray-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-gray-100">
         <Home className="h-4 w-4" />
         Volver al inicio
       </Link>

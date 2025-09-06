@@ -13,9 +13,9 @@ export function AuthHeader({ title, subtitle, logoSrc = '/icons/orientia.svg', c
     <div className={cn('mb-6 sm:mb-8 flex flex-col items-center gap-3 text-center', className)}>
       {logoSrc && <Image src={logoSrc} alt="Logo" width={200} height={33} priority />}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900">{title}</h1>
         {subtitle ? (
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{subtitle}</p>
+          <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
         ) : null}
       </div>
     </div>
@@ -23,4 +23,3 @@ export function AuthHeader({ title, subtitle, logoSrc = '/icons/orientia.svg', c
 }
 
 export default AuthHeader;
-

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { StudentData } from '@/lib/groq/types';
-import { GroqTestForm } from '../groq-test/components/GroqTestForm';
+import { InformeCompletoForm } from './components/InformeCompletoForm';
 import { InformePreview } from '../groq-test/components/InformePreview';
 import { Button } from '@/components/ui/button';
 
@@ -114,7 +114,7 @@ export default function GenerarInformePage() {
 
       {/* Mostrar formulario si no hay informe generado */}
       {!generatedReport && (
-        <GroqTestForm
+        <InformeCompletoForm
           onSubmit={handleGenerateReport}
           isLoading={isGenerating}
         />

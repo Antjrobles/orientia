@@ -9,7 +9,7 @@ export function AuthCard({ children, className }: AuthCardProps) {
   return (
     <div
       className={cn(
-        'w-full rounded-xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800 sm:p-8',
+        'w-full rounded-xl border border-gray-200 bg-white p-6 shadow-lg sm:p-8',
         className,
       )}
     >
@@ -19,4 +19,3 @@ export function AuthCard({ children, className }: AuthCardProps) {
 }
 
 export default AuthCard;
-
