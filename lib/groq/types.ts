@@ -1,9 +1,16 @@
 export interface StudentData {
   nombre: string;
-  edad: number;
   curso: string;
   motivoConsulta: string;
   observaciones?: string;
+  // Campos adicionales opcionales para enriquecer el informe
+  fechaNacimiento?: string; // ISO date (YYYY-MM-DD)
+  unidad?: string;
+  primerTutor?: string;
+  segundoTutor?: string;
+  etapaEscolar?: string;
+  centro?: string;
+  localidad?: string;
 }
 
 export interface GeneratedReport {

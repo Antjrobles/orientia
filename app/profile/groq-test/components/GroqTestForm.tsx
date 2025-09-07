@@ -16,7 +16,6 @@ interface GroqTestFormProps {
 export function GroqTestForm({ onSubmit, isLoading }: GroqTestFormProps) {
   const [formData, setFormData] = useState<StudentData>({
     nombre: '',
-    edad: 0,
     curso: '',
     motivoConsulta: '',
     observaciones: ''
@@ -29,10 +28,6 @@ export function GroqTestForm({ onSubmit, isLoading }: GroqTestFormProps) {
 
     if (!formData.nombre.trim()) {
       newErrors.nombre = 'El nombre es requerido';
-    }
-
-    if (!formData.edad || formData.edad < 3 || formData.edad > 25) {
-      newErrors.edad = 'La edad debe estar entre 3 y 25 años';
     }
 
     if (!formData.curso.trim()) {
@@ -73,7 +68,6 @@ export function GroqTestForm({ onSubmit, isLoading }: GroqTestFormProps) {
   const handleClear = () => {
     setFormData({
       nombre: '',
-      edad: 0,
       curso: '',
       motivoConsulta: '',
       observaciones: ''
@@ -103,22 +97,7 @@ export function GroqTestForm({ onSubmit, isLoading }: GroqTestFormProps) {
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="edad">Edad *</Label>
-            <Input
-              id="edad"
-              type="number"
-              min="3"
-              max="25"
-              value={formData.edad || ''}
-              onChange={(e) => handleInputChange('edad', parseInt(e.target.value) || 0)}
-              placeholder="Ej: 12"
-              className={errors.edad ? 'border-red-500' : ''}
-            />
-            {errors.edad && (
-              <p className="text-sm text-red-500">{errors.edad}</p>
-            )}
-          </div>
+          {/* Campo Edad eliminado para alinear con el flujo actual */}
 
           <div className="space-y-2">
             <Label htmlFor="curso">Curso *</Label>

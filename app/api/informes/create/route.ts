@@ -5,13 +5,21 @@ import { supabase } from '@/lib/supabase';
 import { z } from 'zod';
 
 const CreateInformeSchema = z.object({
-  studentData: z.object({
-    nombre: z.string(),
-    edad: z.number(),
-    curso: z.string(),
-    motivoConsulta: z.string(),
-    observaciones: z.string().optional(),
-  }),
+  studentData: z
+    .object({
+      nombre: z.string(),
+      curso: z.string(),
+      motivoConsulta: z.string(),
+      observaciones: z.string().optional(),
+      fechaNacimiento: z.string().optional(),
+      unidad: z.string().optional(),
+      primerTutor: z.string().optional(),
+      segundoTutor: z.string().optional(),
+      etapaEscolar: z.string().optional(),
+      centro: z.string().optional(),
+      localidad: z.string().optional(),
+    })
+    .passthrough(),
   generatedReport: z.string(),
 });
 
@@ -35,16 +43,15 @@ export async function POST(request: NextRequest) {
       datos_identificativos: {
         alumno: {
           nombre: studentData.nombre,
-          fecha_nacimiento: '',
-          nie: '',
+          fecha_nacimiento: studentData.fechaNacimiento || '',
           curso: studentData.curso,
         },
         centro: {
-          nombre: '',
-          localidad: '',
+          nombre: studentData.centro || '',
+          localidad: studentData.localidad || '',
         },
-        tutores: [],
-        etapa_escolar: studentData.curso,
+        tutores: [studentData.primerTutor, studentData.segundoTutor].filter(Boolean),
+        etapa_escolar: studentData.etapaEscolar || studentData.curso,
       },
       evaluacion_psicopedagogica: {
         motivo_consulta: studentData.motivoConsulta,

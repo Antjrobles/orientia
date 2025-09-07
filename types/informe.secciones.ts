@@ -8,7 +8,6 @@ export interface DatosIdentificativos {
   alumno: {
     nombre?: string;
     fecha_nacimiento?: string; // ISODateString
-    nie?: string;
     curso?: string;
   };
   centro?: {
@@ -66,4 +65,3 @@ export interface Orientaciones {
   orientaciones_profesorado?: string;
   orientaciones_familia?: string;
 }
-

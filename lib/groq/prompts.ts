@@ -41,15 +41,17 @@ Genera un informe psicopedagógico completo y profesional para el siguiente alum
 
 **DATOS DEL ALUMNO:**
 - Nombre: ${params.nombre}
-- Edad: ${params.edad} años
 - Curso: ${params.curso}
 - Motivo de consulta: ${params.motivoConsulta}
 ${params.observaciones ? `- Observaciones adicionales: ${params.observaciones}` : ''}
+${params.fechaNacimiento ? `- Fecha de nacimiento: ${params.fechaNacimiento}` : ''}
+${params.unidad ? `- Unidad: ${params.unidad}` : ''}
+${params.etapaEscolar ? `- Etapa de escolarización: ${params.etapaEscolar}` : ''}
 
 **INSTRUCCIONES:**
 - Elabora un informe psicopedagógico profesional y detallado
 - Incluye todas las secciones estándar mencionadas en el prompt del sistema
-- Personaliza el contenido basándote en la edad, curso y motivo de consulta
+- Personaliza el contenido basándote en el curso, etapa y motivo de consulta
 - Proporciona recomendaciones específicas y prácticas
 - Utiliza un formato claro y bien estructurado
 - El informe debe tener entre 800-1200 palabras aproximadamente
