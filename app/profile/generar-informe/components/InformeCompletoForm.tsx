@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Save } from "lucide-react";
+import { Save, User, GraduationCap, Brain } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { StudentData } from "@/lib/groq/types";
 
@@ -32,6 +32,9 @@ interface FormState {
   primerTutor?: string;
   segundoTutor?: string;
   etapaEscolar?: string;
+  // Historia escolar (datos escolares)
+  escolarizacionPrevia?: string;
+  actuacionesDiversidad?: string;
 
   // Adjuntos (p. ej., comunicación a la familia)
   familiaAdjuntos?: File[];
@@ -79,6 +82,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   });
 
   const [open, setOpen] = useState<SectionKey[]>(["datosPersonales", "evaluacionPsicopedagogica"]);
+
+  // Cargar borrador si existe para mantener sincronía entre secciones
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("informe-borrador");
+      if (raw) {
+        const parsed = JSON.parse(raw) as Partial<FormState>;
+        setForm((f) => ({ ...f, ...parsed }));
+      }
+    } catch {
+      // ignorar
+    }
+  }, []);
 
   const errors = useMemo(() => {
     const e: Partial<Record<keyof FormState, string>> = {};
@@ -142,6 +158,52 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     onSubmit(payload);
   };
 
+  // Campos comunes (Nombre, Fecha de nacimiento, Curso, Unidad) reutilizados en dos secciones
+  const IdentityFields = ({ idPrefix = "" }: { idPrefix?: string }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-2">
+        <Label htmlFor={`${idPrefix}nombre`}>Nombre</Label>
+        <Input
+          id={`${idPrefix}nombre`}
+          value={form.nombre}
+          onChange={(e) => handleChange("nombre", e.target.value)}
+          className={errors.nombre ? "border-red-500" : ""}
+          placeholder="Ej: Lidia Montoya Barea"
+        />
+        {errors.nombre && <p className="text-sm text-red-500">{errors.nombre}</p>}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor={`${idPrefix}fechaNacimiento`}>Fecha de nacimiento</Label>
+        <Input
+          id={`${idPrefix}fechaNacimiento`}
+          type="date"
+          value={form.fechaNacimiento || ""}
+          onChange={(e) => handleChange("fechaNacimiento", e.target.value)}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor={`${idPrefix}curso`}>Curso</Label>
+        <Input
+          id={`${idPrefix}curso`}
+          value={form.curso}
+          onChange={(e) => handleChange("curso", e.target.value)}
+          className={errors.curso ? "border-red-500" : ""}
+          placeholder="Ej: 6º de Educ. Primaria (Matriculado)"
+        />
+        {errors.curso && <p className="text-sm text-red-500">{errors.curso}</p>}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor={`${idPrefix}unidad`}>Unidad</Label>
+        <Input
+          id={`${idPrefix}unidad`}
+          value={form.unidad || ""}
+          onChange={(e) => handleChange("unidad", e.target.value)}
+          placeholder="Ej: 6ºA"
+        />
+      </div>
+    </div>
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -151,9 +213,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <Accordion type="multiple" value={open} onValueChange={(v) => setOpen(v as SectionKey[])} className="w-full">
             {/* Datos personales */}
-            <AccordionItem value="datosPersonales" className="rounded-md bg-green-50 mb-2">
-              <AccordionTrigger className="flex items-center gap-2 px-4">
-                <span>Datos personales (*)</span>
+            <AccordionItem value="datosPersonales" className="rounded-md bg-emerald-50 mb-2 border-l-4 border-emerald-500">
+              <AccordionTrigger className="flex items-center gap-2 px-4 text-emerald-900 font-bold uppercase tracking-wide">
+                <User className="h-4 w-4" />
+                <span>Datos personales</span>
                 <Badge variant={isSectionComplete("datosPersonales") ? "default" : "secondary"}>
                   {isSectionComplete("datosPersonales") ? "Completo" : "Pendiente"}
                 </Badge>
@@ -163,25 +226,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 <div className="space-y-4">
                   <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
                     <p className="mb-3 text-sm font-semibold text-emerald-700">Información personal</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="nombre">Nombre del alumno/a</Label>
-                        <Input id="nombre" value={form.nombre} onChange={(e) => handleChange("nombre", e.target.value)} className={errors.nombre ? "border-red-500" : ""} placeholder="Ej: Lidia Montoya Barea" />
-                        {errors.nombre && <p className="text-sm text-red-500">{errors.nombre}</p>}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="fechaNacimiento">Fecha de nacimiento</Label>
-                        <Input id="fechaNacimiento" type="date" value={form.fechaNacimiento || ""} onChange={(e) => handleChange("fechaNacimiento", e.target.value)} />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="curso">Curso</Label>
-                        <Input id="curso" value={form.curso} onChange={(e) => handleChange("curso", e.target.value)} className={errors.curso ? "border-red-500" : ""} placeholder="Ej: 6º de Educ. Primaria (Matriculado)" />
-                        {errors.curso && <p className="text-sm text-red-500">{errors.curso}</p>}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="unidad">Unidad</Label>
-                        <Input id="unidad" value={form.unidad || ""} onChange={(e) => handleChange("unidad", e.target.value)} placeholder="Ej: 6ºA" />
-                      </div>
+                    <IdentityFields idPrefix="dp-" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                       <div className="space-y-2">
                         <Label htmlFor="primerTutor">Nombre del primer tutor</Label>
                         <Input id="primerTutor" value={form.primerTutor || ""} onChange={(e) => handleChange("primerTutor", e.target.value)} placeholder="Ej: Barea González, Mónica" />
@@ -224,7 +270,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </div>
                 {/* Botón Guardar dentro de Datos personales */}
                 <div className="mt-4 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
                     <Save className="h-4 w-4 mr-2" /> Guardar
                   </Button>
                 </div>
@@ -232,28 +278,38 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             </AccordionItem>
 
             {/* Datos escolares */}
-            <AccordionItem value="datosEscolares" className="rounded-md bg-white mb-2">
-              <AccordionTrigger className="flex items-center gap-2 px-4">
-                <span>Datos escolares (*)</span>
+            <AccordionItem value="datosEscolares" className="rounded-md bg-emerald-50 mb-2 border-l-4 border-emerald-500">
+              <AccordionTrigger className="flex items-center gap-2 px-4 text-emerald-900 font-bold uppercase tracking-wide">
+                <GraduationCap className="h-4 w-4" />
+                <span>Datos escolares</span>
                 <Badge variant={isSectionComplete("datosEscolares") ? "default" : "secondary"}>
                   {isSectionComplete("datosEscolares") ? "Completo" : "Pendiente"}
                 </Badge>
               </AccordionTrigger>
               <AccordionContent className="px-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="centro">Centro</Label>
-                    <Input id="centro" value={form.centro || ""} onChange={(e) => handleChange("centro", e.target.value)} placeholder="Nombre del centro" />
+                {/* Bloque 1: Datos del alumno o alumna */}
+                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm mb-4">
+                  <p className="mb-3 text-sm font-semibold text-gray-700">Datos del alumno o alumna</p>
+                  <IdentityFields idPrefix="esc-" />
+                </div>
+
+                {/* Bloque 2: Historia escolar */}
+                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
+                  <p className="mb-3 text-sm font-semibold text-gray-700">Historia escolar</p>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="esc-escolarizacionPrevia">Datos de escolarización previa</Label>
+                      <Textarea id="esc-escolarizacionPrevia" rows={4} value={form.escolarizacionPrevia || ""} onChange={(e) => handleChange("escolarizacionPrevia", e.target.value)} placeholder="Especifica centros previos, repeticiones, incidencias, materias con dificultades, etc." />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="esc-actuacionesDiversidad">Actuaciones, medidas y programas de atención a la diversidad desarrollados</Label>
+                      <Textarea id="esc-actuacionesDiversidad" rows={4} value={form.actuacionesDiversidad || ""} onChange={(e) => handleChange("actuacionesDiversidad", e.target.value)} placeholder="Refuerzo, acompañamiento, adaptaciones, programas específicos, etc." />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="localidad">Localidad</Label>
-                    <Input id="localidad" value={form.localidad || ""} onChange={(e) => handleChange("localidad", e.target.value)} placeholder="Ej: Málaga" />
-                  </div>
-                  {/* La etapa se ha movido a Datos personales para alinearlo con Séneca */}
                 </div>
                 {/* Botón Guardar dentro de Datos escolares */}
                 <div className="mt-4 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
                     <Save className="h-4 w-4 mr-2" /> Guardar
                   </Button>
                 </div>
@@ -261,9 +317,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             </AccordionItem>
 
             {/* Evaluación psicopedagógica */}
-            <AccordionItem value="evaluacionPsicopedagogica" className="rounded-md bg-green-50 mb-2">
-              <AccordionTrigger className="flex items-center gap-2 px-4">
-                <span>Datos de la evaluación psicopedagógica (*)</span>
+            <AccordionItem value="evaluacionPsicopedagogica" className="rounded-md bg-emerald-50 mb-2 border-l-4 border-emerald-500">
+              <AccordionTrigger className="flex items-center gap-2 px-4 text-emerald-900 font-bold uppercase tracking-wide">
+                <Brain className="h-4 w-4" />
+                <span>Datos de la evaluación psicopedagógica</span>
                 <Badge variant={isSectionComplete("evaluacionPsicopedagogica") ? "default" : "secondary"}>
                   {isSectionComplete("evaluacionPsicopedagogica") ? "Completo" : "Pendiente"}
                 </Badge>
@@ -292,7 +349,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             {/* Secciones placeholder (texto libre por ahora) */}
             <AccordionItem value="infoAlumno" className="rounded-md bg-white mb-2">
               <AccordionTrigger className="px-4">
-                Información relevante del alumno/a (*)
+                Información relevante del alumno/a
               </AccordionTrigger>
               <AccordionContent className="px-4">
                 <Textarea rows={4} value={form.infoAlumno || ""} onChange={(e) => handleChange("infoAlumno", e.target.value)} placeholder="Anota datos relevantes. Lo estructuraremos más adelante." />
@@ -307,7 +364,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
             <AccordionItem value="contextoEscolar" className="rounded-md bg-green-50 mb-2">
               <AccordionTrigger className="px-4">
-                Información relevante sobre el contexto escolar (*)
+                Información relevante sobre el contexto escolar
               </AccordionTrigger>
               <AccordionContent className="px-4">
                 <Textarea rows={4} value={form.contextoEscolar || ""} onChange={(e) => handleChange("contextoEscolar", e.target.value)} placeholder="Clima de aula, recursos, apoyos, etc." />
