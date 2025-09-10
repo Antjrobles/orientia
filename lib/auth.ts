@@ -10,21 +10,38 @@ import bcrypt from 'bcryptjs';
 // para poder reutilizarlo en otras partes de la aplicación (ej. en la API de registro).
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
-export const authOptions: AuthOptions = {
-  providers: [
+// Construye la lista de proveedores de forma condicional según env vars
+const providers: any[] = [];
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
+    })
+  );
+}
+
+if (process.env.APPLE_CLIENT_ID && process.env.APPLE_CLIENT_SECRET) {
+  providers.push(
     AppleProvider({
       clientId: process.env.APPLE_CLIENT_ID as string,
       clientSecret: process.env.APPLE_CLIENT_SECRET as string,
-    }),
+    })
+  );
+}
+
+if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
+  providers.push(
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
-    }),
-    CredentialsProvider({
+    })
+  );
+}
+
+providers.push(
+  CredentialsProvider({
       name: 'Credentials',
       credentials: {
         email: { label: 'Email', type: 'email', placeholder: 'tu@email.com' },
@@ -48,7 +65,9 @@ export const authOptions: AuthOptions = {
 
         // Verificar si el email está verificado (solo para usuarios con contraseña)
         if (!user.emailVerified) {
-          throw new Error('EMAIL_NOT_VERIFIED');
+          // Devolvemos null para provocar CredentialsSignin.
+          // La UI hará una comprobación posterior para diferenciar email no verificado.
+          return null;
         }
 
         const passwordsMatch = await bcrypt.compare(credentials.password, user.hashed_password);
@@ -60,8 +79,11 @@ export const authOptions: AuthOptions = {
 
         return null;
       },
-    }),
-  ],
+    })
+);
+
+export const authOptions: AuthOptions = {
+  providers,
   // adapter: SupabaseAdapter({
   //   url: process.env.SUPABASE_URL as string,
   //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY as string,

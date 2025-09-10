@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting por IP + por email
+    const ip = getClientIp(request);
+    const rl = checkRateLimit(`resend:${ip}`, 10, 60_000);
+    if (!rl.allowed) {
+      return NextResponse.json({ success: false, error: 'Demasiadas solicitudes' }, { status: 429 });
+    }
     const { email } = await request.json();
     if (!email || typeof email !== 'string') {
       return NextResponse.json({ success: false, error: 'Email requerido' }, { status: 400 });
+    }
+    const rlEmail = checkRateLimit(`resend-email:${email}`, 3, 60_000);
+    if (!rlEmail.allowed) {
+      return NextResponse.json({ success: false, error: 'Demasiadas solicitudes para este email' }, { status: 429 });
     }
 
     // Buscar usuario

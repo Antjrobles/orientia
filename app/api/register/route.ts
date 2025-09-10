@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { z } from 'zod';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
@@ -16,6 +17,12 @@ const registerSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    // Rate limiting por IP (5 solicitudes por minuto)
+    const ip = getClientIp(request);
+    const rl = checkRateLimit(`register:${ip}`, 5, 60_000);
+    if (!rl.allowed) {
+      return NextResponse.json({ error: 'Demasiadas solicitudes. Inténtalo de nuevo más tarde.' }, { status: 429 });
+    }
     const body = await request.json();
     const validation = registerSchema.safeParse(body);
 
@@ -61,7 +68,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No se pudo crear el usuario' }, { status: 500 });
     }
 
-    // 6. Guardar token de verificación
+    // 6. Guardar token de verificación (rate limit por email)
+    const rlEmail = checkRateLimit(`register-email:${email}`, 3, 60_000);
+    if (!rlEmail.allowed) {
+      return NextResponse.json({ error: 'Demasiados intentos para este email. Prueba más tarde.' }, { status: 429 });
+    }
     const { error: tokenError } = await supabase.from('verification_tokens').insert({
       identifier: email,
       token: verificationToken,

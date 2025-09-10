@@ -60,11 +60,23 @@ export default function LoginPage() {
     setLoading(false);
 
     if (result?.error) {
-      if (result.error === 'EMAIL_NOT_VERIFIED') {
-        setError('Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.');
-      } else {
-        setError('Email o contraseña incorrectos. Por favor, verifica tus datos.');
-      }
+      // NextAuth devuelve 'CredentialsSignin' para cualquier fallo de authorize().
+      // Diferenciamos si es email no verificado consultando a la API.
+      try {
+        const resp = await fetch('/api/auth/check-email-verified', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.exists && !data.verified) {
+            setError('Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.');
+            return;
+          }
+        }
+      } catch {}
+      setError('Email o contraseña incorrectos. Por favor, verifica tus datos.');
     } else if (result?.ok) {
       router.push(callbackUrl);
     }

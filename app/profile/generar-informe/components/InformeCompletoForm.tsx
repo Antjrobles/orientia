@@ -278,7 +278,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Secciones del Informe</CardTitle>
+        <CardTitle className="text-3xl font-bold">Secciones del Informe</CardTitle>
         <Button type="button" variant="outline" size="sm" onClick={() => setOpen([])} title="Contraer todo">
           <Minimize2 className="h-4 w-4 mr-2" /> Contraer todo
         </Button>
