@@ -38,9 +38,12 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* UI surfaces (stripe backgrounds for sections) — emerald suave */
-    --section-odd: 142 76% 96%; /* tinte esmeralda muy suave */
-    --section-even: 160 30% 99%;
+    /* UI surfaces (stripe backgrounds for sections) */
+    --section-odd: 142 76% 96%; /* fondo IMPAR (emerald muy suave) */
+    --section-even: 201 100% 97%; /* fondo PAR (sky muy suave) */
+    /* Borde lateral para encabezados de sección */
+    --section-odd-border: 142 72% 36%;  /* emerald ~500 */
+    --section-even-border: 201 96% 32%; /* sky ~600 */
   }
 }
 
@@ -56,6 +59,9 @@
 /* Suaves fondos alternos para secciones (editable) */
 .section-odd { background-color: hsl(var(--section-odd)); }
 .section-even { background-color: hsl(var(--section-even)); }
+/* Color del borde izquierdo cuando se usa con Tailwind `border-l-4` */
+.section-odd-border { border-left-color: hsl(var(--section-odd-border)); }
+.section-even-border { border-left-color: hsl(var(--section-even-border)); }
 
 /* Clase para ocultar visualmente elementos pero mantenerlos accesibles para lectores de pantalla */
 .sr-only {
