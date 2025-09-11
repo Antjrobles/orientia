@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import type { StudentData } from "@/lib/groq/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { IdentityFields } from "./IdentityFields";
 
 type SectionKey =
   | "datosPersonales"
@@ -229,78 +230,58 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     onSubmit(payload);
   };
 
-  // Campos comunes (Nombre, Fecha de nacimiento, Curso, Unidad) reutilizados en dos secciones
-  const IdentityFields = ({ idPrefix = "" }: { idPrefix?: string }) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="space-y-2">
-        <Label htmlFor={`${idPrefix}nombre`}>Nombre</Label>
-        <Input
-          id={`${idPrefix}nombre`}
-          value={form.nombre}
-          onChange={(e) => handleChange("nombre", e.target.value)}
-          className={errors.nombre ? "border-red-500" : ""}
-          placeholder="Ej: Lidia Montoya Barea"
-        />
-        {errors.nombre && <p className="text-sm text-red-500">{errors.nombre}</p>}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor={`${idPrefix}fechaNacimiento`}>Fecha de nacimiento</Label>
-        <Input
-          id={`${idPrefix}fechaNacimiento`}
-          type="date"
-          value={form.fechaNacimiento || ""}
-          onChange={(e) => handleChange("fechaNacimiento", e.target.value)}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor={`${idPrefix}curso`}>Curso</Label>
-        <Input
-          id={`${idPrefix}curso`}
-          value={form.curso}
-          onChange={(e) => handleChange("curso", e.target.value)}
-          className={errors.curso ? "border-red-500" : ""}
-          placeholder="Ej: 6º de Educ. Primaria (Matriculado)"
-        />
-        {errors.curso && <p className="text-sm text-red-500">{errors.curso}</p>}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor={`${idPrefix}unidad`}>Unidad</Label>
-        <Input
-          id={`${idPrefix}unidad`}
-          value={form.unidad || ""}
-          onChange={(e) => handleChange("unidad", e.target.value)}
-          placeholder="Ej: 6ºA"
-        />
-      </div>
-    </div>
-  );
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-3xl font-bold">Secciones del Informe</CardTitle>
-        <Button type="button" variant="outline" size="sm" onClick={() => setOpen([])} title="Contraer todo">
-          <Minimize2 className="h-4 w-4 mr-2" /> Contraer todo
-        </Button>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Accordion type="multiple" value={open} onValueChange={(v) => setOpen(v as SectionKey[])} className="w-full">
+    <div className="space-y-6">
+      {/* Header mejorado */}
+      <div className="bg-gradient-to-r from-slate-50 to-blue-50 border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm">
+        <div className="flex flex-col gap-4">
+          <div className="text-center sm:text-left">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-800">Formulario de Informe Psicopedagógico</h1>
+            <p className="text-sm sm:text-base text-slate-600 mt-1">Complete las secciones necesarias para generar el informe</p>
+          </div>
+          <div className="flex justify-center sm:justify-end">
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setOpen([])} 
+              className="border-slate-300 text-slate-600 hover:bg-slate-50 w-full sm:w-auto"
+            >
+              <Minimize2 className="h-4 w-4 mr-2" /> Contraer todo
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <Card className="border-0 shadow-lg">
+        <CardContent className="p-0">
+          <form onSubmit={handleSubmit} className="space-y-1">
+            <Accordion type="multiple" value={open} onValueChange={(v) => setOpen(v as SectionKey[])} className="w-full">
             {/* Datos personales */}
-            <AccordionItem value="datosPersonales" className="rounded-md section-odd mb-2 border-l-4 section-odd-border">
-              <AccordionTrigger className="flex w-full items-center gap-2 px-4 h-12 text-emerald-900 font-bold uppercase tracking-wide">
-                <User className="h-4 w-4" />
-                <span>Datos personales</span>
-                <Badge className="ml-auto" variant={isSectionComplete("datosPersonales") ? "default" : "secondary"}>
-                  {isSectionComplete("datosPersonales") ? "Completo" : "Pendiente"}
+            <AccordionItem value="datosPersonales" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-colors border-l-4 border-l-blue-500">
+                <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex-shrink-0">
+                  <User className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
+                </div>
+                <div className="flex-1 text-left min-w-0">
+                  <span className="text-sm sm:text-lg font-semibold text-slate-800 block truncate">Datos Personales</span>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Información básica del alumno</p>
+                </div>
+                <Badge className="ml-2 text-xs flex-shrink-0" variant={isSectionComplete("datosPersonales") ? "default" : "secondary"}>
+                  <span className="hidden sm:inline">{isSectionComplete("datosPersonales") ? "Completo" : "Pendiente"}</span>
+                  <span className="sm:hidden">{isSectionComplete("datosPersonales") ? "✓" : "○"}</span>
                 </Badge>
               </AccordionTrigger>
-              <AccordionContent className="px-4">
+              <AccordionContent className="px-4 sm:px-6 py-4 bg-white">
                 {/* Bloque principal: Información personal y tutores */}
-                <div className="space-y-4">
-                  <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
-                    <p className="mb-3 text-sm font-semibold text-emerald-700">Datos del alumno o alumna</p>
-                    <IdentityFields idPrefix="dp-" />
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-3 sm:p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <h3 className="text-sm font-semibold text-blue-800">Datos del alumno o alumna</h3>
+                    </div>
+                    <IdentityFields idPrefix="dp-" form={form} handleChange={handleChange} errors={errors} />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                       <div className="space-y-2">
                         <Label htmlFor="primerTutor">Nombre del primer tutor</Label>
@@ -314,14 +295,20 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
 
                   {/* Etapa de escolarización */}
-                  <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
-                    <p className="mb-3 text-sm font-semibold text-emerald-700">Etapa de escolarización</p>
+                  <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <h3 className="text-sm font-semibold text-blue-800">Etapa de escolarización</h3>
+                    </div>
                     <Input id="etapaEscolar" value={form.etapaEscolar || ""} onChange={(e) => handleChange("etapaEscolar", e.target.value)} placeholder="Ej: Tercer Ciclo de Educación Primaria" />
                   </div>
 
                   {/* Información a la familia: adjuntos */}
-                  <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
-                    <p className="mb-3 text-sm font-semibold text-emerald-700">Información a la familia</p>
+                  <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <h3 className="text-sm font-semibold text-blue-800">Información a la familia</h3>
+                    </div>
                     <div className="flex items-center gap-3">
                       <Input id="familiaAdjuntos" type="file" multiple onChange={(e) => handleFilesChange(e.target.files)} />
                     </div>
@@ -343,33 +330,46 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
                 </div>
                 {/* Botón Guardar dentro de Datos personales */}
-                <div className="mt-4 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
-                    <Save className="h-4 w-4 mr-2" /> Guardar
+                <div className="mt-6 flex justify-end">
+                  <Button type="button" className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Save className="h-4 w-4 mr-2" /> Guardar Sección
                   </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
 
             {/* Datos escolares */}
-            <AccordionItem value="datosEscolares" className="rounded-md section-even mb-2 border-l-4 section-even-border">
-              <AccordionTrigger className="flex w-full items-center gap-2 px-4 h-12 text-emerald-900 font-bold uppercase tracking-wide">
-                <GraduationCap className="h-4 w-4" />
-                <span>Datos escolares</span>
-                <Badge className="ml-auto" variant={isSectionComplete("datosEscolares") ? "default" : "secondary"}>
-                  {isSectionComplete("datosEscolares") ? "Completo" : "Pendiente"}
+            <AccordionItem value="datosEscolares" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 transition-colors border-l-4 border-l-emerald-500">
+                <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-emerald-100 rounded-full flex-shrink-0">
+                  <GraduationCap className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-600" />
+                </div>
+                <div className="flex-1 text-left min-w-0">
+                  <span className="text-sm sm:text-lg font-semibold text-slate-800 block truncate">Datos Escolares</span>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Historia académica y escolarización</p>
+                </div>
+                <Badge className="ml-2 text-xs flex-shrink-0" variant={isSectionComplete("datosEscolares") ? "default" : "secondary"}>
+                  <span className="hidden sm:inline">{isSectionComplete("datosEscolares") ? "Completo" : "Pendiente"}</span>
+                  <span className="sm:hidden">{isSectionComplete("datosEscolares") ? "✓" : "○"}</span>
                 </Badge>
               </AccordionTrigger>
-              <AccordionContent className="px-4">
-                {/* Bloque 1: Datos del alumno o alumna */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm mb-4">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Datos del alumno o alumna</p>
-                  <IdentityFields idPrefix="esc-" />
-                </div>
+              <AccordionContent className="px-4 sm:px-6 py-4 bg-white">
+                <div className="space-y-4 sm:space-y-6">
+                  {/* Bloque 1: Datos del alumno o alumna */}
+                  <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-3 sm:p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                      <h3 className="text-sm font-semibold text-emerald-800">Datos del alumno o alumna</h3>
+                    </div>
+                    <IdentityFields idPrefix="esc-" form={form} handleChange={handleChange} errors={errors} />
+                  </div>
 
-                {/* Bloque 2: Historia escolar */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Historia escolar</p>
+                  {/* Bloque 2: Historia escolar */}
+                  <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                      <h3 className="text-sm font-semibold text-emerald-800">Historia escolar</h3>
+                    </div>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="esc-escolarizacionPrevia">Datos de escolarización previa</Label>
@@ -380,31 +380,40 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       <Textarea id="esc-actuacionesDiversidad" rows={4} value={form.actuacionesDiversidad || ""} onChange={(e) => handleChange("actuacionesDiversidad", e.target.value)} placeholder="Refuerzo, acompañamiento, adaptaciones, programas específicos, etc." />
                     </div>
                   </div>
+                  </div>
                 </div>
                 {/* Botón Guardar dentro de Datos escolares */}
-                <div className="mt-4 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
-                    <Save className="h-4 w-4 mr-2" /> Guardar
+                <div className="mt-6 flex justify-end">
+                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Save className="h-4 w-4 mr-2" /> Guardar Sección
                   </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
 
             {/* Evaluación psicopedagógica */}
-            <AccordionItem value="evaluacionPsicopedagogica" className="rounded-md section-odd mb-2 border-l-4 section-odd-border">
-              <AccordionTrigger className="flex w-full items-center gap-2 px-4 h-12 text-emerald-900 font-bold uppercase tracking-wide">
-                <Brain className="h-4 w-4" />
-                <span>Datos de la evaluación psicopedagógica</span>
+            <AccordionItem value="evaluacionPsicopedagogica" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100 transition-colors border-l-4 border-l-purple-500">
+                <div className="flex items-center justify-center w-8 h-8 bg-purple-100 rounded-full">
+                  <Brain className="h-4 w-4 text-purple-600" />
+                </div>
+                <div className="flex-1 text-left">
+                  <span className="text-lg font-semibold text-slate-800">Evaluación Psicopedagógica</span>
+                  <p className="text-sm text-slate-600 mt-0.5">Datos y motivo de la evaluación</p>
+                </div>
                 <Badge className="ml-auto" variant={isSectionComplete("evaluacionPsicopedagogica") ? "default" : "secondary"}>
                   {isSectionComplete("evaluacionPsicopedagogica") ? "Completo" : "Pendiente"}
                 </Badge>
               </AccordionTrigger>
-              <AccordionContent className="px-4">
+              <AccordionContent className="px-6 py-4 bg-white">
                 <div className="space-y-6">
                   {/* Bloque identidad para consistencia */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                    <p className="mb-3 text-sm font-semibold text-gray-700">Datos del alumno o alumna</p>
-                    <IdentityFields idPrefix="ev-" />
+                  <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-5 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      <h3 className="text-sm font-semibold text-purple-800">Datos del alumno o alumna</h3>
+                    </div>
+                    <IdentityFields idPrefix="ev-" form={form} handleChange={handleChange} errors={errors} />
                     <div className="grid grid-cols-1 gap-4 mt-4">
                       <div className="space-y-2">
                         <Label htmlFor="eoeReferencia">EOE de referencia en el momento de la elaboración del informe</Label>
@@ -414,8 +423,11 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
 
                   {/* Bloque: Datos de la evaluación psicopedagógica */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="mb-1 text-sm font-semibold text-gray-700">Datos de la evaluación psicopedagógica</p>
+                  <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-5 shadow-sm space-y-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      <h3 className="text-sm font-semibold text-purple-800">Datos de la evaluación psicopedagógica</h3>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="profesionalRealiza">Profesional que lo realiza</Label>
@@ -467,41 +479,54 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
                 </div>
                 {/* Botón Guardar dentro de Evaluación psicopedagógica */}
-                <div className="mt-4 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
-                    <Save className="h-4 w-4 mr-2" /> Guardar
+                <div className="mt-6 flex justify-end">
+                  <Button type="button" className="bg-purple-600 hover:bg-purple-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Save className="h-4 w-4 mr-2" /> Guardar Sección
                   </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
 
             {/* Información relevante del alumno/a */}
-            <AccordionItem value="infoAlumno" className="rounded-md section-even mb-2 border-l-4 section-even-border">
-              <AccordionTrigger className="flex w-full items-center gap-2 px-4 h-12 text-emerald-900 font-bold uppercase tracking-wide">
-                <FileText className="h-4 w-4" />
-                <span>Información relevante del alumno/a</span>
+            <AccordionItem value="infoAlumno" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-orange-50 to-amber-50 hover:from-orange-100 hover:to-amber-100 transition-colors border-l-4 border-l-orange-500">
+                <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-full">
+                  <FileText className="h-4 w-4 text-orange-600" />
+                </div>
+                <div className="flex-1 text-left">
+                  <span className="text-lg font-semibold text-slate-800">Información Relevante del Alumno</span>
+                  <p className="text-sm text-slate-600 mt-0.5">Desarrollo y características específicas</p>
+                </div>
                 <Badge className="ml-auto" variant={isSectionComplete("infoAlumno") ? "default" : "secondary"}>
                   {isSectionComplete("infoAlumno") ? "Completo" : "Pendiente"}
                 </Badge>
               </AccordionTrigger>
-              <AccordionContent className="px-4 space-y-6">
+              <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna: reutiliza identidad */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Datos del alumno o alumna</p>
-                  <IdentityFields idPrefix="ir-" />
+                <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-orange-800">Datos del alumno o alumna</h3>
+                  </div>
+                  <IdentityFields idPrefix="ir-" form={form} handleChange={handleChange} errors={errors} />
                 </div>
 
                 {/* Datos clínicos y/o sociales relevantes */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Datos clínicos y/o sociales relevantes</p>
+                <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-orange-800">Datos clínicos y/o sociales relevantes</h3>
+                  </div>
                   <Textarea rows={4} value={form.datosClinicosSociales || ""} onChange={(e) => handleChange("datosClinicosSociales", e.target.value)} placeholder="Descripción médica/social relevante (diagnósticos, tratamientos, informes externos, etc.)" />
                 </div>
 
                 {/* Datos relativos al: Desarrollo cognitivo */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-3">
-                  <p className="mb-1 text-sm font-semibold text-gray-700">Datos relativos al:</p>
+                <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm space-y-3">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-orange-800">Desarrollo cognitivo</h3>
+                  </div>
                   <div className="space-y-2">
-                    <p className="text-sm font-medium text-gray-700">Desarrollo cognitivo</p>
                     <Textarea rows={4} value={form.descDesarrolloCognitivo || ""} onChange={(e) => handleChange("descDesarrolloCognitivo", e.target.value)} placeholder="Descripción de resultados, CI, memoria de trabajo, razonamiento, etc." />
                   </div>
                 </div>
@@ -784,88 +809,121 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </div>
 
                 {/* Guardar dentro de Información relevante */}
-                <div className="mt-4 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
-                    <Save className="h-4 w-4 mr-2" /> Guardar
+                <div className="mt-6 flex justify-end">
+                  <Button type="button" className="bg-orange-600 hover:bg-orange-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Save className="h-4 w-4 mr-2" /> Guardar Sección
                   </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="contextoEscolar" className="rounded-md section-odd mb-2 border-l-4 section-odd-border">
-              <AccordionTrigger className="flex w-full items-center gap-2 px-4 h-12 text-emerald-900 font-bold uppercase tracking-wide">
-                <Building2 className="h-4 w-4" />
-                <span>Información relevante sobre el contexto escolar</span>
+            <AccordionItem value="contextoEscolar" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-teal-50 to-cyan-50 hover:from-teal-100 hover:to-cyan-100 transition-colors border-l-4 border-l-teal-500">
+                <div className="flex items-center justify-center w-8 h-8 bg-teal-100 rounded-full">
+                  <Building2 className="h-4 w-4 text-teal-600" />
+                </div>
+                <div className="flex-1 text-left">
+                  <span className="text-lg font-semibold text-slate-800">Contexto Escolar</span>
+                  <p className="text-sm text-slate-600 mt-0.5">Información del entorno educativo</p>
+                </div>
                 <Badge className="ml-auto" variant={isSectionComplete("contextoEscolar") ? "default" : "secondary"}>
                   {isSectionComplete("contextoEscolar") ? "Completo" : "Pendiente"}
                 </Badge>
               </AccordionTrigger>
-              <AccordionContent className="px-4 space-y-4">
+              <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Datos del alumno o alumna</p>
-                  <IdentityFields idPrefix="ce-" />
+                <div className="rounded-lg border border-teal-200 bg-teal-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-teal-800">Datos del alumno o alumna</h3>
+                  </div>
+                  <IdentityFields idPrefix="ce-" form={form} handleChange={handleChange} errors={errors} />
                 </div>
                 {/* Texto principal de contexto escolar */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Información relevante sobre el contexto escolar</p>
+                <div className="rounded-lg border border-teal-200 bg-teal-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-teal-800">Información relevante sobre el contexto escolar</h3>
+                  </div>
                   <Textarea rows={6} value={form.contextoEscolar || ""} onChange={(e) => handleChange("contextoEscolar", e.target.value)} placeholder="Ej.: Llegada reciente al centro, ratio de aula, recursos de PT/AL, disponibilidad de apoyos, características del centro, etc." />
                 </div>
                 {/* Botón Guardar dentro de Contexto escolar */}
-                <div className="mt-2 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
-                    <Save className="h-4 w-4 mr-2" /> Guardar
+                <div className="mt-6 flex justify-end">
+                  <Button type="button" className="bg-teal-600 hover:bg-teal-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Save className="h-4 w-4 mr-2" /> Guardar Sección
                   </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="entornoFamiliar" className="rounded-md section-even mb-2 border-l-4 section-even-border">
-              <AccordionTrigger className="flex w-full items-center gap-2 px-4 h-12 text-emerald-900 font-bold uppercase tracking-wide">
-                <Home className="h-4 w-4" />
-                <span>Información relevante sobre el entorno familiar y el contexto social (*)</span>
+            <AccordionItem value="entornoFamiliar" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transition-colors border-l-4 border-l-pink-500">
+                <div className="flex items-center justify-center w-8 h-8 bg-pink-100 rounded-full">
+                  <Home className="h-4 w-4 text-pink-600" />
+                </div>
+                <div className="flex-1 text-left">
+                  <span className="text-lg font-semibold text-slate-800">Entorno Familiar</span>
+                  <p className="text-sm text-slate-600 mt-0.5">Contexto familiar y social del alumno</p>
+                </div>
                 <Badge className="ml-auto" variant={isSectionComplete("entornoFamiliar") ? "default" : "secondary"}>
                   {isSectionComplete("entornoFamiliar") ? "Completo" : "Pendiente"}
                 </Badge>
               </AccordionTrigger>
-              <AccordionContent className="px-4 space-y-4">
+              <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Datos del alumno o alumna</p>
-                  <IdentityFields idPrefix="ef-" />
+                <div className="rounded-lg border border-pink-200 bg-pink-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-pink-800">Datos del alumno o alumna</h3>
+                  </div>
+                  <IdentityFields idPrefix="ef-" form={form} handleChange={handleChange} errors={errors} />
                 </div>
                 {/* Texto principal del entorno familiar/contexto social */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Información relevante sobre el entorno familiar y el contexto social</p>
+                <div className="rounded-lg border border-pink-200 bg-pink-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-pink-800">Información relevante sobre el entorno familiar y el contexto social</h3>
+                  </div>
                   <Textarea rows={6} value={form.entornoFamiliar || ""} onChange={(e) => handleChange("entornoFamiliar", e.target.value)} placeholder="Ej.: Situación familiar (convivencia, custodia), red de apoyos, recursos sociales, factores de riesgo/protección, etc." />
                 </div>
                 {/* Botón Guardar dentro de Entorno familiar */}
-                <div className="mt-2 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
-                    <Save className="h-4 w-4 mr-2" /> Guardar
+                <div className="mt-6 flex justify-end">
+                  <Button type="button" className="bg-pink-600 hover:bg-pink-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Save className="h-4 w-4 mr-2" /> Guardar Sección
                   </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="necesidadesApoyo" className="rounded-md section-odd mb-2 border-l-4 section-odd-border">
-              <AccordionTrigger className="flex w-full items-center gap-2 px-4 h-12 text-emerald-900 font-bold uppercase tracking-wide">
-                <Target className="h-4 w-4" />
-                <span>Determinación de las necesidades específicas de apoyo educativo (*)</span>
+            <AccordionItem value="necesidadesApoyo" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-indigo-50 to-blue-50 hover:from-indigo-100 hover:to-blue-100 transition-colors border-l-4 border-l-indigo-500">
+                <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full">
+                  <Target className="h-4 w-4 text-indigo-600" />
+                </div>
+                <div className="flex-1 text-left">
+                  <span className="text-lg font-semibold text-slate-800">Necesidades de Apoyo Educativo</span>
+                  <p className="text-sm text-slate-600 mt-0.5">Determinación de NEAE específicas</p>
+                </div>
                 <Badge className="ml-auto" variant={isSectionComplete("necesidadesApoyo") ? "default" : "secondary"}>
                   {isSectionComplete("necesidadesApoyo") ? "Completo" : "Pendiente"}
                 </Badge>
               </AccordionTrigger>
-              <AccordionContent className="px-4 space-y-6">
+              <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Datos del alumno o alumna</p>
-                  <IdentityFields idPrefix="ne-" />
+                <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-indigo-800">Datos del alumno o alumna</h3>
+                  </div>
+                  <IdentityFields idPrefix="ne-" form={form} handleChange={handleChange} errors={errors} />
                 </div>
 
                 {/* Determinación de NEAE */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                  <p className="text-sm font-semibold text-gray-700">Determinación de las necesidades específicas de apoyo educativo</p>
+                <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm space-y-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-indigo-800">Determinación de las necesidades específicas de apoyo educativo</h3>
+                  </div>
                   <div className="space-y-2">
                     <Label>¿Presenta necesidades específicas de apoyo educativo?</Label>
                     <RadioGroup className="flex gap-6" value={form.presentaNEAE || ""} onValueChange={(v) => handleChange("presentaNEAE", v)}>
@@ -937,33 +995,44 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </div>
 
                 {/* Observaciones */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Observaciones</p>
+                <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-indigo-800">Observaciones</h3>
+                  </div>
                   <Textarea rows={4} value={form.observacionesNEAE || ""} onChange={(e) => handleChange("observacionesNEAE", e.target.value)} placeholder="Resumen de la necesidad y su correspondencia con el NCC, medidas de acceso necesarias, etc." />
                 </div>
 
                 {/* Botón Guardar */}
-                <div className="mt-2 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
-                    <Save className="h-4 w-4 mr-2" /> Guardar
+                <div className="mt-6 flex justify-end">
+                  <Button type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Save className="h-4 w-4 mr-2" /> Guardar Sección
                   </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="propuestaAtencion" className="rounded-md section-even mb-2 border-l-4 section-even-border">
-              <AccordionTrigger className="flex w-full items-center gap-2 px-4 h-12 text-emerald-900 font-bold uppercase tracking-wide">
-                <ClipboardCheck className="h-4 w-4" />
-                <span>Propuesta de atención educativa. Orientaciones al profesorado (*)</span>
+            <AccordionItem value="propuestaAtencion" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-lime-50 to-green-50 hover:from-lime-100 hover:to-green-100 transition-colors border-l-4 border-l-lime-500">
+                <div className="flex items-center justify-center w-8 h-8 bg-lime-100 rounded-full">
+                  <ClipboardCheck className="h-4 w-4 text-lime-600" />
+                </div>
+                <div className="flex-1 text-left">
+                  <span className="text-lg font-semibold text-slate-800">Propuesta de Atención Educativa</span>
+                  <p className="text-sm text-slate-600 mt-0.5">Orientaciones y medidas para el profesorado</p>
+                </div>
                 <Badge className="ml-auto" variant={isSectionComplete("propuestaAtencion") ? "default" : "secondary"}>
                   {isSectionComplete("propuestaAtencion") ? "Completo" : "Pendiente"}
                 </Badge>
               </AccordionTrigger>
-              <AccordionContent className="px-4 space-y-6">
+              <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Datos del alumno o alumna</p>
-                  <IdentityFields idPrefix="pa-" />
+                <div className="rounded-lg border border-lime-200 bg-lime-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-lime-800">Datos del alumno o alumna</h3>
+                  </div>
+                  <IdentityFields idPrefix="pa-" form={form} handleChange={handleChange} errors={errors} />
                 </div>
 
                 {/* Propuesta de atención educativa */}
@@ -1117,45 +1186,62 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </div>
 
                 {/* Orientaciones al profesorado */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-2">
-                  <p className="text-sm font-semibold text-gray-700">Especificar orientaciones para la organización de la respuesta educativa.</p>
-                  <Label htmlFor="propuestaAtencion">Orientaciones al profesorado</Label>
+                <div className="rounded-lg border border-lime-200 bg-lime-50/50 p-5 shadow-sm space-y-2">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-lime-800">Orientaciones al profesorado</h3>
+                  </div>
+                  <p className="text-sm text-slate-600 mb-3">Especificar orientaciones para la organización de la respuesta educativa.</p>
                   <Textarea id="propuestaAtencion" rows={6} value={form.propuestaAtencion || ""} onChange={(e) => handleChange("propuestaAtencion", e.target.value)} placeholder="Sugerencias metodológicas, organización del aula, apoyos, seguimiento, coordinación..." />
                 </div>
 
                 {/* Botón Guardar */}
-                <div className="mt-2 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
-                    <Save className="h-4 w-4 mr-2" /> Guardar
+                <div className="mt-6 flex justify-end">
+                  <Button type="button" className="bg-lime-600 hover:bg-lime-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Save className="h-4 w-4 mr-2" /> Guardar Sección
                   </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="orientacionesFamilia" className="rounded-md section-odd mb-2 border-l-4 section-odd-border">
-              <AccordionTrigger className="flex w-full items-center gap-2 px-4 h-12 text-emerald-900 font-bold uppercase tracking-wide">
-                <Users className="h-4 w-4" />
-                <span>Orientaciones a la familia o a los representantes legales (*)</span>
+            <AccordionItem value="orientacionesFamilia" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 transition-colors border-l-4 border-l-violet-500">
+                <div className="flex items-center justify-center w-8 h-8 bg-violet-100 rounded-full">
+                  <Users className="h-4 w-4 text-violet-600" />
+                </div>
+                <div className="flex-1 text-left">
+                  <span className="text-lg font-semibold text-slate-800">Orientaciones a la Familia</span>
+                  <p className="text-sm text-slate-600 mt-0.5">Guía para representantes legales</p>
+                </div>
                 <Badge className="ml-auto" variant={isSectionComplete("orientacionesFamilia") ? "default" : "secondary"}>
                   {isSectionComplete("orientacionesFamilia") ? "Completo" : "Pendiente"}
                 </Badge>
               </AccordionTrigger>
-              <AccordionContent className="px-4 space-y-4">
+              <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Datos del alumno o alumna</p>
-                  <IdentityFields idPrefix="of-" />
+                <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-violet-800">Datos del alumno o alumna</h3>
+                  </div>
+                  <IdentityFields idPrefix="of-" form={form} handleChange={handleChange} errors={errors} />
                 </div>
 
                 {/* Orientaciones */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Orientaciones a la familia o a los representantes legales</p>
+                <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-violet-800">Orientaciones a la familia o a los representantes legales</h3>
+                  </div>
                   <Textarea rows={8} value={form.orientacionesFamilia || ""} onChange={(e) => handleChange("orientacionesFamilia", e.target.value)} placeholder="Ej.: Establecer contactos periódicos con la tutora, reforzar logros, proporcionar apoyo y dedicación, fomentar expectativas positivas, coordinación con el centro, etc." />
                 </div>
 
                 {/* Fichero externo */}
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm">
-                  <p className="mb-3 text-sm font-semibold text-gray-700">Fichero externo</p>
+                <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
+                    <h3 className="text-sm font-semibold text-violet-800">Fichero externo</h3>
+                  </div>
                   <div className="flex items-center gap-3">
                     <Input type="file" multiple onChange={(e) => handleOrientacionesFiles(e.target.files)} />
                   </div>
@@ -1177,30 +1263,47 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </div>
 
                 {/* Botón Guardar dentro de Orientaciones a la familia */}
-                <div className="mt-2 flex justify-end">
-                  <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={handleSaveDraft}>
-                    <Save className="h-4 w-4 mr-2" /> Guardar
+                <div className="mt-6 flex justify-end">
+                  <Button type="button" className="bg-violet-600 hover:bg-violet-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Save className="h-4 w-4 mr-2" /> Guardar Sección
                   </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
 
-          <div className="flex items-center justify-between gap-2 pt-4">
-            <Button type="submit" disabled={isLoading} className="">
-              {isLoading ? "Generando..." : "Generar informe"}
-            </Button>
-            <div className="ml-auto flex items-center gap-2">
-              <Button type="button" variant="outline" onClick={handleClear} disabled={isLoading}>
-                Limpiar
+          <div className="bg-gradient-to-r from-slate-50 to-slate-100 border-t border-slate-200 p-4 sm:p-6 mt-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <Button 
+                type="submit" 
+                disabled={isLoading} 
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 sm:px-8 py-2.5 text-sm sm:text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                {isLoading ? "Generando..." : "🚀 Generar Informe"}
               </Button>
-              <Button type="button" onClick={handleSaveDraft} className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                Guardar borrador
-              </Button>
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={handleClear} 
+                  disabled={isLoading}
+                  className="border-slate-300 text-slate-600 hover:bg-slate-50 px-4 sm:px-6 w-full sm:w-auto"
+                >
+                  Limpiar Todo
+                </Button>
+                <Button 
+                  type="button" 
+                  onClick={handleSaveDraft} 
+                  className="bg-slate-600 hover:bg-slate-700 text-white px-4 sm:px-6 shadow-sm w-full sm:w-auto"
+                >
+                  💾 Guardar Borrador
+                </Button>
+              </div>
             </div>
           </div>
         </form>
       </CardContent>
-    </Card>
+      </Card>
+    </div>
   );
 }
