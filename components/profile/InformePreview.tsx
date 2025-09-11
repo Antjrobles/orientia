@@ -6,7 +6,24 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Copy, CheckCircle, AlertCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { LoadingIndicator } from './LoadingIndicator';
+
+interface LoadingIndicatorProps {
+  message?: string;
+}
+
+function LoadingIndicator({ message = 'Generando informe...' }: LoadingIndicatorProps) {
+  return (
+    <div className="flex flex-col items-center justify-center py-8 space-y-4">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="text-center">
+        <p className="text-sm font-medium text-gray-700">{message}</p>
+        <p className="text-xs text-gray-500 mt-1">
+          Esto puede tomar unos segundos
+        </p>
+      </div>
+    </div>
+  );
+}
 
 interface InformePreviewProps {
   report: string | null;

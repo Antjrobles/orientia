@@ -1,9 +1,9 @@
 'use client'
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import Spinner from '@/components/ui/Spinner';
 import { useSession } from 'next-auth/react';
-import { Search, Filter, FileText, Eye, Edit, Copy, Trash2, Plus } from "lucide-react";
+import { Search, FileText, Eye, Edit, Copy, Trash2, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,34 +11,53 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
 
+interface Informe {
+  id: string;
+  estado: 'completado' | 'borrador' | string;
+  creado_en: string;
+  actualizado_en: string;
+  datos_identificativos?: {
+    alumno?: {
+      nombre?: string;
+      curso?: string;
+    };
+    centro?: {
+      nombre?: string;
+    };
+  };
+  evaluacion_psicopedagogica?: {
+    motivo_consulta?: string;
+  };
+}
 
 function InformesContent() {
   const { data: session } = useSession();
   const [busqueda, setBusqueda] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('todos');
-  const [informes, setInformes] = useState<any[]>([]);
+  const [informes, setInformes] = useState<Informe[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchInformes = async () => {
-      try {
-        const response = await fetch('/api/informes/list');
-        const data = await response.json();
+  const fetchInformes = useCallback(async () => {
+    if (!session) return;
+    
+    try {
+      const response = await fetch('/api/informes/list');
+      const data = await response.json();
 
-        if (data.success) {
-          setInformes(data.informes);
-        }
-      } catch (error) {
-        console.error('Error al cargar informes:', error);
-      } finally {
-        setLoading(false);
+      if (data.success) {
+        setInformes(data.informes || []);
       }
-    };
-
-    if (session) {
-      fetchInformes();
+    } catch (error) {
+      console.error('Error al cargar informes:', error);
+      setInformes([]);
+    } finally {
+      setLoading(false);
     }
   }, [session]);
+
+  useEffect(() => {
+    fetchInformes();
+  }, [fetchInformes]);
 
   // Filtrar informes
   const informesFiltrados = informes.filter(informe => {

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { StudentData } from '@/lib/groq/types';
-import { InformeCompletoForm } from './components/InformeCompletoForm';
-import { InformePreview } from '../groq-test/components/InformePreview';
+import { InformeCompletoForm } from '@/components/profile/InformeCompletoForm';
+import { InformePreview } from '@/components/profile/InformePreview';
 import { Button } from '@/components/ui/button';
 
 export default function GenerarInformePage() {
@@ -47,12 +47,10 @@ export default function GenerarInformePage() {
   };
 
   const handleSaveInforme = async () => {
-    console.log('🔵 Iniciando guardado...');
-    console.log('🔵 generatedReport:', !!generatedReport);
-    console.log('🔵 currentFormData:', currentFormData);
-
     if (!generatedReport || !currentFormData) {
-      console.log('❌ Faltan datos para guardar');
+      toast.error('Error de validación', {
+        description: 'Faltan datos necesarios para guardar el informe.'
+      });
       return;
     }
 
@@ -60,7 +58,6 @@ export default function GenerarInformePage() {
     setError(null);
 
     try {
-      console.log('🔵 Enviando datos a API...');
       const response = await fetch('/api/informes/create', {
         method: 'POST',
         headers: {
@@ -72,30 +69,27 @@ export default function GenerarInformePage() {
         }),
       });
 
-      console.log('🔵 Respuesta recibida:', response.status);
       const data = await response.json();
-      console.log('🔵 Datos de respuesta:', data);
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error del servidor');
+      }
 
       if (data.success) {
         toast.success('¡Informe guardado exitosamente!', {
           description: 'El informe se ha guardado correctamente en tu base de datos.'
         });
-        // Limpiar el formulario
         setGeneratedReport(null);
         setCurrentFormData(null);
       } else {
-        console.log('❌ Error en respuesta:', data.error);
-        toast.error('Error al guardar', {
-          description: data.error || 'Error al guardar el informe'
-        });
-        setError(data.error || 'Error al guardar el informe');
+        throw new Error(data.error || 'Error desconocido al guardar el informe');
       }
     } catch (err) {
-      console.error('❌ Error al guardar informe:', err);
-      toast.error('Error de conexión', {
-        description: 'Error de conexión al guardar.'
+      const errorMessage = err instanceof Error ? err.message : 'Error de conexión al guardar.';
+      toast.error('Error al guardar', {
+        description: errorMessage
       });
-      setError('Error de conexión al guardar.');
+      setError(errorMessage);
     } finally {
       setIsSaving(false);
     }
