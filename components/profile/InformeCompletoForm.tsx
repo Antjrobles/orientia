@@ -132,7 +132,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     observaciones: "",
   });
 
-  const [open, setOpen] = useState<SectionKey[]>(["datosPersonales", "evaluacionPsicopedagogica"]);
+  const [open, setOpen] = useState<SectionKey[]>([]);
   const [visionTemp, setVisionTemp] = useState<string>("");
   const [audicionTemp, setAudicionTemp] = useState<string>("");
   const [necesidadTemp, setNecesidadTemp] = useState<string>("");
