@@ -97,13 +97,10 @@ export default function GenerarInformePage() {
 
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+      <div className="mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
           Generar Informe Psicopedagógico
         </h1>
-        <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto px-4 sm:px-0">
-          Crea informes profesionales con IA y guárdalos en tu base de datos
-        </p>
       </div>
 
       {/* Mostrar formulario si no hay informe generado */}

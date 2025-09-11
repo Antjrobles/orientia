@@ -125,6 +125,12 @@ const requiredSections: Record<SectionKey, string[]> = {
   orientacionesFamilia: [],
 };
 
+const SectionStatusIndicator = ({ isComplete }: { isComplete: boolean }) => (
+  <div className="w-3 h-3 rounded border flex-shrink-0 flex items-center justify-center bg-white">
+    {isComplete && <div className="w-2 h-2 bg-gray-700 rounded-sm"></div>}
+  </div>
+);
+
 export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   const [form, setForm] = useState<FormState>({
     nombre: "",
@@ -165,6 +171,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
   const isSectionComplete = (key: SectionKey) => {
     const req = requiredSections[key];
+    // Si no hay campos requeridos, la sección NUNCA está completa
+    if (req.length === 0) return false;
+    
     return req.every((k) => {
       const v = (form as any)[k];
       return typeof v === "number" ? true : Boolean(v && String(v).trim());
@@ -214,7 +223,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   };
 
   const handleClear = () => {
-    setForm({ nombre: "", curso: "", motivoConsulta: "", observaciones: "" });
+    // LIMPIAR completamente
+    setForm({
+      nombre: "",
+      curso: "", 
+      motivoConsulta: "",
+    } as FormState);
+    
+    // Resetear estados temporales
+    setVisionTemp("");
+    setAudicionTemp("");
+    
+    // Cerrar acordeones  
+    setOpen([]);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -233,25 +254,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Header mejorado */}
-      <div className="bg-gradient-to-r from-slate-50 to-blue-50 border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm">
-        <div className="flex flex-col gap-4">
-          <div className="text-center sm:text-left">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-800">Formulario de Informe Psicopedagógico</h1>
-            <p className="text-sm sm:text-base text-slate-600 mt-1">Complete las secciones necesarias para generar el informe</p>
-          </div>
-          <div className="flex justify-center sm:justify-end">
-            <Button 
-              type="button" 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setOpen([])} 
-              className="border-slate-300 text-slate-600 hover:bg-slate-50 w-full sm:w-auto"
-            >
-              <Minimize2 className="h-4 w-4 mr-2" /> Contraer todo
-            </Button>
-          </div>
-        </div>
+      <div className="flex justify-end mb-4">
+        <Button 
+          type="button" 
+          variant="outline" 
+          size="sm" 
+          onClick={() => setOpen([])} 
+          className="text-gray-600"
+        >
+          <Minimize2 className="h-4 w-4 mr-2" /> Contraer todo
+        </Button>
       </div>
 
       <Card className="border-0 shadow-lg">
@@ -260,18 +272,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             <Accordion type="multiple" value={open} onValueChange={(v) => setOpen(v as SectionKey[])} className="w-full">
             {/* Datos personales */}
             <AccordionItem value="datosPersonales" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-colors border-l-4 border-l-blue-500">
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-colors border-l-4 border-l-blue-500" style={{textDecoration: 'none'}}>
                 <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex-shrink-0">
                   <User className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
                 </div>
                 <div className="flex-1 text-left min-w-0">
-                  <span className="text-sm sm:text-lg font-semibold text-slate-800 block truncate">Datos Personales</span>
+                  <span className="text-sm sm:text-lg font-semibold block truncate text-slate-800 no-underline">
+                    Datos Personales {isSectionComplete("datosPersonales") && <span className="text-4xl font-bold text-green-600 no-underline"> ✓</span>}
+                  </span>
                   <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Información básica del alumno</p>
                 </div>
-                <Badge className="ml-2 text-xs flex-shrink-0" variant={isSectionComplete("datosPersonales") ? "default" : "secondary"}>
-                  <span className="hidden sm:inline">{isSectionComplete("datosPersonales") ? "Completo" : "Pendiente"}</span>
-                  <span className="sm:hidden">{isSectionComplete("datosPersonales") ? "✓" : "○"}</span>
-                </Badge>
               </AccordionTrigger>
               <AccordionContent className="px-4 sm:px-6 py-4 bg-white">
                 {/* Bloque principal: Información personal y tutores */}
@@ -340,18 +350,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
             {/* Datos escolares */}
             <AccordionItem value="datosEscolares" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 transition-colors border-l-4 border-l-emerald-500">
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 transition-colors border-l-4 border-l-emerald-500" style={{textDecoration: 'none'}}>
                 <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-emerald-100 rounded-full flex-shrink-0">
                   <GraduationCap className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-600" />
                 </div>
                 <div className="flex-1 text-left min-w-0">
-                  <span className="text-sm sm:text-lg font-semibold text-slate-800 block truncate">Datos Escolares</span>
+                  <span className="text-sm sm:text-lg font-semibold block truncate text-slate-800">
+                    Datos Escolares {isSectionComplete("datosEscolares") && <span className="text-4xl font-bold text-green-600"> ✓</span>}
+                  </span>
                   <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Historia académica y escolarización</p>
                 </div>
-                <Badge className="ml-2 text-xs flex-shrink-0" variant={isSectionComplete("datosEscolares") ? "default" : "secondary"}>
-                  <span className="hidden sm:inline">{isSectionComplete("datosEscolares") ? "Completo" : "Pendiente"}</span>
-                  <span className="sm:hidden">{isSectionComplete("datosEscolares") ? "✓" : "○"}</span>
-                </Badge>
               </AccordionTrigger>
               <AccordionContent className="px-4 sm:px-6 py-4 bg-white">
                 <div className="space-y-4 sm:space-y-6">
@@ -393,19 +401,18 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
             {/* Evaluación psicopedagógica */}
             <AccordionItem value="evaluacionPsicopedagogica" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100 transition-colors border-l-4 border-l-purple-500">
-                <div className="flex items-center justify-center w-8 h-8 bg-purple-100 rounded-full">
-                  <Brain className="h-4 w-4 text-purple-600" />
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100 transition-colors border-l-4 border-l-purple-500" style={{textDecoration: 'none'}}>
+                <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-purple-100 rounded-full flex-shrink-0">
+                  <Brain className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600" />
                 </div>
-                <div className="flex-1 text-left">
-                  <span className="text-lg font-semibold text-slate-800">Evaluación Psicopedagógica</span>
-                  <p className="text-sm text-slate-600 mt-0.5">Datos y motivo de la evaluación</p>
+                <div className="flex-1 text-left min-w-0">
+                  <span className="text-sm sm:text-lg font-semibold block truncate text-slate-800">
+                    Evaluación Psicopedagógica {isSectionComplete("evaluacionPsicopedagogica") && <span className="text-4xl font-bold text-green-600"> ✓</span>}
+                  </span>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Datos y motivo de la evaluación</p>
                 </div>
-                <Badge className="ml-auto" variant={isSectionComplete("evaluacionPsicopedagogica") ? "default" : "secondary"}>
-                  {isSectionComplete("evaluacionPsicopedagogica") ? "Completo" : "Pendiente"}
-                </Badge>
               </AccordionTrigger>
-              <AccordionContent className="px-6 py-4 bg-white">
+              <AccordionContent className="px-4 py-4 sm:px-6 bg-white">
                 <div className="space-y-6">
                   {/* Bloque identidad para consistencia */}
                   <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-5 shadow-sm">
@@ -489,17 +496,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
             {/* Información relevante del alumno/a */}
             <AccordionItem value="infoAlumno" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-orange-50 to-amber-50 hover:from-orange-100 hover:to-amber-100 transition-colors border-l-4 border-l-orange-500">
-                <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-full">
-                  <FileText className="h-4 w-4 text-orange-600" />
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-orange-50 to-amber-50 hover:from-orange-100 hover:to-amber-100 transition-colors border-l-4 border-l-orange-500" style={{textDecoration: 'none'}}>
+                <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-orange-100 rounded-full flex-shrink-0">
+                  <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-orange-600" />
                 </div>
-                <div className="flex-1 text-left">
-                  <span className="text-lg font-semibold text-slate-800">Información Relevante del Alumno</span>
-                  <p className="text-sm text-slate-600 mt-0.5">Desarrollo y características específicas</p>
+                <div className="flex-1 text-left min-w-0">
+                  <span className="text-sm sm:text-lg font-semibold block truncate text-slate-800">
+                    Información Relevante del Alumno {isSectionComplete("infoAlumno") && <span className="text-4xl font-bold text-green-600"> ✓</span>}
+                  </span>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Desarrollo y características específicas</p>
                 </div>
-                <Badge className="ml-auto" variant={isSectionComplete("infoAlumno") ? "default" : "secondary"}>
-                  {isSectionComplete("infoAlumno") ? "Completo" : "Pendiente"}
-                </Badge>
               </AccordionTrigger>
               <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna: reutiliza identidad */}
@@ -567,7 +573,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <Label>Desarrollo sensorial visión</Label>
                     <div className="flex items-center gap-2">
                       <Select value={visionTemp || undefined} onValueChange={(v) => setVisionTemp(v)}>
-                        <SelectTrigger className="w-full md:w-[560px]">
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Selecciona valoración" />
                         </SelectTrigger>
                         <SelectContent>
@@ -596,7 +602,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <Label>Desarrollo sensorial audición</Label>
                     <div className="flex items-center gap-2">
                       <Select value={audicionTemp || undefined} onValueChange={(v) => setAudicionTemp(v)}>
-                        <SelectTrigger className="w-full md:w-[560px]">
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Selecciona valoración" />
                         </SelectTrigger>
                         <SelectContent>
@@ -818,17 +824,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             </AccordionItem>
 
             <AccordionItem value="contextoEscolar" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-teal-50 to-cyan-50 hover:from-teal-100 hover:to-cyan-100 transition-colors border-l-4 border-l-teal-500">
-                <div className="flex items-center justify-center w-8 h-8 bg-teal-100 rounded-full">
-                  <Building2 className="h-4 w-4 text-teal-600" />
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-teal-50 to-cyan-50 hover:from-teal-100 hover:to-cyan-100 transition-colors border-l-4 border-l-teal-500" style={{textDecoration: 'none'}}>
+                <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-teal-100 rounded-full flex-shrink-0">
+                  <Building2 className="h-3 w-3 sm:h-4 sm:w-4 text-teal-600" />
                 </div>
-                <div className="flex-1 text-left">
-                  <span className="text-lg font-semibold text-slate-800">Contexto Escolar</span>
-                  <p className="text-sm text-slate-600 mt-0.5">Información del entorno educativo</p>
+                <div className="flex-1 text-left min-w-0">
+                  <span className="text-sm sm:text-lg font-semibold block truncate text-slate-800">
+                    Contexto Escolar {isSectionComplete("contextoEscolar") && <span className="text-4xl font-bold text-green-600"> ✓</span>}
+                  </span>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Información del entorno educativo</p>
                 </div>
-                <Badge className="ml-auto" variant={isSectionComplete("contextoEscolar") ? "default" : "secondary"}>
-                  {isSectionComplete("contextoEscolar") ? "Completo" : "Pendiente"}
-                </Badge>
               </AccordionTrigger>
               <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna */}
@@ -857,17 +862,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             </AccordionItem>
 
             <AccordionItem value="entornoFamiliar" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transition-colors border-l-4 border-l-pink-500">
-                <div className="flex items-center justify-center w-8 h-8 bg-pink-100 rounded-full">
-                  <Home className="h-4 w-4 text-pink-600" />
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transition-colors border-l-4 border-l-pink-500" style={{textDecoration: 'none'}}>
+                <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-pink-100 rounded-full flex-shrink-0">
+                  <Home className="h-3 w-3 sm:h-4 sm:w-4 text-pink-600" />
                 </div>
-                <div className="flex-1 text-left">
-                  <span className="text-lg font-semibold text-slate-800">Entorno Familiar</span>
-                  <p className="text-sm text-slate-600 mt-0.5">Contexto familiar y social del alumno</p>
+                <div className="flex-1 text-left min-w-0">
+                  <span className="text-sm sm:text-lg font-semibold block truncate text-slate-800">
+                    Entorno Familiar {isSectionComplete("entornoFamiliar") && <span className="text-4xl font-bold text-green-600"> ✓</span>}
+                  </span>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Contexto familiar y social del alumno</p>
                 </div>
-                <Badge className="ml-auto" variant={isSectionComplete("entornoFamiliar") ? "default" : "secondary"}>
-                  {isSectionComplete("entornoFamiliar") ? "Completo" : "Pendiente"}
-                </Badge>
               </AccordionTrigger>
               <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna */}
@@ -896,17 +900,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             </AccordionItem>
 
             <AccordionItem value="necesidadesApoyo" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-indigo-50 to-blue-50 hover:from-indigo-100 hover:to-blue-100 transition-colors border-l-4 border-l-indigo-500">
-                <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full">
-                  <Target className="h-4 w-4 text-indigo-600" />
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-indigo-50 to-blue-50 hover:from-indigo-100 hover:to-blue-100 transition-colors border-l-4 border-l-indigo-500" style={{textDecoration: 'none'}}>
+                <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-indigo-100 rounded-full flex-shrink-0">
+                  <Target className="h-3 w-3 sm:h-4 sm:w-4 text-indigo-600" />
                 </div>
-                <div className="flex-1 text-left">
-                  <span className="text-lg font-semibold text-slate-800">Necesidades de Apoyo Educativo</span>
-                  <p className="text-sm text-slate-600 mt-0.5">Determinación de NEAE específicas</p>
+                <div className="flex-1 text-left min-w-0">
+                  <span className="text-sm sm:text-lg font-semibold block truncate text-slate-800">
+                    Necesidades de Apoyo Educativo {isSectionComplete("necesidadesApoyo") && <span className="text-4xl font-bold text-green-600"> ✓</span>}
+                  </span>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Determinación de NEAE específicas</p>
                 </div>
-                <Badge className="ml-auto" variant={isSectionComplete("necesidadesApoyo") ? "default" : "secondary"}>
-                  {isSectionComplete("necesidadesApoyo") ? "Completo" : "Pendiente"}
-                </Badge>
               </AccordionTrigger>
               <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna */}
@@ -1013,17 +1016,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             </AccordionItem>
 
             <AccordionItem value="propuestaAtencion" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-lime-50 to-green-50 hover:from-lime-100 hover:to-green-100 transition-colors border-l-4 border-l-lime-500">
-                <div className="flex items-center justify-center w-8 h-8 bg-lime-100 rounded-full">
-                  <ClipboardCheck className="h-4 w-4 text-lime-600" />
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-lime-50 to-green-50 hover:from-lime-100 hover:to-green-100 transition-colors border-l-4 border-l-lime-500" style={{textDecoration: 'none'}}>
+                <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-lime-100 rounded-full flex-shrink-0">
+                  <ClipboardCheck className="h-3 w-3 sm:h-4 sm:w-4 text-lime-600" />
                 </div>
-                <div className="flex-1 text-left">
-                  <span className="text-lg font-semibold text-slate-800">Propuesta de Atención Educativa</span>
-                  <p className="text-sm text-slate-600 mt-0.5">Orientaciones y medidas para el profesorado</p>
+                <div className="flex-1 text-left min-w-0">
+                  <span className="text-sm sm:text-lg font-semibold block truncate text-slate-800">
+                    Propuesta de Atención Educativa {isSectionComplete("propuestaAtencion") && <span className="text-4xl font-bold text-green-600"> ✓</span>}
+                  </span>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Orientaciones y medidas para el profesorado</p>
                 </div>
-                <Badge className="ml-auto" variant={isSectionComplete("propuestaAtencion") ? "default" : "secondary"}>
-                  {isSectionComplete("propuestaAtencion") ? "Completo" : "Pendiente"}
-                </Badge>
               </AccordionTrigger>
               <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna */}
@@ -1205,17 +1207,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             </AccordionItem>
 
             <AccordionItem value="orientacionesFamilia" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <AccordionTrigger className="flex w-full items-center gap-3 px-6 py-4 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 transition-colors border-l-4 border-l-violet-500">
-                <div className="flex items-center justify-center w-8 h-8 bg-violet-100 rounded-full">
-                  <Users className="h-4 w-4 text-violet-600" />
+              <AccordionTrigger className="flex w-full items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 transition-colors border-l-4 border-l-violet-500" style={{textDecoration: 'none'}}>
+                <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-violet-100 rounded-full flex-shrink-0">
+                  <Users className="h-3 w-3 sm:h-4 sm:w-4 text-violet-600" />
                 </div>
-                <div className="flex-1 text-left">
-                  <span className="text-lg font-semibold text-slate-800">Orientaciones a la Familia</span>
-                  <p className="text-sm text-slate-600 mt-0.5">Guía para representantes legales</p>
+                <div className="flex-1 text-left min-w-0">
+                  <span className="text-sm sm:text-lg font-semibold block truncate text-slate-800">
+                    Orientaciones a la Familia {isSectionComplete("orientacionesFamilia") && <span className="text-4xl font-bold text-green-600"> ✓</span>}
+                  </span>
+                  <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Guía para representantes legales</p>
                 </div>
-                <Badge className="ml-auto" variant={isSectionComplete("orientacionesFamilia") ? "default" : "secondary"}>
-                  {isSectionComplete("orientacionesFamilia") ? "Completo" : "Pendiente"}
-                </Badge>
               </AccordionTrigger>
               <AccordionContent className="px-6 py-4 bg-white space-y-6">
                 {/* Datos del alumno o alumna */}
