@@ -27,10 +27,10 @@ export default function ProfileHeader() {
   return (
     <>
       <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex items-center">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center h-16 w-full overflow-hidden">
+            {/* Zona izquierda: Logo */}
+            <div className="flex items-center shrink-0">
               <Link href="/" aria-label="Volver a la página de inicio">
                 <Image
                   src="/icons/logo4.svg"
@@ -43,8 +43,8 @@ export default function ProfileHeader() {
               </Link>
             </div>
 
-            {/* Navegación escritorio (solo visible en md o más) */}
-            <nav className="hidden md:flex items-center space-x-6" role="navigation" aria-label="Navegación de perfil">
+            {/* Zona centro: Navegación (ocupa más espacio) */}
+            <nav className="hidden md:flex flex-1 justify-center items-center mx-6 gap-2" role="navigation" aria-label="Navegación de perfil">
               <Link
                 href="/profile"
                 className={cn(
@@ -94,22 +94,19 @@ export default function ProfileHeader() {
               )}
             </nav>
 
-            {/* Parte derecha */}
-            <div className="flex items-center">
-              {/* Botón menú móvil */}
-              <button
-                className="md:hidden p-2 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
-                aria-label="Abrir menú"
-                onClick={() => setMobileMenuOpen(true)}
-              >
-                <Menu className="h-6 w-6" />
-              </button>
-
-              {/* Botones usuario escritorio */}
-              <div className="hidden md:flex items-center">
-                <AuthButtons />
-              </div>
+            {/* Zona derecha: Botones usuario (desktop) */}
+            <div className="hidden md:flex items-center justify-end">
+              <AuthButtons />
             </div>
+
+            {/* Botón menú móvil (derecha) */}
+            <button
+              className="md:hidden p-2 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 ml-auto"
+              aria-label="Abrir menú"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu className="h-6 w-6" />
+            </button>
           </div>
         </div>
       </header>
