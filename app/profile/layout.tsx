@@ -12,17 +12,18 @@ export default function ProfileLayout({ children }: ProfileLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <ProfileHeader />
-      <DynamicBreadcrumb />
       <SidebarProvider style={{"--sidebar-width": "13rem"} as any}>
-        <div className="container mx-auto bg-gray-50">
-          <div className="flex py-10 gap-10">
-            <ProfileSidebar />
-            <SidebarInset className="flex-1 bg-gray-50"><main id="main" role="main" tabIndex={-1}>
+        <ProfileSidebar />
+        <SidebarInset className="flex-1 bg-gray-50">
+          <DynamicBreadcrumb />
+          <div className="container mx-auto">
+            <div className="py-10">
+              <main id="main" role="main" tabIndex={-1}>
                 {children}
               </main>
-            </SidebarInset>
+            </div>
           </div>
-        </div>
+        </SidebarInset>
       </SidebarProvider>
       <BackToTopButton />
     </div>
