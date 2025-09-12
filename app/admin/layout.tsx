@@ -1,6 +1,6 @@
 import ProfileHeader from "@/components/headers/ProfileHeader";
 import { ProfileSidebar } from "@/components/sidebars/ProfileSidebar";
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -24,12 +24,9 @@ export default async function AdminLayout({
       <DynamicBreadcrumb />
       <SidebarProvider>
         <div className="container mx-auto">
-          <div className="flex py-10 gap-10">
+          <div className="flex py-10 gap-10 ">
             <ProfileSidebar />
             <SidebarInset className="flex-1">
-              <div className="flex h-12 items-center gap-2 px-4 mb-6">
-                <SidebarTrigger />
-              </div>
               <main id="main" role="main" tabIndex={-1}>{children}</main>
             </SidebarInset>
           </div>

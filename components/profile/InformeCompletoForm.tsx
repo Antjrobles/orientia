@@ -269,7 +269,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
   return (
     <div className="space-y-6 mt-8 sm:mt-12">
-      <Card className="border-0 shadow-lg">
+      <Card className="border-0  bg-gray-50">
         <CardHeader className="border-b border-slate-200 p-4 sm:p-6">
           <div className="flex justify-between items-center">
             <CardTitle className="text-lg sm:text-xl">Secciones del Informe</CardTitle>

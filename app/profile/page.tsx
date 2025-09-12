@@ -52,10 +52,10 @@ async function ProfileContent() {
   const firstName = session.user.name?.split(' ')[0] || 'usuario';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="space-y-8 text-center">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <div className="space-y-8 text-center bg-gray-50">
         {/* Cabecera de Bienvenida */}
-        <div className='text-center space-y-2'>
+        <div className='text-center space-y-2 bg-gray-50'>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 text-center">
             ¡Bienvenido de nuevo, {firstName}!
           </h1>
@@ -66,7 +66,7 @@ async function ProfileContent() {
         {/* Tarjetas de Estadísticas */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {MOCK_STATS.map((stat) => (
-            <Card 
+            <Card
               key={stat.title}
               className={stat.variant === 'warning' ? 'border-orange-500/50' : ''}
             >

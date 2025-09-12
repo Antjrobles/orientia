@@ -39,7 +39,7 @@ function InformesContent() {
 
   const fetchInformes = useCallback(async () => {
     if (!session) return;
-    
+
     try {
       const response = await fetch('/api/informes/list');
       const data = await response.json();
