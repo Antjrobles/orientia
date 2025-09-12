@@ -101,6 +101,9 @@ export default function GenerarInformePage() {
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
           Generar Informe Psicopedagógico
         </h1>
+        <p className="text-gray-600">
+          Complete el formulario para generar un informe
+        </p>
       </div>
 
       {/* Mostrar formulario si no hay informe generado */}

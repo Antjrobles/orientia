@@ -1,5 +1,7 @@
 import ProfileHeader from "@/components/headers/ProfileHeader"
 import { ProfileSidebar } from "@/components/sidebars/ProfileSidebar"
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
+import DynamicBreadcrumb from '@/components/navigation/DynamicBreadcrumb'
 
 interface ProfileLayoutProps {
   children: React.ReactNode;
@@ -7,18 +9,24 @@ interface ProfileLayoutProps {
 
 export default function ProfileLayout({ children }: ProfileLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <ProfileHeader />
-      <div className="container mx-auto flex-1 py-10">
-        <div className="grid md:grid-cols-[220px_1fr] lg:grid-cols-[250px_1fr] gap-10">
-          <aside className="hidden md:block">
+      <DynamicBreadcrumb />
+      <SidebarProvider>
+        <div className="container mx-auto">
+          <div className="flex py-10 gap-10">
             <ProfileSidebar />
-          </aside>
-          <main id="main" role="main" tabIndex={-1}>
-            {children}
-          </main>
+            <SidebarInset className="flex-1">
+              <div className="flex h-12 items-center gap-2 px-4 mb-6">
+                <SidebarTrigger />
+              </div>
+              <main id="main" role="main" tabIndex={-1}>
+                {children}
+              </main>
+            </SidebarInset>
+          </div>
         </div>
-      </div>
+      </SidebarProvider>
     </div>
   );
 }

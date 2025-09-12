@@ -1,8 +1,10 @@
 import ProfileHeader from "@/components/headers/ProfileHeader";
 import { ProfileSidebar } from "@/components/sidebars/ProfileSidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import DynamicBreadcrumb from '@/components/navigation/DynamicBreadcrumb';
 
 export default async function AdminLayout({
   children,
@@ -17,17 +19,22 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <ProfileHeader />
-      <div className="container mx-auto flex-1 py-10">
-        <div className="grid md:grid-cols-[220px_1fr] lg:grid-cols-[250px_1fr] gap-10">
-          {/* Sidebar solo visible en escritorio */}
-          <div className="hidden md:block">
+      <DynamicBreadcrumb />
+      <SidebarProvider>
+        <div className="container mx-auto">
+          <div className="flex py-10 gap-10">
             <ProfileSidebar />
+            <SidebarInset className="flex-1">
+              <div className="flex h-12 items-center gap-2 px-4 mb-6">
+                <SidebarTrigger />
+              </div>
+              <main id="main" role="main" tabIndex={-1}>{children}</main>
+            </SidebarInset>
           </div>
-          <main id="main" role="main" tabIndex={-1}>{children}</main>
         </div>
-      </div>
+      </SidebarProvider>
     </div>
   );
 }

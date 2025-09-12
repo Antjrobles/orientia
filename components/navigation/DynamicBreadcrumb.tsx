@@ -1,0 +1,114 @@
+'use client'
+
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { ChevronRight, Home } from "lucide-react"
+
+interface BreadcrumbItem {
+  label: string
+  href: string
+}
+
+const pathLabels: Record<string, string> = {
+  // Auth pages
+  'login': 'Iniciar Sesión',
+  'register': 'Registrarse',
+  'verify-email': 'Verificar Email',
+  
+  // Profile pages
+  'profile': 'Perfil',
+  'informes': 'Informes',
+  'generar-informe': 'Generar Informe',
+  
+  // Admin pages
+  'admin': 'Administración',
+  
+  // Resources pages
+  'faq': 'Preguntas Frecuentes',
+  'formacion': 'Formación',
+  'manual': 'Manual',
+  'soporte': 'Soporte',
+  
+  // Legal pages
+  'cookies': 'Política de Cookies',
+  'privacidad': 'Política de Privacidad',
+  'rgpd': 'RGPD',
+  'ajustes-cookies': 'Ajustes de Cookies',
+  'accesibilidad': 'Accesibilidad',
+  'eliminacion-de-datos-de-usuario': 'Eliminación de Datos',
+  'terminos': 'Términos y Condiciones',
+  
+  // Error pages
+  'not-permitted': 'Acceso Denegado'
+}
+
+export default function DynamicBreadcrumb() {
+  const pathname = usePathname()
+  
+  // Don't show breadcrumb on home page
+  if (pathname === '/') {
+    return (
+      <nav aria-label="Breadcrumb" className="bg-gray-50 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+          <ol className="flex items-center space-x-2 text-sm text-gray-600">
+            <li>
+              <Link href="/" className="hover:text-green-600 flex items-center">
+                <Home className="w-4 h-4 mr-1" />
+                Inicio
+              </Link>
+            </li>
+            <li aria-hidden="true"><ChevronRight className="w-4 h-4" /></li>
+            <li className="text-gray-900" aria-current="page">
+              Sistema de Informes Psicopedagógicos
+            </li>
+          </ol>
+        </div>
+      </nav>
+    )
+  }
+  
+  // Split pathname and create breadcrumb items
+  const pathSegments = pathname.split('/').filter(segment => segment)
+  const breadcrumbItems: BreadcrumbItem[] = []
+  
+  // Always start with home
+  breadcrumbItems.push({ label: 'Inicio', href: '/' })
+  
+  // Build breadcrumb items from path segments
+  let currentPath = ''
+  pathSegments.forEach((segment, index) => {
+    currentPath += `/${segment}`
+    const label = pathLabels[segment] || segment.charAt(0).toUpperCase() + segment.slice(1)
+    breadcrumbItems.push({ label, href: currentPath })
+  })
+  
+  return (
+    <nav aria-label="Breadcrumb" className="bg-gray-50 border-b">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+        <ol className="flex items-center space-x-2 text-sm text-gray-600">
+          {breadcrumbItems.map((item, index) => (
+            <li key={item.href} className="flex items-center">
+              {index > 0 && (
+                <ChevronRight className="w-4 h-4 mr-2" aria-hidden="true" />
+              )}
+              {index === breadcrumbItems.length - 1 ? (
+                <span className="text-gray-900 flex items-center" aria-current="page">
+                  {index === 0 && <Home className="w-4 h-4 mr-1" />}
+                  {item.label}
+                </span>
+              ) : (
+                <Link 
+                  href={item.href} 
+                  className="hover:text-green-600 flex items-center"
+                >
+                  {index === 0 && <Home className="w-4 h-4 mr-1" />}
+                  {item.label}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </nav>
+  )
+}

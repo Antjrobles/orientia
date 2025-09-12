@@ -7,7 +7,7 @@ import Benefits from '@/components/marketing/Benefits';
 import Features from '@/components/marketing/Features';
 import Hero from '@/components/marketing/Hero';
 import Header from '@/components/headers/Header';
-import Breadcrumb from '@/components/navigation/Breadcrumb';
+import DynamicBreadcrumb from '@/components/navigation/DynamicBreadcrumb';
 import ContactForm from '@/components/forms/ContactForm';
 import Pricing from '@/components/marketing/Pricing';
 
@@ -67,7 +67,7 @@ export default function Page() {
       <Header />
 
       {/* Breadcrumb */}
-      <Breadcrumb />
+      <DynamicBreadcrumb />
 
       {/* Main Content */}
       <main id='main' role='main'>

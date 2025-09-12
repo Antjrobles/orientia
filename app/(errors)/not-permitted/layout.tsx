@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import DynamicBreadcrumb from '@/components/navigation/DynamicBreadcrumb';
 
 export const metadata: Metadata = {
   title: 'Acceso restringido',
@@ -8,6 +9,11 @@ export const metadata: Metadata = {
 };
 
 export default function NotPermittedLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <div>
+      <DynamicBreadcrumb />
+      {children}
+    </div>
+  );
 }
 
