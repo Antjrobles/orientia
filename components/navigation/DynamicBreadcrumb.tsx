@@ -49,7 +49,7 @@ export default function DynamicBreadcrumb() {
   if (pathname === '/') {
     return (
       <div className="h-11 px-4 border-b border-gray-200 bg-gray-50 flex items-center justify-start">
-        <nav aria-label="Breadcrumb" className="max-w-7xl mx-auto w-full">
+        <nav aria-label="Breadcrumb" className="w-full">
           <ol className="flex items-center space-x-2 text-sm text-gray-600">
             <li>
               <Link href="/" className="hover:text-green-600 flex items-center">
@@ -84,7 +84,7 @@ export default function DynamicBreadcrumb() {
 
   return (
     <div className="h-11 px-4 border-b border-gray-200 bg-gray-50 flex items-center justify-start">
-      <nav aria-label="Breadcrumb" className="max-w-7xl mx-auto w-full">
+      <nav aria-label="Breadcrumb" className="w-full">
         <ol className="flex items-center space-x-2 text-sm text-gray-600">
           {breadcrumbItems.map((item, index) => (
             <li key={item.href} className="flex items-center">

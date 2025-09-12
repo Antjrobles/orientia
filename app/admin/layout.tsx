@@ -21,16 +21,16 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-gray-50">
       <ProfileHeader />
-      <DynamicBreadcrumb />
-      <SidebarProvider>
-        <div className="container mx-auto">
-          <div className="flex py-10 gap-10 ">
-            <ProfileSidebar />
-            <SidebarInset className="flex-1">
+      <SidebarProvider style={{"--sidebar-width": "13rem"} as any}>
+        <ProfileSidebar />
+        <SidebarInset className="flex-1 bg-gray-50">
+          <DynamicBreadcrumb />
+          <div className="container mx-auto">
+            <div className="py-10">
               <main id="main" role="main" tabIndex={-1}>{children}</main>
-            </SidebarInset>
+            </div>
           </div>
-        </div>
+        </SidebarInset>
       </SidebarProvider>
     </div>
   );
