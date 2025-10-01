@@ -115,7 +115,7 @@ interface Props {
 }
 
 const requiredSections: Record<SectionKey, string[]> = {
-  datosPersonales: ["nombre", "curso"],
+  datosPersonales: ["curso"], // nombre es automático, no requerido del usuario
   datosEscolares: ["escolarizacionPrevia"],
   evaluacionPsicopedagogica: ["motivoConsulta"],
   infoAlumno: ["descDesarrolloCognitivo"],
@@ -133,8 +133,15 @@ const SectionStatusIndicator = ({ isComplete }: { isComplete: boolean }) => (
 );
 
 export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
+  // Generar código anónimo único al montar el componente
+  const [anonCode] = useState(() => {
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substring(2, 7);
+    return `ALUM-${timestamp}-${random}`.toUpperCase();
+  });
+
   const [form, setForm] = useState<FormState>({
-    nombre: "",
+    nombre: `Alumno/a [${anonCode}]`,
     curso: "",
     motivoConsulta: "",
     observaciones: "",
@@ -155,7 +162,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
       const raw = localStorage.getItem("informe-borrador");
       if (raw) {
         const parsed = JSON.parse(raw) as Partial<FormState>;
-        setForm((f) => ({ ...f, ...parsed }));
+        // Nunca sobreescribir el nombre con el borrador
+        const { nombre, ...restParsed } = parsed;
+        setForm((f) => ({ ...f, ...restParsed }));
       }
     } catch {
       // ignorar
@@ -164,7 +173,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
   const errors = useMemo(() => {
     const e: Partial<Record<keyof FormState, string>> = {};
-    if (!form.nombre?.trim()) e.nombre = "Requerido";
+    // El nombre ya no es requerido del usuario, es automático
     if (!form.curso?.trim()) e.curso = "Requerido";
     if (!form.motivoConsulta?.trim()) e.motivoConsulta = "Requerido";
     return e;
@@ -238,9 +247,14 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   };
 
   const handleClear = () => {
+    // Generar nuevo código anónimo
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substring(2, 7);
+    const newAnonCode = `ALUM-${timestamp}-${random}`.toUpperCase();
+
     // LIMPIAR completamente
     setForm({
-      nombre: "",
+      nombre: `Alumno/a [${newAnonCode}]`,
       curso: "",
       motivoConsulta: "",
     } as FormState);
@@ -251,14 +265,22 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
     // Cerrar acordeones
     setOpen([]);
+
+    toast.info('Formulario limpiado', {
+      description: 'Se ha generado un nuevo código anónimo'
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Solo enviamos lo que el backend espera hoy
-    if (!form.nombre?.trim() || !form.curso?.trim() || !form.motivoConsulta?.trim()) return;
+    // Validar campos requeridos (nombre es automático)
+    if (!form.curso?.trim() || !form.motivoConsulta?.trim()) {
+      toast.error('Por favor, completa los campos requeridos');
+      return;
+    }
+
     const payload: StudentData = {
-      nombre: form.nombre.trim(),
+      nombre: form.nombre, // Código anónimo generado automáticamente
       curso: form.curso.trim(),
       motivoConsulta: form.motivoConsulta.trim(),
       observaciones: form.observaciones?.trim() || "",
@@ -337,7 +359,18 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                         <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                         <h3 className="text-sm font-semibold text-blue-800">Etapa de escolarización</h3>
                       </div>
-                      <Input id="etapaEscolar" value={form.etapaEscolar || ""} onChange={(e) => handleChange("etapaEscolar", e.target.value)} placeholder="Ej: Tercer Ciclo de Educación Primaria" />
+                      <Select
+                        value={form.etapaEscolar || undefined}
+                        onValueChange={(value) => handleChange("etapaEscolar", value)}
+                      >
+                        <SelectTrigger id="etapaEscolar">
+                          <SelectValue placeholder="Selecciona la etapa educativa" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Infantil">Infantil</SelectItem>
+                          <SelectItem value="Primaria">Primaria</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     {/* Información a la familia: adjuntos */}
