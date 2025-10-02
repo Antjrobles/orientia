@@ -201,7 +201,17 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   });
 
   const [open, setOpen] = useState<SectionKey[]>([]);
-  const [datosAlumnoOpen, setDatosAlumnoOpen] = useState(true);
+  const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>({
+    dp: true,
+    esc: false,
+    ev: false,
+    ir: false,
+    ce: false,
+    ef: false,
+    ne: false,
+    pa: false,
+    of: false,
+  });
   const [visionTemp, setVisionTemp] = useState<string>("");
   const [audicionTemp, setAudicionTemp] = useState<string>("");
   const [necesidadTemp, setNecesidadTemp] = useState<string>("");
@@ -210,6 +220,13 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   const [profEspecialistaTemp, setProfEspecialistaTemp] = useState<string>("");
   const [personalNoDocenteTemp, setPersonalNoDocenteTemp] =
     useState<string>("");
+
+  const toggleCollapsible = (key: string) => {
+    setOpenCollapsibles(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
 
   // Cargar borrador si existe para mantener sincronía entre secciones
   useEffect(() => {
@@ -446,7 +463,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 <AccordionContent className="px-4 sm:px-6 py-4 bg-white">
                   {/* Bloque principal: Información personal y tutores */}
                   <div className="space-y-4 sm:space-y-6">
-                    <Collapsible open={datosAlumnoOpen} onOpenChange={setDatosAlumnoOpen}>
+                    <Collapsible open={openCollapsibles['dp']} onOpenChange={() => toggleCollapsible('dp')}>
                       <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-3 sm:p-5 shadow-sm">
                         <CollapsibleTrigger className="flex items-center justify-between w-full group">
                           <div className="flex items-center gap-2">
@@ -455,7 +472,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               Datos del alumno o alumna
                             </h3>
                           </div>
-                          {datosAlumnoOpen ? (
+                          {openCollapsibles['dp'] ? (
                             <ChevronUp className="h-4 w-4 text-blue-600 transition-transform group-hover:scale-110" />
                           ) : (
                             <ChevronDown className="h-4 w-4 text-blue-600 transition-transform group-hover:scale-110" />
@@ -629,20 +646,31 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 <AccordionContent className="px-4 sm:px-6 py-4 bg-white">
                   <div className="space-y-4 sm:space-y-6">
                     {/* Bloque 1: Datos del alumno o alumna */}
-                    <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-3 sm:p-5 shadow-sm">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-emerald-800">
-                          Datos del alumno o alumna
-                        </h3>
+                    <Collapsible open={openCollapsibles['esc']} onOpenChange={() => toggleCollapsible('esc')}>
+                      <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-3 sm:p-5 shadow-sm">
+                        <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-emerald-800">
+                              Datos del alumno o alumna
+                            </h3>
+                          </div>
+                          {openCollapsibles['esc'] ? (
+                            <ChevronUp className="h-4 w-4 text-emerald-600 transition-transform group-hover:scale-110" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 text-emerald-600 transition-transform group-hover:scale-110" />
+                          )}
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-4">
+                          <IdentityFields
+                            idPrefix="esc-"
+                            form={form}
+                            handleChange={handleChange}
+                            errors={errors}
+                          />
+                        </CollapsibleContent>
                       </div>
-                      <IdentityFields
-                        idPrefix="esc-"
-                        form={form}
-                        handleChange={handleChange}
-                        errors={errors}
-                      />
-                    </div>
+                    </Collapsible>
 
                     {/* Bloque 2: Historia escolar */}
                     <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-5 shadow-sm">
@@ -837,35 +865,35 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                     {form.medidaSeleccionadaInfantil?.startsWith(
                                       "Programas de adaptación curricular",
                                     ) && (
-                                      <div className="ml-6 pl-4 border-l-2 border-emerald-300 space-y-2 mt-2">
-                                        <p className="text-xs font-medium text-gray-600 mb-2">
-                                          Selecciona el tipo de programa:
-                                        </p>
-                                        {[
-                                          "La atención educativa al alumnado por situaciones personales de hospitalización o de convalecencia domiciliaria",
-                                          "Las adaptaciones de acceso a los elementos del currículo para el alumnado con neae",
-                                          "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado nee",
-                                          "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
-                                        ].map((submedida) => (
-                                          <div
-                                            key={submedida}
-                                            className="flex items-start gap-2"
-                                          >
-                                            <RadioGroupItem
-                                              value={`Programas de adaptación curricular: ${submedida}`}
-                                              id={`inf-${submedida}`}
-                                              className="mt-1"
-                                            />
-                                            <label
-                                              htmlFor={`inf-${submedida}`}
-                                              className="text-sm text-gray-600 cursor-pointer"
+                                        <div className="ml-6 pl-4 border-l-2 border-emerald-300 space-y-2 mt-2">
+                                          <p className="text-xs font-medium text-gray-600 mb-2">
+                                            Selecciona el tipo de programa:
+                                          </p>
+                                          {[
+                                            "La atención educativa al alumnado por situaciones personales de hospitalización o de convalecencia domiciliaria",
+                                            "Las adaptaciones de acceso a los elementos del currículo para el alumnado con neae",
+                                            "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado nee",
+                                            "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
+                                          ].map((submedida) => (
+                                            <div
+                                              key={submedida}
+                                              className="flex items-start gap-2"
                                             >
-                                              {submedida}
-                                            </label>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
+                                              <RadioGroupItem
+                                                value={`Programas de adaptación curricular: ${submedida}`}
+                                                id={`inf-${submedida}`}
+                                                className="mt-1"
+                                              />
+                                              <label
+                                                htmlFor={`inf-${submedida}`}
+                                                className="text-sm text-gray-600 cursor-pointer"
+                                              >
+                                                {submedida}
+                                              </label>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
                                   </div>
                                 </div>
 
@@ -1038,34 +1066,34 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                     {form.medidaSeleccionadaPrimaria?.startsWith(
                                       "Programas de adaptación curricular",
                                     ) && (
-                                      <div className="ml-6 pl-4 border-l-2 border-blue-300 space-y-2 mt-2">
-                                        <p className="text-xs font-medium text-gray-600 mb-2">
-                                          Selecciona el tipo de programa:
-                                        </p>
-                                        {[
-                                          "Las adaptaciones de acceso a los elementos del currículo para el alumnado NEAE",
-                                          "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado NEE",
-                                          "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
-                                        ].map((submedida) => (
-                                          <div
-                                            key={submedida}
-                                            className="flex items-start gap-2"
-                                          >
-                                            <RadioGroupItem
-                                              value={`Programas de adaptación curricular: ${submedida}`}
-                                              id={`prim-${submedida}`}
-                                              className="mt-1"
-                                            />
-                                            <label
-                                              htmlFor={`prim-${submedida}`}
-                                              className="text-sm text-gray-600 cursor-pointer"
+                                        <div className="ml-6 pl-4 border-l-2 border-blue-300 space-y-2 mt-2">
+                                          <p className="text-xs font-medium text-gray-600 mb-2">
+                                            Selecciona el tipo de programa:
+                                          </p>
+                                          {[
+                                            "Las adaptaciones de acceso a los elementos del currículo para el alumnado NEAE",
+                                            "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado NEE",
+                                            "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
+                                          ].map((submedida) => (
+                                            <div
+                                              key={submedida}
+                                              className="flex items-start gap-2"
                                             >
-                                              {submedida}
-                                            </label>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
+                                              <RadioGroupItem
+                                                value={`Programas de adaptación curricular: ${submedida}`}
+                                                id={`prim-${submedida}`}
+                                                className="mt-1"
+                                              />
+                                              <label
+                                                htmlFor={`prim-${submedida}`}
+                                                className="text-sm text-gray-600 cursor-pointer"
+                                              >
+                                                {submedida}
+                                              </label>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
                                   </div>
                                 </div>
 
@@ -1241,34 +1269,34 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                     {form.medidaSeleccionadaSecundaria?.startsWith(
                                       "Programas de adaptación curricular",
                                     ) && (
-                                      <div className="ml-6 pl-4 border-l-2 border-purple-300 space-y-2 mt-2">
-                                        <p className="text-xs font-medium text-gray-600 mb-2">
-                                          Selecciona el tipo de programa:
-                                        </p>
-                                        {[
-                                          "Adaptación curricular de acceso",
-                                          "Adaptación curricular significativa",
-                                          "Adaptación curricular para el alumnado con altas capacidades intelectuales",
-                                        ].map((submedida) => (
-                                          <div
-                                            key={submedida}
-                                            className="flex items-start gap-2"
-                                          >
-                                            <RadioGroupItem
-                                              value={`Programas de adaptación curricular: ${submedida}`}
-                                              id={`sec-${submedida}`}
-                                              className="mt-1"
-                                            />
-                                            <label
-                                              htmlFor={`sec-${submedida}`}
-                                              className="text-sm text-gray-600 cursor-pointer"
+                                        <div className="ml-6 pl-4 border-l-2 border-purple-300 space-y-2 mt-2">
+                                          <p className="text-xs font-medium text-gray-600 mb-2">
+                                            Selecciona el tipo de programa:
+                                          </p>
+                                          {[
+                                            "Adaptación curricular de acceso",
+                                            "Adaptación curricular significativa",
+                                            "Adaptación curricular para el alumnado con altas capacidades intelectuales",
+                                          ].map((submedida) => (
+                                            <div
+                                              key={submedida}
+                                              className="flex items-start gap-2"
                                             >
-                                              {submedida}
-                                            </label>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
+                                              <RadioGroupItem
+                                                value={`Programas de adaptación curricular: ${submedida}`}
+                                                id={`sec-${submedida}`}
+                                                className="mt-1"
+                                              />
+                                              <label
+                                                htmlFor={`sec-${submedida}`}
+                                                className="text-sm text-gray-600 cursor-pointer"
+                                              >
+                                                {submedida}
+                                              </label>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
                                   </div>
                                 </div>
 
@@ -1341,36 +1369,47 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 <AccordionContent className="px-4 py-4 sm:px-6 bg-white">
                   <div className="space-y-6">
                     {/* Bloque identidad para consistencia */}
-                    <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-5 shadow-sm">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-purple-800">
-                          Datos del alumno o alumna
-                        </h3>
-                      </div>
-                      <IdentityFields
-                        idPrefix="ev-"
-                        form={form}
-                        handleChange={handleChange}
-                        errors={errors}
-                      />
-                      <div className="grid grid-cols-1 gap-4 mt-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="eoeReferencia">
-                            EOE de referencia en el momento de la elaboración
-                            del informe
-                          </Label>
-                          <Input
-                            id="eoeReferencia"
-                            value={form.eoeReferencia || ""}
-                            onChange={(e) =>
-                              handleChange("eoeReferencia", e.target.value)
-                            }
-                            placeholder="Ej: 29070143 - E.O.E. Málaga Norte-Ciudad Jardín - Málaga"
+                    <Collapsible open={openCollapsibles['ev']} onOpenChange={() => toggleCollapsible('ev')}>
+                      <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-5 shadow-sm">
+                        <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-purple-800">
+                              Datos del alumno o alumna
+                            </h3>
+                          </div>
+                          {openCollapsibles['ev'] ? (
+                            <ChevronUp className="h-4 w-4 text-purple-600 transition-transform group-hover:scale-110" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 text-purple-600 transition-transform group-hover:scale-110" />
+                          )}
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-4">
+                          <IdentityFields
+                            idPrefix="ev-"
+                            form={form}
+                            handleChange={handleChange}
+                            errors={errors}
                           />
-                        </div>
+                          <div className="grid grid-cols-1 gap-4 mt-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="eoeReferencia">
+                                EOE de referencia en el momento de la elaboración
+                                del informe
+                              </Label>
+                              <Input
+                                id="eoeReferencia"
+                                value={form.eoeReferencia || ""}
+                                onChange={(e) =>
+                                  handleChange("eoeReferencia", e.target.value)
+                                }
+                                placeholder="Ej: 29070143 - E.O.E. Málaga Norte-Ciudad Jardín - Málaga"
+                              />
+                            </div>
+                          </div>
+                        </CollapsibleContent>
                       </div>
-                    </div>
+                    </Collapsible>
 
                     {/* Bloque: Datos de la evaluación psicopedagógica */}
                     <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-5 shadow-sm space-y-4">
@@ -1564,20 +1603,31 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna: reutiliza identidad */}
-                  <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-orange-800">
-                        Datos del alumno o alumna
-                      </h3>
+                  <Collapsible open={openCollapsibles['ir']} onOpenChange={() => toggleCollapsible('ir')}>
+                    <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-orange-800">
+                            Datos del alumno o alumna
+                          </h3>
+                        </div>
+                        {openCollapsibles['ir'] ? (
+                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <IdentityFields
+                          idPrefix="ir-"
+                          form={form}
+                          handleChange={handleChange}
+                          errors={errors}
+                        />
+                      </CollapsibleContent>
                     </div>
-                    <IdentityFields
-                      idPrefix="ir-"
-                      form={form}
-                      handleChange={handleChange}
-                      errors={errors}
-                    />
-                  </div>
+                  </Collapsible>
 
                   {/* Datos clínicos y/o sociales relevantes */}
                   <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm">
@@ -1718,7 +1768,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.visionValoraciones || []),
                               visionTemp,
                             ]),
-                            setVisionTemp(""))
+                              setVisionTemp(""))
                           }
                         >
                           Añadir
@@ -1784,7 +1834,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.audicionValoraciones || []),
                               audicionTemp,
                             ]),
-                            setAudicionTemp(""))
+                              setAudicionTemp(""))
                           }
                         >
                           Añadir
@@ -2243,20 +2293,31 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna */}
-                  <div className="rounded-lg border border-teal-200 bg-teal-50/50 p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-teal-800">
-                        Datos del alumno o alumna
-                      </h3>
+                  <Collapsible open={openCollapsibles['ce']} onOpenChange={() => toggleCollapsible('ce')}>
+                    <div className="rounded-lg border border-teal-200 bg-teal-50/50 p-5 shadow-sm">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-teal-800">
+                            Datos del alumno o alumna
+                          </h3>
+                        </div>
+                        {openCollapsibles['ce'] ? (
+                          <ChevronUp className="h-4 w-4 text-teal-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-teal-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <IdentityFields
+                          idPrefix="ce-"
+                          form={form}
+                          handleChange={handleChange}
+                          errors={errors}
+                        />
+                      </CollapsibleContent>
                     </div>
-                    <IdentityFields
-                      idPrefix="ce-"
-                      form={form}
-                      handleChange={handleChange}
-                      errors={errors}
-                    />
-                  </div>
+                  </Collapsible>
                   {/* Texto principal de contexto escolar */}
                   <div className="rounded-lg border border-teal-200 bg-teal-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
@@ -2311,20 +2372,31 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna */}
-                  <div className="rounded-lg border border-pink-200 bg-pink-50/50 p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-pink-800">
-                        Datos del alumno o alumna
-                      </h3>
+                  <Collapsible open={openCollapsibles['ef']} onOpenChange={() => toggleCollapsible('ef')}>
+                    <div className="rounded-lg border border-pink-200 bg-pink-50/50 p-5 shadow-sm">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-pink-800">
+                            Datos del alumno o alumna
+                          </h3>
+                        </div>
+                        {openCollapsibles['ef'] ? (
+                          <ChevronUp className="h-4 w-4 text-pink-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-pink-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <IdentityFields
+                          idPrefix="ef-"
+                          form={form}
+                          handleChange={handleChange}
+                          errors={errors}
+                        />
+                      </CollapsibleContent>
                     </div>
-                    <IdentityFields
-                      idPrefix="ef-"
-                      form={form}
-                      handleChange={handleChange}
-                      errors={errors}
-                    />
-                  </div>
+                  </Collapsible>
                   {/* Texto principal del entorno familiar/contexto social */}
                   <div className="rounded-lg border border-pink-200 bg-pink-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
@@ -2382,20 +2454,31 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna */}
-                  <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-indigo-800">
-                        Datos del alumno o alumna
-                      </h3>
+                  <Collapsible open={openCollapsibles['ne']} onOpenChange={() => toggleCollapsible('ne')}>
+                    <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-indigo-800">
+                            Datos del alumno o alumna
+                          </h3>
+                        </div>
+                        {openCollapsibles['ne'] ? (
+                          <ChevronUp className="h-4 w-4 text-indigo-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-indigo-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <IdentityFields
+                          idPrefix="ne-"
+                          form={form}
+                          handleChange={handleChange}
+                          errors={errors}
+                        />
+                      </CollapsibleContent>
                     </div>
-                    <IdentityFields
-                      idPrefix="ne-"
-                      form={form}
-                      handleChange={handleChange}
-                      errors={errors}
-                    />
-                  </div>
+                  </Collapsible>
 
                   {/* Determinación de NEAE */}
                   <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm space-y-4">
@@ -2474,7 +2557,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                             ...(form.necesidadesListado || []),
                             necesidadTemp,
                           ]),
-                          setNecesidadTemp(""))
+                            setNecesidadTemp(""))
                         }
                       >
                         Añadir
@@ -2595,20 +2678,31 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna */}
-                  <div className="rounded-lg border border-lime-200 bg-lime-50/50 p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-lime-800">
-                        Datos del alumno o alumna
-                      </h3>
+                  <Collapsible open={openCollapsibles['pa']} onOpenChange={() => toggleCollapsible('pa')}>
+                    <div className="rounded-lg border border-lime-200 bg-lime-50/50 p-5 shadow-sm">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-lime-800">
+                            Datos del alumno o alumna
+                          </h3>
+                        </div>
+                        {openCollapsibles['pa'] ? (
+                          <ChevronUp className="h-4 w-4 text-lime-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-lime-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <IdentityFields
+                          idPrefix="pa-"
+                          form={form}
+                          handleChange={handleChange}
+                          errors={errors}
+                        />
+                      </CollapsibleContent>
                     </div>
-                    <IdentityFields
-                      idPrefix="pa-"
-                      form={form}
-                      handleChange={handleChange}
-                      errors={errors}
-                    />
-                  </div>
+                  </Collapsible>
 
                   {/* Propuesta de atención educativa */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
@@ -2662,7 +2756,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.medidasEducativasGenerales || []),
                               medidaTemp,
                             ]),
-                            setMedidaTemp(""))
+                              setMedidaTemp(""))
                           }
                         >
                           Añadir
@@ -2743,7 +2837,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.recursosMaterialesEspecificos || []),
                               recursoMaterialTemp,
                             ]),
-                            setRecursoMaterialTemp(""))
+                              setRecursoMaterialTemp(""))
                           }
                         >
                           Añadir
@@ -2751,37 +2845,37 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       </div>
                       {(form.recursosMaterialesEspecificos?.length || 0) >
                         0 && (
-                        <ul className="mt-2 divide-y rounded-md border bg-white">
-                          {(form.recursosMaterialesEspecificos || []).map(
-                            (r, i) => (
-                              <li
-                                key={`rec-${i}`}
-                                className="px-3 py-2 text-sm flex items-center justify-between"
-                              >
-                                <span>
-                                  {r
-                                    .replace(/_/g, " ")
-                                    .replace(/\b\w/g, (t) => t.toUpperCase())}
-                                </span>
-                                <button
-                                  type="button"
-                                  className="text-gray-500 hover:text-red-600"
-                                  onClick={() =>
-                                    handleChange(
-                                      "recursosMaterialesEspecificos",
-                                      (
-                                        form.recursosMaterialesEspecificos || []
-                                      ).filter((_, idx) => idx !== i),
-                                    )
-                                  }
+                          <ul className="mt-2 divide-y rounded-md border bg-white">
+                            {(form.recursosMaterialesEspecificos || []).map(
+                              (r, i) => (
+                                <li
+                                  key={`rec-${i}`}
+                                  className="px-3 py-2 text-sm flex items-center justify-between"
                                 >
-                                  Borrar
-                                </button>
-                              </li>
-                            ),
-                          )}
-                        </ul>
-                      )}
+                                  <span>
+                                    {r
+                                      .replace(/_/g, " ")
+                                      .replace(/\b\w/g, (t) => t.toUpperCase())}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    className="text-gray-500 hover:text-red-600"
+                                    onClick={() =>
+                                      handleChange(
+                                        "recursosMaterialesEspecificos",
+                                        (
+                                          form.recursosMaterialesEspecificos || []
+                                        ).filter((_, idx) => idx !== i),
+                                      )
+                                    }
+                                  >
+                                    Borrar
+                                  </button>
+                                </li>
+                              ),
+                            )}
+                          </ul>
+                        )}
                       <div className="space-y-2 mt-2">
                         <Label htmlFor="recursosMaterialesObs">
                           Observaciones
@@ -2863,7 +2957,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.profesoradoEspecialista || []),
                               profEspecialistaTemp,
                             ]),
-                            setProfEspecialistaTemp(""))
+                              setProfEspecialistaTemp(""))
                           }
                         >
                           Añadir
@@ -2956,7 +3050,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.personalNoDocente || []),
                               personalNoDocenteTemp,
                             ]),
-                            setPersonalNoDocenteTemp(""))
+                              setPersonalNoDocenteTemp(""))
                           }
                         >
                           Añadir
@@ -3073,20 +3167,31 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna */}
-                  <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-violet-800">
-                        Datos del alumno o alumna
-                      </h3>
+                  <Collapsible open={openCollapsibles['of']} onOpenChange={() => toggleCollapsible('of')}>
+                    <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-violet-800">
+                            Datos del alumno o alumna
+                          </h3>
+                        </div>
+                        {openCollapsibles['of'] ? (
+                          <ChevronUp className="h-4 w-4 text-violet-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-violet-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <IdentityFields
+                          idPrefix="of-"
+                          form={form}
+                          handleChange={handleChange}
+                          errors={errors}
+                        />
+                      </CollapsibleContent>
                     </div>
-                    <IdentityFields
-                      idPrefix="of-"
-                      form={form}
-                      handleChange={handleChange}
-                      errors={errors}
-                    />
-                  </div>
+                  </Collapsible>
 
                   {/* Orientaciones */}
                   <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
