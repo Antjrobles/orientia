@@ -7,6 +7,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,6 +34,7 @@ import {
   Shield,
   ChevronDown,
   ChevronRight,
+  ChevronUp,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { StudentData } from "@/lib/groq/types";
@@ -195,6 +201,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   });
 
   const [open, setOpen] = useState<SectionKey[]>([]);
+  const [datosAlumnoOpen, setDatosAlumnoOpen] = useState(true);
   const [visionTemp, setVisionTemp] = useState<string>("");
   const [audicionTemp, setAudicionTemp] = useState<string>("");
   const [necesidadTemp, setNecesidadTemp] = useState<string>("");
@@ -439,68 +446,79 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 <AccordionContent className="px-4 sm:px-6 py-4 bg-white">
                   {/* Bloque principal: Información personal y tutores */}
                   <div className="space-y-4 sm:space-y-6">
-                    <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-3 sm:p-5 shadow-sm">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-blue-800">
-                          Datos del alumno o alumna
-                        </h3>
-                      </div>
-                      <IdentityFields
-                        idPrefix="dp-"
-                        form={form}
-                        handleChange={handleChange}
-                        errors={errors}
-                      />
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="primerTutor"
-                            className="flex items-center gap-2"
-                          >
-                            Nombre del primer tutor/a
-                            <Shield className="w-4 h-4 text-emerald-600" />
-                          </Label>
-                          <Input
-                            id="primerTutor"
-                            value={
-                              form.primerTutor || "Tutor/a 1 [Código Anónimo]"
-                            }
-                            readOnly
-                            disabled
-                            className="bg-gray-100 cursor-not-allowed text-gray-600 border-gray-300 font-mono text-sm"
-                            title="Campo protegido por LOPD - No se permiten nombres reales"
+                    <Collapsible open={datosAlumnoOpen} onOpenChange={setDatosAlumnoOpen}>
+                      <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-3 sm:p-5 shadow-sm">
+                        <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-blue-800">
+                              Datos del alumno o alumna
+                            </h3>
+                          </div>
+                          {datosAlumnoOpen ? (
+                            <ChevronUp className="h-4 w-4 text-blue-600 transition-transform group-hover:scale-110" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 text-blue-600 transition-transform group-hover:scale-110" />
+                          )}
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-4">
+                          <IdentityFields
+                            idPrefix="dp-"
+                            form={form}
+                            handleChange={handleChange}
+                            errors={errors}
                           />
-                          <p className="text-xs text-gray-500 flex items-center gap-1">
-                            <Shield className="w-3 h-3" />
-                            Campo anonimizado por protección de datos (LOPD)
-                          </p>
-                        </div>
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="segundoTutor"
-                            className="flex items-center gap-2"
-                          >
-                            Nombre del segundo tutor/a
-                            <Shield className="w-4 h-4 text-emerald-600" />
-                          </Label>
-                          <Input
-                            id="segundoTutor"
-                            value={
-                              form.segundoTutor || "Tutor/a 2 [Código Anónimo]"
-                            }
-                            readOnly
-                            disabled
-                            className="bg-gray-100 cursor-not-allowed text-gray-600 border-gray-300 font-mono text-sm"
-                            title="Campo protegido por LOPD - No se permiten nombres reales"
-                          />
-                          <p className="text-xs text-gray-500 flex items-center gap-1">
-                            <Shield className="w-3 h-3" />
-                            Campo anonimizado por protección de datos (LOPD)
-                          </p>
-                        </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div className="space-y-2">
+                              <Label
+                                htmlFor="primerTutor"
+                                className="flex items-center gap-2"
+                              >
+                                Nombre del primer tutor/a
+                                <Shield className="w-4 h-4 text-emerald-600" />
+                              </Label>
+                              <Input
+                                id="primerTutor"
+                                value={
+                                  form.primerTutor || "Tutor/a 1 [Código Anónimo]"
+                                }
+                                readOnly
+                                disabled
+                                className="bg-gray-100 cursor-not-allowed text-gray-600 border-gray-300 font-mono text-sm"
+                                title="Campo protegido por LOPD - No se permiten nombres reales"
+                              />
+                              <p className="text-xs text-gray-500 flex items-center gap-1">
+                                <Shield className="w-3 h-3" />
+                                Campo anonimizado por protección de datos (LOPD)
+                              </p>
+                            </div>
+                            <div className="space-y-2">
+                              <Label
+                                htmlFor="segundoTutor"
+                                className="flex items-center gap-2"
+                              >
+                                Nombre del segundo tutor/a
+                                <Shield className="w-4 h-4 text-emerald-600" />
+                              </Label>
+                              <Input
+                                id="segundoTutor"
+                                value={
+                                  form.segundoTutor || "Tutor/a 2 [Código Anónimo]"
+                                }
+                                readOnly
+                                disabled
+                                className="bg-gray-100 cursor-not-allowed text-gray-600 border-gray-300 font-mono text-sm"
+                                title="Campo protegido por LOPD - No se permiten nombres reales"
+                              />
+                              <p className="text-xs text-gray-500 flex items-center gap-1">
+                                <Shield className="w-3 h-3" />
+                                Campo anonimizado por protección de datos (LOPD)
+                              </p>
+                            </div>
+                          </div>
+                        </CollapsibleContent>
                       </div>
-                    </div>
+                    </Collapsible>
 
                     {/* Etapa de escolarización */}
                     <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-5 shadow-sm">
