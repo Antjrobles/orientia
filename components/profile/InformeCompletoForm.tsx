@@ -201,7 +201,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   });
 
   const [open, setOpen] = useState<SectionKey[]>([]);
-  const [openCollapsibles, setOpenCollapsibles] = useState<Record<string, boolean>>({
+  const [openCollapsibles, setOpenCollapsibles] = useState<
+    Record<string, boolean>
+  >({
     dp: true,
     esc: false,
     ev: false,
@@ -212,6 +214,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     pa: false,
     of: false,
   });
+  const [historiaEscolarOpen, setHistoriaEscolarOpen] = useState(true);
+  const [editingMedida, setEditingMedida] = useState<
+    "infantil" | "primaria" | "secundaria" | null
+  >(null);
   const [visionTemp, setVisionTemp] = useState<string>("");
   const [audicionTemp, setAudicionTemp] = useState<string>("");
   const [necesidadTemp, setNecesidadTemp] = useState<string>("");
@@ -222,10 +228,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     useState<string>("");
 
   const toggleCollapsible = (key: string) => {
-    setOpenCollapsibles(prev => ({
+    setOpenCollapsibles((prev) => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: !prev[key],
     }));
+  };
+
+  const handleNivelActuacionesChange = (
+    value: "infantil" | "primaria" | "secundaria" | undefined,
+  ) => {
+    handleChange("nivelEducativoActuaciones", value);
+    if (value) {
+      setEditingMedida(value); // Entrar en modo edición al seleccionar un nivel
+    }
   };
 
   // Cargar borrador si existe para mantener sincronía entre secciones
@@ -440,21 +455,21 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
               {/* Datos personales */}
               <AccordionItem
                 value="datosPersonales"
-                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-colors border-l-4 border-l-blue-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-blue-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
-                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full flex-shrink-0">
                       <User className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
+                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">Datos Personales</span>
                         {isSectionComplete("datosPersonales") && (
                           <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
                         )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
                         Información básica del alumno
                       </p>
                     </div>
@@ -463,16 +478,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 <AccordionContent className="px-4 sm:px-6 py-4 bg-white">
                   {/* Bloque principal: Información personal y tutores */}
                   <div className="space-y-4 sm:space-y-6">
-                    <Collapsible open={openCollapsibles['dp']} onOpenChange={() => toggleCollapsible('dp')}>
-                      <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-3 sm:p-5 shadow-sm">
+                    <Collapsible
+                      open={openCollapsibles["dp"]}
+                      onOpenChange={() => toggleCollapsible("dp")}
+                    >
+                      <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-3 sm:p-5">
                         <CollapsibleTrigger className="flex items-center justify-between w-full group">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <h3 className="text-sm font-semibold text-blue-800">
+                            <h3 className="text-sm font-semibold text-slate-700">
                               Datos del alumno o alumna
                             </h3>
                           </div>
-                          {openCollapsibles['dp'] ? (
+                          {openCollapsibles["dp"] ? (
                             <ChevronUp className="h-4 w-4 text-blue-600 transition-transform group-hover:scale-110" />
                           ) : (
                             <ChevronDown className="h-4 w-4 text-blue-600 transition-transform group-hover:scale-110" />
@@ -497,7 +515,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               <Input
                                 id="primerTutor"
                                 value={
-                                  form.primerTutor || "Tutor/a 1 [Código Anónimo]"
+                                  form.primerTutor ||
+                                  "Tutor/a 1 [Código Anónimo]"
                                 }
                                 readOnly
                                 disabled
@@ -520,7 +539,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               <Input
                                 id="segundoTutor"
                                 value={
-                                  form.segundoTutor || "Tutor/a 2 [Código Anónimo]"
+                                  form.segundoTutor ||
+                                  "Tutor/a 2 [Código Anónimo]"
                                 }
                                 readOnly
                                 disabled
@@ -538,10 +558,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </Collapsible>
 
                     {/* Etapa de escolarización */}
-                    <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-5 shadow-sm">
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-blue-800">
+                        <h3 className="text-sm font-semibold text-slate-700">
                           Etapa de escolarización
                         </h3>
                       </div>
@@ -562,10 +582,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
 
                     {/* Información a la familia: adjuntos */}
-                    <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-5 shadow-sm">
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-blue-800">
+                        <h3 className="text-sm font-semibold text-slate-700">
                           Información a la familia
                         </h3>
                       </div>
@@ -623,21 +643,21 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
               {/* Datos escolares */}
               <AccordionItem
                 value="datosEscolares"
-                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 transition-colors border-l-4 border-l-emerald-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-emerald-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
-                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-emerald-100 rounded-full flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 bg-emerald-100 rounded-full flex-shrink-0">
                       <GraduationCap className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
+                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">Datos Escolares</span>
                         {isSectionComplete("datosEscolares") && (
                           <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
                         )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
                         Historia académica y escolarización
                       </p>
                     </div>
@@ -646,16 +666,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 <AccordionContent className="px-4 sm:px-6 py-4 bg-white">
                   <div className="space-y-4 sm:space-y-6">
                     {/* Bloque 1: Datos del alumno o alumna */}
-                    <Collapsible open={openCollapsibles['esc']} onOpenChange={() => toggleCollapsible('esc')}>
-                      <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-3 sm:p-5 shadow-sm">
+                    <Collapsible
+                      open={openCollapsibles["esc"]}
+                      onOpenChange={() => toggleCollapsible("esc")}
+                    >
+                      <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-3 sm:p-5">
                         <CollapsibleTrigger className="flex items-center justify-between w-full group">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                            <h3 className="text-sm font-semibold text-emerald-800">
+                            <h3 className="text-sm font-semibold text-slate-700">
                               Datos del alumno o alumna
                             </h3>
                           </div>
-                          {openCollapsibles['esc'] ? (
+                          {openCollapsibles["esc"] ? (
                             <ChevronUp className="h-4 w-4 text-emerald-600 transition-transform group-hover:scale-110" />
                           ) : (
                             <ChevronDown className="h-4 w-4 text-emerald-600 transition-transform group-hover:scale-110" />
@@ -673,660 +696,806 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </Collapsible>
 
                     {/* Bloque 2: Historia escolar */}
-                    <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-5 shadow-sm">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-emerald-800">
-                          Historia escolar
-                        </h3>
+                    <Collapsible
+                      open={historiaEscolarOpen}
+                      onOpenChange={setHistoriaEscolarOpen}
+                    >
+                      <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                        <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-slate-700">
+                              Historia escolar
+                            </h3>
+                          </div>
+                          {historiaEscolarOpen ? (
+                            <ChevronUp className="h-4 w-4 text-emerald-600 transition-transform group-hover:scale-110" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 text-emerald-600 transition-transform group-hover:scale-110" />
+                          )}
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-4">
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="esc-escolarizacionPrevia">
+                                Datos de escolarización previa
+                              </Label>
+                              <Textarea
+                                id="esc-escolarizacionPrevia"
+                                rows={4}
+                                value={form.escolarizacionPrevia || ""}
+                                onChange={(e) =>
+                                  handleChange(
+                                    "escolarizacionPrevia",
+                                    e.target.value,
+                                  )
+                                }
+                                placeholder="Especifica centros previos, años de escolarización, etc."
+                              />
+                            </div>
+                            <div className="rounded-lg border border-slate-200 bg-white p-4 space-y-4">
+                              <div className="flex justify-between items-center">
+                                <Label
+                                  htmlFor="esc-nivelEducativo"
+                                  className="text-sm font-semibold text-slate-800"
+                                >
+                                  Actuaciones, medidas y programas de atención a
+                                  la diversidad desarrollados
+                                </Label>
+                                {form.nivelEducativoActuaciones && (
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-xs text-red-600 hover:bg-red-100 hover:text-red-700"
+                                    onClick={() =>
+                                      handleChange(
+                                        "nivelEducativoActuaciones",
+                                        undefined,
+                                      )
+                                    }
+                                  >
+                                    Limpiar selección
+                                  </Button>
+                                )}
+                              </div>
+
+                              <div className="space-y-4">
+                                {/* Selector principal: Infantil, Primaria o Secundaria */}
+                                <Select
+                                  value={
+                                    form.nivelEducativoActuaciones || undefined
+                                  }
+                                  onValueChange={(
+                                    value:
+                                      | "infantil"
+                                      | "primaria"
+                                      | "secundaria",
+                                  ) => handleNivelActuacionesChange(value)}
+                                >
+                                  <SelectTrigger id="esc-nivelEducativo">
+                                    <SelectValue placeholder="Selecciona un nivel para ver las medidas" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="infantil">
+                                      Educación Infantil
+                                    </SelectItem>
+                                    <SelectItem value="primaria">
+                                      Educación Primaria
+                                    </SelectItem>
+                                    <SelectItem value="secundaria">
+                                      Educación Secundaria
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+
+                                {/* EDUCACIÓN INFANTIL */}
+                                {form.nivelEducativoActuaciones ===
+                                  "infantil" && (
+                                  <div className="mt-4 border-l-4 border-emerald-400 pl-4">
+                                    {form.medidaSeleccionadaInfantil &&
+                                    editingMedida !== "infantil" ? (
+                                      <div className="p-4 bg-emerald-50 rounded-md border border-emerald-200">
+                                        <p className="text-sm font-semibold text-emerald-800 mb-2">
+                                          Medida seleccionada:
+                                        </p>
+                                        <p className="text-sm text-gray-700">
+                                          {form.medidaSeleccionadaInfantil}
+                                        </p>
+                                        <Button
+                                          type="button"
+                                          variant="link"
+                                          className="p-0 h-auto mt-3 text-sm text-emerald-700"
+                                          onClick={() =>
+                                            setEditingMedida("infantil")
+                                          }
+                                        >
+                                          Cambiar selección
+                                        </Button>
+                                      </div>
+                                    ) : (
+                                      <RadioGroup
+                                        value={
+                                          form.medidaSeleccionadaInfantil ||
+                                          undefined
+                                        }
+                                        onValueChange={(value) => {
+                                          handleChange(
+                                            "medidaSeleccionadaInfantil",
+                                            value,
+                                          );
+                                          // Si no es una opción que abre sub-opciones, salimos del modo edición
+                                          if (
+                                            !value.startsWith(
+                                              "Programas de adaptación curricular",
+                                            )
+                                          ) {
+                                            setEditingMedida(null);
+                                          }
+                                        }}
+                                      >
+                                        {/* MEDIDAS GENERALES */}
+                                        <div className="space-y-3">
+                                          <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                            Medidas Generales
+                                          </h4>
+                                          <div className="space-y-2">
+                                            {[
+                                              "En el 2º ciclo, apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
+                                              "Acción tutorial",
+                                              "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por proyectos",
+                                              "Actuaciones en el proceso de tránsito entre ciclos, o etapas",
+                                              "Actuaciones de prevención y control del absentismo",
+                                            ].map((medida) => (
+                                              <div
+                                                key={medida}
+                                                className="flex items-start gap-2"
+                                              >
+                                                <RadioGroupItem
+                                                  value={medida}
+                                                  id={`inf-${medida}`}
+                                                  className="mt-1"
+                                                />
+                                                <label
+                                                  htmlFor={`inf-${medida}`}
+                                                  className="text-sm text-gray-700 cursor-pointer"
+                                                >
+                                                  {medida}
+                                                </label>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+
+                                        {/* PROGRAMAS */}
+                                        <div className="space-y-3">
+                                          <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                            Programas
+                                          </h4>
+                                          <div className="space-y-2">
+                                            {[
+                                              "Programa de refuerzo del aprendizaje",
+                                              "Programa de profundización",
+                                            ].map((programa) => (
+                                              <div
+                                                key={programa}
+                                                className="flex items-start gap-2"
+                                              >
+                                                <RadioGroupItem
+                                                  value={programa}
+                                                  id={`inf-${programa}`}
+                                                  className="mt-1"
+                                                />
+                                                <label
+                                                  htmlFor={`inf-${programa}`}
+                                                  className="text-sm text-gray-700 cursor-pointer"
+                                                >
+                                                  {programa}
+                                                </label>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+
+                                        {/* MEDIDAS ESPECÍFICAS */}
+                                        <div className="space-y-3">
+                                          <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                            Medidas Específicas
+                                          </h4>
+                                          <div className="space-y-2">
+                                            {/* Opciones principales de Medidas Específicas */}
+                                            {[
+                                              "El apoyo dentro del aula por profesorado especialista de PT o AL, personal complementario u otro personal externo al aula",
+                                              "El apoyo fuera del aula por profesorado especialista de PT o AL, personal complementario u otro personal externo al aula",
+                                              "Programas específicos para el tratamiento personalizado del alumnado neae",
+                                            ].map((medida) => (
+                                              <div
+                                                key={medida}
+                                                className="flex items-start gap-2"
+                                              >
+                                                <RadioGroupItem
+                                                  value={medida}
+                                                  id={`inf-${medida}`}
+                                                  className="mt-1"
+                                                />
+                                                <label
+                                                  htmlFor={`inf-${medida}`}
+                                                  className="text-sm text-gray-700 cursor-pointer"
+                                                >
+                                                  {medida}
+                                                </label>
+                                              </div>
+                                            ))}
+
+                                            {/* Programas de adaptación curricular con sub-opciones */}
+                                            <div className="flex items-start gap-2">
+                                              <RadioGroupItem
+                                                value="Programas de adaptación curricular"
+                                                id="inf-programas-adaptacion"
+                                                className="mt-1"
+                                              />
+                                              <label
+                                                htmlFor="inf-programas-adaptacion"
+                                                className="text-sm text-black cursor-pointer font-medium font-extrabold flex items-center gap-1"
+                                              >
+                                                Programas de adaptación
+                                                curricular
+                                                {form.medidaSeleccionadaInfantil?.startsWith(
+                                                  "Programas de adaptación curricular",
+                                                ) ? (
+                                                  <ChevronDown className="w-4 h-4 text-emerald-600" />
+                                                ) : (
+                                                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                                                )}
+                                                <span className="text-xs text-emerald-600 ml-1">
+                                                  (Ver opciones)
+                                                </span>
+                                              </label>
+                                            </div>
+
+                                            {/* Sub-opciones de Programas de adaptación curricular */}
+                                            {form.medidaSeleccionadaInfantil?.startsWith(
+                                              "Programas de adaptación curricular",
+                                            ) && (
+                                              <div className="ml-6 pl-4 border-l-2 border-emerald-300 space-y-2 mt-2">
+                                                <p className="text-xs font-medium text-gray-600 mb-2">
+                                                  Selecciona el tipo de
+                                                  programa:
+                                                </p>
+                                                {[
+                                                  "La atención educativa al alumnado por situaciones personales de hospitalización o de convalecencia domiciliaria",
+                                                  "Las adaptaciones de acceso a los elementos del currículo para el alumnado con neae",
+                                                  "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado nee",
+                                                  "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
+                                                ].map((submedida) => (
+                                                  <div
+                                                    key={submedida}
+                                                    className="flex items-start gap-2"
+                                                  >
+                                                    <RadioGroupItem
+                                                      value={`Programas de adaptación curricular: ${submedida}`}
+                                                      id={`inf-${submedida}`}
+                                                      className="mt-1"
+                                                    />
+                                                    <label
+                                                      htmlFor={`inf-${submedida}`}
+                                                      className="text-sm text-gray-600 cursor-pointer"
+                                                    >
+                                                      {submedida}
+                                                    </label>
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+
+                                        {/* OTRAS ACTUACIONES - Sección independiente */}
+                                        <div className="space-y-3 mt-6">
+                                          <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                            Otras Actuaciones
+                                          </h4>
+                                          <div className="space-y-2">
+                                            <Textarea
+                                              id="otrasOrientacionesInfantil"
+                                              rows={4}
+                                              value={
+                                                form.otrasOrientaciones || ""
+                                              }
+                                              onChange={(e) =>
+                                                handleChange(
+                                                  "otrasOrientaciones",
+                                                  e.target.value,
+                                                )
+                                              }
+                                              placeholder="Especifica otras medidas, programas u orientaciones adicionales..."
+                                              className="w-full"
+                                            />
+                                          </div>
+                                        </div>
+                                      </RadioGroup>
+                                    )}
+                                  </div>
+                                )}
+
+                                {/* EDUCACIÓN PRIMARIA */}
+                                {form.nivelEducativoActuaciones ===
+                                  "primaria" && (
+                                  <div className="mt-4 border-l-4 border-l-blue-500 pl-4">
+                                    {form.medidaSeleccionadaPrimaria &&
+                                    editingMedida !== "primaria" ? (
+                                      <div className="p-4 bg-blue-50 rounded-md border border-blue-200">
+                                        <p className="text-sm font-semibold text-blue-800 mb-2">
+                                          Medida seleccionada:
+                                        </p>
+                                        <p className="text-sm text-gray-700">
+                                          {form.medidaSeleccionadaPrimaria}
+                                        </p>
+                                        <Button
+                                          type="button"
+                                          variant="link"
+                                          className="p-0 h-auto mt-3 text-sm text-blue-700"
+                                          onClick={() =>
+                                            setEditingMedida("primaria")
+                                          }
+                                        >
+                                          Cambiar selección
+                                        </Button>
+                                      </div>
+                                    ) : (
+                                      <RadioGroup
+                                        value={
+                                          form.medidaSeleccionadaPrimaria ||
+                                          undefined
+                                        }
+                                        onValueChange={(value) => {
+                                          handleChange(
+                                            "medidaSeleccionadaPrimaria",
+                                            value,
+                                          );
+                                          if (
+                                            !value.startsWith(
+                                              "Programas de adaptación curricular",
+                                            )
+                                          ) {
+                                            setEditingMedida(null);
+                                          }
+                                        }}
+                                      >
+                                        {/* MEDIDAS GENERALES */}
+                                        <div className="space-y-3">
+                                          <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                            Medidas Generales
+                                          </h4>
+                                          <div className="space-y-2 pl-2">
+                                            {[
+                                              "Agrupación de áreas en ámbitos",
+                                              "Apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
+                                              "Desdoblamiento de grupos",
+                                              "Agrupamientos flexibles",
+                                              "Sustitución de la Segunda Lengua Extranjera por un Área Lingüística de carácter transversal",
+                                              "Acción tutorial",
+                                              "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por Proyectos",
+                                              "Prevención y control del absentismo",
+                                              "Distribución del horario lectivo de autonomía del centro entre las opciones previstas",
+                                              "Actuaciones dentro del programa de tránsito",
+                                            ].map((medida) => (
+                                              <div
+                                                key={medida}
+                                                className="flex items-start gap-2"
+                                              >
+                                                <RadioGroupItem
+                                                  value={medida}
+                                                  id={`prim-${medida}`}
+                                                  className="mt-1"
+                                                />
+                                                <label
+                                                  htmlFor={`prim-${medida}`}
+                                                  className="text-sm text-gray-700 cursor-pointer"
+                                                >
+                                                  {medida}
+                                                </label>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+
+                                        {/* PROGRAMAS */}
+                                        <div className="space-y-3 mt-6">
+                                          <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                            Programas
+                                          </h4>
+                                          <div className="space-y-2 pl-2">
+                                            {[
+                                              "Programa de refuerzo del aprendizaje",
+                                              "Programa de profundización",
+                                            ].map((programa) => (
+                                              <div
+                                                key={programa}
+                                                className="flex items-start gap-2"
+                                              >
+                                                <RadioGroupItem
+                                                  value={programa}
+                                                  id={`prim-${programa}`}
+                                                  className="mt-1"
+                                                />
+                                                <label
+                                                  htmlFor={`prim-${programa}`}
+                                                  className="text-sm text-gray-700 cursor-pointer"
+                                                >
+                                                  {programa}
+                                                </label>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+
+                                        {/* MEDIDAS ESPECÍFICAS */}
+                                        <div className="space-y-3 mt-6">
+                                          <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                            Medidas Específicas
+                                          </h4>
+                                          <div className="space-y-2 pl-2">
+                                            {/* Opciones principales de Medidas Específicas */}
+                                            {[
+                                              "El apoyo dentro del aula por profesorado especialista de PT o AL, personal complementario u otro personal",
+                                              "Programas específicos para el tratamiento personalizado del alumnado NEAE",
+                                              "La atención educativa al alumnado por situaciones personales de hospitalización o de convalecencia domiciliaria",
+                                              "Escolarización un curso por debajo del que corresponde por edad para el alumnado de incorporación tardía",
+                                              "Atención específica para el alumnado que se incorpora tardíamente y que presenta graves carencias en la comunicación lingüística en Lengua Castellana",
+                                              "Flexibilización de la escolarización del alumnado con altas capacidades intelectuales",
+                                            ].map((medida) => (
+                                              <div
+                                                key={medida}
+                                                className="flex items-start gap-2"
+                                              >
+                                                <RadioGroupItem
+                                                  value={medida}
+                                                  id={`prim-${medida}`}
+                                                  className="mt-1"
+                                                />
+                                                <label
+                                                  htmlFor={`prim-${medida}`}
+                                                  className="text-sm text-gray-700 cursor-pointer"
+                                                >
+                                                  {medida}
+                                                </label>
+                                              </div>
+                                            ))}
+
+                                            {/* Programas de adaptación curricular con sub-opciones */}
+                                            <div className="flex items-start gap-2">
+                                              <RadioGroupItem
+                                                value="Programas de adaptación curricular"
+                                                id="prim-programas-adaptacion"
+                                                className="mt-1"
+                                              />
+                                              <label
+                                                htmlFor="prim-programas-adaptacion"
+                                                className="text-sm text-black cursor-pointer font-medium font-extrabold flex items-center gap-1"
+                                              >
+                                                Programas de adaptación
+                                                curricular
+                                                {form.medidaSeleccionadaPrimaria?.startsWith(
+                                                  "Programas de adaptación curricular",
+                                                ) ? (
+                                                  <ChevronDown className="w-4 h-4 text-blue-600" />
+                                                ) : (
+                                                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                                                )}
+                                                <span className="text-xs text-blue-600 ml-1">
+                                                  (Ver opciones)
+                                                </span>
+                                              </label>
+                                            </div>
+
+                                            {/* Sub-opciones de Programas de adaptación curricular */}
+                                            {form.medidaSeleccionadaPrimaria?.startsWith(
+                                              "Programas de adaptación curricular",
+                                            ) && (
+                                              <div className="ml-6 pl-4 border-l-2 border-blue-300 space-y-2 mt-2">
+                                                <p className="text-xs font-medium text-gray-600 mb-2">
+                                                  Selecciona el tipo de
+                                                  programa:
+                                                </p>
+                                                {[
+                                                  "Las adaptaciones de acceso a los elementos del currículo para el alumnado NEAE",
+                                                  "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado NEE",
+                                                  "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
+                                                ].map((submedida) => (
+                                                  <div
+                                                    key={submedida}
+                                                    className="flex items-start gap-2"
+                                                  >
+                                                    <RadioGroupItem
+                                                      value={`Programas de adaptación curricular: ${submedida}`}
+                                                      id={`prim-${submedida}`}
+                                                      className="mt-1"
+                                                    />
+                                                    <label
+                                                      htmlFor={`prim-${submedida}`}
+                                                      className="text-sm text-gray-600 cursor-pointer"
+                                                    >
+                                                      {submedida}
+                                                    </label>
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+
+                                        {/* OTRAS ACTUACIONES - Sección independiente */}
+                                        <div className="space-y-3 mt-6">
+                                          <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                            Otras Actuaciones
+                                          </h4>
+                                          <div className="space-y-2">
+                                            <Textarea
+                                              id="otrasOrientacionesPrimaria"
+                                              rows={4}
+                                              value={
+                                                form.otrasOrientaciones || ""
+                                              }
+                                              onChange={(e) =>
+                                                handleChange(
+                                                  "otrasOrientaciones",
+                                                  e.target.value,
+                                                )
+                                              }
+                                              placeholder="Especifica otras medidas, programas u orientaciones adicionales..."
+                                              className="w-full"
+                                            />
+                                          </div>
+                                        </div>
+                                      </RadioGroup>
+                                    )}
+                                  </div>
+                                )}
+
+                                {/* EDUCACIÓN SECUNDARIA */}
+                                {form.nivelEducativoActuaciones ===
+                                  "secundaria" && (
+                                  <div className="mt-4 border-l-4 border-l-purple-500 pl-4">
+                                    {form.medidaSeleccionadaSecundaria &&
+                                    editingMedida !== "secundaria" ? (
+                                      <div className="p-4 bg-purple-50 rounded-md border border-purple-200">
+                                        <p className="text-sm font-semibold text-purple-800 mb-2">
+                                          Medida seleccionada:
+                                        </p>
+                                        <p className="text-sm text-gray-700">
+                                          {form.medidaSeleccionadaSecundaria}
+                                        </p>
+                                        <Button
+                                          type="button"
+                                          variant="link"
+                                          className="p-0 h-auto mt-3 text-sm text-purple-700"
+                                          onClick={() =>
+                                            setEditingMedida("secundaria")
+                                          }
+                                        >
+                                          Cambiar selección
+                                        </Button>
+                                      </div>
+                                    ) : (
+                                      <RadioGroup
+                                        value={
+                                          form.medidaSeleccionadaSecundaria ||
+                                          undefined
+                                        }
+                                        onValueChange={(value) => {
+                                          handleChange(
+                                            "medidaSeleccionadaSecundaria",
+                                            value,
+                                          );
+                                          if (
+                                            !value.startsWith(
+                                              "Programas de adaptación curricular",
+                                            )
+                                          ) {
+                                            setEditingMedida(null);
+                                          }
+                                        }}
+                                      >
+                                        {/* MEDIDAS GENERALES */}
+                                        <div className="space-y-3">
+                                          <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                            Medidas Generales
+                                          </h4>
+                                          <div className="space-y-2 pl-2">
+                                            {[
+                                              "Agrupación de materias en ámbitos de conocimiento",
+                                              "Apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
+                                              "Desdoblamientos de grupos",
+                                              "Agrupamientos flexibles con carácter temporal y abierto",
+                                              "Sustitución de la Segunda Lengua Extranjera por una Materia Lingüística de carácter transversal",
+                                              "Acción tutorial",
+                                              "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por proyectos que promuevan la inclusión",
+                                              "Actuaciones de coordinación en el proceso de tránsito entre etapas",
+                                              "Actuaciones de prevención y control del absentismo",
+                                              "Distribución del horario lectivo de las materias optativas propias de la Comunidad Andaluza",
+                                              "Actuaciones de coordinación en el proceso de tránsito entre etapas educativas",
+                                            ].map((medida) => (
+                                              <div
+                                                key={medida}
+                                                className="flex items-start gap-2"
+                                              >
+                                                <RadioGroupItem
+                                                  value={medida}
+                                                  id={`sec-${medida}`}
+                                                  className="mt-1"
+                                                />
+                                                <label
+                                                  htmlFor={`sec-${medida}`}
+                                                  className="text-sm text-gray-700 cursor-pointer"
+                                                >
+                                                  {medida}
+                                                </label>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+
+                                        {/* PROGRAMAS */}
+                                        <div className="space-y-3 mt-6">
+                                          <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                            Programas
+                                          </h4>
+                                          <div className="space-y-2 pl-2">
+                                            {[
+                                              "Programas de refuerzo del aprendizaje",
+                                              "Programas de profundización",
+                                              "Programa de Diversificación Curricular",
+                                            ].map((programa) => (
+                                              <div
+                                                key={programa}
+                                                className="flex items-start gap-2"
+                                              >
+                                                <RadioGroupItem
+                                                  value={programa}
+                                                  id={`sec-${programa}`}
+                                                  className="mt-1"
+                                                />
+                                                <label
+                                                  htmlFor={`sec-${programa}`}
+                                                  className="text-sm text-gray-700 cursor-pointer"
+                                                >
+                                                  {programa}
+                                                </label>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+
+                                        {/* MEDIDAS ESPECÍFICAS */}
+                                        <div className="space-y-3 mt-6">
+                                          <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                            Medidas Específicas
+                                          </h4>
+                                          <div className="space-y-2 pl-2">
+                                            {/* Opciones principales de Medidas Específicas */}
+                                            {[
+                                              "Apoyo dentro del aula por PT, AL, personal complementario u otro personal",
+                                              "Programas específicos para el tratamiento personalizado del alumnado NEAE",
+                                              "Atención educativa al alumnado por situaciones de hospitalización o convalecencia domiciliaria",
+                                              "Flexibilización del periodo de escolarización para el alumnado con altas capacidades",
+                                              "Permanencia extraordinaria (solo alumnado NEE)",
+                                              "Escolarización un curso inferior al que corresponde por edad para el alumnado de incorporación tardía con desfase en su nivel curricular de competencia de dos o más cursos",
+                                              "Atención específica para alumnado de incorporación tardía con graves carencias en la comunicación lingüística",
+                                            ].map((medida) => (
+                                              <div
+                                                key={medida}
+                                                className="flex items-start gap-2"
+                                              >
+                                                <RadioGroupItem
+                                                  value={medida}
+                                                  id={`sec-${medida}`}
+                                                  className="mt-1"
+                                                />
+                                                <label
+                                                  htmlFor={`sec-${medida}`}
+                                                  className="text-sm text-gray-700 cursor-pointer"
+                                                >
+                                                  {medida}
+                                                </label>
+                                              </div>
+                                            ))}
+
+                                            {/* Programas de adaptación curricular con sub-opciones */}
+                                            <div className="flex items-start gap-2">
+                                              <RadioGroupItem
+                                                value="Programas de adaptación curricular"
+                                                id="sec-programas-adaptacion"
+                                                className="mt-1"
+                                              />
+                                              <label
+                                                htmlFor="sec-programas-adaptacion"
+                                                className="text-sm text-black cursor-pointer font-medium font-extrabold flex items-center gap-1"
+                                              >
+                                                Programas de adaptación
+                                                curricular
+                                                {form.medidaSeleccionadaSecundaria?.startsWith(
+                                                  "Programas de adaptación curricular",
+                                                ) ? (
+                                                  <ChevronDown className="w-4 h-4 text-purple-600" />
+                                                ) : (
+                                                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                                                )}
+                                                <span className="text-xs text-purple-600 ml-1">
+                                                  (Ver opciones)
+                                                </span>
+                                              </label>
+                                            </div>
+
+                                            {/* Sub-opciones de Programas de adaptación curricular */}
+                                            {form.medidaSeleccionadaSecundaria?.startsWith(
+                                              "Programas de adaptación curricular",
+                                            ) && (
+                                              <div className="ml-6 pl-4 border-l-2 border-purple-300 space-y-2 mt-2">
+                                                <p className="text-xs font-medium text-gray-600 mb-2">
+                                                  Selecciona el tipo de
+                                                  programa:
+                                                </p>
+                                                {[
+                                                  "Adaptación curricular de acceso",
+                                                  "Adaptación curricular significativa",
+                                                  "Adaptación curricular para el alumnado con altas capacidades intelectuales",
+                                                ].map((submedida) => (
+                                                  <div
+                                                    key={submedida}
+                                                    className="flex items-start gap-2"
+                                                  >
+                                                    <RadioGroupItem
+                                                      value={`Programas de adaptación curricular: ${submedida}`}
+                                                      id={`sec-${submedida}`}
+                                                      className="mt-1"
+                                                    />
+                                                    <label
+                                                      htmlFor={`sec-${submedida}`}
+                                                      className="text-sm text-gray-600 cursor-pointer"
+                                                    >
+                                                      {submedida}
+                                                    </label>
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+
+                                        {/* OTRAS ACTUACIONES - Sección independiente */}
+                                        <div className="space-y-3 mt-6">
+                                          <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                            Otras Actuaciones
+                                          </h4>
+                                          <div className="space-y-2">
+                                            <Textarea
+                                              id="otrasOrientacionesSecundaria"
+                                              rows={4}
+                                              value={
+                                                form.otrasOrientaciones || ""
+                                              }
+                                              onChange={(e) =>
+                                                handleChange(
+                                                  "otrasOrientaciones",
+                                                  e.target.value,
+                                                )
+                                              }
+                                              placeholder="Especifica otras medidas, programas u orientaciones adicionales..."
+                                              className="w-full"
+                                            />
+                                          </div>
+                                        </div>
+                                      </RadioGroup>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </CollapsibleContent>
                       </div>
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="esc-escolarizacionPrevia">
-                            Datos de escolarización previa
-                          </Label>
-                          <Textarea
-                            id="esc-escolarizacionPrevia"
-                            rows={4}
-                            value={form.escolarizacionPrevia || ""}
-                            onChange={(e) =>
-                              handleChange(
-                                "escolarizacionPrevia",
-                                e.target.value,
-                              )
-                            }
-                            placeholder="Especifica centros previos, años de escolarización, etc."
-                          />
-                        </div>
-                        <div className="space-y-4">
-                          <Label htmlFor="esc-nivelEducativo">
-                            Actuaciones, medidas y programas de atención a la
-                            diversidad desarrollados
-                          </Label>
-
-                          {/* Selector principal: Infantil, Primaria o Secundaria */}
-                          <Select
-                            value={form.nivelEducativoActuaciones || undefined}
-                            onValueChange={(
-                              value: "infantil" | "primaria" | "secundaria",
-                            ) =>
-                              handleChange("nivelEducativoActuaciones", value)
-                            }
-                          >
-                            <SelectTrigger id="esc-nivelEducativo">
-                              <SelectValue placeholder="Selecciona el nivel educativo" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="infantil">
-                                Educación Infantil
-                              </SelectItem>
-                              <SelectItem value="primaria">
-                                Educación Primaria
-                              </SelectItem>
-                              <SelectItem value="secundaria">
-                                Educación Secundaria
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-
-                          {/* EDUCACIÓN INFANTIL */}
-                          {form.nivelEducativoActuaciones === "infantil" && (
-                            <div className="space-y-6 mt-4 border-l-4 border-l-emerald-500 pl-4">
-                              <RadioGroup
-                                value={
-                                  form.medidaSeleccionadaInfantil || undefined
-                                }
-                                onValueChange={(value) =>
-                                  handleChange(
-                                    "medidaSeleccionadaInfantil",
-                                    value,
-                                  )
-                                }
-                              >
-                                {/* MEDIDAS GENERALES */}
-                                <div className="space-y-3">
-                                  <h4 className="font-semibold text-sm text-emerald-800 uppercase">
-                                    Medidas Generales
-                                  </h4>
-                                  <div className="space-y-2">
-                                    {[
-                                      "En el 2º ciclo, apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
-                                      "Acción tutorial",
-                                      "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por proyectos",
-                                      "Actuaciones en el proceso de tránsito entre ciclos, o etapas",
-                                      "Actuaciones de prevención y control del absentismo",
-                                    ].map((medida) => (
-                                      <div
-                                        key={medida}
-                                        className="flex items-start gap-2"
-                                      >
-                                        <RadioGroupItem
-                                          value={medida}
-                                          id={`inf-${medida}`}
-                                          className="mt-1"
-                                        />
-                                        <label
-                                          htmlFor={`inf-${medida}`}
-                                          className="text-sm text-gray-700 cursor-pointer"
-                                        >
-                                          {medida}
-                                        </label>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-
-                                {/* PROGRAMAS */}
-                                <div className="space-y-3">
-                                  <h4 className="font-semibold text-sm text-emerald-800 uppercase">
-                                    Programas
-                                  </h4>
-                                  <div className="space-y-2">
-                                    {[
-                                      "Programa de refuerzo del aprendizaje",
-                                      "Programa de profundización",
-                                    ].map((programa) => (
-                                      <div
-                                        key={programa}
-                                        className="flex items-start gap-2"
-                                      >
-                                        <RadioGroupItem
-                                          value={programa}
-                                          id={`inf-${programa}`}
-                                          className="mt-1"
-                                        />
-                                        <label
-                                          htmlFor={`inf-${programa}`}
-                                          className="text-sm text-gray-700 cursor-pointer"
-                                        >
-                                          {programa}
-                                        </label>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-
-                                {/* MEDIDAS ESPECÍFICAS */}
-                                <div className="space-y-3">
-                                  <h4 className="font-semibold text-sm text-emerald-800 uppercase">
-                                    Medidas Específicas
-                                  </h4>
-                                  <div className="space-y-2">
-                                    {/* Opciones principales de Medidas Específicas */}
-                                    {[
-                                      "El apoyo dentro del aula por profesorado especialista de PT o AL, personal complementario u otro personal externo al aula",
-                                      "El apoyo fuera del aula por profesorado especialista de PT o AL, personal complementario u otro personal externo al aula",
-                                      "Programas específicos para el tratamiento personalizado del alumnado neae",
-                                    ].map((medida) => (
-                                      <div
-                                        key={medida}
-                                        className="flex items-start gap-2"
-                                      >
-                                        <RadioGroupItem
-                                          value={medida}
-                                          id={`inf-${medida}`}
-                                          className="mt-1"
-                                        />
-                                        <label
-                                          htmlFor={`inf-${medida}`}
-                                          className="text-sm text-gray-700 cursor-pointer"
-                                        >
-                                          {medida}
-                                        </label>
-                                      </div>
-                                    ))}
-
-                                    {/* Programas de adaptación curricular con sub-opciones */}
-                                    <div className="flex items-start gap-2">
-                                      <RadioGroupItem
-                                        value="Programas de adaptación curricular"
-                                        id="inf-programas-adaptacion"
-                                        className="mt-1"
-                                      />
-                                      <label
-                                        htmlFor="inf-programas-adaptacion"
-                                        className="text-sm text-black cursor-pointer font-medium font-extrabold flex items-center gap-1"
-                                      >
-                                        Programas de adaptación curricular
-                                        {form.medidaSeleccionadaInfantil?.startsWith(
-                                          "Programas de adaptación curricular",
-                                        ) ? (
-                                          <ChevronDown className="w-4 h-4 text-emerald-600" />
-                                        ) : (
-                                          <ChevronRight className="w-4 h-4 text-gray-400" />
-                                        )}
-                                        <span className="text-xs text-emerald-600 ml-1">
-                                          (Ver opciones)
-                                        </span>
-                                      </label>
-                                    </div>
-
-                                    {/* Sub-opciones de Programas de adaptación curricular */}
-                                    {form.medidaSeleccionadaInfantil?.startsWith(
-                                      "Programas de adaptación curricular",
-                                    ) && (
-                                        <div className="ml-6 pl-4 border-l-2 border-emerald-300 space-y-2 mt-2">
-                                          <p className="text-xs font-medium text-gray-600 mb-2">
-                                            Selecciona el tipo de programa:
-                                          </p>
-                                          {[
-                                            "La atención educativa al alumnado por situaciones personales de hospitalización o de convalecencia domiciliaria",
-                                            "Las adaptaciones de acceso a los elementos del currículo para el alumnado con neae",
-                                            "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado nee",
-                                            "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
-                                          ].map((submedida) => (
-                                            <div
-                                              key={submedida}
-                                              className="flex items-start gap-2"
-                                            >
-                                              <RadioGroupItem
-                                                value={`Programas de adaptación curricular: ${submedida}`}
-                                                id={`inf-${submedida}`}
-                                                className="mt-1"
-                                              />
-                                              <label
-                                                htmlFor={`inf-${submedida}`}
-                                                className="text-sm text-gray-600 cursor-pointer"
-                                              >
-                                                {submedida}
-                                              </label>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      )}
-                                  </div>
-                                </div>
-
-                                {/* OTRAS ACTUACIONES - Sección independiente */}
-                                <div className="space-y-3 mt-6">
-                                  <h4 className="font-semibold text-sm text-emerald-800 uppercase">
-                                    Otras Actuaciones
-                                  </h4>
-                                  <div className="space-y-2">
-                                    <Textarea
-                                      id="otrasOrientacionesInfantil"
-                                      rows={4}
-                                      value={form.otrasOrientaciones || ""}
-                                      onChange={(e) =>
-                                        handleChange(
-                                          "otrasOrientaciones",
-                                          e.target.value,
-                                        )
-                                      }
-                                      placeholder="Especifica otras medidas, programas u orientaciones adicionales..."
-                                      className="w-full"
-                                    />
-                                  </div>
-                                </div>
-                              </RadioGroup>
-                            </div>
-                          )}
-
-                          {/* EDUCACIÓN PRIMARIA */}
-                          {form.nivelEducativoActuaciones === "primaria" && (
-                            <div className="space-y-6 mt-4 border-l-4 border-l-blue-500 pl-4">
-                              <RadioGroup
-                                value={
-                                  form.medidaSeleccionadaPrimaria || undefined
-                                }
-                                onValueChange={(value) =>
-                                  handleChange(
-                                    "medidaSeleccionadaPrimaria",
-                                    value,
-                                  )
-                                }
-                              >
-                                {/* MEDIDAS GENERALES */}
-                                <div className="space-y-3">
-                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
-                                    Medidas Generales
-                                  </h4>
-                                  <div className="space-y-2 pl-2">
-                                    {[
-                                      "Agrupación de áreas en ámbitos",
-                                      "Apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
-                                      "Desdoblamiento de grupos",
-                                      "Agrupamientos flexibles",
-                                      "Sustitución de la Segunda Lengua Extranjera por un Área Lingüística de carácter transversal",
-                                      "Acción tutorial",
-                                      "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por Proyectos",
-                                      "Prevención y control del absentismo",
-                                      "Distribución del horario lectivo de autonomía del centro entre las opciones previstas",
-                                      "Actuaciones dentro del programa de tránsito",
-                                    ].map((medida) => (
-                                      <div
-                                        key={medida}
-                                        className="flex items-start gap-2"
-                                      >
-                                        <RadioGroupItem
-                                          value={medida}
-                                          id={`prim-${medida}`}
-                                          className="mt-1"
-                                        />
-                                        <label
-                                          htmlFor={`prim-${medida}`}
-                                          className="text-sm text-gray-700 cursor-pointer"
-                                        >
-                                          {medida}
-                                        </label>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-
-                                {/* PROGRAMAS */}
-                                <div className="space-y-3 mt-6">
-                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
-                                    Programas
-                                  </h4>
-                                  <div className="space-y-2 pl-2">
-                                    {[
-                                      "Programa de refuerzo del aprendizaje",
-                                      "Programa de profundización",
-                                    ].map((programa) => (
-                                      <div
-                                        key={programa}
-                                        className="flex items-start gap-2"
-                                      >
-                                        <RadioGroupItem
-                                          value={programa}
-                                          id={`prim-${programa}`}
-                                          className="mt-1"
-                                        />
-                                        <label
-                                          htmlFor={`prim-${programa}`}
-                                          className="text-sm text-gray-700 cursor-pointer"
-                                        >
-                                          {programa}
-                                        </label>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-
-                                {/* MEDIDAS ESPECÍFICAS */}
-                                <div className="space-y-3 mt-6">
-                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
-                                    Medidas Específicas
-                                  </h4>
-                                  <div className="space-y-2 pl-2">
-                                    {/* Opciones principales de Medidas Específicas */}
-                                    {[
-                                      "El apoyo dentro del aula por profesorado especialista de PT o AL, personal complementario u otro personal",
-                                      "Programas específicos para el tratamiento personalizado del alumnado NEAE",
-                                      "La atención educativa al alumnado por situaciones personales de hospitalización o de convalecencia domiciliaria",
-                                      "Escolarización un curso por debajo del que corresponde por edad para el alumnado de incorporación tardía",
-                                      "Atención específica para el alumnado que se incorpora tardíamente y que presenta graves carencias en la comunicación lingüística en Lengua Castellana",
-                                      "Flexibilización de la escolarización del alumnado con altas capacidades intelectuales",
-                                    ].map((medida) => (
-                                      <div
-                                        key={medida}
-                                        className="flex items-start gap-2"
-                                      >
-                                        <RadioGroupItem
-                                          value={medida}
-                                          id={`prim-${medida}`}
-                                          className="mt-1"
-                                        />
-                                        <label
-                                          htmlFor={`prim-${medida}`}
-                                          className="text-sm text-gray-700 cursor-pointer"
-                                        >
-                                          {medida}
-                                        </label>
-                                      </div>
-                                    ))}
-
-                                    {/* Programas de adaptación curricular con sub-opciones */}
-                                    <div className="flex items-start gap-2">
-                                      <RadioGroupItem
-                                        value="Programas de adaptación curricular"
-                                        id="prim-programas-adaptacion"
-                                        className="mt-1"
-                                      />
-                                      <label
-                                        htmlFor="prim-programas-adaptacion"
-                                        className="text-sm text-black cursor-pointer font-medium font-extrabold flex items-center gap-1"
-                                      >
-                                        Programas de adaptación curricular
-                                        {form.medidaSeleccionadaPrimaria?.startsWith(
-                                          "Programas de adaptación curricular",
-                                        ) ? (
-                                          <ChevronDown className="w-4 h-4 text-blue-600" />
-                                        ) : (
-                                          <ChevronRight className="w-4 h-4 text-gray-400" />
-                                        )}
-                                        <span className="text-xs text-blue-600 ml-1">
-                                          (Ver opciones)
-                                        </span>
-                                      </label>
-                                    </div>
-
-                                    {/* Sub-opciones de Programas de adaptación curricular */}
-                                    {form.medidaSeleccionadaPrimaria?.startsWith(
-                                      "Programas de adaptación curricular",
-                                    ) && (
-                                        <div className="ml-6 pl-4 border-l-2 border-blue-300 space-y-2 mt-2">
-                                          <p className="text-xs font-medium text-gray-600 mb-2">
-                                            Selecciona el tipo de programa:
-                                          </p>
-                                          {[
-                                            "Las adaptaciones de acceso a los elementos del currículo para el alumnado NEAE",
-                                            "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado NEE",
-                                            "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
-                                          ].map((submedida) => (
-                                            <div
-                                              key={submedida}
-                                              className="flex items-start gap-2"
-                                            >
-                                              <RadioGroupItem
-                                                value={`Programas de adaptación curricular: ${submedida}`}
-                                                id={`prim-${submedida}`}
-                                                className="mt-1"
-                                              />
-                                              <label
-                                                htmlFor={`prim-${submedida}`}
-                                                className="text-sm text-gray-600 cursor-pointer"
-                                              >
-                                                {submedida}
-                                              </label>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      )}
-                                  </div>
-                                </div>
-
-                                {/* OTRAS ACTUACIONES - Sección independiente */}
-                                <div className="space-y-3 mt-6">
-                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
-                                    Otras Actuaciones
-                                  </h4>
-                                  <div className="space-y-2">
-                                    <Textarea
-                                      id="otrasOrientacionesPrimaria"
-                                      rows={4}
-                                      value={form.otrasOrientaciones || ""}
-                                      onChange={(e) =>
-                                        handleChange(
-                                          "otrasOrientaciones",
-                                          e.target.value,
-                                        )
-                                      }
-                                      placeholder="Especifica otras medidas, programas u orientaciones adicionales..."
-                                      className="w-full"
-                                    />
-                                  </div>
-                                </div>
-                              </RadioGroup>
-                            </div>
-                          )}
-
-                          {/* EDUCACIÓN SECUNDARIA */}
-                          {form.nivelEducativoActuaciones === "secundaria" && (
-                            <div className="space-y-6 mt-4 border-l-4 border-l-purple-500 pl-4">
-                              <RadioGroup
-                                value={
-                                  form.medidaSeleccionadaSecundaria || undefined
-                                }
-                                onValueChange={(value) =>
-                                  handleChange(
-                                    "medidaSeleccionadaSecundaria",
-                                    value,
-                                  )
-                                }
-                              >
-                                {/* MEDIDAS GENERALES */}
-                                <div className="space-y-3">
-                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
-                                    Medidas Generales
-                                  </h4>
-                                  <div className="space-y-2 pl-2">
-                                    {[
-                                      "Agrupación de materias en ámbitos de conocimiento",
-                                      "Apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
-                                      "Desdoblamientos de grupos",
-                                      "Agrupamientos flexibles con carácter temporal y abierto",
-                                      "Sustitución de la Segunda Lengua Extranjera por una Materia Lingüística de carácter transversal",
-                                      "Acción tutorial",
-                                      "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por proyectos que promuevan la inclusión",
-                                      "Actuaciones de coordinación en el proceso de tránsito entre etapas",
-                                      "Actuaciones de prevención y control del absentismo",
-                                      "Distribución del horario lectivo de las materias optativas propias de la Comunidad Andaluza",
-                                      "Actuaciones de coordinación en el proceso de tránsito entre etapas educativas",
-                                    ].map((medida) => (
-                                      <div
-                                        key={medida}
-                                        className="flex items-start gap-2"
-                                      >
-                                        <RadioGroupItem
-                                          value={medida}
-                                          id={`sec-${medida}`}
-                                          className="mt-1"
-                                        />
-                                        <label
-                                          htmlFor={`sec-${medida}`}
-                                          className="text-sm text-gray-700 cursor-pointer"
-                                        >
-                                          {medida}
-                                        </label>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-
-                                {/* PROGRAMAS */}
-                                <div className="space-y-3 mt-6">
-                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
-                                    Programas
-                                  </h4>
-                                  <div className="space-y-2 pl-2">
-                                    {[
-                                      "Programas de refuerzo del aprendizaje",
-                                      "Programas de profundización",
-                                      "Programa de Diversificación Curricular",
-                                    ].map((programa) => (
-                                      <div
-                                        key={programa}
-                                        className="flex items-start gap-2"
-                                      >
-                                        <RadioGroupItem
-                                          value={programa}
-                                          id={`sec-${programa}`}
-                                          className="mt-1"
-                                        />
-                                        <label
-                                          htmlFor={`sec-${programa}`}
-                                          className="text-sm text-gray-700 cursor-pointer"
-                                        >
-                                          {programa}
-                                        </label>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-
-                                {/* MEDIDAS ESPECÍFICAS */}
-                                <div className="space-y-3 mt-6">
-                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
-                                    Medidas Específicas
-                                  </h4>
-                                  <div className="space-y-2 pl-2">
-                                    {/* Opciones principales de Medidas Específicas */}
-                                    {[
-                                      "Apoyo dentro del aula por PT, AL, personal complementario u otro personal",
-                                      "Programas específicos para el tratamiento personalizado del alumnado NEAE",
-                                      "Atención educativa al alumnado por situaciones de hospitalización o convalecencia domiciliaria",
-                                      "Flexibilización del periodo de escolarización para el alumnado con altas capacidades",
-                                      "Permanencia extraordinaria (solo alumnado NEE)",
-                                      "Escolarización un curso inferior al que corresponde por edad para el alumnado de incorporación tardía con desfase en su nivel curricular de competencia de dos o más cursos",
-                                      "Atención específica para alumnado de incorporación tardía con graves carencias en la comunicación lingüística",
-                                    ].map((medida) => (
-                                      <div
-                                        key={medida}
-                                        className="flex items-start gap-2"
-                                      >
-                                        <RadioGroupItem
-                                          value={medida}
-                                          id={`sec-${medida}`}
-                                          className="mt-1"
-                                        />
-                                        <label
-                                          htmlFor={`sec-${medida}`}
-                                          className="text-sm text-gray-700 cursor-pointer"
-                                        >
-                                          {medida}
-                                        </label>
-                                      </div>
-                                    ))}
-
-                                    {/* Programas de adaptación curricular con sub-opciones */}
-                                    <div className="flex items-start gap-2">
-                                      <RadioGroupItem
-                                        value="Programas de adaptación curricular"
-                                        id="sec-programas-adaptacion"
-                                        className="mt-1"
-                                      />
-                                      <label
-                                        htmlFor="sec-programas-adaptacion"
-                                        className="text-sm text-black cursor-pointer font-medium font-extrabold flex items-center gap-1"
-                                      >
-                                        Programas de adaptación curricular
-                                        {form.medidaSeleccionadaSecundaria?.startsWith(
-                                          "Programas de adaptación curricular",
-                                        ) ? (
-                                          <ChevronDown className="w-4 h-4 text-purple-600" />
-                                        ) : (
-                                          <ChevronRight className="w-4 h-4 text-gray-400" />
-                                        )}
-                                        <span className="text-xs text-purple-600 ml-1">
-                                          (Ver opciones)
-                                        </span>
-                                      </label>
-                                    </div>
-
-                                    {/* Sub-opciones de Programas de adaptación curricular */}
-                                    {form.medidaSeleccionadaSecundaria?.startsWith(
-                                      "Programas de adaptación curricular",
-                                    ) && (
-                                        <div className="ml-6 pl-4 border-l-2 border-purple-300 space-y-2 mt-2">
-                                          <p className="text-xs font-medium text-gray-600 mb-2">
-                                            Selecciona el tipo de programa:
-                                          </p>
-                                          {[
-                                            "Adaptación curricular de acceso",
-                                            "Adaptación curricular significativa",
-                                            "Adaptación curricular para el alumnado con altas capacidades intelectuales",
-                                          ].map((submedida) => (
-                                            <div
-                                              key={submedida}
-                                              className="flex items-start gap-2"
-                                            >
-                                              <RadioGroupItem
-                                                value={`Programas de adaptación curricular: ${submedida}`}
-                                                id={`sec-${submedida}`}
-                                                className="mt-1"
-                                              />
-                                              <label
-                                                htmlFor={`sec-${submedida}`}
-                                                className="text-sm text-gray-600 cursor-pointer"
-                                              >
-                                                {submedida}
-                                              </label>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      )}
-                                  </div>
-                                </div>
-
-                                {/* OTRAS ACTUACIONES - Sección independiente */}
-                                <div className="space-y-3 mt-6">
-                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
-                                    Otras Actuaciones
-                                  </h4>
-                                  <div className="space-y-2">
-                                    <Textarea
-                                      id="otrasOrientacionesSecundaria"
-                                      rows={4}
-                                      value={form.otrasOrientaciones || ""}
-                                      onChange={(e) =>
-                                        handleChange(
-                                          "otrasOrientaciones",
-                                          e.target.value,
-                                        )
-                                      }
-                                      placeholder="Especifica otras medidas, programas u orientaciones adicionales..."
-                                      className="w-full"
-                                    />
-                                  </div>
-                                </div>
-                              </RadioGroup>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                    </Collapsible>
                   </div>
                   {/* Botón Guardar dentro de Datos escolares */}
                   <div className="mt-6 flex justify-end">
@@ -1344,15 +1513,15 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
               {/* Evaluación psicopedagógica */}
               <AccordionItem
                 value="evaluacionPsicopedagogica"
-                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100 transition-colors border-l-4 border-l-purple-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-purple-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
-                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-purple-100 rounded-full flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 bg-purple-100 rounded-full flex-shrink-0">
                       <Brain className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
+                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">
                           Evaluación Psicopedagógica
                         </span>
@@ -1360,7 +1529,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
                         )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
                         Datos y motivo de la evaluación
                       </p>
                     </div>
@@ -1369,16 +1538,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 <AccordionContent className="px-4 py-4 sm:px-6 bg-white">
                   <div className="space-y-6">
                     {/* Bloque identidad para consistencia */}
-                    <Collapsible open={openCollapsibles['ev']} onOpenChange={() => toggleCollapsible('ev')}>
-                      <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-5 shadow-sm">
+                    <Collapsible
+                      open={openCollapsibles["ev"]}
+                      onOpenChange={() => toggleCollapsible("ev")}
+                    >
+                      <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                         <CollapsibleTrigger className="flex items-center justify-between w-full group">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                            <h3 className="text-sm font-semibold text-purple-800">
+                            <h3 className="text-sm font-semibold text-slate-700">
                               Datos del alumno o alumna
                             </h3>
                           </div>
-                          {openCollapsibles['ev'] ? (
+                          {openCollapsibles["ev"] ? (
                             <ChevronUp className="h-4 w-4 text-purple-600 transition-transform group-hover:scale-110" />
                           ) : (
                             <ChevronDown className="h-4 w-4 text-purple-600 transition-transform group-hover:scale-110" />
@@ -1394,8 +1566,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <div className="grid grid-cols-1 gap-4 mt-4">
                             <div className="space-y-2">
                               <Label htmlFor="eoeReferencia">
-                                EOE de referencia en el momento de la elaboración
-                                del informe
+                                EOE de referencia en el momento de la
+                                elaboración del informe
                               </Label>
                               <Input
                                 id="eoeReferencia"
@@ -1412,10 +1584,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </Collapsible>
 
                     {/* Bloque: Datos de la evaluación psicopedagógica */}
-                    <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-5 shadow-sm space-y-4">
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5 space-y-4">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-purple-800">
+                        <h3 className="text-sm font-semibold text-slate-700">
                           Datos de la evaluación psicopedagógica
                         </h3>
                       </div>
@@ -1579,15 +1751,15 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
               {/* Información relevante del alumno/a */}
               <AccordionItem
                 value="infoAlumno"
-                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-orange-50 to-amber-50 hover:from-orange-100 hover:to-amber-100 transition-colors border-l-4 border-l-orange-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-orange-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
-                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-orange-100 rounded-full flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-full flex-shrink-0">
                       <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-orange-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
+                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">
                           Información Relevante del Alumno
                         </span>
@@ -1595,7 +1767,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
                         )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
                         Desarrollo y características específicas
                       </p>
                     </div>
@@ -1603,16 +1775,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna: reutiliza identidad */}
-                  <Collapsible open={openCollapsibles['ir']} onOpenChange={() => toggleCollapsible('ir')}>
-                    <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm">
+                  <Collapsible
+                    open={openCollapsibles["ir"]}
+                    onOpenChange={() => toggleCollapsible("ir")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                       <CollapsibleTrigger className="flex items-center justify-between w-full group">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                          <h3 className="text-sm font-semibold text-orange-800">
+                          <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
                         </div>
-                        {openCollapsibles['ir'] ? (
+                        {openCollapsibles["ir"] ? (
                           <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
                         ) : (
                           <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
@@ -1630,10 +1805,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </Collapsible>
 
                   {/* Datos clínicos y/o sociales relevantes */}
-                  <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm">
+                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-orange-800">
+                      <h3 className="text-sm font-semibold text-slate-700">
                         Datos clínicos y/o sociales relevantes
                       </h3>
                     </div>
@@ -1648,10 +1823,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
 
                   {/* Datos relativos al: Desarrollo cognitivo */}
-                  <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm space-y-3">
+                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5 space-y-3">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-orange-800">
+                      <h3 className="text-sm font-semibold text-slate-700">
                         Desarrollo cognitivo
                       </h3>
                     </div>
@@ -1768,7 +1943,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.visionValoraciones || []),
                               visionTemp,
                             ]),
-                              setVisionTemp(""))
+                            setVisionTemp(""))
                           }
                         >
                           Añadir
@@ -1834,7 +2009,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.audicionValoraciones || []),
                               audicionTemp,
                             ]),
-                              setAudicionTemp(""))
+                            setAudicionTemp(""))
                           }
                         >
                           Añadir
@@ -2271,21 +2446,21 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
               <AccordionItem
                 value="contextoEscolar"
-                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-teal-50 to-cyan-50 hover:from-teal-100 hover:to-cyan-100 transition-colors border-l-4 border-l-teal-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-teal-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
-                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-teal-100 rounded-full flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 bg-teal-100 rounded-full flex-shrink-0">
                       <Building2 className="h-3 w-3 sm:h-4 sm:w-4 text-teal-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
+                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">Contexto Escolar</span>
                         {isSectionComplete("contextoEscolar") && (
                           <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
                         )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
                         Información del entorno educativo
                       </p>
                     </div>
@@ -2293,16 +2468,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna */}
-                  <Collapsible open={openCollapsibles['ce']} onOpenChange={() => toggleCollapsible('ce')}>
-                    <div className="rounded-lg border border-teal-200 bg-teal-50/50 p-5 shadow-sm">
+                  <Collapsible
+                    open={openCollapsibles["ce"]}
+                    onOpenChange={() => toggleCollapsible("ce")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                       <CollapsibleTrigger className="flex items-center justify-between w-full group">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-                          <h3 className="text-sm font-semibold text-teal-800">
+                          <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
                         </div>
-                        {openCollapsibles['ce'] ? (
+                        {openCollapsibles["ce"] ? (
                           <ChevronUp className="h-4 w-4 text-teal-600 transition-transform group-hover:scale-110" />
                         ) : (
                           <ChevronDown className="h-4 w-4 text-teal-600 transition-transform group-hover:scale-110" />
@@ -2319,10 +2497,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
                   </Collapsible>
                   {/* Texto principal de contexto escolar */}
-                  <div className="rounded-lg border border-teal-200 bg-teal-50/50 p-5 shadow-sm">
+                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-teal-800">
+                      <h3 className="text-sm font-semibold text-slate-700">
                         Información relevante sobre el contexto escolar
                       </h3>
                     </div>
@@ -2350,21 +2528,21 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
               <AccordionItem
                 value="entornoFamiliar"
-                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transition-colors border-l-4 border-l-pink-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-pink-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
-                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-pink-100 rounded-full flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 bg-pink-100 rounded-full flex-shrink-0">
                       <Home className="h-3 w-3 sm:h-4 sm:w-4 text-pink-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
+                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">Entorno Familiar</span>
                         {isSectionComplete("entornoFamiliar") && (
                           <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
                         )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
                         Contexto familiar y social del alumno
                       </p>
                     </div>
@@ -2372,16 +2550,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna */}
-                  <Collapsible open={openCollapsibles['ef']} onOpenChange={() => toggleCollapsible('ef')}>
-                    <div className="rounded-lg border border-pink-200 bg-pink-50/50 p-5 shadow-sm">
+                  <Collapsible
+                    open={openCollapsibles["ef"]}
+                    onOpenChange={() => toggleCollapsible("ef")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                       <CollapsibleTrigger className="flex items-center justify-between w-full group">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                          <h3 className="text-sm font-semibold text-pink-800">
+                          <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
                         </div>
-                        {openCollapsibles['ef'] ? (
+                        {openCollapsibles["ef"] ? (
                           <ChevronUp className="h-4 w-4 text-pink-600 transition-transform group-hover:scale-110" />
                         ) : (
                           <ChevronDown className="h-4 w-4 text-pink-600 transition-transform group-hover:scale-110" />
@@ -2398,10 +2579,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
                   </Collapsible>
                   {/* Texto principal del entorno familiar/contexto social */}
-                  <div className="rounded-lg border border-pink-200 bg-pink-50/50 p-5 shadow-sm">
+                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-pink-800">
+                      <h3 className="text-sm font-semibold text-slate-700">
                         Información relevante sobre el entorno familiar y el
                         contexto social
                       </h3>
@@ -2430,15 +2611,15 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
               <AccordionItem
                 value="necesidadesApoyo"
-                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-indigo-50 to-blue-50 hover:from-indigo-100 hover:to-blue-100 transition-colors border-l-4 border-l-indigo-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-indigo-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
-                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-indigo-100 rounded-full flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full flex-shrink-0">
                       <Target className="h-3 w-3 sm:h-4 sm:w-4 text-indigo-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
+                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">
                           Necesidades de Apoyo Educativo
                         </span>
@@ -2446,7 +2627,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
                         )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
                         Determinación de NEAE específicas
                       </p>
                     </div>
@@ -2454,16 +2635,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna */}
-                  <Collapsible open={openCollapsibles['ne']} onOpenChange={() => toggleCollapsible('ne')}>
-                    <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm">
+                  <Collapsible
+                    open={openCollapsibles["ne"]}
+                    onOpenChange={() => toggleCollapsible("ne")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                       <CollapsibleTrigger className="flex items-center justify-between w-full group">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                          <h3 className="text-sm font-semibold text-indigo-800">
+                          <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
                         </div>
-                        {openCollapsibles['ne'] ? (
+                        {openCollapsibles["ne"] ? (
                           <ChevronUp className="h-4 w-4 text-indigo-600 transition-transform group-hover:scale-110" />
                         ) : (
                           <ChevronDown className="h-4 w-4 text-indigo-600 transition-transform group-hover:scale-110" />
@@ -2481,10 +2665,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </Collapsible>
 
                   {/* Determinación de NEAE */}
-                  <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm space-y-4">
+                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5 space-y-4">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-indigo-800">
+                      <h3 className="text-sm font-semibold text-slate-700">
                         Determinación de las necesidades específicas de apoyo
                         educativo
                       </h3>
@@ -2557,7 +2741,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                             ...(form.necesidadesListado || []),
                             necesidadTemp,
                           ]),
-                            setNecesidadTemp(""))
+                          setNecesidadTemp(""))
                         }
                       >
                         Añadir
@@ -2622,10 +2806,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
 
                   {/* Observaciones */}
-                  <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm">
+                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-indigo-800">
+                      <h3 className="text-sm font-semibold text-slate-700">
                         Observaciones
                       </h3>
                     </div>
@@ -2654,15 +2838,15 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
               <AccordionItem
                 value="propuestaAtencion"
-                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-lime-50 to-green-50 hover:from-lime-100 hover:to-green-100 transition-colors border-l-4 border-l-lime-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-lime-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
-                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-lime-100 rounded-full flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 bg-lime-100 rounded-full flex-shrink-0">
                       <ClipboardCheck className="h-3 w-3 sm:h-4 sm:w-4 text-lime-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
+                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">
                           Propuesta de Atención Educativa
                         </span>
@@ -2670,7 +2854,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
                         )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
                         Orientaciones y medidas para el profesorado
                       </p>
                     </div>
@@ -2678,16 +2862,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna */}
-                  <Collapsible open={openCollapsibles['pa']} onOpenChange={() => toggleCollapsible('pa')}>
-                    <div className="rounded-lg border border-lime-200 bg-lime-50/50 p-5 shadow-sm">
+                  <Collapsible
+                    open={openCollapsibles["pa"]}
+                    onOpenChange={() => toggleCollapsible("pa")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                       <CollapsibleTrigger className="flex items-center justify-between w-full group">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
-                          <h3 className="text-sm font-semibold text-lime-800">
+                          <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
                         </div>
-                        {openCollapsibles['pa'] ? (
+                        {openCollapsibles["pa"] ? (
                           <ChevronUp className="h-4 w-4 text-lime-600 transition-transform group-hover:scale-110" />
                         ) : (
                           <ChevronDown className="h-4 w-4 text-lime-600 transition-transform group-hover:scale-110" />
@@ -2705,12 +2892,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </Collapsible>
 
                   {/* Propuesta de atención educativa */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">
+                  <div className="rounded-md border border-slate-200 bg-slate-50/50 p-4 space-y-4">
+                    <p className="text-sm font-semibold text-slate-700">
                       Especificar la propuesta de medidas y recursos necesarios
                       para atender las NEAE identificadas.
                     </p>
-                    <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">
+                    <div className="rounded-md border bg-slate-100 p-3 text-xs text-slate-600">
                       Medidas Educativas
                     </div>
 
@@ -2756,7 +2943,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.medidasEducativasGenerales || []),
                               medidaTemp,
                             ]),
-                              setMedidaTemp(""))
+                            setMedidaTemp(""))
                           }
                         >
                           Añadir
@@ -2801,7 +2988,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       <p className="text-sm font-medium">
                         Recursos materiales específicos
                       </p>
-                      <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">
+                      <div className="rounded-md border bg-slate-100 p-3 text-xs text-slate-600">
                         La propuesta de Recursos Materiales Específicos requiere
                         informe previo del E.O.E. Especializado. Adjuntar
                         informe en Ficheros Externos.
@@ -2837,7 +3024,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.recursosMaterialesEspecificos || []),
                               recursoMaterialTemp,
                             ]),
-                              setRecursoMaterialTemp(""))
+                            setRecursoMaterialTemp(""))
                           }
                         >
                           Añadir
@@ -2845,37 +3032,37 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       </div>
                       {(form.recursosMaterialesEspecificos?.length || 0) >
                         0 && (
-                          <ul className="mt-2 divide-y rounded-md border bg-white">
-                            {(form.recursosMaterialesEspecificos || []).map(
-                              (r, i) => (
-                                <li
-                                  key={`rec-${i}`}
-                                  className="px-3 py-2 text-sm flex items-center justify-between"
+                        <ul className="mt-2 divide-y rounded-md border bg-white">
+                          {(form.recursosMaterialesEspecificos || []).map(
+                            (r, i) => (
+                              <li
+                                key={`rec-${i}`}
+                                className="px-3 py-2 text-sm flex items-center justify-between"
+                              >
+                                <span>
+                                  {r
+                                    .replace(/_/g, " ")
+                                    .replace(/\b\w/g, (t) => t.toUpperCase())}
+                                </span>
+                                <button
+                                  type="button"
+                                  className="text-gray-500 hover:text-red-600"
+                                  onClick={() =>
+                                    handleChange(
+                                      "recursosMaterialesEspecificos",
+                                      (
+                                        form.recursosMaterialesEspecificos || []
+                                      ).filter((_, idx) => idx !== i),
+                                    )
+                                  }
                                 >
-                                  <span>
-                                    {r
-                                      .replace(/_/g, " ")
-                                      .replace(/\b\w/g, (t) => t.toUpperCase())}
-                                  </span>
-                                  <button
-                                    type="button"
-                                    className="text-gray-500 hover:text-red-600"
-                                    onClick={() =>
-                                      handleChange(
-                                        "recursosMaterialesEspecificos",
-                                        (
-                                          form.recursosMaterialesEspecificos || []
-                                        ).filter((_, idx) => idx !== i),
-                                      )
-                                    }
-                                  >
-                                    Borrar
-                                  </button>
-                                </li>
-                              ),
-                            )}
-                          </ul>
-                        )}
+                                  Borrar
+                                </button>
+                              </li>
+                            ),
+                          )}
+                        </ul>
+                      )}
                       <div className="space-y-2 mt-2">
                         <Label htmlFor="recursosMaterialesObs">
                           Observaciones
@@ -2897,7 +3084,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
                     {/* Actuaciones personalizadas de acción tutorial y seguimiento */}
                     <div className="space-y-2">
-                      <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">
+                      <div className="rounded-md border bg-slate-100 p-3 text-xs text-slate-600">
                         Medidas de carácter ordinario sujetas a lo establecido
                         en el Proyecto Educativo del Centro
                       </div>
@@ -2920,8 +3107,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
 
                   {/* Recursos personales */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">
+                  <div className="rounded-md border border-slate-200 bg-slate-50/50 p-4 space-y-4">
+                    <p className="text-sm font-semibold text-slate-700">
                       Recursos Personales
                     </p>
                     {/* Profesorado especialista */}
@@ -2957,7 +3144,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.profesoradoEspecialista || []),
                               profEspecialistaTemp,
                             ]),
-                              setProfEspecialistaTemp(""))
+                            setProfEspecialistaTemp(""))
                           }
                         >
                           Añadir
@@ -3014,7 +3201,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
                     {/* Personal no docente */}
                     <div className="space-y-2">
-                      <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">
+                      <div className="rounded-md border bg-slate-100 p-3 text-xs text-slate-600">
                         La propuesta de ILSE requiere informe previo del E.O.E.
                         Especializado. La del Fisioterapeuta solo para Centro
                         Específico de Educación Especial.
@@ -3050,7 +3237,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               ...(form.personalNoDocente || []),
                               personalNoDocenteTemp,
                             ]),
-                              setPersonalNoDocenteTemp(""))
+                            setPersonalNoDocenteTemp(""))
                           }
                         >
                           Añadir
@@ -3106,10 +3293,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
 
                   {/* Orientaciones al profesorado */}
-                  <div className="rounded-lg border border-lime-200 bg-lime-50/50 p-5 shadow-sm space-y-2">
+                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5 space-y-2">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-lime-800">
+                      <h3 className="text-sm font-semibold text-slate-700">
                         Orientaciones al profesorado
                       </h3>
                     </div>
@@ -3143,15 +3330,15 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
               <AccordionItem
                 value="orientacionesFamilia"
-                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 transition-colors border-l-4 border-l-violet-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-violet-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
-                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-violet-100 rounded-full flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 bg-violet-100 rounded-full flex-shrink-0">
                       <Users className="h-3 w-3 sm:h-4 sm:w-4 text-violet-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
+                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">
                           Orientaciones a la Familia
                         </span>
@@ -3159,7 +3346,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
                         )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
                         Guía para representantes legales
                       </p>
                     </div>
@@ -3167,16 +3354,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-6">
                   {/* Datos del alumno o alumna */}
-                  <Collapsible open={openCollapsibles['of']} onOpenChange={() => toggleCollapsible('of')}>
-                    <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
+                  <Collapsible
+                    open={openCollapsibles["of"]}
+                    onOpenChange={() => toggleCollapsible("of")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                       <CollapsibleTrigger className="flex items-center justify-between w-full group">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
-                          <h3 className="text-sm font-semibold text-violet-800">
+                          <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
                         </div>
-                        {openCollapsibles['of'] ? (
+                        {openCollapsibles["of"] ? (
                           <ChevronUp className="h-4 w-4 text-violet-600 transition-transform group-hover:scale-110" />
                         ) : (
                           <ChevronDown className="h-4 w-4 text-violet-600 transition-transform group-hover:scale-110" />
@@ -3194,10 +3384,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </Collapsible>
 
                   {/* Orientaciones */}
-                  <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
+                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-violet-800">
+                      <h3 className="text-sm font-semibold text-slate-700">
                         Orientaciones a la familia o a los representantes
                         legales
                       </h3>
@@ -3213,10 +3403,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
 
                   {/* Fichero externo */}
-                  <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
+                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-violet-800">
+                      <h3 className="text-sm font-semibold text-slate-700">
                         Fichero externo
                       </h3>
                     </div>
