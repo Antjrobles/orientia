@@ -42,6 +42,8 @@ import {
   ChevronRight,
   ChevronUp,
   Info,
+  X,
+  Trash2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { StudentData } from "@/lib/groq/types";
@@ -165,9 +167,9 @@ interface Props {
 }
 
 const requiredSections: Record<SectionKey, string[]> = {
-  datosPersonales: ["curso"], // nombre es automático, no requerido del usuario
+  datosPersonales: ["curso", "etapaEscolar"], // nombre es automático, no requerido del usuario
   datosEscolares: ["escolarizacionPrevia"],
-  evaluacionPsicopedagogica: ["motivoConsulta"],
+  evaluacionPsicopedagogica: ["fechaInicioEvaluacion", "fechaFinEvaluacion", "motivoEvaluacion"],
   infoAlumno: ["descDesarrolloCognitivo"],
   contextoEscolar: ["contextoEscolar"],
   entornoFamiliar: ["entornoFamiliar"],
@@ -178,6 +180,7 @@ const requiredSections: Record<SectionKey, string[]> = {
 
 const requiredCollapsibleSections: Record<string, string[]> = {
   identity: ["curso", "fechaNacimiento"], // Para "Datos del alumno o alumna"
+  datosEvaluacionPsico: ["fechaInicioEvaluacion", "fechaFinEvaluacion", "motivoEvaluacion", "instrumentosInformacion"], // Para "Datos de la evaluación psicopedagógica"
 };
 
 const SectionStatusIndicator = ({ isComplete }: { isComplete: boolean }) => (
@@ -199,6 +202,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
       alumno: generateCode("ALUM"),
       tutor1: generateCode("TUT1"),
       tutor2: generateCode("TUT2"),
+      profesional: generateCode("PROF"),
+      eoe: generateCode("EOE"),
     };
   });
 
@@ -206,6 +211,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     nombre: `Alumno/a [${anonCodes.alumno}]`,
     primerTutor: `Tutor/a 1 [${anonCodes.tutor1}]`,
     segundoTutor: `Tutor/a 2 [${anonCodes.tutor2}]`,
+    profesionalRealiza: `Profesional [${anonCodes.profesional}]`,
+    eoeReferencia: `EOE [${anonCodes.eoe}]`,
     curso: "",
     motivoConsulta: "",
     observaciones: "",
@@ -282,6 +289,78 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
       const req = requiredSections[key];
       // Si no hay campos requeridos, la sección NUNCA está completa
       if (req.length === 0) return false;
+
+      // Para datosEscolares, requiere AMBAS subsecciones completas:
+      // 1. identity (Datos del alumno): curso + fechaNacimiento
+      // 2. historiaEscolar: escolarización previa + actuaciones
+      if (key === "datosEscolares") {
+        // Validar subsección "identity" (Datos del alumno o alumna)
+        const identityComplete = Boolean(
+          form.curso && form.curso.trim() &&
+          form.fechaNacimiento && form.fechaNacimiento.trim()
+        );
+
+        // Validar subsección "historiaEscolar" (Historia escolar)
+        const escolarizacionOk = Boolean(
+          form.escolarizacionPrevia && form.escolarizacionPrevia.trim(),
+        );
+        const actuacionOk = Boolean(
+          form.medidaSeleccionadaInfantil ||
+            form.medidaSeleccionadaPrimaria ||
+            form.medidaSeleccionadaSecundaria,
+        );
+        const historiaEscolarComplete = escolarizacionOk && actuacionOk;
+
+        return identityComplete && historiaEscolarComplete;
+      }
+
+      // Para evaluacionPsicopedagogica, requiere AMBAS subsecciones completas:
+      // 1. identity (Datos del alumno): curso + fechaNacimiento
+      // 2. datosEvaluacionPsico: fechas + motivo
+      if (key === "evaluacionPsicopedagogica") {
+        // Validar subsección "identity" (Datos del alumno o alumna)
+        const identityComplete = Boolean(
+          form.curso && form.curso.trim() &&
+          form.fechaNacimiento && form.fechaNacimiento.trim()
+        );
+
+        // Validar subsección "datosEvaluacionPsico" (Datos de la evaluación psicopedagógica)
+        const datosEvaluacionComplete = Boolean(
+          form.fechaInicioEvaluacion && form.fechaInicioEvaluacion.trim() &&
+          form.fechaFinEvaluacion && form.fechaFinEvaluacion.trim() &&
+          form.motivoEvaluacion && form.motivoEvaluacion.trim() &&
+          form.instrumentosInformacion && form.instrumentosInformacion.trim()
+        );
+
+        return identityComplete && datosEvaluacionComplete;
+      }
+
+      // Para las secciones restantes (infoAlumno, contextoEscolar, entornoFamiliar, necesidadesApoyo, propuestaAtencion, orientacionesFamilia)
+      // requieren identity (Datos del alumno) + sus campos específicos
+      const sectionsWithIdentity: SectionKey[] = [
+        "infoAlumno",
+        "contextoEscolar",
+        "entornoFamiliar",
+        "necesidadesApoyo",
+        "propuestaAtencion",
+        "orientacionesFamilia"
+      ];
+
+      if (sectionsWithIdentity.includes(key)) {
+        // Validar subsección "identity" (Datos del alumno o alumna)
+        const identityComplete = Boolean(
+          form.curso && form.curso.trim() &&
+          form.fechaNacimiento && form.fechaNacimiento.trim()
+        );
+
+        // Validar campos específicos de la sección
+        const specificFieldsComplete = req.every((k) => {
+          const v = (form as any)[k];
+          return typeof v === "number" ? true : Boolean(v && String(v).trim());
+        });
+
+        return identityComplete && specificFieldsComplete;
+      }
 
       return req.every((k) => {
         const v = (form as any)[k];
@@ -378,7 +457,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     }));
   };
 
-  const handleSaveDraft = () => {
+  const handleSaveDraft = (sectionToClose?: SectionKey) => {
     try {
       const payload = {
         ...form,
@@ -387,6 +466,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
       toast.success("Borrador guardado", {
         description: "Se ha guardado localmente en este navegador.",
       });
+      // Contraer la sección después de guardar
+      if (sectionToClose) {
+        setOpen((prev) => prev.filter((s) => s !== sectionToClose));
+      }
     } catch (e) {
       toast.error("No se pudo guardar el borrador");
     }
@@ -404,6 +487,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
       alumno: generateCode("ALUM"),
       tutor1: generateCode("TUT1"),
       tutor2: generateCode("TUT2"),
+      profesional: generateCode("PROF"),
+      eoe: generateCode("EOE"),
     };
 
     // LIMPIAR completamente
@@ -411,6 +496,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
       nombre: `Alumno/a [${newCodes.alumno}]`,
       primerTutor: `Tutor/a 1 [${newCodes.tutor1}]`,
       segundoTutor: `Tutor/a 2 [${newCodes.tutor2}]`,
+      profesionalRealiza: `Profesional [${newCodes.profesional}]`,
+      eoeReferencia: `EOE [${newCodes.eoe}]`,
       curso: "",
       motivoConsulta: "",
     } as FormState);
@@ -723,7 +810,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <Button
                       type="button"
                       className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
-                      onClick={handleSaveDraft}
+                      onClick={() => handleSaveDraft("datosPersonales")}
                     >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
@@ -1620,7 +1707,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <Button
                       type="button"
                       className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
-                      onClick={handleSaveDraft}
+                      onClick={() => handleSaveDraft("datosEscolares")}
                     >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
@@ -1689,164 +1776,196 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                             handleChange={handleChange}
                             errors={errors}
                           />
-                          <div className="grid grid-cols-1 gap-4 mt-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="eoeReferencia">
-                                <Tooltip>
+                          <TooltipProvider>
+                            <div className="grid grid-cols-1 gap-4 mt-4">
+                              <div className="space-y-2">
+                                <Tooltip delayDuration={300}>
                                   <TooltipTrigger asChild>
-                                    <span className="flex items-center gap-1 cursor-help">
+                                    <Label
+                                      htmlFor="eoeReferencia"
+                                      className="flex items-center gap-2 cursor-help"
+                                    >
                                       EOE de referencia
-                                      <Info className="w-3 h-3 text-slate-500" />
-                                    </span>
+                                      <Shield className="w-4 h-4 text-emerald-600" />
+                                    </Label>
                                   </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>
-                                      Equipo de Orientación Educativa (EOE).
+                                  <TooltipContent side="top" align="start">
+                                    <p className="max-w-xs">
+                                      Campo protegido por LOPD. El EOE real no se guarda, se usa un
+                                      código anónimo para generar el informe.
                                     </p>
                                   </TooltipContent>
                                 </Tooltip>
-                              </Label>
-                              <Input
-                                id="eoeReferencia"
-                                value={form.eoeReferencia || ""}
-                                onChange={(e) =>
-                                  handleChange("eoeReferencia", e.target.value)
-                                }
-                                placeholder="Ej: 29070143 - E.O.E. Málaga Norte-Ciudad Jardín - Málaga"
-                              />
+                                <Input
+                                  id="eoeReferencia"
+                                  value={form.eoeReferencia || "EOE [Código Anónimo]"}
+                                  readOnly
+                                  disabled
+                                  className="bg-gray-100 cursor-not-allowed text-gray-600 border-gray-300 font-mono text-sm"
+                                />
+                              </div>
                             </div>
-                          </div>
+                          </TooltipProvider>
                         </CollapsibleContent>
                       </div>
                     </Collapsible>
 
                     {/* Bloque: Datos de la evaluación psicopedagógica */}
-                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5 space-y-4">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-slate-700">
-                          Datos de la evaluación psicopedagógica
-                        </h3>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Collapsible
+                      open={openCollapsibles["evPsico"]}
+                      onOpenChange={() => toggleCollapsible("evPsico")}
+                    >
+                      <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                        <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-slate-700">
+                              Datos de la evaluación psicopedagógica
+                            </h3>
+                            {isCollapsibleSectionComplete("datosEvaluacionPsico") && (
+                              <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                            )}
+                          </div>
+                          {openCollapsibles["evPsico"] ? (
+                            <ChevronUp className="h-4 w-4 text-purple-600 transition-transform group-hover:scale-110" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 text-purple-600 transition-transform group-hover:scale-110" />
+                          )}
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-4 space-y-4">
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="flex flex-col">
+                            <div className="min-h-[28px] flex items-center mb-2">
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Label
+                                    htmlFor="profesionalRealiza"
+                                    className="flex items-center gap-2 cursor-help"
+                                  >
+                                    Profesional que lo realiza
+                                    <Shield className="w-4 h-4 text-emerald-600" />
+                                  </Label>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="max-w-xs">
+                                    Campo protegido por LOPD. El nombre real no se guarda, se usa un código anónimo para generar el informe.
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
+                            <Input
+                              id="profesionalRealiza"
+                              value={form.profesionalRealiza || "Profesional [Código Anónimo]"}
+                              readOnly
+                              disabled
+                              tabIndex={-1}
+                              onKeyDown={(e) => e.preventDefault()}
+                              onPaste={(e) => e.preventDefault()}
+                              onChange={(e) => e.preventDefault()}
+                              className="bg-gray-100 cursor-not-allowed text-gray-600 border-gray-300 font-mono text-sm"
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <div className="min-h-[28px] flex items-center mb-2">
+                              <Label htmlFor="fechaInicioEvaluacion">
+                                Fecha inicio de la evaluación
+                              </Label>
+                            </div>
+                            <Input
+                              id="fechaInicioEvaluacion"
+                              type="date"
+                              value={form.fechaInicioEvaluacion || ""}
+                              onChange={(e) =>
+                                handleChange(
+                                  "fechaInicioEvaluacion",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <div className="min-h-[28px] flex items-center mb-2">
+                              <Label htmlFor="fechaFinEvaluacion">
+                                Fecha fin de la evaluación
+                              </Label>
+                            </div>
+                            <Input
+                              id="fechaFinEvaluacion"
+                              type="date"
+                              value={form.fechaFinEvaluacion || ""}
+                              onChange={(e) =>
+                                handleChange("fechaFinEvaluacion", e.target.value)
+                              }
+                            />
+                          </div>
+                        </div>
                         <div className="space-y-2">
-                          <Label htmlFor="profesionalRealiza">
+                          <Label htmlFor="motivoEvaluacion">
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span className="flex items-center gap-1 cursor-help">
-                                  Profesional que lo realiza
+                                  Motivo de la evaluación psicopedagógica
                                   <Info className="w-3 h-3 text-slate-500" />
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Nombre y apellidos del orientador/a.</p>
+                                <p className="max-w-xs">
+                                  Selecciona el motivo principal por el que se realiza la evaluación psicopedagógica.
+                                </p>
                               </TooltipContent>
                             </Tooltip>
                           </Label>
-                          <Input
-                            id="profesionalRealiza"
-                            value={form.profesionalRealiza || ""}
-                            onChange={(e) =>
-                              handleChange("profesionalRealiza", e.target.value)
-                            }
-                            placeholder="Nombre y apellidos"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="fechaInicioEvaluacion">
-                            Fecha inicio de la evaluación
-                          </Label>
-                          <Input
-                            id="fechaInicioEvaluacion"
-                            type="date"
-                            value={form.fechaInicioEvaluacion || ""}
-                            onChange={(e) =>
-                              handleChange(
-                                "fechaInicioEvaluacion",
-                                e.target.value,
-                              )
-                            }
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="fechaFinEvaluacion">
-                            Fecha fin de la evaluación
-                          </Label>
-                          <Input
-                            id="fechaFinEvaluacion"
-                            type="date"
-                            value={form.fechaFinEvaluacion || ""}
-                            onChange={(e) =>
-                              handleChange("fechaFinEvaluacion", e.target.value)
-                            }
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="motivoEvaluacion">
-                            Motivo de la evaluación psicopedagógica
-                          </Label>
-                          <Select
-                            value={form.motivoEvaluacion || undefined}
-                            onValueChange={(v) =>
-                              handleChange("motivoEvaluacion", v)
-                            }
-                          >
-                            <SelectTrigger id="motivoEvaluacion">
-                              <SelectValue placeholder="Selecciona un motivo" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="dificultades_aprendizaje">
-                                Dificultades de aprendizaje
-                              </SelectItem>
-                              <SelectItem value="problemas_comportamiento">
-                                Problemas de comportamiento
-                              </SelectItem>
-                              <SelectItem value="altas_capacidades">
-                                Altas capacidades
-                              </SelectItem>
-                              <SelectItem value="neae">
-                                Necesidades específicas de apoyo
-                              </SelectItem>
-                              <SelectItem value="otros">Otros</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <div className="flex gap-2">
+                            <Select
+                              value={form.motivoEvaluacion || undefined}
+                              onValueChange={(v) =>
+                                handleChange("motivoEvaluacion", v)
+                              }
+                            >
+                              <SelectTrigger id="motivoEvaluacion" className="flex-1">
+                                <SelectValue placeholder="Selecciona un motivo" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="screening_altas_capacidades">
+                                  Por haber superado la fase de screening (cribaje) del Protocolo de Detección de Altas Capacidades Intelectuales
+                                </SelectItem>
+                                <SelectItem value="neae_escolarizado">
+                                  Nueva identificación de NEAE en un alumno/a escolarizado
+                                </SelectItem>
+                                <SelectItem value="neae_nueva_escolarizacion">
+                                  Nueva identificación de NEAE en un alumno/a de nueva escolarización
+                                </SelectItem>
+                                <SelectItem value="revision_ordinaria">
+                                  Revisión ordinaria
+                                </SelectItem>
+                                <SelectItem value="revision_extraordinaria">
+                                  Revisión extraordinaria (origen de la solicitud)
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            {form.motivoEvaluacion && (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() => handleChange("motivoEvaluacion", "")}
+                                    className="flex-shrink-0"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Limpiar selección</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            )}
+                          </div>
                         </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="motivoConsulta">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span className="flex items-center gap-1 cursor-help">
-                                Motivo de la evaluación psicopedagógica
-                                <Info className="w-3 h-3 text-slate-500" />
-                              </span>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="max-w-xs">
-                                Este es el campo principal que usará la IA para
-                                generar el informe. Sé detallado.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </Label>
-                        <Textarea
-                          id="motivoConsulta"
-                          rows={4}
-                          value={form.motivoConsulta}
-                          onChange={(e) =>
-                            handleChange("motivoConsulta", e.target.value)
-                          }
-                          className={
-                            errors.motivoConsulta ? "border-red-500" : ""
-                          }
-                          placeholder="Describe brevemente el motivo de la evaluación"
-                        />
-                        {errors.motivoConsulta && (
-                          <p className="text-sm text-red-500">
-                            {errors.motivoConsulta}
-                          </p>
-                        )}
-                      </div>
+   
                       <div className="space-y-2">
                         <Label htmlFor="instrumentosInformacion">
                           <Tooltip>
@@ -1877,7 +1996,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           placeholder="Observación en aula, entrevistas, análisis de documentación, pruebas, etc."
                         />
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="numeroSesiones">
                             Número de sesiones
@@ -1906,14 +2025,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           />
                         </div>
                       </div>
-                    </div>
+                        </CollapsibleContent>
+                      </div>
+                    </Collapsible>
                   </div>
                   {/* Botón Guardar dentro de Evaluación psicopedagógica */}
                   <div className="mt-6 flex justify-end">
                     <Button
                       type="button"
                       className="bg-purple-600 hover:bg-purple-700 text-white shadow-sm"
-                      onClick={handleSaveDraft}
+                      onClick={() => handleSaveDraft("evaluacionPsicopedagogica")}
                     >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
@@ -2643,7 +2764,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <Button
                       type="button"
                       className="bg-orange-600 hover:bg-orange-700 text-white shadow-sm"
-                      onClick={handleSaveDraft}
+                      onClick={() => handleSaveDraft("infoAlumno")}
                     >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
@@ -2746,7 +2867,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <Button
                       type="button"
                       className="bg-teal-600 hover:bg-teal-700 text-white shadow-sm"
-                      onClick={handleSaveDraft}
+                      onClick={() => handleSaveDraft("contextoEscolar")}
                     >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
@@ -2850,7 +2971,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <Button
                       type="button"
                       className="bg-pink-600 hover:bg-pink-700 text-white shadow-sm"
-                      onClick={handleSaveDraft}
+                      onClick={() => handleSaveDraft("entornoFamiliar")}
                     >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
@@ -3110,7 +3231,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <Button
                       type="button"
                       className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm"
-                      onClick={handleSaveDraft}
+                      onClick={() => handleSaveDraft("necesidadesApoyo")}
                     >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
@@ -3192,84 +3313,102 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
 
                     {/* Medidas educativas generales */}
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium">
+                    <div className="space-y-3">
+                      <p className="text-sm font-medium text-slate-700">
                         Medidas educativas generales
                       </p>
-                      <div className="grid grid-cols-1 md:grid-cols-3 items-end gap-4">
-                        <div className="md:col-span-2">
-                          <Select
-                            value={medidaTemp || undefined}
-                            onValueChange={(v) => setMedidaTemp(v)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Selecciona medida" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="refuerzo_lcl_en_lugar_de_2LE">
-                                Refuerzo de LCL en lugar de 2ª Lengua Extranjera
-                                (Educación Primaria)
-                              </SelectItem>
-                              <SelectItem value="organizacion_flexible">
-                                Organización flexible de
-                                espacios/tiempos/recursos
-                              </SelectItem>
-                              <SelectItem value="actividades_refuerzo">
-                                Actividades de refuerzo educativo
-                              </SelectItem>
-                              <SelectItem value="apoyo_en_grupo_ordinario">
-                                Apoyo en grupo ordinario mediante 2º profesor/a
-                                dentro del aula
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          onClick={() =>
-                            medidaTemp &&
-                            (handleChange("medidasEducativasGenerales", [
+                      <Select
+                        value=""
+                        onValueChange={(v) => {
+                          if (v && !form.medidasEducativasGenerales?.includes(v)) {
+                            handleChange("medidasEducativasGenerales", [
                               ...(form.medidasEducativasGenerales || []),
-                              medidaTemp,
-                            ]),
-                            setMedidaTemp(""))
+                              v,
+                            ]);
                           }
-                        >
-                          Añadir
-                        </Button>
-                      </div>
+                        }}
+                      >
+                        <SelectTrigger className="bg-white">
+                          <SelectValue placeholder="Selecciona medida" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem
+                            value="apoyo_grupos_ordinarios"
+                            disabled={form.medidasEducativasGenerales?.includes("apoyo_grupos_ordinarios")}
+                          >
+                            {form.medidasEducativasGenerales?.includes("apoyo_grupos_ordinarios") && "✓ "}
+                            Apoyo en grupos ordinarios mediante un segundo profesor o profesora dentro del aula
+                          </SelectItem>
+                          <SelectItem
+                            value="accion_tutorial"
+                            disabled={form.medidasEducativasGenerales?.includes("accion_tutorial")}
+                          >
+                            {form.medidasEducativasGenerales?.includes("accion_tutorial") && "✓ "}
+                            Acción tutorial
+                          </SelectItem>
+                          <SelectItem
+                            value="metodologias_didacticas"
+                            disabled={form.medidasEducativasGenerales?.includes("metodologias_didacticas")}
+                          >
+                            {form.medidasEducativasGenerales?.includes("metodologias_didacticas") && "✓ "}
+                            Metodologías didácticas basadas en el trabajo colaborativo, tutoría entre iguales y aprendizaje por proyectos
+                          </SelectItem>
+                          <SelectItem
+                            value="actuaciones_coordinacion"
+                            disabled={form.medidasEducativasGenerales?.includes("actuaciones_coordinacion")}
+                          >
+                            {form.medidasEducativasGenerales?.includes("actuaciones_coordinacion") && "✓ "}
+                            Actuaciones de coordinación en el proceso de tránsito entre ciclos, o entre etapas
+                          </SelectItem>
+                          <SelectItem
+                            value="actuaciones_prevencion"
+                            disabled={form.medidasEducativasGenerales?.includes("actuaciones_prevencion")}
+                          >
+                            {form.medidasEducativasGenerales?.includes("actuaciones_prevencion") && "✓ "}
+                            Actuaciones de prevención y control del absentismo
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                       {(form.medidasEducativasGenerales?.length || 0) > 0 && (
-                        <ul className="mt-2 divide-y rounded-md border bg-white">
+                        <div className="space-y-2">
                           {(form.medidasEducativasGenerales || []).map(
-                            (m, i) => (
-                              <li
-                                key={`med-${i}`}
-                                className="px-3 py-2 text-sm flex items-center justify-between"
-                              >
-                                <span>
-                                  {m
-                                    .replace(/_/g, " ")
-                                    .replace(/\b\w/g, (t) => t.toUpperCase())}
-                                </span>
-                                <button
-                                  type="button"
-                                  className="text-gray-500 hover:text-red-600"
-                                  onClick={() =>
-                                    handleChange(
-                                      "medidasEducativasGenerales",
-                                      (
-                                        form.medidasEducativasGenerales || []
-                                      ).filter((_, idx) => idx !== i),
-                                    )
-                                  }
+                            (m, i) => {
+                              const textos: Record<string, string> = {
+                                "apoyo_grupos_ordinarios": "Apoyo en grupos ordinarios mediante un segundo profesor o profesora dentro del aula",
+                                "accion_tutorial": "Acción tutorial",
+                                "metodologias_didacticas": "Metodologías didácticas basadas en el trabajo colaborativo, tutoría entre iguales y aprendizaje por proyectos",
+                                "actuaciones_coordinacion": "Actuaciones de coordinación en el proceso de tránsito entre ciclos, o entre etapas",
+                                "actuaciones_prevencion": "Actuaciones de prevención y control del absentismo"
+                              };
+
+                              return (
+                                <div
+                                  key={`med-${i}`}
+                                  className="flex items-start gap-3 p-3 bg-emerald-100 border border-emerald-200 rounded-lg group hover:bg-emerald-50 transition-colors"
                                 >
-                                  Borrar
-                                </button>
-                              </li>
-                            ),
+                                  <div className="flex-1 text-sm text-slate-700 leading-relaxed">
+                                    {textos[m] || m}
+                                  </div>
+                                  <button
+                                    type="button"
+                                    className="flex-shrink-0 p-1.5 text-white bg-red-500 hover:text-slate-400 hover:bg-transparent rounded transition-all"
+                                    onClick={() =>
+                                      handleChange(
+                                        "medidasEducativasGenerales",
+                                        (
+                                          form.medidasEducativasGenerales || []
+                                        ).filter((_, idx) => idx !== i),
+                                      )
+                                    }
+                                    title="Eliminar"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              );
+                            }
                           )}
-                        </ul>
+                        </div>
                       )}
                     </div>
 
@@ -3623,7 +3762,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <Button
                       type="button"
                       className="bg-lime-600 hover:bg-lime-700 text-white shadow-sm"
-                      onClick={handleSaveDraft}
+                      onClick={() => handleSaveDraft("propuestaAtencion")}
                     >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
@@ -3791,7 +3930,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <Button
                       type="button"
                       className="bg-violet-600 hover:bg-violet-700 text-white shadow-sm"
-                      onClick={handleSaveDraft}
+                      onClick={() => handleSaveDraft("orientacionesFamilia")}
                     >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
