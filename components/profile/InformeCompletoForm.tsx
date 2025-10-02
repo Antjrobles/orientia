@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Accordion,
@@ -35,6 +41,7 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  Info,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { StudentData } from "@/lib/groq/types";
@@ -169,6 +176,10 @@ const requiredSections: Record<SectionKey, string[]> = {
   orientacionesFamilia: ["orientacionesFamilia"],
 };
 
+const requiredCollapsibleSections: Record<string, string[]> = {
+  identity: ["curso", "fechaNacimiento"], // Para "Datos del alumno o alumna"
+};
+
 const SectionStatusIndicator = ({ isComplete }: { isComplete: boolean }) => (
   <div className="w-3 h-3 rounded border flex-shrink-0 flex items-center justify-center bg-white">
     {isComplete && <div className="w-2 h-2 bg-gray-700 rounded-sm"></div>}
@@ -280,6 +291,30 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     [form],
   );
 
+  const isCollapsibleSectionComplete = useCallback(
+    (key: string) => {
+      if (key === "historiaEscolar") {
+        const escolarizacionOk = Boolean(
+          form.escolarizacionPrevia && form.escolarizacionPrevia.trim(),
+        );
+        const actuacionOk = Boolean(
+          form.medidaSeleccionadaInfantil ||
+            form.medidaSeleccionadaPrimaria ||
+            form.medidaSeleccionadaSecundaria,
+        );
+        return escolarizacionOk && actuacionOk;
+      }
+      const req = requiredCollapsibleSections[key];
+      if (!req || req.length === 0) return false;
+
+      return req.every((k) => {
+        const v = (form as any)[k];
+        // Para fechas y otros campos, una cadena no vacía es suficiente
+        return Boolean(v && String(v).trim());
+      });
+    },
+    [form],
+  );
   const { completedSectionsCount, totalCompletable, progressPercentage } =
     useMemo(() => {
       const sectionKeys = Object.keys(requiredSections) as SectionKey[];
@@ -410,7 +445,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   };
 
   return (
-    <div className="space-y-6 mt-8 sm:mt-12">
+    <TooltipProvider delayDuration={300}>
       <Card className="border-0  bg-gray-50">
         <CardHeader className="border-b border-slate-200 p-4 sm:p-6">
           <div className="flex justify-between items-center">
@@ -466,7 +501,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">Datos Personales</span>
                         {isSectionComplete("datosPersonales") && (
-                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                          >
+                            Completado
+                          </Badge>
                         )}
                       </span>
                       <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
@@ -489,6 +529,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                             <h3 className="text-sm font-semibold text-slate-700">
                               Datos del alumno o alumna
                             </h3>
+                            {isCollapsibleSectionComplete("identity") && (
+                              <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                            )}
                           </div>
                           {openCollapsibles["dp"] ? (
                             <ChevronUp className="h-4 w-4 text-blue-600 transition-transform group-hover:scale-110" />
@@ -509,8 +552,20 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                 htmlFor="primerTutor"
                                 className="flex items-center gap-2"
                               >
-                                Nombre del primer tutor/a
-                                <Shield className="w-4 h-4 text-emerald-600" />
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <span className="flex items-center gap-1 cursor-help">
+                                      Nombre del primer tutor/a
+                                      <Shield className="w-4 h-4 text-emerald-600" />
+                                    </span>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="max-w-xs">
+                                      Este campo se anonimiza para cumplir con
+                                      la LOPD. No se guardan nombres reales.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
                               </Label>
                               <Input
                                 id="primerTutor"
@@ -533,8 +588,20 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                 htmlFor="segundoTutor"
                                 className="flex items-center gap-2"
                               >
-                                Nombre del segundo tutor/a
-                                <Shield className="w-4 h-4 text-emerald-600" />
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <span className="flex items-center gap-1 cursor-help">
+                                      Nombre del segundo tutor/a
+                                      <Shield className="w-4 h-4 text-emerald-600" />
+                                    </span>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="max-w-xs">
+                                      Este campo se anonimiza para cumplir con
+                                      la LOPD. No se guardan nombres reales.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
                               </Label>
                               <Input
                                 id="segundoTutor"
@@ -560,10 +627,20 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     {/* Etapa de escolarización */}
                     <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-slate-700">
-                          Etapa de escolarización
-                        </h3>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex items-center gap-2 cursor-help">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <h3 className="text-sm font-semibold text-slate-700">
+                                Etapa de escolarización
+                              </h3>
+                              <Info className="w-3 h-3 text-slate-500" />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Selecciona la etapa actual del alumno/a.</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                       <Select
                         value={form.etapaEscolar || undefined}
@@ -584,10 +661,24 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     {/* Información a la familia: adjuntos */}
                     <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-slate-700">
-                          Información a la familia
-                        </h3>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex items-center gap-2 cursor-help">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <h3 className="text-sm font-semibold text-slate-700">
+                                Información a la familia
+                              </h3>
+                              <Info className="w-3 h-3 text-slate-500" />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs">
+                              Adjunta aquí cualquier documento relevante que se
+                              haya compartido con la familia (consentimientos,
+                              informes previos, etc.).
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                       <div className="flex items-center gap-3">
                         <Input
@@ -654,7 +745,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">Datos Escolares</span>
                         {isSectionComplete("datosEscolares") && (
-                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                          >
+                            Completado
+                          </Badge>
                         )}
                       </span>
                       <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
@@ -677,6 +773,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                             <h3 className="text-sm font-semibold text-slate-700">
                               Datos del alumno o alumna
                             </h3>
+                            {isCollapsibleSectionComplete("identity") && (
+                              <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                            )}
                           </div>
                           {openCollapsibles["esc"] ? (
                             <ChevronUp className="h-4 w-4 text-emerald-600 transition-transform group-hover:scale-110" />
@@ -707,6 +806,11 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                             <h3 className="text-sm font-semibold text-slate-700">
                               Historia escolar
                             </h3>
+                            {isCollapsibleSectionComplete(
+                              "historiaEscolar",
+                            ) && (
+                              <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                            )}
                           </div>
                           {historiaEscolarOpen ? (
                             <ChevronUp className="h-4 w-4 text-emerald-600 transition-transform group-hover:scale-110" />
@@ -717,8 +821,22 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                         <CollapsibleContent className="mt-4">
                           <div className="space-y-4">
                             <div className="space-y-2">
-                              <Label htmlFor="esc-escolarizacionPrevia">
+                              <Label
+                                htmlFor="esc-escolarizacionPrevia"
+                                className="flex items-center gap-1"
+                              >
                                 Datos de escolarización previa
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="w-3 h-3 text-slate-500 cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      Centros previos, años de escolarización,
+                                      repeticiones, etc.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
                               </Label>
                               <Textarea
                                 id="esc-escolarizacionPrevia"
@@ -1526,7 +1644,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           Evaluación Psicopedagógica
                         </span>
                         {isSectionComplete("evaluacionPsicopedagogica") && (
-                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                          >
+                            Completado
+                          </Badge>
                         )}
                       </span>
                       <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
@@ -1549,6 +1672,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                             <h3 className="text-sm font-semibold text-slate-700">
                               Datos del alumno o alumna
                             </h3>
+                            {isCollapsibleSectionComplete("identity") && (
+                              <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                            )}
                           </div>
                           {openCollapsibles["ev"] ? (
                             <ChevronUp className="h-4 w-4 text-purple-600 transition-transform group-hover:scale-110" />
@@ -1566,8 +1692,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <div className="grid grid-cols-1 gap-4 mt-4">
                             <div className="space-y-2">
                               <Label htmlFor="eoeReferencia">
-                                EOE de referencia en el momento de la
-                                elaboración del informe
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <span className="flex items-center gap-1 cursor-help">
+                                      EOE de referencia
+                                      <Info className="w-3 h-3 text-slate-500" />
+                                    </span>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      Equipo de Orientación Educativa (EOE).
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
                               </Label>
                               <Input
                                 id="eoeReferencia"
@@ -1594,7 +1731,17 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="profesionalRealiza">
-                            Profesional que lo realiza
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="flex items-center gap-1 cursor-help">
+                                  Profesional que lo realiza
+                                  <Info className="w-3 h-3 text-slate-500" />
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Nombre y apellidos del orientador/a.</p>
+                              </TooltipContent>
+                            </Tooltip>
                           </Label>
                           <Input
                             id="profesionalRealiza"
@@ -1667,7 +1814,20 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="motivoConsulta">
-                          Motivo de la evaluación psicopedagógica
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="flex items-center gap-1 cursor-help">
+                                Motivo de la evaluación psicopedagógica
+                                <Info className="w-3 h-3 text-slate-500" />
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-xs">
+                                Este es el campo principal que usará la IA para
+                                generar el informe. Sé detallado.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
                         </Label>
                         <Textarea
                           id="motivoConsulta"
@@ -1689,7 +1849,20 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="instrumentosInformacion">
-                          Instrumentos de recogida de información
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="flex items-center gap-1 cursor-help">
+                                Instrumentos de recogida de información
+                                <Info className="w-3 h-3 text-slate-500" />
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-xs">
+                                Ej: Observación, entrevistas, análisis de
+                                trabajos, pruebas estandarizadas (WISC, etc.).
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
                         </Label>
                         <Textarea
                           id="instrumentosInformacion"
@@ -1764,7 +1937,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           Información Relevante del Alumno
                         </span>
                         {isSectionComplete("infoAlumno") && (
-                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                          >
+                            Completado
+                          </Badge>
                         )}
                       </span>
                       <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
@@ -1786,6 +1964,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
+                          {isCollapsibleSectionComplete("identity") && (
+                            <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                          )}
                         </div>
                         {openCollapsibles["ir"] ? (
                           <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
@@ -1807,10 +1988,23 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   {/* Datos clínicos y/o sociales relevantes */}
                   <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-slate-700">
-                        Datos clínicos y/o sociales relevantes
-                      </h3>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-2 cursor-help">
+                            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-slate-700">
+                              Datos clínicos y/o sociales relevantes
+                            </h3>
+                            <Info className="w-3 h-3 text-slate-500" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">
+                            Diagnósticos médicos, tratamientos, informes
+                            externos, situación social, etc.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <Textarea
                       rows={4}
@@ -1825,10 +2019,23 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   {/* Datos relativos al: Desarrollo cognitivo */}
                   <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5 space-y-3">
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-slate-700">
-                        Desarrollo cognitivo
-                      </h3>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-2 cursor-help">
+                            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-slate-700">
+                              Desarrollo cognitivo
+                            </h3>
+                            <Info className="w-3 h-3 text-slate-500" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">
+                            Resultados de pruebas (CI, memoria, atención),
+                            razonamiento, funciones ejecutivas...
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <div className="space-y-2">
                       <Textarea
@@ -2457,7 +2664,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">Contexto Escolar</span>
                         {isSectionComplete("contextoEscolar") && (
-                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                          >
+                            Completado
+                          </Badge>
                         )}
                       </span>
                       <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
@@ -2479,6 +2691,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
+                          {isCollapsibleSectionComplete("identity") && (
+                            <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                          )}
                         </div>
                         {openCollapsibles["ce"] ? (
                           <ChevronUp className="h-4 w-4 text-teal-600 transition-transform group-hover:scale-110" />
@@ -2499,10 +2714,23 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   {/* Texto principal de contexto escolar */}
                   <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-slate-700">
-                        Información relevante sobre el contexto escolar
-                      </h3>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-2 cursor-help">
+                            <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-slate-700">
+                              Información relevante sobre el contexto escolar
+                            </h3>
+                            <Info className="w-3 h-3 text-slate-500" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">
+                            Ratio del aula, recursos de PT/AL, clima escolar,
+                            relación con el profesorado, etc.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <Textarea
                       rows={6}
@@ -2539,7 +2767,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">Entorno Familiar</span>
                         {isSectionComplete("entornoFamiliar") && (
-                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                          >
+                            Completado
+                          </Badge>
                         )}
                       </span>
                       <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
@@ -2561,6 +2794,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
+                          {isCollapsibleSectionComplete("identity") && (
+                            <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                          )}
                         </div>
                         {openCollapsibles["ef"] ? (
                           <ChevronUp className="h-4 w-4 text-pink-600 transition-transform group-hover:scale-110" />
@@ -2581,11 +2817,24 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   {/* Texto principal del entorno familiar/contexto social */}
                   <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-slate-700">
-                        Información relevante sobre el entorno familiar y el
-                        contexto social
-                      </h3>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-2 cursor-help">
+                            <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-slate-700">
+                              Información relevante sobre el entorno familiar y
+                              el contexto social
+                            </h3>
+                            <Info className="w-3 h-3 text-slate-500" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">
+                            Estructura familiar, pautas educativas, nivel de
+                            colaboración, factores de riesgo/protección, etc.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <Textarea
                       rows={6}
@@ -2624,7 +2873,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           Necesidades de Apoyo Educativo
                         </span>
                         {isSectionComplete("necesidadesApoyo") && (
-                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                          >
+                            Completado
+                          </Badge>
                         )}
                       </span>
                       <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
@@ -2646,6 +2900,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
+                          {isCollapsibleSectionComplete("identity") && (
+                            <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                          )}
                         </div>
                         {openCollapsibles["ne"] ? (
                           <ChevronUp className="h-4 w-4 text-indigo-600 transition-transform group-hover:scale-110" />
@@ -2675,7 +2932,19 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
                     <div className="space-y-2">
                       <Label>
-                        ¿Presenta necesidades específicas de apoyo educativo?
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="flex items-center gap-1 cursor-help">
+                              ¿Presenta NEAE?
+                              <Info className="w-3 h-3 text-slate-500" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>
+                              Necesidades Específicas de Apoyo Educativo (NEAE).
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
                       </Label>
                       <RadioGroup
                         className="flex gap-6"
@@ -2808,10 +3077,23 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   {/* Observaciones */}
                   <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-slate-700">
-                        Observaciones
-                      </h3>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-2 cursor-help">
+                            <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-slate-700">
+                              Observaciones
+                            </h3>
+                            <Info className="w-3 h-3 text-slate-500" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">
+                            Resume la necesidad y su correspondencia con el
+                            Nivel de Competencia Curricular (NCC).
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <Textarea
                       rows={4}
@@ -2851,7 +3133,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           Propuesta de Atención Educativa
                         </span>
                         {isSectionComplete("propuestaAtencion") && (
-                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                          >
+                            Completado
+                          </Badge>
                         )}
                       </span>
                       <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
@@ -2873,6 +3160,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
+                          {isCollapsibleSectionComplete("identity") && (
+                            <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                          )}
                         </div>
                         {openCollapsibles["pa"] ? (
                           <ChevronUp className="h-4 w-4 text-lime-600 transition-transform group-hover:scale-110" />
@@ -3295,10 +3585,23 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   {/* Orientaciones al profesorado */}
                   <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5 space-y-2">
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-slate-700">
-                        Orientaciones al profesorado
-                      </h3>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-2 cursor-help">
+                            <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-slate-700">
+                              Orientaciones al profesorado
+                            </h3>
+                            <Info className="w-3 h-3 text-slate-500" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">
+                            Sugerencias metodológicas, de organización,
+                            evaluación, etc.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <p className="text-sm text-slate-600 mb-3">
                       Especificar orientaciones para la organización de la
@@ -3343,7 +3646,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           Orientaciones a la Familia
                         </span>
                         {isSectionComplete("orientacionesFamilia") && (
-                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                          >
+                            Completado
+                          </Badge>
                         )}
                       </span>
                       <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
@@ -3365,6 +3673,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           <h3 className="text-sm font-semibold text-slate-700">
                             Datos del alumno o alumna
                           </h3>
+                          {isCollapsibleSectionComplete("identity") && (
+                            <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
+                          )}
                         </div>
                         {openCollapsibles["of"] ? (
                           <ChevronUp className="h-4 w-4 text-violet-600 transition-transform group-hover:scale-110" />
@@ -3386,11 +3697,24 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   {/* Orientaciones */}
                   <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-slate-700">
-                        Orientaciones a la familia o a los representantes
-                        legales
-                      </h3>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-2 cursor-help">
+                            <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-slate-700">
+                              Orientaciones a la familia o a los representantes
+                              legales
+                            </h3>
+                            <Info className="w-3 h-3 text-slate-500" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">
+                            Pautas de actuación, fomento de la autonomía,
+                            coordinación con el centro, etc.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <Textarea
                       rows={8}
@@ -3405,10 +3729,23 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   {/* Fichero externo */}
                   <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-slate-700">
-                        Fichero externo
-                      </h3>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-2 cursor-help">
+                            <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
+                            <h3 className="text-sm font-semibold text-slate-700">
+                              Fichero externo
+                            </h3>
+                            <Info className="w-3 h-3 text-slate-500" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">
+                            Adjunta aquí informes externos, dictámenes, u otros
+                            documentos de interés.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <div className="flex items-center gap-3">
                       <Input
@@ -3494,6 +3831,6 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
           </form>
         </CardContent>
       </Card>
-    </div>
+    </TooltipProvider>
   );
 }

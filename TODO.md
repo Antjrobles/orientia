@@ -719,6 +719,7 @@
 
 - [ ] ¿Podrías implementar un sistema de autoguardado para que el borrador se guarde automáticamente cada cierto tiempo?
 - [ ] ¿Puedes añadir una funcionalidad para previsualizar el informe en formato PDF antes de generarlo?
+
 ---
 
 **Prioridad Alta**: Seguridad, Performance, Gestión de Informes, IA y Generación
