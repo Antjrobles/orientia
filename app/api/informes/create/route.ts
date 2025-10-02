@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { supabase } from '@/lib/supabase';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
+import { z } from "zod";
 
 const CreateInformeSchema = z.object({
   studentData: z
@@ -29,8 +29,8 @@ export async function POST(request: NextRequest) {
 
     if (!session?.user?.id) {
       return NextResponse.json(
-        { success: false, error: 'No autorizado' },
-        { status: 401 }
+        { success: false, error: "No autorizado" },
+        { status: 401 },
       );
     }
 
@@ -43,35 +43,37 @@ export async function POST(request: NextRequest) {
       datos_identificativos: {
         alumno: {
           nombre: studentData.nombre,
-          fecha_nacimiento: studentData.fechaNacimiento || '',
+          fecha_nacimiento: studentData.fechaNacimiento || "",
           curso: studentData.curso,
         },
         centro: {
-          nombre: studentData.centro || '',
-          localidad: studentData.localidad || '',
+          nombre: studentData.centro || "",
+          localidad: studentData.localidad || "",
         },
-        tutores: [studentData.primerTutor, studentData.segundoTutor].filter(Boolean),
+        tutores: [studentData.primerTutor, studentData.segundoTutor].filter(
+          Boolean,
+        ),
         etapa_escolar: studentData.etapaEscolar || studentData.curso,
       },
       evaluacion_psicopedagogica: {
         motivo_consulta: studentData.motivoConsulta,
-        observaciones: studentData.observaciones || '',
+        observaciones: studentData.observaciones || "",
         informe_ia_generado: generatedReport,
       },
-      estado: 'borrador' as const,
+      estado: "borrador" as const,
     };
 
     const { data, error } = await supabase
-      .from('informes')
+      .from("informes")
       .insert(informeData)
       .select()
       .single();
 
     if (error) {
-      console.error('Error al guardar informe:', error);
+      console.error("Error al guardar informe:", error);
       return NextResponse.json(
-        { success: false, error: 'Error al guardar el informe' },
-        { status: 500 }
+        { success: false, error: "Error al guardar el informe" },
+        { status: 500 },
       );
     }
 
@@ -79,20 +81,19 @@ export async function POST(request: NextRequest) {
       success: true,
       informe: data,
     });
-
   } catch (error) {
-    console.error('Error en create informe API:', error);
+    console.error("Error en create informe API:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { success: false, error: 'Datos inválidos' },
-        { status: 400 }
+        { success: false, error: "Datos inválidos" },
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
-      { success: false, error: 'Error interno del servidor' },
-      { status: 500 }
+      { success: false, error: "Error interno del servidor" },
+      { status: 500 },
     );
   }
 }

@@ -1,19 +1,25 @@
-'use client'
+"use client";
 
-import { Suspense, useState, useEffect, useCallback } from 'react';
-import Spinner from '@/components/ui/Spinner';
-import { useSession } from 'next-auth/react';
+import { Suspense, useState, useEffect, useCallback } from "react";
+import Spinner from "@/components/ui/Spinner";
+import { useSession } from "next-auth/react";
 import { Search, FileText, Eye, Edit, Copy, Trash2, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Link from "next/link";
 
 interface Informe {
   id: string;
-  estado: 'completado' | 'borrador' | string;
+  estado: "completado" | "borrador" | string;
   creado_en: string;
   actualizado_en: string;
   datos_identificativos?: {
@@ -32,8 +38,8 @@ interface Informe {
 
 function InformesContent() {
   const { data: session } = useSession();
-  const [busqueda, setBusqueda] = useState('');
-  const [filtroEstado, setFiltroEstado] = useState('todos');
+  const [busqueda, setBusqueda] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("todos");
   const [informes, setInformes] = useState<Informe[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,14 +47,14 @@ function InformesContent() {
     if (!session) return;
 
     try {
-      const response = await fetch('/api/informes/list');
+      const response = await fetch("/api/informes/list");
       const data = await response.json();
 
       if (data.success) {
         setInformes(data.informes || []);
       }
     } catch (error) {
-      console.error('Error al cargar informes:', error);
+      console.error("Error al cargar informes:", error);
       setInformes([]);
     } finally {
       setLoading(false);
@@ -60,13 +66,15 @@ function InformesContent() {
   }, [fetchInformes]);
 
   // Filtrar informes
-  const informesFiltrados = informes.filter(informe => {
-    const alumnoNombre = informe.datos_identificativos?.alumno?.nombre || '';
-    const centroNombre = informe.datos_identificativos?.centro?.nombre || '';
+  const informesFiltrados = informes.filter((informe) => {
+    const alumnoNombre = informe.datos_identificativos?.alumno?.nombre || "";
+    const centroNombre = informe.datos_identificativos?.centro?.nombre || "";
 
-    const coincideBusqueda = alumnoNombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+    const coincideBusqueda =
+      alumnoNombre.toLowerCase().includes(busqueda.toLowerCase()) ||
       centroNombre.toLowerCase().includes(busqueda.toLowerCase());
-    const coincideEstado = filtroEstado === 'todos' || informe.estado === filtroEstado;
+    const coincideEstado =
+      filtroEstado === "todos" || informe.estado === filtroEstado;
 
     return coincideBusqueda && coincideEstado;
   });
@@ -77,9 +85,13 @@ function InformesContent() {
 
   const getEstadoBadge = (estado: string) => {
     switch (estado) {
-      case 'completado':
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Completado</Badge>;
-      case 'borrador':
+      case "completado":
+        return (
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+            Completado
+          </Badge>
+        );
+      case "borrador":
         return <Badge variant="secondary">Borrador</Badge>;
       default:
         return <Badge variant="outline">{estado}</Badge>;
@@ -87,10 +99,10 @@ function InformesContent() {
   };
 
   const formatearFecha = (fecha: string) => {
-    return new Date(fecha).toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
+    return new Date(fecha).toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
   };
 
@@ -101,8 +113,12 @@ function InformesContent() {
           <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
             <FileText className="h-12 w-12 text-gray-400" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No tienes informes creados</h3>
-          <p className="text-gray-500 mb-6">Comienza creando tu primer informe psicopedagógico</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            No tienes informes creados
+          </h3>
+          <p className="text-gray-500 mb-6">
+            Comienza creando tu primer informe psicopedagógico
+          </p>
           <Link href="/profile/generar-informe">
             <Button className="bg-green-600 hover:bg-green-700">
               <Plus className="h-4 w-4 mr-2" />
@@ -120,7 +136,9 @@ function InformesContent() {
         {/* Cabecera */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">Mis Informes</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+              Mis Informes
+            </h1>
             <p className="text-muted-foreground mt-1">
               Gestiona todos tus informes psicopedagógicos
             </p>
@@ -170,37 +188,50 @@ function InformesContent() {
             <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
               <Search className="h-8 w-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No se encontraron informes</h3>
-            <p className="text-gray-500">Intenta ajustar los filtros de búsqueda</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              No se encontraron informes
+            </h3>
+            <p className="text-gray-500">
+              Intenta ajustar los filtros de búsqueda
+            </p>
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {informesFiltrados.map((informe) => (
-              <Card key={informe.id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={informe.id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-1">
-                        {informe.datos_identificativos?.alumno?.nombre || 'Sin nombre'}
+                        {informe.datos_identificativos?.alumno?.nombre ||
+                          "Sin nombre"}
                       </CardTitle>
                       <p className="text-sm text-muted-foreground mt-1">
-                        {informe.datos_identificativos?.centro?.nombre || 'Sin centro'} • {informe.datos_identificativos?.alumno?.curso || 'Sin curso'}
+                        {informe.datos_identificativos?.centro?.nombre ||
+                          "Sin centro"}{" "}
+                        •{" "}
+                        {informe.datos_identificativos?.alumno?.curso ||
+                          "Sin curso"}
                       </p>
                     </div>
-                    <div className="ml-2">
-                      {getEstadoBadge(informe.estado)}
-                    </div>
+                    <div className="ml-2">{getEstadoBadge(informe.estado)}</div>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="space-y-3">
                     <p className="text-sm text-gray-600 line-clamp-2">
-                      {informe.evaluacion_psicopedagogica?.motivo_consulta || 'Sin motivo especificado'}
+                      {informe.evaluacion_psicopedagogica?.motivo_consulta ||
+                        "Sin motivo especificado"}
                     </p>
 
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>Creado: {formatearFecha(informe.creado_en)}</span>
-                      <span>Modificado: {formatearFecha(informe.actualizado_en)}</span>
+                      <span>
+                        Modificado: {formatearFecha(informe.actualizado_en)}
+                      </span>
                     </div>
 
                     <div className="flex gap-2 pt-2">
@@ -215,7 +246,11 @@ function InformesContent() {
                       <Button variant="outline" size="sm">
                         <Copy className="h-3 w-3" />
                       </Button>
-                      <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-red-600 hover:text-red-700"
+                      >
                         <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>
@@ -232,9 +267,7 @@ function InformesContent() {
 
 export default function InformesPage() {
   return (
-    <Suspense fallback={
-      <Spinner variant="centered" />
-    }>
+    <Suspense fallback={<Spinner variant="centered" />}>
       <InformesContent />
     </Suspense>
   );

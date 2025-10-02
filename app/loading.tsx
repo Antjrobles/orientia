@@ -1,4 +1,4 @@
-import Spinner from '@/components/ui/Spinner';
+import Spinner from "@/components/ui/Spinner";
 
 /**
  * Componente de carga genérico para toda la aplicación.

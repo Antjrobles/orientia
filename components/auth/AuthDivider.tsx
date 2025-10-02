@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
-import type { PropsWithChildren } from 'react';
+import { cn } from "@/lib/utils";
+import type { PropsWithChildren } from "react";
 
 type AuthDividerProps = PropsWithChildren<{
   className?: string;
@@ -7,7 +7,7 @@ type AuthDividerProps = PropsWithChildren<{
 
 export function AuthDivider({ children, className }: AuthDividerProps) {
   return (
-    <div className={cn('relative my-2', className)}>
+    <div className={cn("relative my-2", className)}>
       <div className="absolute inset-0 flex items-center" aria-hidden="true">
         <div className="w-full border-t border-gray-200" />
       </div>

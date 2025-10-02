@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Brain,
   FileText,
@@ -15,10 +15,9 @@ import {
   Database,
   Award,
   BookOpen,
-} from "lucide-react"
-import Link from "next/link"
-import Image from 'next/image';
-
+} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Hero() {
   return (
@@ -27,7 +26,10 @@ export default function Hero() {
       className="relative bg-gradient-to-br from-green-600 via-green-700 to-green-800 text-white py-20"
       aria-labelledby="hero-title"
     >
-      <div className="absolute inset-0 bg-black opacity-10" aria-hidden="true"></div>
+      <div
+        className="absolute inset-0 bg-black opacity-10"
+        aria-hidden="true"
+      ></div>
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
@@ -35,17 +37,23 @@ export default function Hero() {
               <Sparkles className="h-4 w-4 mr-2" aria-hidden="true" />
               Potenciado por Inteligencia Artificial
             </Badge>
-            <h1 id="hero-title" className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+            <h1
+              id="hero-title"
+              className="text-4xl lg:text-5xl font-bold mb-6 leading-tight"
+            >
               Sistema de Informes Psicopedagógicos
               <span className="block text-green-200">Inteligente</span>
             </h1>
             <p className="text-xl mb-8 text-green-100 leading-relaxed">
-              Genera informes psicopedagógicos profesionales con asistencia de IA, optimizando tu tiempo y
-              garantizando la calidad técnica
+              Genera informes psicopedagógicos profesionales con asistencia de
+              IA, optimizando tu tiempo y garantizando la calidad técnica
             </p>
             <div className="flex justify-center sm:justify-start">
               <Link href="/register">
-                <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 font-semibold">
+                <Button
+                  size="lg"
+                  className="bg-white text-green-700 hover:bg-green-50 font-semibold"
+                >
                   Comenzar Ahora
                   <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                 </Button>
@@ -76,7 +84,9 @@ export default function Hero() {
                   <div className="h-4 bg-gray-200 rounded w-5/6"></div>
                   <div className="h-8 bg-green-100 rounded flex items-center justify-center">
                     <Brain className="h-4 w-4 text-green-600 mr-2" />
-                    <span className="text-green-700 text-sm font-medium">IA Generando...</span>
+                    <span className="text-green-700 text-sm font-medium">
+                      IA Generando...
+                    </span>
                   </div>
                 </div>
               </div>
@@ -88,5 +98,5 @@ export default function Hero() {
         </div>
       </div>
     </section>
-  )
+  );
 }

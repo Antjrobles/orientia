@@ -1,32 +1,42 @@
-'use client'
+"use client";
 
-import Link from "next/link"
-import Image from 'next/image'
-import AuthButtons from "@/components/auth/AuthButtons"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { useState, useEffect } from "react"
-import { Menu, X, Shield, LayoutDashboard, FilePlus2, FolderKanban } from "lucide-react"
-import { useSession } from "next-auth/react"
+import Link from "next/link";
+import Image from "next/image";
+import AuthButtons from "@/components/auth/AuthButtons";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
+import {
+  Menu,
+  X,
+  Shield,
+  LayoutDashboard,
+  FilePlus2,
+  FolderKanban,
+} from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function ProfileHeader() {
-  const pathname = usePathname()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { data: session } = useSession()
+  const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
-  const isAdmin = session?.user?.role === 'admin'
+  const isAdmin = session?.user?.role === "admin";
 
   // Bloquear scroll al abrir menú móvil
   useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? 'hidden' : 'unset'
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "unset";
     return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [mobileMenuOpen])
+      document.body.style.overflow = "unset";
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <>
-      <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
+      <header
+        className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50"
+        role="banner"
+      >
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16 w-full overflow-hidden">
             {/* Zona izquierda: Logo */}
@@ -44,14 +54,18 @@ export default function ProfileHeader() {
             </div>
 
             {/* Zona centro: Navegación (ocupa más espacio) */}
-            <nav className="hidden md:flex flex-1 justify-center items-center mx-6 gap-2" role="navigation" aria-label="Navegación de perfil">
+            <nav
+              className="hidden md:flex flex-1 justify-center items-center mx-6 gap-2"
+              role="navigation"
+              aria-label="Navegación de perfil"
+            >
               <Link
                 href="/profile"
                 className={cn(
                   "px-3 py-2 rounded-md text-sm font-medium transition-colors",
                   pathname === "/profile"
                     ? "text-green-600 bg-green-50 font-semibold"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
                 )}
               >
                 Panel Principal
@@ -62,7 +76,7 @@ export default function ProfileHeader() {
                   "px-3 py-2 rounded-md text-sm font-medium transition-colors",
                   pathname.startsWith("/profile/generar-informe")
                     ? "text-green-600 bg-green-50 font-semibold"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
                 )}
               >
                 Nuevo Informe
@@ -73,7 +87,7 @@ export default function ProfileHeader() {
                   "px-3 py-2 rounded-md text-sm font-medium transition-colors",
                   pathname.startsWith("/profile/informes")
                     ? "text-green-600 bg-green-50 font-semibold"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
                 )}
               >
                 Mis Informes
@@ -85,7 +99,7 @@ export default function ProfileHeader() {
                     "inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors",
                     pathname.startsWith("/admin")
                       ? "text-red-600 bg-red-50 font-semibold"
-                      : "text-red-600 hover:bg-red-50 hover:text-red-700"
+                      : "text-red-600 hover:bg-red-50 hover:text-red-700",
                   )}
                 >
                   <Shield className="w-4 h-4 mr-1" />
@@ -143,7 +157,7 @@ export default function ProfileHeader() {
                       "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
                       pathname === "/profile"
                         ? "text-green-600 bg-green-50 font-semibold"
-                        : "text-gray-700 hover:bg-gray-50"
+                        : "text-gray-700 hover:bg-gray-50",
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -156,7 +170,7 @@ export default function ProfileHeader() {
                       "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
                       pathname.startsWith("/profile/generar-informe")
                         ? "text-green-600 bg-green-50 font-semibold"
-                        : "text-gray-700 hover:bg-gray-50"
+                        : "text-gray-700 hover:bg-gray-50",
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -169,7 +183,7 @@ export default function ProfileHeader() {
                       "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
                       pathname.startsWith("/profile/informes")
                         ? "text-green-600 bg-green-50 font-semibold"
-                        : "text-gray-700 hover:bg-gray-50"
+                        : "text-gray-700 hover:bg-gray-50",
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -183,7 +197,7 @@ export default function ProfileHeader() {
                         "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
                         pathname.startsWith("/admin")
                           ? "text-red-600 bg-red-50 font-semibold"
-                          : "text-red-600 hover:bg-red-50"
+                          : "text-red-600 hover:bg-red-50",
                       )}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -203,5 +217,5 @@ export default function ProfileHeader() {
         </div>
       )}
     </>
-  )
+  );
 }

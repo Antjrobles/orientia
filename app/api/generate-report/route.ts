@@ -1,8 +1,8 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json()
+    const data = await request.json();
 
     // Aquí iría la integración con la API de IA
     // Por ejemplo, usando OpenAI, Anthropic, o cualquier otro proveedor
@@ -54,14 +54,17 @@ ${data.recomendaciones}
 *Informe generado con asistencia de Inteligencia Artificial*
 *Fecha de elaboración: ${new Date().toLocaleDateString("es-ES")}*
 *Orientador/a responsable: [Nombre del orientador]*
-    `
+    `;
 
     return NextResponse.json({
       success: true,
       report: reportContent,
       generatedAt: new Date().toISOString(),
-    })
+    });
   } catch (error) {
-    return NextResponse.json({ success: false, error: "Error al generar el informe" }, { status: 500 })
+    return NextResponse.json(
+      { success: false, error: "Error al generar el informe" },
+      { status: 500 },
+    );
   }
 }

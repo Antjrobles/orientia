@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from "react";
 
-export const DEFAULT_MOBILE_BREAKPOINT = 768
+export const DEFAULT_MOBILE_BREAKPOINT = 768;
 
 /**
  * useIsMobile
@@ -10,40 +10,45 @@ export const DEFAULT_MOBILE_BREAKPOINT = 768
  * - Acepta fallback para navegadores antiguos (addListener/removeListener)
  */
 export function useIsMobile(breakpoint: number = DEFAULT_MOBILE_BREAKPOINT) {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
+    undefined,
+  );
 
   React.useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia === "undefined") {
+    if (
+      typeof window === "undefined" ||
+      typeof window.matchMedia === "undefined"
+    ) {
       // SSR o entorno sin matchMedia
-      setIsMobile(false)
-      return
+      setIsMobile(false);
+      return;
     }
 
-    const query = `(max-width: ${breakpoint - 1}px)`
-    const mql = window.matchMedia(query)
+    const query = `(max-width: ${breakpoint - 1}px)`;
+    const mql = window.matchMedia(query);
 
     const onChange = () => {
-      setIsMobile(mql.matches)
-    }
+      setIsMobile(mql.matches);
+    };
 
     // Suscripción con fallback para navegadores antiguos
     if (typeof mql.addEventListener === "function") {
-      mql.addEventListener("change", onChange)
+      mql.addEventListener("change", onChange);
     } else if (typeof (mql as any).addListener === "function") {
-      ;(mql as any).addListener(onChange)
+      (mql as any).addListener(onChange);
     }
 
     // Estado inicial
-    setIsMobile(mql.matches)
+    setIsMobile(mql.matches);
 
     return () => {
       if (typeof mql.removeEventListener === "function") {
-        mql.removeEventListener("change", onChange)
+        mql.removeEventListener("change", onChange);
       } else if (typeof (mql as any).removeListener === "function") {
-        ;(mql as any).removeListener(onChange)
+        (mql as any).removeListener(onChange);
       }
-    }
-  }, [breakpoint])
+    };
+  }, [breakpoint]);
 
-  return !!isMobile
+  return !!isMobile;
 }

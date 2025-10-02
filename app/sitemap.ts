@@ -1,8 +1,11 @@
-import { MetadataRoute } from 'next';
+import { MetadataRoute } from "next";
 
 function getBaseUrl() {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'https://www.orientia.es';
-  return raw.endsWith('/') ? raw.slice(0, -1) : raw;
+  const raw =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXTAUTH_URL ||
+    "https://www.orientia.es";
+  return raw.endsWith("/") ? raw.slice(0, -1) : raw;
 }
 
 /**
@@ -15,21 +18,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = getBaseUrl();
   const lastmod = new Date().toISOString();
 
-  const publicRoutes = [
-    '/',
-    '/manual',
-    '/faq',
-    '/soporte',
-    '/formacion',
-  ];
+  const publicRoutes = ["/", "/manual", "/faq", "/soporte", "/formacion"];
 
   const legalRoutes = [
-    '/privacidad',
-    '/terminos',
-    '/cookies',
-    '/accesibilidad',
-    '/rgpd',
-    '/eliminacion-de-datos-de-usuario',
+    "/privacidad",
+    "/terminos",
+    "/cookies",
+    "/accesibilidad",
+    "/rgpd",
+    "/eliminacion-de-datos-de-usuario",
   ];
 
   // Si usas i18n, define aquí tus locales:
@@ -38,7 +35,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   //   languages: Object.fromEntries(locales.map((l) => [l, `${baseUrl}/${l}${path === '/' ? '' : path}`])),
   // });
 
-  const mapEntry = (route: string, priority: number, changeFrequency: MetadataRoute.Sitemap[0]['changeFrequency']) => ({
+  const mapEntry = (
+    route: string,
+    priority: number,
+    changeFrequency: MetadataRoute.Sitemap[0]["changeFrequency"],
+  ) => ({
     url: `${baseUrl}${route}`,
     lastModified: lastmod,
     changeFrequency,
@@ -47,10 +48,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
 
   const publicUrls = publicRoutes.map((r) =>
-    mapEntry(r, r === '/' ? 1.0 : 0.7, r === '/' ? 'daily' : 'weekly')
+    mapEntry(r, r === "/" ? 1.0 : 0.7, r === "/" ? "daily" : "weekly"),
   );
 
-  const legalUrls = legalRoutes.map((r) => mapEntry(r, 0.3, 'yearly'));
+  const legalUrls = legalRoutes.map((r) => mapEntry(r, 0.3, "yearly"));
 
   // 👉 ejemplo para añadir rutas dinámicas (blog, docs, etc.)
   // const posts = await fetchPostsSomehow();

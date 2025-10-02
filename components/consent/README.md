@@ -7,11 +7,12 @@ Componentes relacionados con el consentimiento de cookies y privacidad.
 - `AjustesCookiesPanel.tsx`: Panel de toggles para la página `/ajustes-cookies`, sincronizado con el provider.
 
 Notas:
+
 - Las categorías actuales: `necessary`, `preferences`, `analytics`, `performance`, `ads`.
 - El provider emite `window.__consent__` y el evento `consent:updated` para que integraciones externas puedan reaccionar.
 - Si añades integraciones (analytics/SDKs), cárgalas condicionalmente según el estado del provider.
 
 Extensión:
+
 - Ajusta la lista de cookies a purgar en `lib/consent.ts` (`removeNonEssentialCookies`).
 - Añade loaders condicionales por categoría (helpers) si integras proveedores reales.
-

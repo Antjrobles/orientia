@@ -1,8 +1,8 @@
-import Script from "next/script"
+import Script from "next/script";
 
 interface StructuredDataProps {
-  type: "WebApplication" | "Organization" | "Article" | "FAQPage"
-  data: Record<string, any>
+  type: "WebApplication" | "Organization" | "Article" | "FAQPage";
+  data: Record<string, any>;
 }
 
 export function StructuredData({ type, data }: StructuredDataProps) {
@@ -10,7 +10,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
     "@context": "https://schema.org",
     "@type": type,
     ...data,
-  }
+  };
 
   return (
     <Script
@@ -20,7 +20,7 @@ export function StructuredData({ type, data }: StructuredDataProps) {
         __html: JSON.stringify(structuredData),
       }}
     />
-  )
+  );
 }
 
 // Datos estructurados específicos para la organización
@@ -50,7 +50,7 @@ export const organizationStructuredData = {
     "https://twitter.com/",
     "https://www.youtube.com/user/",
   ],
-}
+};
 
 // Datos estructurados para FAQ
 export const faqStructuredData = {
@@ -80,4 +80,4 @@ export const faqStructuredData = {
       },
     },
   ],
-}
+};

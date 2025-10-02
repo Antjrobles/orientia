@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 
-interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface PasswordInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   ariaToggleLabelShow?: string;
   ariaToggleLabelHide?: string;
@@ -36,4 +37,3 @@ export function PasswordInput({
     </div>
   );
 }
-

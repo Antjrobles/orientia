@@ -1,14 +1,14 @@
 // components/admin/ResumenCards.tsx
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, FileText, Activity, Hourglass } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Users, FileText, Activity, Hourglass } from "lucide-react";
 
 interface Props {
-  totalUsuarios: number
-  totalInformes: number
-  informesCompletados: number
-  informesEnProgreso: number
+  totalUsuarios: number;
+  totalInformes: number;
+  informesCompletados: number;
+  informesEnProgreso: number;
 }
 
 export function ResumenCards({
@@ -42,22 +42,26 @@ export function ResumenCards({
       descripcion: "Aún en desarrollo",
       icono: <Hourglass className="h-5 w-5 text-muted-foreground" />,
     },
-  ]
+  ];
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
       {tarjetas.map((tarjeta, i) => (
         <Card key={i}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{tarjeta.titulo}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {tarjeta.titulo}
+            </CardTitle>
             {tarjeta.icono}
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{tarjeta.valor}</div>
-            <p className="text-xs text-muted-foreground">{tarjeta.descripcion}</p>
+            <p className="text-xs text-muted-foreground">
+              {tarjeta.descripcion}
+            </p>
           </CardContent>
         </Card>
       ))}
     </div>
-  )
+  );
 }

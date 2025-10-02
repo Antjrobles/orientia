@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Brain,
   FileText,
@@ -15,22 +15,28 @@ import {
   Database,
   Award,
   BookOpen,
-} from "lucide-react"
-import Link from "next/link"
-import Image from 'next/image';
+} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
-
-
-export default function Features(){
+export default function Features() {
   return (
-    <section id="caracteristicas" className="py-20 bg-gray-50" aria-labelledby="features-title">
+    <section
+      id="caracteristicas"
+      className="py-20 bg-gray-50"
+      aria-labelledby="features-title"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="text-center mb-16">
-          <h2 id="features-title" className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h2
+            id="features-title"
+            className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4"
+          >
             Características Principales
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Herramientas avanzadas diseñadas específicamente para orientadores educativos
+            Herramientas avanzadas diseñadas específicamente para orientadores
+            educativos
           </p>
         </header>
 
@@ -45,8 +51,9 @@ export default function Features(){
               </div>
               <h3 className="text-xl font-semibold mb-3">Generación con IA</h3>
               <p className="text-gray-600">
-                Inteligencia artificial especializada en psicopedagogía que genera informes profesionales basados en
-                tus observaciones y evaluaciones.
+                Inteligencia artificial especializada en psicopedagogía que
+                genera informes profesionales basados en tus observaciones y
+                evaluaciones.
               </p>
             </div>
           </article>
@@ -59,10 +66,12 @@ export default function Features(){
               >
                 <FileText className="h-6 w-6 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Plantillas Oficiales</h3>
+              <h3 className="text-xl font-semibold mb-3">
+                Plantillas Oficiales
+              </h3>
               <p className="text-gray-600">
-                Formatos estandarizados que cumplen con la normativa de la Junta de Andalucía y las mejores
-                prácticas psicopedagógicas.
+                Formatos estandarizados que cumplen con la normativa de la Junta
+                de Andalucía y las mejores prácticas psicopedagógicas.
               </p>
             </div>
           </article>
@@ -77,8 +86,8 @@ export default function Features(){
               </div>
               <h3 className="text-xl font-semibold mb-3">Ahorro de Tiempo</h3>
               <p className="text-gray-600">
-                Reduce el tiempo de elaboración de informes de horas a minutos, permitiéndote dedicar más tiempo a
-                la intervención directa.
+                Reduce el tiempo de elaboración de informes de horas a minutos,
+                permitiéndote dedicar más tiempo a la intervención directa.
               </p>
             </div>
           </article>
@@ -91,10 +100,12 @@ export default function Features(){
               >
                 <Database className="h-6 w-6 text-orange-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Gestión Centralizada</h3>
+              <h3 className="text-xl font-semibold mb-3">
+                Gestión Centralizada
+              </h3>
               <p className="text-gray-600">
-                Almacena y organiza todos los informes de forma segura con acceso rápido al historial de cada
-                alumno.
+                Almacena y organiza todos los informes de forma segura con
+                acceso rápido al historial de cada alumno.
               </p>
             </div>
           </article>
@@ -107,10 +118,12 @@ export default function Features(){
               >
                 <Award className="h-6 w-6 text-red-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Calidad Profesional</h3>
+              <h3 className="text-xl font-semibold mb-3">
+                Calidad Profesional
+              </h3>
               <p className="text-gray-600">
-                Informes con terminología técnica precisa y estructura profesional que cumplen los estándares más
-                exigentes.
+                Informes con terminología técnica precisa y estructura
+                profesional que cumplen los estándares más exigentes.
               </p>
             </div>
           </article>
@@ -123,15 +136,17 @@ export default function Features(){
               >
                 <BookOpen className="h-6 w-6 text-teal-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Recursos Integrados</h3>
+              <h3 className="text-xl font-semibold mb-3">
+                Recursos Integrados
+              </h3>
               <p className="text-gray-600">
-                Acceso a bases de datos de pruebas psicopedagógicas, escalas de evaluación y recursos educativos
-                actualizados.
+                Acceso a bases de datos de pruebas psicopedagógicas, escalas de
+                evaluación y recursos educativos actualizados.
               </p>
             </div>
           </article>
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -5,9 +5,13 @@
  */
 
 // Tipos de enumeración basados en el esquema de la BD
-export type EstadoInforme = 'borrador' | 'en_progreso' | 'completado' | 'archivado';
-export type RolUsuario = 'usuario' | 'admin';
-export type PlanUsuario = 'gratis' | 'premium' | 'enterprise';
+export type EstadoInforme =
+  | "borrador"
+  | "en_progreso"
+  | "completado"
+  | "archivado";
+export type RolUsuario = "usuario" | "admin";
+export type PlanUsuario = "gratis" | "premium" | "enterprise";
 
 // --- INTERFACES DE TABLAS PRINCIPALES (Relación 1 a 1 con Informe) ---
 

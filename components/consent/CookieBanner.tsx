@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useConsent } from '@/components/consent/ConsentProvider';
-import Link from 'next/link';
-import { toast } from 'sonner';
+import React, { useEffect, useState } from "react";
+import { useConsent } from "@/components/consent/ConsentProvider";
+import Link from "next/link";
+import { toast } from "sonner";
 
 export default function CookieBanner() {
-  const { consent, loaded, hasCookie, acceptAll, rejectNonEssential, save } = useConsent();
+  const { consent, loaded, hasCookie, acceptAll, rejectNonEssential, save } =
+    useConsent();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState(consent);
 
@@ -24,23 +25,39 @@ export default function CookieBanner() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
           <div className="flex-1">
             <p className="text-sm text-gray-800">
-              Usamos cookies necesarias para el funcionamiento del sitio y, con tu consentimiento, cookies de preferencias, analítica y rendimiento.
-              Puedes cambiar tu elección en cualquier momento desde <Link href="/ajustes-cookies" className="text-primary-600 underline">Ajustes de Cookies</Link>.
+              Usamos cookies necesarias para el funcionamiento del sitio y, con
+              tu consentimiento, cookies de preferencias, analítica y
+              rendimiento. Puedes cambiar tu elección en cualquier momento desde{" "}
+              <Link
+                href="/ajustes-cookies"
+                className="text-primary-600 underline"
+              >
+                Ajustes de Cookies
+              </Link>
+              .
             </p>
             {open && (
               <div className="mt-3 space-y-3">
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {[
-                    { key: 'preferences', label: 'Preferencias' },
-                    { key: 'analytics', label: 'Analítica' },
-                    { key: 'performance', label: 'Rendimiento' },
-                    { key: 'ads', label: 'Publicidad' },
+                    { key: "preferences", label: "Preferencias" },
+                    { key: "analytics", label: "Analítica" },
+                    { key: "performance", label: "Rendimiento" },
+                    { key: "ads", label: "Publicidad" },
                   ].map((c) => (
-                    <label key={c.key} className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-2 text-sm">
+                    <label
+                      key={c.key}
+                      className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-2 text-sm"
+                    >
                       <input
                         type="checkbox"
                         checked={(draft as any)[c.key]}
-                        onChange={(e) => setDraft({ ...(draft as any), [c.key]: e.target.checked } as any)}
+                        onChange={(e) =>
+                          setDraft({
+                            ...(draft as any),
+                            [c.key]: e.target.checked,
+                          } as any)
+                        }
                         className="h-4 w-4 rounded border-gray-300"
                       />
                       <span className="text-gray-800">{c.label}</span>
@@ -49,7 +66,10 @@ export default function CookieBanner() {
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => { save(draft); toast.success('Preferencias guardadas'); }}
+                    onClick={() => {
+                      save(draft);
+                      toast.success("Preferencias guardadas");
+                    }}
                     className="rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200"
                   >
                     Guardar preferencias
@@ -59,14 +79,29 @@ export default function CookieBanner() {
             )}
           </div>
           <div className="flex flex-col items-stretch gap-2 sm:flex-row">
-            <button onClick={() => { rejectNonEssential(); toast.success('Preferencias rechazadas'); }} className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50">
+            <button
+              onClick={() => {
+                rejectNonEssential();
+                toast.success("Preferencias rechazadas");
+              }}
+              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50"
+            >
               Rechazar todo
             </button>
-            <button onClick={() => { acceptAll(); toast.success('Preferencias aceptadas'); }} className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700">
+            <button
+              onClick={() => {
+                acceptAll();
+                toast.success("Preferencias aceptadas");
+              }}
+              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+            >
               Aceptar todo
             </button>
-            <button onClick={() => setOpen((v) => !v)} className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200">
-              {open ? 'Ocultar' : 'Configurar'}
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200"
+            >
+              {open ? "Ocultar" : "Configurar"}
             </button>
           </div>
         </div>

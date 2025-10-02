@@ -1,19 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const { email, name, verificationUrl } = await request.json();
 
     // Enviar email usando Plunk
-    const response = await fetch('https://api.useplunk.com/v1/send', {
-      method: 'POST',
+    const response = await fetch("https://api.useplunk.com/v1/send", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.PLUNK_API_KEY}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.PLUNK_API_KEY}`,
       },
       body: JSON.stringify({
         to: email,
-        subject: 'Verifica tu cuenta en Orientia',
+        subject: "Verifica tu cuenta en Orientia",
         body: `
           <!DOCTYPE html>
           <html>
@@ -59,16 +59,16 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('Error de Plunk:', errorData);
-      throw new Error('Error enviando email con Plunk');
+      console.error("Error de Plunk:", errorData);
+      throw new Error("Error enviando email con Plunk");
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error enviando email:', error);
+    console.error("Error enviando email:", error);
     return NextResponse.json(
-      { success: false, error: 'Error enviando email' },
-      { status: 500 }
+      { success: false, error: "Error enviando email" },
+      { status: 500 },
     );
   }
 }

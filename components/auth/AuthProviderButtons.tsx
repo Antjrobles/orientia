@@ -9,7 +9,10 @@ interface Props {
   callbackUrl?: string;
 }
 
-export function AuthProviderButtons({ isLoading, callbackUrl = "/profile" }: Props) {
+export function AuthProviderButtons({
+  isLoading,
+  callbackUrl = "/profile",
+}: Props) {
   return (
     <div className="flex justify-center gap-4">
       <Button
@@ -28,7 +31,12 @@ export function AuthProviderButtons({ isLoading, callbackUrl = "/profile" }: Pro
         size="icon"
         aria-label="Acceder con Facebook"
       >
-        <Image src="/icons/facebook.svg" alt="Facebook" width={20} height={20} />
+        <Image
+          src="/icons/facebook.svg"
+          alt="Facebook"
+          width={20}
+          height={20}
+        />
       </Button>
       <Button
         onClick={() => signIn("apple", { callbackUrl })}
@@ -42,4 +50,3 @@ export function AuthProviderButtons({ isLoading, callbackUrl = "/profile" }: Pro
     </div>
   );
 }
-

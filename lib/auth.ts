@@ -1,14 +1,17 @@
-import { type AuthOptions } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import AppleProvider from 'next-auth/providers/apple';
-import FacebookProvider from 'next-auth/providers/facebook';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { createClient } from '@supabase/supabase-js';
-import bcrypt from 'bcryptjs';
+import { type AuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import AppleProvider from "next-auth/providers/apple";
+import FacebookProvider from "next-auth/providers/facebook";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { createClient } from "@supabase/supabase-js";
+import bcrypt from "bcryptjs";
 
 // Es una buena práctica crear el cliente de Supabase en un archivo separado
 // para poder reutilizarlo en otras partes de la aplicación (ej. en la API de registro).
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+);
 
 // Construye la lista de proveedores de forma condicional según env vars
 const providers: any[] = [];
@@ -18,7 +21,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    })
+    }),
   );
 }
 
@@ -27,7 +30,7 @@ if (process.env.APPLE_CLIENT_ID && process.env.APPLE_CLIENT_SECRET) {
     AppleProvider({
       clientId: process.env.APPLE_CLIENT_ID as string,
       clientSecret: process.env.APPLE_CLIENT_SECRET as string,
-    })
+    }),
   );
 }
 
@@ -36,50 +39,57 @@ if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
-    })
+    }),
   );
 }
 
 providers.push(
   CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email', placeholder: 'tu@email.com' },
-        password: { label: 'Contraseña', type: 'password' },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) {
-          return null;
-        }
-
-        const { data: user } = await supabase
-          .from('users')
-          .select('*, hashed_password, emailVerified') // Incluir emailVerified
-          .eq('email', credentials.email)
-          .single();
-
-
-        if (!user || !user.hashed_password) {
-          return null;
-        }
-
-        // Verificar si el email está verificado (solo para usuarios con contraseña)
-        if (!user.emailVerified) {
-          // Devolvemos null para provocar CredentialsSignin.
-          // La UI hará una comprobación posterior para diferenciar email no verificado.
-          return null;
-        }
-
-        const passwordsMatch = await bcrypt.compare(credentials.password, user.hashed_password);
-
-        if (passwordsMatch) {
-          // Devuelve solo los datos necesarios para la sesión, excluyendo la contraseña
-          return { id: user.id, name: user.name, email: user.email, image: user.image };
-        }
-
+    name: "Credentials",
+    credentials: {
+      email: { label: "Email", type: "email", placeholder: "tu@email.com" },
+      password: { label: "Contraseña", type: "password" },
+    },
+    async authorize(credentials) {
+      if (!credentials?.email || !credentials.password) {
         return null;
-      },
-    })
+      }
+
+      const { data: user } = await supabase
+        .from("users")
+        .select("*, hashed_password, emailVerified") // Incluir emailVerified
+        .eq("email", credentials.email)
+        .single();
+
+      if (!user || !user.hashed_password) {
+        return null;
+      }
+
+      // Verificar si el email está verificado (solo para usuarios con contraseña)
+      if (!user.emailVerified) {
+        // Devolvemos null para provocar CredentialsSignin.
+        // La UI hará una comprobación posterior para diferenciar email no verificado.
+        return null;
+      }
+
+      const passwordsMatch = await bcrypt.compare(
+        credentials.password,
+        user.hashed_password,
+      );
+
+      if (passwordsMatch) {
+        // Devuelve solo los datos necesarios para la sesión, excluyendo la contraseña
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+        };
+      }
+
+      return null;
+    },
+  }),
 );
 
 export const authOptions: AuthOptions = {
@@ -90,45 +100,46 @@ export const authOptions: AuthOptions = {
   // }),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   cookies: {
     sessionToken: {
       // En producción, es buena idea usar el prefijo __Secure-
       // pero requiere que el sitio se sirva sobre HTTPS.
-      name: process.env.NODE_ENV === 'production' ? `__Secure-next-auth.session-token` : `next-auth.session-token`,
+      name:
+        process.env.NODE_ENV === "production"
+          ? `__Secure-next-auth.session-token`
+          : `next-auth.session-token`,
       options: {
         httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
         // Si tu dominio de producción es .antjrobles.tech, podrías añadir:
         // domain: process.env.NODE_ENV === "production" ? ".antjrobles.tech" : "localhost"
       },
     },
   },
   pages: {
-    signIn: '/login',
-    error: '/login', // Redirige errores de OAuth al login
+    signIn: "/login",
+    error: "/login", // Redirige errores de OAuth al login
   },
   callbacks: {
     async signIn({ user, account }) {
-   
-
-      if (account?.provider === 'google' || account?.provider === 'facebook') {
+      if (account?.provider === "google" || account?.provider === "facebook") {
         if (!user.email) {
-          console.error('No se encontró un email en el perfil de Google.');
+          console.error("No se encontró un email en el perfil de Google.");
           return false; // Bloquea el inicio de sesión si no hay email
         }
         try {
           const { data: existingUser, error: selectError } = await supabase
-            .from('users')
-            .select('id')
-            .eq('email', user.email)
+            .from("users")
+            .select("id")
+            .eq("email", user.email)
             .single();
 
           // Ignoramos el error que indica que no se encontró el usuario, que es lo esperado para nuevos registros.
-          if (selectError && selectError.code !== 'PGRST116') {
+          if (selectError && selectError.code !== "PGRST116") {
             throw selectError;
           }
 
@@ -138,19 +149,20 @@ export const authOptions: AuthOptions = {
             return true;
           } else {
             // El usuario es nuevo, lo insertamos con el rol por defecto.
-            const { error: insertError } = await supabase
-              .from('users')
-              .insert({
-                name: user.name,
-                email: user.email,
-                image: user.image,
-                role: 'usuario', // Asignamos el rol por defecto
-              });
+            const { error: insertError } = await supabase.from("users").insert({
+              name: user.name,
+              email: user.email,
+              image: user.image,
+              role: "usuario", // Asignamos el rol por defecto
+            });
 
             if (insertError) throw insertError;
           }
         } catch (error) {
-          console.error(`Error al guardar/actualizar el usuario de ${account?.provider} en la BD:`, error);
+          console.error(
+            `Error al guardar/actualizar el usuario de ${account?.provider} en la BD:`,
+            error,
+          );
           return false; // Bloquea el inicio de sesión si hay un error de base de datos
         }
       }
@@ -161,9 +173,9 @@ export const authOptions: AuthOptions = {
       // buscamos al usuario en nuestra base de datos para obtener el ID (UUID) y el rol correctos.
       if (user) {
         const { data: dbUser } = await supabase
-          .from('users')
-          .select('id, role') // Obtenemos el ID de la BD y el rol
-          .eq('email', user.email!)
+          .from("users")
+          .select("id, role") // Obtenemos el ID de la BD y el rol
+          .eq("email", user.email!)
           .single();
 
         // Si encontramos al usuario, enriquecemos el token con los datos de la BD.

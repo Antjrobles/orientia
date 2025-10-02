@@ -1,4 +1,4 @@
-import { withAuth } from "next-auth/middleware"
+import { withAuth } from "next-auth/middleware";
 
 export default withAuth({
   pages: {
@@ -6,16 +6,16 @@ export default withAuth({
   },
   callbacks: {
     authorized: ({ token, req }) => {
-      const pathname = req.nextUrl.pathname
+      const pathname = req.nextUrl.pathname;
       // Rutas de admin: requieren rol admin
       if (pathname.startsWith("/admin")) {
-        return Boolean(token && (token as any).role === 'admin')
+        return Boolean(token && (token as any).role === "admin");
       }
       // Para el resto en el matcher: requiere estar autenticado
-      return Boolean(token)
+      return Boolean(token);
     },
   },
-})
+});
 
 export const config = {
   matcher: [
@@ -25,4 +25,4 @@ export const config = {
     "/centros/:path*",
     "/admin/:path*",
   ],
-}
+};

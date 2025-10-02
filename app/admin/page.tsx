@@ -27,7 +27,7 @@ import { AnalyticsChart } from "@/components/admin/AnalyticsChart";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 interface InformeReciente {
@@ -111,10 +111,12 @@ export default async function AdminPage() {
         totalUsuarios={totalUsers ?? 0}
         totalInformes={totalReports ?? 0}
         informesCompletados={
-          informesRecientesSeguros.filter((i) => i.estado === "completado").length
+          informesRecientesSeguros.filter((i) => i.estado === "completado")
+            .length
         }
         informesEnProgreso={
-          informesRecientesSeguros.filter((i) => i.estado === "en_progreso").length
+          informesRecientesSeguros.filter((i) => i.estado === "en_progreso")
+            .length
         }
       />
 
@@ -144,7 +146,8 @@ export default async function AdminPage() {
                   <TableRow key={report.id}>
                     <TableCell>
                       <div className="font-medium">
-                        {report.informacion_alumno?.nombre_apellidos || "No especificado"}
+                        {report.informacion_alumno?.nombre_apellidos ||
+                          "No especificado"}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         ID: {report.id.substring(0, 8)}...
@@ -168,9 +171,7 @@ export default async function AdminPage() {
         <Card>
           <CardHeader>
             <CardTitle>Estadísticas Rápidas</CardTitle>
-            <CardDescription>
-              Resumen de actividad reciente.
-            </CardDescription>
+            <CardDescription>Resumen de actividad reciente.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
@@ -184,13 +185,21 @@ export default async function AdminPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Completados</span>
               <span className="text-2xl font-bold text-green-600">
-                {informesRecientesSeguros.filter((i) => i.estado === "completado").length}
+                {
+                  informesRecientesSeguros.filter(
+                    (i) => i.estado === "completado",
+                  ).length
+                }
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">En Progreso</span>
               <span className="text-2xl font-bold text-orange-600">
-                {informesRecientesSeguros.filter((i) => i.estado === "en_progreso").length}
+                {
+                  informesRecientesSeguros.filter(
+                    (i) => i.estado === "en_progreso",
+                  ).length
+                }
               </span>
             </div>
           </CardContent>

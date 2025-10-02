@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { toast } from 'sonner';
-import { StudentData } from '@/lib/groq/types';
-import { InformeCompletoForm } from '@/components/profile/InformeCompletoForm';
-import { InformePreview } from '@/components/profile/InformePreview';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { StudentData } from "@/lib/groq/types";
+import { InformeCompletoForm } from "@/components/profile/InformeCompletoForm";
+import { InformePreview } from "@/components/profile/InformePreview";
+import { Button } from "@/components/ui/button";
 
 export default function GenerarInformePage() {
   const { data: session } = useSession();
@@ -14,7 +14,9 @@ export default function GenerarInformePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [generatedReport, setGeneratedReport] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [currentFormData, setCurrentFormData] = useState<StudentData | null>(null);
+  const [currentFormData, setCurrentFormData] = useState<StudentData | null>(
+    null,
+  );
 
   const handleGenerateReport = async (formData: StudentData) => {
     setIsGenerating(true);
@@ -23,10 +25,10 @@ export default function GenerarInformePage() {
     setCurrentFormData(formData);
 
     try {
-      const response = await fetch('/api/groq/generate-report', {
-        method: 'POST',
+      const response = await fetch("/api/groq/generate-report", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -36,11 +38,11 @@ export default function GenerarInformePage() {
       if (data.success && data.report) {
         setGeneratedReport(data.report);
       } else {
-        setError(data.error || 'Error desconocido al generar el informe');
+        setError(data.error || "Error desconocido al generar el informe");
       }
     } catch (err) {
-      console.error('Error al generar informe:', err);
-      setError('Error de conexión. Por favor, intenta de nuevo.');
+      console.error("Error al generar informe:", err);
+      setError("Error de conexión. Por favor, intenta de nuevo.");
     } finally {
       setIsGenerating(false);
     }
@@ -48,8 +50,8 @@ export default function GenerarInformePage() {
 
   const handleSaveInforme = async () => {
     if (!generatedReport || !currentFormData) {
-      toast.error('Error de validación', {
-        description: 'Faltan datos necesarios para guardar el informe.'
+      toast.error("Error de validación", {
+        description: "Faltan datos necesarios para guardar el informe.",
       });
       return;
     }
@@ -58,10 +60,10 @@ export default function GenerarInformePage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/informes/create', {
-        method: 'POST',
+      const response = await fetch("/api/informes/create", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           studentData: currentFormData,
@@ -72,22 +74,26 @@ export default function GenerarInformePage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Error del servidor');
+        throw new Error(data.error || "Error del servidor");
       }
 
       if (data.success) {
-        toast.success('¡Informe guardado exitosamente!', {
-          description: 'El informe se ha guardado correctamente en tu base de datos.'
+        toast.success("¡Informe guardado exitosamente!", {
+          description:
+            "El informe se ha guardado correctamente en tu base de datos.",
         });
         setGeneratedReport(null);
         setCurrentFormData(null);
       } else {
-        throw new Error(data.error || 'Error desconocido al guardar el informe');
+        throw new Error(
+          data.error || "Error desconocido al guardar el informe",
+        );
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error de conexión al guardar.';
-      toast.error('Error al guardar', {
-        description: errorMessage
+      const errorMessage =
+        err instanceof Error ? err.message : "Error de conexión al guardar.";
+      toast.error("Error al guardar", {
+        description: errorMessage,
       });
       setError(errorMessage);
     } finally {
@@ -130,12 +136,8 @@ export default function GenerarInformePage() {
               >
                 Crear Nuevo
               </Button>
-              <Button
-                onClick={handleSaveInforme}
-                disabled={isSaving}
-                size="lg"
-              >
-                {isSaving ? 'Guardando...' : 'Guardar Informe'}
+              <Button onClick={handleSaveInforme} disabled={isSaving} size="lg">
+                {isSaving ? "Guardando..." : "Guardar Informe"}
               </Button>
             </div>
           </div>

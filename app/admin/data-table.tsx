@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import * as React from 'react'
+import * as React from "react";
 import {
   ColumnDef,
   SortingState,
@@ -10,7 +10,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table'
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -19,22 +19,22 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
-export function DataTable<TData extends { name?: string; email?: string }, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [globalFilter, setGlobalFilter] = React.useState('') // Usamos un estado simple para el filtro global
-  const [rowSelection, setRowSelection] = React.useState({})
+export function DataTable<
+  TData extends { name?: string; email?: string },
+  TValue,
+>({ columns, data }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = React.useState(""); // Usamos un estado simple para el filtro global
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -51,12 +51,12 @@ export function DataTable<TData extends { name?: string; email?: string }, TValu
       globalFilter,
     },
     globalFilterFn: (row, columnId, filterValue) => {
-      const name = (row.original.name ?? '').toLowerCase()
-      const email = (row.original.email ?? '').toLowerCase()
-      const value = (filterValue as string).toLowerCase()
-      return name.includes(value) || email.includes(value)
+      const name = (row.original.name ?? "").toLowerCase();
+      const email = (row.original.email ?? "").toLowerCase();
+      const value = (filterValue as string).toLowerCase();
+      return name.includes(value) || email.includes(value);
     },
-  })
+  });
 
   return (
     <div>
@@ -77,7 +77,10 @@ export function DataTable<TData extends { name?: string; email?: string }, TValu
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -86,17 +89,26 @@ export function DataTable<TData extends { name?: string; email?: string }, TValu
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No se encontraron resultados.
                 </TableCell>
               </TableRow>
@@ -106,7 +118,8 @@ export function DataTable<TData extends { name?: string; email?: string }, TValu
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} de {table.getFilteredRowModel().rows.length} fila(s) seleccionadas.
+          {table.getFilteredSelectedRowModel().rows.length} de{" "}
+          {table.getFilteredRowModel().rows.length} fila(s) seleccionadas.
         </div>
         <Button
           variant="outline"
@@ -126,5 +139,5 @@ export function DataTable<TData extends { name?: string; email?: string }, TValu
         </Button>
       </div>
     </div>
-  )
+  );
 }

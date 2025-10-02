@@ -1,17 +1,44 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Save, User, GraduationCap, Brain, FileText, Building2, Home, Target, ClipboardCheck, Users, Minimize2, CheckCircle2 } from "lucide-react";
+import {
+  Save,
+  User,
+  GraduationCap,
+  Brain,
+  FileText,
+  Building2,
+  Home,
+  Target,
+  ClipboardCheck,
+  Users,
+  Minimize2,
+  CheckCircle2,
+  Shield,
+  ChevronDown,
+  ChevronRight,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { StudentData } from "@/lib/groq/types";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { IdentityFields } from "./IdentityFields";
@@ -39,6 +66,16 @@ interface FormState {
   // Historia escolar (datos escolares)
   escolarizacionPrevia?: string;
   actuacionesDiversidad?: string;
+  // Actuaciones - Sistema condicional
+  nivelEducativoActuaciones?: "infantil" | "primaria" | "secundaria";
+  // Educación Infantil - Solo UNA opción seleccionable (radio button)
+  medidaSeleccionadaInfantil?: string;
+  // Educación Primaria - Solo UNA opción seleccionable
+  medidaSeleccionadaPrimaria?: string;
+  // Educación Secundaria - Solo UNA opción seleccionable
+  medidaSeleccionadaSecundaria?: string;
+  // Otras orientaciones (común para todos los niveles)
+  otrasOrientaciones?: string;
   // EOE referencia
   eoeReferencia?: string;
   // Datos de evaluación psicopedagógica ampliados
@@ -133,15 +170,25 @@ const SectionStatusIndicator = ({ isComplete }: { isComplete: boolean }) => (
 );
 
 export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
-  // Generar código anónimo único al montar el componente
-  const [anonCode] = useState(() => {
-    const timestamp = Date.now().toString(36);
-    const random = Math.random().toString(36).substring(2, 7);
-    return `ALUM-${timestamp}-${random}`.toUpperCase();
+  // Generar códigos anónimos únicos al montar el componente
+  const [anonCodes] = useState(() => {
+    const generateCode = (prefix: string) => {
+      const timestamp = Date.now().toString(36);
+      const random = Math.random().toString(36).substring(2, 7);
+      return `${prefix}-${timestamp}-${random}`.toUpperCase();
+    };
+
+    return {
+      alumno: generateCode("ALUM"),
+      tutor1: generateCode("TUT1"),
+      tutor2: generateCode("TUT2"),
+    };
   });
 
   const [form, setForm] = useState<FormState>({
-    nombre: `Alumno/a [${anonCode}]`,
+    nombre: `Alumno/a [${anonCodes.alumno}]`,
+    primerTutor: `Tutor/a 1 [${anonCodes.tutor1}]`,
+    segundoTutor: `Tutor/a 2 [${anonCodes.tutor2}]`,
     curso: "",
     motivoConsulta: "",
     observaciones: "",
@@ -154,7 +201,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   const [medidaTemp, setMedidaTemp] = useState<string>("");
   const [recursoMaterialTemp, setRecursoMaterialTemp] = useState<string>("");
   const [profEspecialistaTemp, setProfEspecialistaTemp] = useState<string>("");
-  const [personalNoDocenteTemp, setPersonalNoDocenteTemp] = useState<string>("");
+  const [personalNoDocenteTemp, setPersonalNoDocenteTemp] =
+    useState<string>("");
 
   // Cargar borrador si existe para mantener sincronía entre secciones
   useEffect(() => {
@@ -162,8 +210,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
       const raw = localStorage.getItem("informe-borrador");
       if (raw) {
         const parsed = JSON.parse(raw) as Partial<FormState>;
-        // Nunca sobreescribir el nombre con el borrador
-        const { nombre, ...restParsed } = parsed;
+        // Nunca sobreescribir campos anonimizados con el borrador
+        const { nombre, primerTutor, segundoTutor, ...restParsed } = parsed;
         setForm((f) => ({ ...f, ...restParsed }));
       }
     } catch {
@@ -179,45 +227,65 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     return e;
   }, [form]);
 
-  const isSectionComplete = useCallback((key: SectionKey) => {
-    const req = requiredSections[key];
-    // Si no hay campos requeridos, la sección NUNCA está completa
-    if (req.length === 0) return false;
+  const isSectionComplete = useCallback(
+    (key: SectionKey) => {
+      const req = requiredSections[key];
+      // Si no hay campos requeridos, la sección NUNCA está completa
+      if (req.length === 0) return false;
 
-    return req.every((k) => {
-      const v = (form as any)[k];
-      return typeof v === "number" ? true : Boolean(v && String(v).trim());
-    });
-  }, [form]);
+      return req.every((k) => {
+        const v = (form as any)[k];
+        return typeof v === "number" ? true : Boolean(v && String(v).trim());
+      });
+    },
+    [form],
+  );
 
-  const { completedSectionsCount, totalCompletable, progressPercentage } = useMemo(() => {
-    const sectionKeys = Object.keys(requiredSections) as SectionKey[];
-    const completableSections = sectionKeys.filter(key => requiredSections[key].length > 0);
-    const completedSectionsCount = completableSections.filter(key => isSectionComplete(key)).length;
-    const totalCompletable = completableSections.length;
-    const progressPercentage = totalCompletable > 0 ? (completedSectionsCount / totalCompletable) * 100 : 0;
+  const { completedSectionsCount, totalCompletable, progressPercentage } =
+    useMemo(() => {
+      const sectionKeys = Object.keys(requiredSections) as SectionKey[];
+      const completableSections = sectionKeys.filter(
+        (key) => requiredSections[key].length > 0,
+      );
+      const completedSectionsCount = completableSections.filter((key) =>
+        isSectionComplete(key),
+      ).length;
+      const totalCompletable = completableSections.length;
+      const progressPercentage =
+        totalCompletable > 0
+          ? (completedSectionsCount / totalCompletable) * 100
+          : 0;
 
-    return {
+      return {
         completedSectionsCount,
         totalCompletable,
-        progressPercentage
-    };
-  }, [isSectionComplete]);
+        progressPercentage,
+      };
+    }, [isSectionComplete]);
 
-  const handleChange = <K extends keyof FormState>(key: K, value: FormState[K]) => {
+  const handleChange = <K extends keyof FormState>(
+    key: K,
+    value: FormState[K],
+  ) => {
     setForm((f) => ({ ...f, [key]: value }));
   };
 
   const handleFilesChange = (files: FileList | null) => {
     if (!files) return;
     const arr = Array.from(files);
-    setForm((f) => ({ ...f, familiaAdjuntos: [...(f.familiaAdjuntos || []), ...arr] }));
+    setForm((f) => ({
+      ...f,
+      familiaAdjuntos: [...(f.familiaAdjuntos || []), ...arr],
+    }));
   };
 
   const handleOrientacionesFiles = (files: FileList | null) => {
     if (!files) return;
     const arr = Array.from(files);
-    setForm((f) => ({ ...f, orientacionesAdjuntos: [...(f.orientacionesAdjuntos || []), ...arr] }));
+    setForm((f) => ({
+      ...f,
+      orientacionesAdjuntos: [...(f.orientacionesAdjuntos || []), ...arr],
+    }));
   };
 
   const removeAdjunto = (idx: number) => {
@@ -230,7 +298,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   const removeOrientacionesAdjunto = (idx: number) => {
     setForm((f) => ({
       ...f,
-      orientacionesAdjuntos: (f.orientacionesAdjuntos || []).filter((_, i) => i !== idx),
+      orientacionesAdjuntos: (f.orientacionesAdjuntos || []).filter(
+        (_, i) => i !== idx,
+      ),
     }));
   };
 
@@ -240,21 +310,33 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
         ...form,
       };
       localStorage.setItem("informe-borrador", JSON.stringify(payload));
-      toast.success("Borrador guardado", { description: "Se ha guardado localmente en este navegador." });
+      toast.success("Borrador guardado", {
+        description: "Se ha guardado localmente en este navegador.",
+      });
     } catch (e) {
       toast.error("No se pudo guardar el borrador");
     }
   };
 
   const handleClear = () => {
-    // Generar nuevo código anónimo
-    const timestamp = Date.now().toString(36);
-    const random = Math.random().toString(36).substring(2, 7);
-    const newAnonCode = `ALUM-${timestamp}-${random}`.toUpperCase();
+    // Generar nuevos códigos anónimos
+    const generateCode = (prefix: string) => {
+      const timestamp = Date.now().toString(36);
+      const random = Math.random().toString(36).substring(2, 7);
+      return `${prefix}-${timestamp}-${random}`.toUpperCase();
+    };
+
+    const newCodes = {
+      alumno: generateCode("ALUM"),
+      tutor1: generateCode("TUT1"),
+      tutor2: generateCode("TUT2"),
+    };
 
     // LIMPIAR completamente
     setForm({
-      nombre: `Alumno/a [${newAnonCode}]`,
+      nombre: `Alumno/a [${newCodes.alumno}]`,
+      primerTutor: `Tutor/a 1 [${newCodes.tutor1}]`,
+      segundoTutor: `Tutor/a 2 [${newCodes.tutor2}]`,
       curso: "",
       motivoConsulta: "",
     } as FormState);
@@ -266,8 +348,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     // Cerrar acordeones
     setOpen([]);
 
-    toast.info('Formulario limpiado', {
-      description: 'Se ha generado un nuevo código anónimo'
+    toast.info("Formulario limpiado", {
+      description: "Se han generado nuevos códigos anónimos",
     });
   };
 
@@ -275,7 +357,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     e.preventDefault();
     // Validar campos requeridos (nombre es automático)
     if (!form.curso?.trim() || !form.motivoConsulta?.trim()) {
-      toast.error('Por favor, completa los campos requeridos');
+      toast.error("Por favor, completa los campos requeridos");
       return;
     }
 
@@ -288,13 +370,14 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     onSubmit(payload);
   };
 
-
   return (
     <div className="space-y-6 mt-8 sm:mt-12">
       <Card className="border-0  bg-gray-50">
         <CardHeader className="border-b border-slate-200 p-4 sm:p-6">
           <div className="flex justify-between items-center">
-            <CardTitle className="text-lg sm:text-xl">Secciones del Informe</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">
+              Secciones del Informe
+            </CardTitle>
             <Button
               type="button"
               variant="outline"
@@ -307,17 +390,34 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
           </div>
           <div className="mt-4">
             <div className="flex justify-between items-center mb-1">
-                <Label htmlFor="form-progress" className="text-sm font-medium text-slate-600">Progreso de secciones requeridas</Label>
-                <span className="text-sm font-semibold text-slate-800">{`${completedSectionsCount} de ${totalCompletable}`}</span>
+              <Label
+                htmlFor="form-progress"
+                className="text-sm font-medium text-slate-600"
+              >
+                Progreso de secciones requeridas
+              </Label>
+              <span className="text-sm font-semibold text-slate-800">{`${completedSectionsCount} de ${totalCompletable}`}</span>
             </div>
-            <Progress id="form-progress" value={progressPercentage} className="w-full bg-slate-200 [&>div]:bg-blue-600" />
+            <Progress
+              id="form-progress"
+              value={progressPercentage}
+              className="w-full bg-slate-200 [&>div]:bg-blue-600"
+            />
           </div>
         </CardHeader>
         <CardContent className="p-0 sm:p-2">
           <form onSubmit={handleSubmit} className="space-y-1">
-            <Accordion type="multiple" value={open} onValueChange={(v) => setOpen(v as SectionKey[])} className="w-full">
+            <Accordion
+              type="multiple"
+              value={open}
+              onValueChange={(v) => setOpen(v as SectionKey[])}
+              className="w-full"
+            >
               {/* Datos personales */}
-              <AccordionItem value="datosPersonales" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionItem
+                value="datosPersonales"
+                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
                 <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-colors border-l-4 border-l-blue-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex-shrink-0">
@@ -326,9 +426,13 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="flex-1 min-w-0">
                       <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
                         <span className="truncate">Datos Personales</span>
-                        {isSectionComplete("datosPersonales") && <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />}
+                        {isSectionComplete("datosPersonales") && (
+                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                        )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Información básica del alumno</p>
+                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                        Información básica del alumno
+                      </p>
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -338,17 +442,62 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-3 sm:p-5 shadow-sm">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-blue-800">Datos del alumno o alumna</h3>
+                        <h3 className="text-sm font-semibold text-blue-800">
+                          Datos del alumno o alumna
+                        </h3>
                       </div>
-                      <IdentityFields idPrefix="dp-" form={form} handleChange={handleChange} errors={errors} />
+                      <IdentityFields
+                        idPrefix="dp-"
+                        form={form}
+                        handleChange={handleChange}
+                        errors={errors}
+                      />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <div className="space-y-2">
-                          <Label htmlFor="primerTutor">Nombre del primer tutor</Label>
-                          <Input id="primerTutor" value={form.primerTutor || ""} onChange={(e) => handleChange("primerTutor", e.target.value)} placeholder="Ej: Barea González, Mónica" />
+                          <Label
+                            htmlFor="primerTutor"
+                            className="flex items-center gap-2"
+                          >
+                            Nombre del primer tutor/a
+                            <Shield className="w-4 h-4 text-emerald-600" />
+                          </Label>
+                          <Input
+                            id="primerTutor"
+                            value={
+                              form.primerTutor || "Tutor/a 1 [Código Anónimo]"
+                            }
+                            readOnly
+                            disabled
+                            className="bg-gray-100 cursor-not-allowed text-gray-600 border-gray-300 font-mono text-sm"
+                            title="Campo protegido por LOPD - No se permiten nombres reales"
+                          />
+                          <p className="text-xs text-gray-500 flex items-center gap-1">
+                            <Shield className="w-3 h-3" />
+                            Campo anonimizado por protección de datos (LOPD)
+                          </p>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="segundoTutor">Nombre del segundo tutor</Label>
-                          <Input id="segundoTutor" value={form.segundoTutor || ""} onChange={(e) => handleChange("segundoTutor", e.target.value)} placeholder="Ej: Montoya Pacheco, David" />
+                          <Label
+                            htmlFor="segundoTutor"
+                            className="flex items-center gap-2"
+                          >
+                            Nombre del segundo tutor/a
+                            <Shield className="w-4 h-4 text-emerald-600" />
+                          </Label>
+                          <Input
+                            id="segundoTutor"
+                            value={
+                              form.segundoTutor || "Tutor/a 2 [Código Anónimo]"
+                            }
+                            readOnly
+                            disabled
+                            className="bg-gray-100 cursor-not-allowed text-gray-600 border-gray-300 font-mono text-sm"
+                            title="Campo protegido por LOPD - No se permiten nombres reales"
+                          />
+                          <p className="text-xs text-gray-500 flex items-center gap-1">
+                            <Shield className="w-3 h-3" />
+                            Campo anonimizado por protección de datos (LOPD)
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -357,11 +506,15 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-5 shadow-sm">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-blue-800">Etapa de escolarización</h3>
+                        <h3 className="text-sm font-semibold text-blue-800">
+                          Etapa de escolarización
+                        </h3>
                       </div>
                       <Select
                         value={form.etapaEscolar || undefined}
-                        onValueChange={(value) => handleChange("etapaEscolar", value)}
+                        onValueChange={(value) =>
+                          handleChange("etapaEscolar", value)
+                        }
                       >
                         <SelectTrigger id="etapaEscolar">
                           <SelectValue placeholder="Selecciona la etapa educativa" />
@@ -377,19 +530,39 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-5 shadow-sm">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-blue-800">Información a la familia</h3>
+                        <h3 className="text-sm font-semibold text-blue-800">
+                          Información a la familia
+                        </h3>
                       </div>
                       <div className="flex items-center gap-3">
-                        <Input id="familiaAdjuntos" type="file" multiple onChange={(e) => handleFilesChange(e.target.files)} />
+                        <Input
+                          id="familiaAdjuntos"
+                          type="file"
+                          multiple
+                          onChange={(e) => handleFilesChange(e.target.files)}
+                        />
                       </div>
                       <div className="mt-4 space-y-2">
-                        <p className="text-sm text-gray-600">Número total de registros: {(form.familiaAdjuntos?.length || 0)}</p>
+                        <p className="text-sm text-gray-600">
+                          Número total de registros:{" "}
+                          {form.familiaAdjuntos?.length || 0}
+                        </p>
                         {(form.familiaAdjuntos?.length || 0) > 0 && (
                           <ul className="divide-y rounded-md border bg-gray-50">
                             {(form.familiaAdjuntos || []).map((f, idx) => (
-                              <li key={`${f.name}-${idx}`} className="flex items-center justify-between px-3 py-2 text-sm">
-                                <span className="truncate" title={f.name}>{f.name}</span>
-                                <button type="button" className="text-gray-500 hover:text-red-600" onClick={() => removeAdjunto(idx)} aria-label={`Eliminar ${f.name}`}>
+                              <li
+                                key={`${f.name}-${idx}`}
+                                className="flex items-center justify-between px-3 py-2 text-sm"
+                              >
+                                <span className="truncate" title={f.name}>
+                                  {f.name}
+                                </span>
+                                <button
+                                  type="button"
+                                  className="text-gray-500 hover:text-red-600"
+                                  onClick={() => removeAdjunto(idx)}
+                                  aria-label={`Eliminar ${f.name}`}
+                                >
                                   Eliminar
                                 </button>
                               </li>
@@ -401,7 +574,11 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
                   {/* Botón Guardar dentro de Datos personales */}
                   <div className="mt-6 flex justify-end">
-                    <Button type="button" className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Button
+                      type="button"
+                      className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                      onClick={handleSaveDraft}
+                    >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
                   </div>
@@ -409,7 +586,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
               </AccordionItem>
 
               {/* Datos escolares */}
-              <AccordionItem value="datosEscolares" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionItem
+                value="datosEscolares"
+                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
                 <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 transition-colors border-l-4 border-l-emerald-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-emerald-100 rounded-full flex-shrink-0">
@@ -418,9 +598,13 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="flex-1 min-w-0">
                       <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
                         <span className="truncate">Datos Escolares</span>
-                        {isSectionComplete("datosEscolares") && <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />}
+                        {isSectionComplete("datosEscolares") && (
+                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                        )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Historia académica y escolarización</p>
+                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                        Historia académica y escolarización
+                      </p>
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -430,32 +614,681 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-3 sm:p-5 shadow-sm">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-emerald-800">Datos del alumno o alumna</h3>
+                        <h3 className="text-sm font-semibold text-emerald-800">
+                          Datos del alumno o alumna
+                        </h3>
                       </div>
-                      <IdentityFields idPrefix="esc-" form={form} handleChange={handleChange} errors={errors} />
+                      <IdentityFields
+                        idPrefix="esc-"
+                        form={form}
+                        handleChange={handleChange}
+                        errors={errors}
+                      />
                     </div>
 
                     {/* Bloque 2: Historia escolar */}
                     <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-5 shadow-sm">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-emerald-800">Historia escolar</h3>
+                        <h3 className="text-sm font-semibold text-emerald-800">
+                          Historia escolar
+                        </h3>
                       </div>
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="esc-escolarizacionPrevia">Datos de escolarización previa</Label>
-                          <Textarea id="esc-escolarizacionPrevia" rows={4} value={form.escolarizacionPrevia || ""} onChange={(e) => handleChange("escolarizacionPrevia", e.target.value)} placeholder="Especifica centros previos, repeticiones, incidencias, materias con dificultades, etc." />
+                          <Label htmlFor="esc-escolarizacionPrevia">
+                            Datos de escolarización previa
+                          </Label>
+                          <Textarea
+                            id="esc-escolarizacionPrevia"
+                            rows={4}
+                            value={form.escolarizacionPrevia || ""}
+                            onChange={(e) =>
+                              handleChange(
+                                "escolarizacionPrevia",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Especifica centros previos, años de escolarización, etc."
+                          />
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="esc-actuacionesDiversidad">Actuaciones, medidas y programas de atención a la diversidad desarrollados</Label>
-                          <Textarea id="esc-actuacionesDiversidad" rows={4} value={form.actuacionesDiversidad || ""} onChange={(e) => handleChange("actuacionesDiversidad", e.target.value)} placeholder="Refuerzo, acompañamiento, adaptaciones, programas específicos, etc." />
+                        <div className="space-y-4">
+                          <Label htmlFor="esc-nivelEducativo">
+                            Actuaciones, medidas y programas de atención a la
+                            diversidad desarrollados
+                          </Label>
+
+                          {/* Selector principal: Infantil, Primaria o Secundaria */}
+                          <Select
+                            value={form.nivelEducativoActuaciones || undefined}
+                            onValueChange={(
+                              value: "infantil" | "primaria" | "secundaria",
+                            ) =>
+                              handleChange("nivelEducativoActuaciones", value)
+                            }
+                          >
+                            <SelectTrigger id="esc-nivelEducativo">
+                              <SelectValue placeholder="Selecciona el nivel educativo" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="infantil">
+                                Educación Infantil
+                              </SelectItem>
+                              <SelectItem value="primaria">
+                                Educación Primaria
+                              </SelectItem>
+                              <SelectItem value="secundaria">
+                                Educación Secundaria
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+
+                          {/* EDUCACIÓN INFANTIL */}
+                          {form.nivelEducativoActuaciones === "infantil" && (
+                            <div className="space-y-6 mt-4 border-l-4 border-l-emerald-500 pl-4">
+                              <RadioGroup
+                                value={
+                                  form.medidaSeleccionadaInfantil || undefined
+                                }
+                                onValueChange={(value) =>
+                                  handleChange(
+                                    "medidaSeleccionadaInfantil",
+                                    value,
+                                  )
+                                }
+                              >
+                                {/* MEDIDAS GENERALES */}
+                                <div className="space-y-3">
+                                  <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                    Medidas Generales
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {[
+                                      "En el 2º ciclo, apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
+                                      "Acción tutorial",
+                                      "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por proyectos",
+                                      "Actuaciones en el proceso de tránsito entre ciclos, o etapas",
+                                      "Actuaciones de prevención y control del absentismo",
+                                    ].map((medida) => (
+                                      <div
+                                        key={medida}
+                                        className="flex items-start gap-2"
+                                      >
+                                        <RadioGroupItem
+                                          value={medida}
+                                          id={`inf-${medida}`}
+                                          className="mt-1"
+                                        />
+                                        <label
+                                          htmlFor={`inf-${medida}`}
+                                          className="text-sm text-gray-700 cursor-pointer"
+                                        >
+                                          {medida}
+                                        </label>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* PROGRAMAS */}
+                                <div className="space-y-3">
+                                  <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                    Programas
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {[
+                                      "Programa de refuerzo del aprendizaje",
+                                      "Programa de profundización",
+                                    ].map((programa) => (
+                                      <div
+                                        key={programa}
+                                        className="flex items-start gap-2"
+                                      >
+                                        <RadioGroupItem
+                                          value={programa}
+                                          id={`inf-${programa}`}
+                                          className="mt-1"
+                                        />
+                                        <label
+                                          htmlFor={`inf-${programa}`}
+                                          className="text-sm text-gray-700 cursor-pointer"
+                                        >
+                                          {programa}
+                                        </label>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* MEDIDAS ESPECÍFICAS */}
+                                <div className="space-y-3">
+                                  <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                    Medidas Específicas
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {/* Opciones principales de Medidas Específicas */}
+                                    {[
+                                      "El apoyo dentro del aula por profesorado especialista de PT o AL, personal complementario u otro personal externo al aula",
+                                      "El apoyo fuera del aula por profesorado especialista de PT o AL, personal complementario u otro personal externo al aula",
+                                      "Programas específicos para el tratamiento personalizado del alumnado neae",
+                                    ].map((medida) => (
+                                      <div
+                                        key={medida}
+                                        className="flex items-start gap-2"
+                                      >
+                                        <RadioGroupItem
+                                          value={medida}
+                                          id={`inf-${medida}`}
+                                          className="mt-1"
+                                        />
+                                        <label
+                                          htmlFor={`inf-${medida}`}
+                                          className="text-sm text-gray-700 cursor-pointer"
+                                        >
+                                          {medida}
+                                        </label>
+                                      </div>
+                                    ))}
+
+                                    {/* Programas de adaptación curricular con sub-opciones */}
+                                    <div className="flex items-start gap-2">
+                                      <RadioGroupItem
+                                        value="Programas de adaptación curricular"
+                                        id="inf-programas-adaptacion"
+                                        className="mt-1"
+                                      />
+                                      <label
+                                        htmlFor="inf-programas-adaptacion"
+                                        className="text-sm text-black cursor-pointer font-medium font-extrabold flex items-center gap-1"
+                                      >
+                                        Programas de adaptación curricular
+                                        {form.medidaSeleccionadaInfantil?.startsWith(
+                                          "Programas de adaptación curricular",
+                                        ) ? (
+                                          <ChevronDown className="w-4 h-4 text-emerald-600" />
+                                        ) : (
+                                          <ChevronRight className="w-4 h-4 text-gray-400" />
+                                        )}
+                                        <span className="text-xs text-emerald-600 ml-1">
+                                          (Ver opciones)
+                                        </span>
+                                      </label>
+                                    </div>
+
+                                    {/* Sub-opciones de Programas de adaptación curricular */}
+                                    {form.medidaSeleccionadaInfantil?.startsWith(
+                                      "Programas de adaptación curricular",
+                                    ) && (
+                                      <div className="ml-6 pl-4 border-l-2 border-emerald-300 space-y-2 mt-2">
+                                        <p className="text-xs font-medium text-gray-600 mb-2">
+                                          Selecciona el tipo de programa:
+                                        </p>
+                                        {[
+                                          "La atención educativa al alumnado por situaciones personales de hospitalización o de convalecencia domiciliaria",
+                                          "Las adaptaciones de acceso a los elementos del currículo para el alumnado con neae",
+                                          "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado nee",
+                                          "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
+                                        ].map((submedida) => (
+                                          <div
+                                            key={submedida}
+                                            className="flex items-start gap-2"
+                                          >
+                                            <RadioGroupItem
+                                              value={`Programas de adaptación curricular: ${submedida}`}
+                                              id={`inf-${submedida}`}
+                                              className="mt-1"
+                                            />
+                                            <label
+                                              htmlFor={`inf-${submedida}`}
+                                              className="text-sm text-gray-600 cursor-pointer"
+                                            >
+                                              {submedida}
+                                            </label>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* OTRAS ACTUACIONES - Sección independiente */}
+                                <div className="space-y-3 mt-6">
+                                  <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                    Otras Actuaciones
+                                  </h4>
+                                  <div className="space-y-2">
+                                    <Textarea
+                                      id="otrasOrientacionesInfantil"
+                                      rows={4}
+                                      value={form.otrasOrientaciones || ""}
+                                      onChange={(e) =>
+                                        handleChange(
+                                          "otrasOrientaciones",
+                                          e.target.value,
+                                        )
+                                      }
+                                      placeholder="Especifica otras medidas, programas u orientaciones adicionales..."
+                                      className="w-full"
+                                    />
+                                  </div>
+                                </div>
+                              </RadioGroup>
+                            </div>
+                          )}
+
+                          {/* EDUCACIÓN PRIMARIA */}
+                          {form.nivelEducativoActuaciones === "primaria" && (
+                            <div className="space-y-6 mt-4 border-l-4 border-l-blue-500 pl-4">
+                              <RadioGroup
+                                value={
+                                  form.medidaSeleccionadaPrimaria || undefined
+                                }
+                                onValueChange={(value) =>
+                                  handleChange(
+                                    "medidaSeleccionadaPrimaria",
+                                    value,
+                                  )
+                                }
+                              >
+                                {/* MEDIDAS GENERALES */}
+                                <div className="space-y-3">
+                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                    Medidas Generales
+                                  </h4>
+                                  <div className="space-y-2 pl-2">
+                                    {[
+                                      "Agrupación de áreas en ámbitos",
+                                      "Apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
+                                      "Desdoblamiento de grupos",
+                                      "Agrupamientos flexibles",
+                                      "Sustitución de la Segunda Lengua Extranjera por un Área Lingüística de carácter transversal",
+                                      "Acción tutorial",
+                                      "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por Proyectos",
+                                      "Prevención y control del absentismo",
+                                      "Distribución del horario lectivo de autonomía del centro entre las opciones previstas",
+                                      "Actuaciones dentro del programa de tránsito",
+                                    ].map((medida) => (
+                                      <div
+                                        key={medida}
+                                        className="flex items-start gap-2"
+                                      >
+                                        <RadioGroupItem
+                                          value={medida}
+                                          id={`prim-${medida}`}
+                                          className="mt-1"
+                                        />
+                                        <label
+                                          htmlFor={`prim-${medida}`}
+                                          className="text-sm text-gray-700 cursor-pointer"
+                                        >
+                                          {medida}
+                                        </label>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* PROGRAMAS */}
+                                <div className="space-y-3 mt-6">
+                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                    Programas
+                                  </h4>
+                                  <div className="space-y-2 pl-2">
+                                    {[
+                                      "Programa de refuerzo del aprendizaje",
+                                      "Programa de profundización",
+                                    ].map((programa) => (
+                                      <div
+                                        key={programa}
+                                        className="flex items-start gap-2"
+                                      >
+                                        <RadioGroupItem
+                                          value={programa}
+                                          id={`prim-${programa}`}
+                                          className="mt-1"
+                                        />
+                                        <label
+                                          htmlFor={`prim-${programa}`}
+                                          className="text-sm text-gray-700 cursor-pointer"
+                                        >
+                                          {programa}
+                                        </label>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* MEDIDAS ESPECÍFICAS */}
+                                <div className="space-y-3 mt-6">
+                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                    Medidas Específicas
+                                  </h4>
+                                  <div className="space-y-2 pl-2">
+                                    {/* Opciones principales de Medidas Específicas */}
+                                    {[
+                                      "El apoyo dentro del aula por profesorado especialista de PT o AL, personal complementario u otro personal",
+                                      "Programas específicos para el tratamiento personalizado del alumnado NEAE",
+                                      "La atención educativa al alumnado por situaciones personales de hospitalización o de convalecencia domiciliaria",
+                                      "Escolarización un curso por debajo del que corresponde por edad para el alumnado de incorporación tardía",
+                                      "Atención específica para el alumnado que se incorpora tardíamente y que presenta graves carencias en la comunicación lingüística en Lengua Castellana",
+                                      "Flexibilización de la escolarización del alumnado con altas capacidades intelectuales",
+                                    ].map((medida) => (
+                                      <div
+                                        key={medida}
+                                        className="flex items-start gap-2"
+                                      >
+                                        <RadioGroupItem
+                                          value={medida}
+                                          id={`prim-${medida}`}
+                                          className="mt-1"
+                                        />
+                                        <label
+                                          htmlFor={`prim-${medida}`}
+                                          className="text-sm text-gray-700 cursor-pointer"
+                                        >
+                                          {medida}
+                                        </label>
+                                      </div>
+                                    ))}
+
+                                    {/* Programas de adaptación curricular con sub-opciones */}
+                                    <div className="flex items-start gap-2">
+                                      <RadioGroupItem
+                                        value="Programas de adaptación curricular"
+                                        id="prim-programas-adaptacion"
+                                        className="mt-1"
+                                      />
+                                      <label
+                                        htmlFor="prim-programas-adaptacion"
+                                        className="text-sm text-black cursor-pointer font-medium font-extrabold flex items-center gap-1"
+                                      >
+                                        Programas de adaptación curricular
+                                        {form.medidaSeleccionadaPrimaria?.startsWith(
+                                          "Programas de adaptación curricular",
+                                        ) ? (
+                                          <ChevronDown className="w-4 h-4 text-blue-600" />
+                                        ) : (
+                                          <ChevronRight className="w-4 h-4 text-gray-400" />
+                                        )}
+                                        <span className="text-xs text-blue-600 ml-1">
+                                          (Ver opciones)
+                                        </span>
+                                      </label>
+                                    </div>
+
+                                    {/* Sub-opciones de Programas de adaptación curricular */}
+                                    {form.medidaSeleccionadaPrimaria?.startsWith(
+                                      "Programas de adaptación curricular",
+                                    ) && (
+                                      <div className="ml-6 pl-4 border-l-2 border-blue-300 space-y-2 mt-2">
+                                        <p className="text-xs font-medium text-gray-600 mb-2">
+                                          Selecciona el tipo de programa:
+                                        </p>
+                                        {[
+                                          "Las adaptaciones de acceso a los elementos del currículo para el alumnado NEAE",
+                                          "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado NEE",
+                                          "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
+                                        ].map((submedida) => (
+                                          <div
+                                            key={submedida}
+                                            className="flex items-start gap-2"
+                                          >
+                                            <RadioGroupItem
+                                              value={`Programas de adaptación curricular: ${submedida}`}
+                                              id={`prim-${submedida}`}
+                                              className="mt-1"
+                                            />
+                                            <label
+                                              htmlFor={`prim-${submedida}`}
+                                              className="text-sm text-gray-600 cursor-pointer"
+                                            >
+                                              {submedida}
+                                            </label>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* OTRAS ACTUACIONES - Sección independiente */}
+                                <div className="space-y-3 mt-6">
+                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                    Otras Actuaciones
+                                  </h4>
+                                  <div className="space-y-2">
+                                    <Textarea
+                                      id="otrasOrientacionesPrimaria"
+                                      rows={4}
+                                      value={form.otrasOrientaciones || ""}
+                                      onChange={(e) =>
+                                        handleChange(
+                                          "otrasOrientaciones",
+                                          e.target.value,
+                                        )
+                                      }
+                                      placeholder="Especifica otras medidas, programas u orientaciones adicionales..."
+                                      className="w-full"
+                                    />
+                                  </div>
+                                </div>
+                              </RadioGroup>
+                            </div>
+                          )}
+
+                          {/* EDUCACIÓN SECUNDARIA */}
+                          {form.nivelEducativoActuaciones === "secundaria" && (
+                            <div className="space-y-6 mt-4 border-l-4 border-l-purple-500 pl-4">
+                              <RadioGroup
+                                value={
+                                  form.medidaSeleccionadaSecundaria || undefined
+                                }
+                                onValueChange={(value) =>
+                                  handleChange(
+                                    "medidaSeleccionadaSecundaria",
+                                    value,
+                                  )
+                                }
+                              >
+                                {/* MEDIDAS GENERALES */}
+                                <div className="space-y-3">
+                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                    Medidas Generales
+                                  </h4>
+                                  <div className="space-y-2 pl-2">
+                                    {[
+                                      "Agrupación de materias en ámbitos de conocimiento",
+                                      "Apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
+                                      "Desdoblamientos de grupos",
+                                      "Agrupamientos flexibles con carácter temporal y abierto",
+                                      "Sustitución de la Segunda Lengua Extranjera por una Materia Lingüística de carácter transversal",
+                                      "Acción tutorial",
+                                      "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por proyectos que promuevan la inclusión",
+                                      "Actuaciones de coordinación en el proceso de tránsito entre etapas",
+                                      "Actuaciones de prevención y control del absentismo",
+                                      "Distribución del horario lectivo de las materias optativas propias de la Comunidad Andaluza",
+                                      "Actuaciones de coordinación en el proceso de tránsito entre etapas educativas",
+                                    ].map((medida) => (
+                                      <div
+                                        key={medida}
+                                        className="flex items-start gap-2"
+                                      >
+                                        <RadioGroupItem
+                                          value={medida}
+                                          id={`sec-${medida}`}
+                                          className="mt-1"
+                                        />
+                                        <label
+                                          htmlFor={`sec-${medida}`}
+                                          className="text-sm text-gray-700 cursor-pointer"
+                                        >
+                                          {medida}
+                                        </label>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* PROGRAMAS */}
+                                <div className="space-y-3 mt-6">
+                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                    Programas
+                                  </h4>
+                                  <div className="space-y-2 pl-2">
+                                    {[
+                                      "Programas de refuerzo del aprendizaje",
+                                      "Programas de profundización",
+                                      "Programa de Diversificación Curricular",
+                                    ].map((programa) => (
+                                      <div
+                                        key={programa}
+                                        className="flex items-start gap-2"
+                                      >
+                                        <RadioGroupItem
+                                          value={programa}
+                                          id={`sec-${programa}`}
+                                          className="mt-1"
+                                        />
+                                        <label
+                                          htmlFor={`sec-${programa}`}
+                                          className="text-sm text-gray-700 cursor-pointer"
+                                        >
+                                          {programa}
+                                        </label>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* MEDIDAS ESPECÍFICAS */}
+                                <div className="space-y-3 mt-6">
+                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                    Medidas Específicas
+                                  </h4>
+                                  <div className="space-y-2 pl-2">
+                                    {/* Opciones principales de Medidas Específicas */}
+                                    {[
+                                      "Apoyo dentro del aula por PT, AL, personal complementario u otro personal",
+                                      "Programas específicos para el tratamiento personalizado del alumnado NEAE",
+                                      "Atención educativa al alumnado por situaciones de hospitalización o convalecencia domiciliaria",
+                                      "Flexibilización del periodo de escolarización para el alumnado con altas capacidades",
+                                      "Permanencia extraordinaria (solo alumnado NEE)",
+                                      "Escolarización un curso inferior al que corresponde por edad para el alumnado de incorporación tardía con desfase en su nivel curricular de competencia de dos o más cursos",
+                                      "Atención específica para alumnado de incorporación tardía con graves carencias en la comunicación lingüística",
+                                    ].map((medida) => (
+                                      <div
+                                        key={medida}
+                                        className="flex items-start gap-2"
+                                      >
+                                        <RadioGroupItem
+                                          value={medida}
+                                          id={`sec-${medida}`}
+                                          className="mt-1"
+                                        />
+                                        <label
+                                          htmlFor={`sec-${medida}`}
+                                          className="text-sm text-gray-700 cursor-pointer"
+                                        >
+                                          {medida}
+                                        </label>
+                                      </div>
+                                    ))}
+
+                                    {/* Programas de adaptación curricular con sub-opciones */}
+                                    <div className="flex items-start gap-2">
+                                      <RadioGroupItem
+                                        value="Programas de adaptación curricular"
+                                        id="sec-programas-adaptacion"
+                                        className="mt-1"
+                                      />
+                                      <label
+                                        htmlFor="sec-programas-adaptacion"
+                                        className="text-sm text-black cursor-pointer font-medium font-extrabold flex items-center gap-1"
+                                      >
+                                        Programas de adaptación curricular
+                                        {form.medidaSeleccionadaSecundaria?.startsWith(
+                                          "Programas de adaptación curricular",
+                                        ) ? (
+                                          <ChevronDown className="w-4 h-4 text-purple-600" />
+                                        ) : (
+                                          <ChevronRight className="w-4 h-4 text-gray-400" />
+                                        )}
+                                        <span className="text-xs text-purple-600 ml-1">
+                                          (Ver opciones)
+                                        </span>
+                                      </label>
+                                    </div>
+
+                                    {/* Sub-opciones de Programas de adaptación curricular */}
+                                    {form.medidaSeleccionadaSecundaria?.startsWith(
+                                      "Programas de adaptación curricular",
+                                    ) && (
+                                      <div className="ml-6 pl-4 border-l-2 border-purple-300 space-y-2 mt-2">
+                                        <p className="text-xs font-medium text-gray-600 mb-2">
+                                          Selecciona el tipo de programa:
+                                        </p>
+                                        {[
+                                          "Adaptación curricular de acceso",
+                                          "Adaptación curricular significativa",
+                                          "Adaptación curricular para el alumnado con altas capacidades intelectuales",
+                                        ].map((submedida) => (
+                                          <div
+                                            key={submedida}
+                                            className="flex items-start gap-2"
+                                          >
+                                            <RadioGroupItem
+                                              value={`Programas de adaptación curricular: ${submedida}`}
+                                              id={`sec-${submedida}`}
+                                              className="mt-1"
+                                            />
+                                            <label
+                                              htmlFor={`sec-${submedida}`}
+                                              className="text-sm text-gray-600 cursor-pointer"
+                                            >
+                                              {submedida}
+                                            </label>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* OTRAS ACTUACIONES - Sección independiente */}
+                                <div className="space-y-3 mt-6">
+                                  <h4 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">
+                                    Otras Actuaciones
+                                  </h4>
+                                  <div className="space-y-2">
+                                    <Textarea
+                                      id="otrasOrientacionesSecundaria"
+                                      rows={4}
+                                      value={form.otrasOrientaciones || ""}
+                                      onChange={(e) =>
+                                        handleChange(
+                                          "otrasOrientaciones",
+                                          e.target.value,
+                                        )
+                                      }
+                                      placeholder="Especifica otras medidas, programas u orientaciones adicionales..."
+                                      className="w-full"
+                                    />
+                                  </div>
+                                </div>
+                              </RadioGroup>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
                   {/* Botón Guardar dentro de Datos escolares */}
                   <div className="mt-6 flex justify-end">
-                    <Button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Button
+                      type="button"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+                      onClick={handleSaveDraft}
+                    >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
                   </div>
@@ -463,7 +1296,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
               </AccordionItem>
 
               {/* Evaluación psicopedagógica */}
-              <AccordionItem value="evaluacionPsicopedagogica" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionItem
+                value="evaluacionPsicopedagogica"
+                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
                 <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100 transition-colors border-l-4 border-l-purple-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-purple-100 rounded-full flex-shrink-0">
@@ -471,10 +1307,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
-                        <span className="truncate">Evaluación Psicopedagógica</span>
-                        {isSectionComplete("evaluacionPsicopedagogica") && <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />}
+                        <span className="truncate">
+                          Evaluación Psicopedagógica
+                        </span>
+                        {isSectionComplete("evaluacionPsicopedagogica") && (
+                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                        )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Datos y motivo de la evaluación</p>
+                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                        Datos y motivo de la evaluación
+                      </p>
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -484,13 +1326,30 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-5 shadow-sm">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-purple-800">Datos del alumno o alumna</h3>
+                        <h3 className="text-sm font-semibold text-purple-800">
+                          Datos del alumno o alumna
+                        </h3>
                       </div>
-                      <IdentityFields idPrefix="ev-" form={form} handleChange={handleChange} errors={errors} />
+                      <IdentityFields
+                        idPrefix="ev-"
+                        form={form}
+                        handleChange={handleChange}
+                        errors={errors}
+                      />
                       <div className="grid grid-cols-1 gap-4 mt-4">
                         <div className="space-y-2">
-                          <Label htmlFor="eoeReferencia">EOE de referencia en el momento de la elaboración del informe</Label>
-                          <Input id="eoeReferencia" value={form.eoeReferencia || ""} onChange={(e) => handleChange("eoeReferencia", e.target.value)} placeholder="Ej: 29070143 - E.O.E. Málaga Norte-Ciudad Jardín - Málaga" />
+                          <Label htmlFor="eoeReferencia">
+                            EOE de referencia en el momento de la elaboración
+                            del informe
+                          </Label>
+                          <Input
+                            id="eoeReferencia"
+                            value={form.eoeReferencia || ""}
+                            onChange={(e) =>
+                              handleChange("eoeReferencia", e.target.value)
+                            }
+                            placeholder="Ej: 29070143 - E.O.E. Málaga Norte-Ciudad Jardín - Málaga"
+                          />
                         </div>
                       </div>
                     </div>
@@ -499,61 +1358,161 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="rounded-lg border border-purple-200 bg-purple-50/50 p-5 shadow-sm space-y-4">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <h3 className="text-sm font-semibold text-purple-800">Datos de la evaluación psicopedagógica</h3>
+                        <h3 className="text-sm font-semibold text-purple-800">
+                          Datos de la evaluación psicopedagógica
+                        </h3>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="profesionalRealiza">Profesional que lo realiza</Label>
-                          <Input id="profesionalRealiza" value={form.profesionalRealiza || ""} onChange={(e) => handleChange("profesionalRealiza", e.target.value)} placeholder="Nombre y apellidos" />
+                          <Label htmlFor="profesionalRealiza">
+                            Profesional que lo realiza
+                          </Label>
+                          <Input
+                            id="profesionalRealiza"
+                            value={form.profesionalRealiza || ""}
+                            onChange={(e) =>
+                              handleChange("profesionalRealiza", e.target.value)
+                            }
+                            placeholder="Nombre y apellidos"
+                          />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="fechaInicioEvaluacion">Fecha inicio de la evaluación</Label>
-                          <Input id="fechaInicioEvaluacion" type="date" value={form.fechaInicioEvaluacion || ""} onChange={(e) => handleChange("fechaInicioEvaluacion", e.target.value)} />
+                          <Label htmlFor="fechaInicioEvaluacion">
+                            Fecha inicio de la evaluación
+                          </Label>
+                          <Input
+                            id="fechaInicioEvaluacion"
+                            type="date"
+                            value={form.fechaInicioEvaluacion || ""}
+                            onChange={(e) =>
+                              handleChange(
+                                "fechaInicioEvaluacion",
+                                e.target.value,
+                              )
+                            }
+                          />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="fechaFinEvaluacion">Fecha fin de la evaluación</Label>
-                          <Input id="fechaFinEvaluacion" type="date" value={form.fechaFinEvaluacion || ""} onChange={(e) => handleChange("fechaFinEvaluacion", e.target.value)} />
+                          <Label htmlFor="fechaFinEvaluacion">
+                            Fecha fin de la evaluación
+                          </Label>
+                          <Input
+                            id="fechaFinEvaluacion"
+                            type="date"
+                            value={form.fechaFinEvaluacion || ""}
+                            onChange={(e) =>
+                              handleChange("fechaFinEvaluacion", e.target.value)
+                            }
+                          />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="motivoEvaluacion">Motivo de la evaluación psicopedagógica</Label>
-                          <Select value={form.motivoEvaluacion || undefined} onValueChange={(v) => handleChange("motivoEvaluacion", v)}>
+                          <Label htmlFor="motivoEvaluacion">
+                            Motivo de la evaluación psicopedagógica
+                          </Label>
+                          <Select
+                            value={form.motivoEvaluacion || undefined}
+                            onValueChange={(v) =>
+                              handleChange("motivoEvaluacion", v)
+                            }
+                          >
                             <SelectTrigger id="motivoEvaluacion">
                               <SelectValue placeholder="Selecciona un motivo" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="dificultades_aprendizaje">Dificultades de aprendizaje</SelectItem>
-                              <SelectItem value="problemas_comportamiento">Problemas de comportamiento</SelectItem>
-                              <SelectItem value="altas_capacidades">Altas capacidades</SelectItem>
-                              <SelectItem value="neae">Necesidades específicas de apoyo</SelectItem>
+                              <SelectItem value="dificultades_aprendizaje">
+                                Dificultades de aprendizaje
+                              </SelectItem>
+                              <SelectItem value="problemas_comportamiento">
+                                Problemas de comportamiento
+                              </SelectItem>
+                              <SelectItem value="altas_capacidades">
+                                Altas capacidades
+                              </SelectItem>
+                              <SelectItem value="neae">
+                                Necesidades específicas de apoyo
+                              </SelectItem>
                               <SelectItem value="otros">Otros</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="motivoConsulta">Motivo de la evaluación psicopedagógica</Label>
-                        <Textarea id="motivoConsulta" rows={4} value={form.motivoConsulta} onChange={(e) => handleChange("motivoConsulta", e.target.value)} className={errors.motivoConsulta ? "border-red-500" : ""} placeholder="Describe brevemente el motivo de la evaluación" />
-                        {errors.motivoConsulta && <p className="text-sm text-red-500">{errors.motivoConsulta}</p>}
+                        <Label htmlFor="motivoConsulta">
+                          Motivo de la evaluación psicopedagógica
+                        </Label>
+                        <Textarea
+                          id="motivoConsulta"
+                          rows={4}
+                          value={form.motivoConsulta}
+                          onChange={(e) =>
+                            handleChange("motivoConsulta", e.target.value)
+                          }
+                          className={
+                            errors.motivoConsulta ? "border-red-500" : ""
+                          }
+                          placeholder="Describe brevemente el motivo de la evaluación"
+                        />
+                        {errors.motivoConsulta && (
+                          <p className="text-sm text-red-500">
+                            {errors.motivoConsulta}
+                          </p>
+                        )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="instrumentosInformacion">Instrumentos de recogida de información</Label>
-                        <Textarea id="instrumentosInformacion" rows={4} value={form.instrumentosInformacion || ""} onChange={(e) => handleChange("instrumentosInformacion", e.target.value)} placeholder="Observación en aula, entrevistas, análisis de documentación, pruebas, etc." />
+                        <Label htmlFor="instrumentosInformacion">
+                          Instrumentos de recogida de información
+                        </Label>
+                        <Textarea
+                          id="instrumentosInformacion"
+                          rows={4}
+                          value={form.instrumentosInformacion || ""}
+                          onChange={(e) =>
+                            handleChange(
+                              "instrumentosInformacion",
+                              e.target.value,
+                            )
+                          }
+                          placeholder="Observación en aula, entrevistas, análisis de documentación, pruebas, etc."
+                        />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="numeroSesiones">Número de sesiones</Label>
-                          <Input id="numeroSesiones" type="number" min={0} value={form.numeroSesiones || ""} onChange={(e) => handleChange("numeroSesiones", e.target.value)} placeholder="Ej: 5" />
+                          <Label htmlFor="numeroSesiones">
+                            Número de sesiones
+                          </Label>
+                          <Input
+                            id="numeroSesiones"
+                            type="number"
+                            min={0}
+                            value={form.numeroSesiones || ""}
+                            onChange={(e) =>
+                              handleChange("numeroSesiones", e.target.value)
+                            }
+                            placeholder="Ej: 5"
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="observaciones">Observaciones</Label>
-                          <Textarea id="observaciones" rows={3} value={form.observaciones || ""} onChange={(e) => handleChange("observaciones", e.target.value)} placeholder="Información adicional (opcional)" />
+                          <Textarea
+                            id="observaciones"
+                            rows={3}
+                            value={form.observaciones || ""}
+                            onChange={(e) =>
+                              handleChange("observaciones", e.target.value)
+                            }
+                            placeholder="Información adicional (opcional)"
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
                   {/* Botón Guardar dentro de Evaluación psicopedagógica */}
                   <div className="mt-6 flex justify-end">
-                    <Button type="button" className="bg-purple-600 hover:bg-purple-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Button
+                      type="button"
+                      className="bg-purple-600 hover:bg-purple-700 text-white shadow-sm"
+                      onClick={handleSaveDraft}
+                    >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
                   </div>
@@ -561,7 +1520,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
               </AccordionItem>
 
               {/* Información relevante del alumno/a */}
-              <AccordionItem value="infoAlumno" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionItem
+                value="infoAlumno"
+                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
                 <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-orange-50 to-amber-50 hover:from-orange-100 hover:to-amber-100 transition-colors border-l-4 border-l-orange-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-orange-100 rounded-full flex-shrink-0">
@@ -569,10 +1531,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
-                        <span className="truncate">Información Relevante del Alumno</span>
-                        {isSectionComplete("infoAlumno") && <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />}
+                        <span className="truncate">
+                          Información Relevante del Alumno
+                        </span>
+                        {isSectionComplete("infoAlumno") && (
+                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                        )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Desarrollo y características específicas</p>
+                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                        Desarrollo y características específicas
+                      </p>
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -581,86 +1549,185 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-orange-800">Datos del alumno o alumna</h3>
+                      <h3 className="text-sm font-semibold text-orange-800">
+                        Datos del alumno o alumna
+                      </h3>
                     </div>
-                    <IdentityFields idPrefix="ir-" form={form} handleChange={handleChange} errors={errors} />
+                    <IdentityFields
+                      idPrefix="ir-"
+                      form={form}
+                      handleChange={handleChange}
+                      errors={errors}
+                    />
                   </div>
 
                   {/* Datos clínicos y/o sociales relevantes */}
                   <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-orange-800">Datos clínicos y/o sociales relevantes</h3>
+                      <h3 className="text-sm font-semibold text-orange-800">
+                        Datos clínicos y/o sociales relevantes
+                      </h3>
                     </div>
-                    <Textarea rows={4} value={form.datosClinicosSociales || ""} onChange={(e) => handleChange("datosClinicosSociales", e.target.value)} placeholder="Descripción médica/social relevante (diagnósticos, tratamientos, informes externos, etc.)" />
+                    <Textarea
+                      rows={4}
+                      value={form.datosClinicosSociales || ""}
+                      onChange={(e) =>
+                        handleChange("datosClinicosSociales", e.target.value)
+                      }
+                      placeholder="Descripción médica/social relevante (diagnósticos, tratamientos, informes externos, etc.)"
+                    />
                   </div>
 
                   {/* Datos relativos al: Desarrollo cognitivo */}
                   <div className="rounded-lg border border-orange-200 bg-orange-50/50 p-5 shadow-sm space-y-3">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-orange-800">Desarrollo cognitivo</h3>
+                      <h3 className="text-sm font-semibold text-orange-800">
+                        Desarrollo cognitivo
+                      </h3>
                     </div>
                     <div className="space-y-2">
-                      <Textarea rows={4} value={form.descDesarrolloCognitivo || ""} onChange={(e) => handleChange("descDesarrolloCognitivo", e.target.value)} placeholder="Descripción de resultados, CI, memoria de trabajo, razonamiento, etc." />
+                      <Textarea
+                        rows={4}
+                        value={form.descDesarrolloCognitivo || ""}
+                        onChange={(e) =>
+                          handleChange(
+                            "descDesarrolloCognitivo",
+                            e.target.value,
+                          )
+                        }
+                        placeholder="Descripción de resultados, CI, memoria de trabajo, razonamiento, etc."
+                      />
                     </div>
                   </div>
 
                   {/* Autonomía en el uso de WC */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-3">
-                    <p className="text-sm font-semibold text-gray-700">Autonomía en el uso de WC</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Autonomía en el uso de WC
+                    </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="autonomiaWC">Nivel</Label>
-                        <Select value={form.autonomiaWC || undefined} onValueChange={(v) => handleChange("autonomiaWC", v)}>
+                        <Select
+                          value={form.autonomiaWC || undefined}
+                          onValueChange={(v) => handleChange("autonomiaWC", v)}
+                        >
                           <SelectTrigger id="autonomiaWC">
                             <SelectValue placeholder="Selecciona nivel" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_necesita">No necesita atención específica en relación con el uso del W.C.</SelectItem>
-                            <SelectItem value="necesita_apoyo">Necesita atención específica o supervisión ocasional</SelectItem>
-                            <SelectItem value="necesita_apoyo_extenso">Necesita ayuda frecuente/constante</SelectItem>
+                            <SelectItem value="no_necesita">
+                              No necesita atención específica en relación con el
+                              uso del W.C.
+                            </SelectItem>
+                            <SelectItem value="necesita_apoyo">
+                              Necesita atención específica o supervisión
+                              ocasional
+                            </SelectItem>
+                            <SelectItem value="necesita_apoyo_extenso">
+                              Necesita ayuda frecuente/constante
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="autonomiaWCObs">Observaciones</Label>
-                        <Textarea id="autonomiaWCObs" rows={3} value={form.autonomiaWCObs || ""} onChange={(e) => handleChange("autonomiaWCObs", e.target.value)} placeholder="Observaciones relevantes" />
+                        <Textarea
+                          id="autonomiaWCObs"
+                          rows={3}
+                          value={form.autonomiaWCObs || ""}
+                          onChange={(e) =>
+                            handleChange("autonomiaWCObs", e.target.value)
+                          }
+                          placeholder="Observaciones relevantes"
+                        />
                       </div>
                     </div>
                   </div>
 
                   {/* Desarrollo sensorial */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">Desarrollo sensorial</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Desarrollo sensorial
+                    </p>
                     <div className="space-y-2">
                       <Label>Descripción</Label>
-                      <Textarea rows={3} value={form.descDesarrolloSensorial || ""} onChange={(e) => handleChange("descDesarrolloSensorial", e.target.value)} placeholder="Nada que destacar / descripción" />
+                      <Textarea
+                        rows={3}
+                        value={form.descDesarrolloSensorial || ""}
+                        onChange={(e) =>
+                          handleChange(
+                            "descDesarrolloSensorial",
+                            e.target.value,
+                          )
+                        }
+                        placeholder="Nada que destacar / descripción"
+                      />
                     </div>
                     {/* Visión */}
                     <div className="space-y-2">
                       <Label>Desarrollo sensorial visión</Label>
                       <div className="flex items-center gap-2">
-                        <Select value={visionTemp || undefined} onValueChange={(v) => setVisionTemp(v)}>
+                        <Select
+                          value={visionTemp || undefined}
+                          onValueChange={(v) => setVisionTemp(v)}
+                        >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Selecciona valoración" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="No necesita ayuda acceso lectura/escritura/tarea escol. Su visión es funcional">No necesita ayuda acceso lectura/escritura/tarea escol. Su visión es funcional</SelectItem>
-                            <SelectItem value="Requiere adaptaciones de acceso a la lectura/escritura">Requiere adaptaciones de acceso a la lectura/escritura</SelectItem>
-                            <SelectItem value="Necesita apoyo visual específico frecuente">Necesita apoyo visual específico frecuente</SelectItem>
+                            <SelectItem value="No necesita ayuda acceso lectura/escritura/tarea escol. Su visión es funcional">
+                              No necesita ayuda acceso lectura/escritura/tarea
+                              escol. Su visión es funcional
+                            </SelectItem>
+                            <SelectItem value="Requiere adaptaciones de acceso a la lectura/escritura">
+                              Requiere adaptaciones de acceso a la
+                              lectura/escritura
+                            </SelectItem>
+                            <SelectItem value="Necesita apoyo visual específico frecuente">
+                              Necesita apoyo visual específico frecuente
+                            </SelectItem>
                           </SelectContent>
                         </Select>
-                        <Button type="button" variant="secondary" onClick={() => visionTemp && (handleChange("visionValoraciones", [...(form.visionValoraciones || []), visionTemp]), setVisionTemp(""))}>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={() =>
+                            visionTemp &&
+                            (handleChange("visionValoraciones", [
+                              ...(form.visionValoraciones || []),
+                              visionTemp,
+                            ]),
+                            setVisionTemp(""))
+                          }
+                        >
                           Añadir
                         </Button>
                       </div>
                       {(form.visionValoraciones?.length || 0) > 0 && (
                         <ul className="mt-2 divide-y rounded-md border bg-white">
                           {(form.visionValoraciones || []).map((v, i) => (
-                            <li key={`vision-${i}`} className="px-3 py-2 text-sm flex items-center justify-between">
+                            <li
+                              key={`vision-${i}`}
+                              className="px-3 py-2 text-sm flex items-center justify-between"
+                            >
                               <span>{v}</span>
-                              <button type="button" className="text-gray-500 hover:text-red-600" onClick={() => handleChange("visionValoraciones", (form.visionValoraciones || []).filter((_, idx) => idx !== i))}>Borrar</button>
+                              <button
+                                type="button"
+                                className="text-gray-500 hover:text-red-600"
+                                onClick={() =>
+                                  handleChange(
+                                    "visionValoraciones",
+                                    (form.visionValoraciones || []).filter(
+                                      (_, idx) => idx !== i,
+                                    ),
+                                  )
+                                }
+                              >
+                                Borrar
+                              </button>
                             </li>
                           ))}
                         </ul>
@@ -670,26 +1737,63 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="space-y-2">
                       <Label>Desarrollo sensorial audición</Label>
                       <div className="flex items-center gap-2">
-                        <Select value={audicionTemp || undefined} onValueChange={(v) => setAudicionTemp(v)}>
+                        <Select
+                          value={audicionTemp || undefined}
+                          onValueChange={(v) => setAudicionTemp(v)}
+                        >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Selecciona valoración" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="No necesita ayuda acceso lenguaje y comunicación. Su audición es funcional">No necesita ayuda acceso lenguaje y comunicación. Su audición es funcional</SelectItem>
-                            <SelectItem value="Requiere apoyo auditivo específico ocasional">Requiere apoyo auditivo específico ocasional</SelectItem>
-                            <SelectItem value="Necesita apoyo auditivo específico frecuente">Necesita apoyo auditivo específico frecuente</SelectItem>
+                            <SelectItem value="No necesita ayuda acceso lenguaje y comunicación. Su audición es funcional">
+                              No necesita ayuda acceso lenguaje y comunicación.
+                              Su audición es funcional
+                            </SelectItem>
+                            <SelectItem value="Requiere apoyo auditivo específico ocasional">
+                              Requiere apoyo auditivo específico ocasional
+                            </SelectItem>
+                            <SelectItem value="Necesita apoyo auditivo específico frecuente">
+                              Necesita apoyo auditivo específico frecuente
+                            </SelectItem>
                           </SelectContent>
                         </Select>
-                        <Button type="button" variant="secondary" onClick={() => audicionTemp && (handleChange("audicionValoraciones", [...(form.audicionValoraciones || []), audicionTemp]), setAudicionTemp(""))}>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={() =>
+                            audicionTemp &&
+                            (handleChange("audicionValoraciones", [
+                              ...(form.audicionValoraciones || []),
+                              audicionTemp,
+                            ]),
+                            setAudicionTemp(""))
+                          }
+                        >
                           Añadir
                         </Button>
                       </div>
                       {(form.audicionValoraciones?.length || 0) > 0 && (
                         <ul className="mt-2 divide-y rounded-md border bg-white">
                           {(form.audicionValoraciones || []).map((v, i) => (
-                            <li key={`aud-${i}`} className="px-3 py-2 text-sm flex items-center justify-between">
+                            <li
+                              key={`aud-${i}`}
+                              className="px-3 py-2 text-sm flex items-center justify-between"
+                            >
                               <span>{v}</span>
-                              <button type="button" className="text-gray-500 hover:text-red-600" onClick={() => handleChange("audicionValoraciones", (form.audicionValoraciones || []).filter((_, idx) => idx !== i))}>Borrar</button>
+                              <button
+                                type="button"
+                                className="text-gray-500 hover:text-red-600"
+                                onClick={() =>
+                                  handleChange(
+                                    "audicionValoraciones",
+                                    (form.audicionValoraciones || []).filter(
+                                      (_, idx) => idx !== i,
+                                    ),
+                                  )
+                                }
+                              >
+                                Borrar
+                              </button>
                             </li>
                           ))}
                         </ul>
@@ -699,21 +1803,45 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
                   {/* Desarrollo psicomotor */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-3">
-                    <p className="text-sm font-semibold text-gray-700">Desarrollo psicomotor</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Desarrollo psicomotor
+                    </p>
                     <div className="space-y-2">
                       <Label>Descripción</Label>
-                      <Textarea rows={3} value={form.descDesarrolloPsicomotor || ""} onChange={(e) => handleChange("descDesarrolloPsicomotor", e.target.value)} placeholder="Nada que destacar / descripción" />
+                      <Textarea
+                        rows={3}
+                        value={form.descDesarrolloPsicomotor || ""}
+                        onChange={(e) =>
+                          handleChange(
+                            "descDesarrolloPsicomotor",
+                            e.target.value,
+                          )
+                        }
+                        placeholder="Nada que destacar / descripción"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="psicomotorNivel">Nivel</Label>
-                      <Select value={form.psicomotorNivel || undefined} onValueChange={(v) => handleChange("psicomotorNivel", v)}>
+                      <Select
+                        value={form.psicomotorNivel || undefined}
+                        onValueChange={(v) =>
+                          handleChange("psicomotorNivel", v)
+                        }
+                      >
                         <SelectTrigger id="psicomotorNivel">
                           <SelectValue placeholder="Selecciona nivel" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="no_necesita">No necesita atención específica. Su desarrollo psicomotor es funcional</SelectItem>
-                          <SelectItem value="apoyo_ocasional">Requiere apoyo/seguimiento ocasional</SelectItem>
-                          <SelectItem value="apoyo_frecuente">Necesita apoyo frecuente</SelectItem>
+                          <SelectItem value="no_necesita">
+                            No necesita atención específica. Su desarrollo
+                            psicomotor es funcional
+                          </SelectItem>
+                          <SelectItem value="apoyo_ocasional">
+                            Requiere apoyo/seguimiento ocasional
+                          </SelectItem>
+                          <SelectItem value="apoyo_frecuente">
+                            Necesita apoyo frecuente
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -721,144 +1849,293 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
                   {/* Movilidad y autonomía personal */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">Autonomía en los desplazamientos (movilidad)</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Autonomía en los desplazamientos (movilidad)
+                    </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="movilidadNivel">Nivel</Label>
-                        <Select value={form.movilidadNivel || undefined} onValueChange={(v) => handleChange("movilidadNivel", v)}>
+                        <Select
+                          value={form.movilidadNivel || undefined}
+                          onValueChange={(v) =>
+                            handleChange("movilidadNivel", v)
+                          }
+                        >
                           <SelectTrigger id="movilidadNivel">
                             <SelectValue placeholder="Selecciona nivel" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_necesita">No necesita atención específica en relación con el desplazamiento</SelectItem>
-                            <SelectItem value="apoyo_ocasional">Requiere apoyo/seguimiento ocasional</SelectItem>
-                            <SelectItem value="apoyo_frecuente">Necesita apoyo frecuente</SelectItem>
+                            <SelectItem value="no_necesita">
+                              No necesita atención específica en relación con el
+                              desplazamiento
+                            </SelectItem>
+                            <SelectItem value="apoyo_ocasional">
+                              Requiere apoyo/seguimiento ocasional
+                            </SelectItem>
+                            <SelectItem value="apoyo_frecuente">
+                              Necesita apoyo frecuente
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="movilidadObs">Observaciones</Label>
-                        <Textarea id="movilidadObs" rows={3} value={form.movilidadObs || ""} onChange={(e) => handleChange("movilidadObs", e.target.value)} placeholder="Observaciones" />
+                        <Textarea
+                          id="movilidadObs"
+                          rows={3}
+                          value={form.movilidadObs || ""}
+                          onChange={(e) =>
+                            handleChange("movilidadObs", e.target.value)
+                          }
+                          placeholder="Observaciones"
+                        />
                       </div>
                     </div>
                   </div>
 
                   {/* Control postural en sedestación */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">Posibilidades de control postural en sedestación</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Posibilidades de control postural en sedestación
+                    </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="controlPosturalNivel">Nivel</Label>
-                        <Select value={form.controlPosturalNivel || undefined} onValueChange={(v) => handleChange("controlPosturalNivel", v)}>
+                        <Select
+                          value={form.controlPosturalNivel || undefined}
+                          onValueChange={(v) =>
+                            handleChange("controlPosturalNivel", v)
+                          }
+                        >
                           <SelectTrigger id="controlPosturalNivel">
                             <SelectValue placeholder="Selecciona nivel" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_necesita">No necesita atención específica en relación con el control postural</SelectItem>
-                            <SelectItem value="apoyo_ocasional">Requiere apoyo/seguimiento ocasional</SelectItem>
-                            <SelectItem value="apoyo_frecuente">Necesita apoyo frecuente</SelectItem>
+                            <SelectItem value="no_necesita">
+                              No necesita atención específica en relación con el
+                              control postural
+                            </SelectItem>
+                            <SelectItem value="apoyo_ocasional">
+                              Requiere apoyo/seguimiento ocasional
+                            </SelectItem>
+                            <SelectItem value="apoyo_frecuente">
+                              Necesita apoyo frecuente
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="controlPosturalObs">Observaciones</Label>
-                        <Textarea id="controlPosturalObs" rows={3} value={form.controlPosturalObs || ""} onChange={(e) => handleChange("controlPosturalObs", e.target.value)} placeholder="Observaciones" />
+                        <Label htmlFor="controlPosturalObs">
+                          Observaciones
+                        </Label>
+                        <Textarea
+                          id="controlPosturalObs"
+                          rows={3}
+                          value={form.controlPosturalObs || ""}
+                          onChange={(e) =>
+                            handleChange("controlPosturalObs", e.target.value)
+                          }
+                          placeholder="Observaciones"
+                        />
                       </div>
                     </div>
                   </div>
 
                   {/* Acceso a las enseñanzas: manipulación y materiales */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">Acceso a las enseñanzas: manipulación y materiales didácticos</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Acceso a las enseñanzas: manipulación y materiales
+                      didácticos
+                    </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="manipulacionMaterialesNivel">Nivel</Label>
-                        <Select value={form.manipulacionMaterialesNivel || undefined} onValueChange={(v) => handleChange("manipulacionMaterialesNivel", v)}>
+                        <Label htmlFor="manipulacionMaterialesNivel">
+                          Nivel
+                        </Label>
+                        <Select
+                          value={form.manipulacionMaterialesNivel || undefined}
+                          onValueChange={(v) =>
+                            handleChange("manipulacionMaterialesNivel", v)
+                          }
+                        >
                           <SelectTrigger id="manipulacionMaterialesNivel">
                             <SelectValue placeholder="Selecciona nivel" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_necesita">No necesita atención específica en manipulación y uso de materiales didácticos</SelectItem>
-                            <SelectItem value="apoyo_ocasional">Requiere apoyo/seguimiento ocasional</SelectItem>
-                            <SelectItem value="apoyo_frecuente">Necesita apoyo frecuente</SelectItem>
+                            <SelectItem value="no_necesita">
+                              No necesita atención específica en manipulación y
+                              uso de materiales didácticos
+                            </SelectItem>
+                            <SelectItem value="apoyo_ocasional">
+                              Requiere apoyo/seguimiento ocasional
+                            </SelectItem>
+                            <SelectItem value="apoyo_frecuente">
+                              Necesita apoyo frecuente
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="manipulacionMaterialesObs">Observaciones</Label>
-                        <Textarea id="manipulacionMaterialesObs" rows={3} value={form.manipulacionMaterialesObs || ""} onChange={(e) => handleChange("manipulacionMaterialesObs", e.target.value)} placeholder="Observaciones" />
+                        <Label htmlFor="manipulacionMaterialesObs">
+                          Observaciones
+                        </Label>
+                        <Textarea
+                          id="manipulacionMaterialesObs"
+                          rows={3}
+                          value={form.manipulacionMaterialesObs || ""}
+                          onChange={(e) =>
+                            handleChange(
+                              "manipulacionMaterialesObs",
+                              e.target.value,
+                            )
+                          }
+                          placeholder="Observaciones"
+                        />
                       </div>
                     </div>
                   </div>
 
                   {/* Autonomía en la alimentación */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">Autonomía en la alimentación</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Autonomía en la alimentación
+                    </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="alimentacionNivel">Nivel</Label>
-                        <Select value={form.alimentacionNivel || undefined} onValueChange={(v) => handleChange("alimentacionNivel", v)}>
+                        <Select
+                          value={form.alimentacionNivel || undefined}
+                          onValueChange={(v) =>
+                            handleChange("alimentacionNivel", v)
+                          }
+                        >
                           <SelectTrigger id="alimentacionNivel">
                             <SelectValue placeholder="Selecciona nivel" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_necesita">No necesita atención específica en relación con la alimentación</SelectItem>
-                            <SelectItem value="apoyo_ocasional">Requiere apoyo/seguimiento ocasional</SelectItem>
-                            <SelectItem value="apoyo_frecuente">Necesita apoyo frecuente</SelectItem>
+                            <SelectItem value="no_necesita">
+                              No necesita atención específica en relación con la
+                              alimentación
+                            </SelectItem>
+                            <SelectItem value="apoyo_ocasional">
+                              Requiere apoyo/seguimiento ocasional
+                            </SelectItem>
+                            <SelectItem value="apoyo_frecuente">
+                              Necesita apoyo frecuente
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="alimentacionObs">Observaciones</Label>
-                        <Textarea id="alimentacionObs" rows={3} value={form.alimentacionObs || ""} onChange={(e) => handleChange("alimentacionObs", e.target.value)} placeholder="Observaciones" />
+                        <Textarea
+                          id="alimentacionObs"
+                          rows={3}
+                          value={form.alimentacionObs || ""}
+                          onChange={(e) =>
+                            handleChange("alimentacionObs", e.target.value)
+                          }
+                          placeholder="Observaciones"
+                        />
                       </div>
                     </div>
                   </div>
 
                   {/* Desarrollo comunicativo y lingüístico */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">Desarrollo comunicativo y lingüístico</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Desarrollo comunicativo y lingüístico
+                    </p>
                     <div className="space-y-2">
                       <Label>Descripción</Label>
-                      <Textarea rows={4} value={form.descDesarrolloComunicativo || ""} onChange={(e) => handleChange("descDesarrolloComunicativo", e.target.value)} placeholder="Vocabulario, información, comprensión, aritmética..." />
+                      <Textarea
+                        rows={4}
+                        value={form.descDesarrolloComunicativo || ""}
+                        onChange={(e) =>
+                          handleChange(
+                            "descDesarrolloComunicativo",
+                            e.target.value,
+                          )
+                        }
+                        placeholder="Vocabulario, información, comprensión, aritmética..."
+                      />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="comunicacionNivel">Comunicación</Label>
-                        <Select value={form.comunicacionNivel || undefined} onValueChange={(v) => handleChange("comunicacionNivel", v)}>
+                        <Select
+                          value={form.comunicacionNivel || undefined}
+                          onValueChange={(v) =>
+                            handleChange("comunicacionNivel", v)
+                          }
+                        >
                           <SelectTrigger id="comunicacionNivel">
                             <SelectValue placeholder="Selecciona nivel" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_necesita">No necesita atención específica. Comunicación intencional funcional</SelectItem>
-                            <SelectItem value="apoyo_ocasional">Requiere apoyo/seguimiento ocasional</SelectItem>
-                            <SelectItem value="apoyo_frecuente">Necesita apoyo frecuente</SelectItem>
+                            <SelectItem value="no_necesita">
+                              No necesita atención específica. Comunicación
+                              intencional funcional
+                            </SelectItem>
+                            <SelectItem value="apoyo_ocasional">
+                              Requiere apoyo/seguimiento ocasional
+                            </SelectItem>
+                            <SelectItem value="apoyo_frecuente">
+                              Necesita apoyo frecuente
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="lenguajeExpresivoNivel">Lenguaje expresivo</Label>
-                        <Select value={form.lenguajeExpresivoNivel || undefined} onValueChange={(v) => handleChange("lenguajeExpresivoNivel", v)}>
+                        <Label htmlFor="lenguajeExpresivoNivel">
+                          Lenguaje expresivo
+                        </Label>
+                        <Select
+                          value={form.lenguajeExpresivoNivel || undefined}
+                          onValueChange={(v) =>
+                            handleChange("lenguajeExpresivoNivel", v)
+                          }
+                        >
                           <SelectTrigger id="lenguajeExpresivoNivel">
                             <SelectValue placeholder="Selecciona nivel" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_necesita">No necesita atención específica en el dllo lingüístico expresivo</SelectItem>
-                            <SelectItem value="apoyo_ocasional">Requiere apoyo/seguimiento ocasional</SelectItem>
-                            <SelectItem value="apoyo_frecuente">Necesita apoyo frecuente</SelectItem>
+                            <SelectItem value="no_necesita">
+                              No necesita atención específica en el dllo
+                              lingüístico expresivo
+                            </SelectItem>
+                            <SelectItem value="apoyo_ocasional">
+                              Requiere apoyo/seguimiento ocasional
+                            </SelectItem>
+                            <SelectItem value="apoyo_frecuente">
+                              Necesita apoyo frecuente
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="lenguajeComprensivoNivel">Lenguaje comprensivo</Label>
-                        <Select value={form.lenguajeComprensivoNivel || undefined} onValueChange={(v) => handleChange("lenguajeComprensivoNivel", v)}>
+                        <Label htmlFor="lenguajeComprensivoNivel">
+                          Lenguaje comprensivo
+                        </Label>
+                        <Select
+                          value={form.lenguajeComprensivoNivel || undefined}
+                          onValueChange={(v) =>
+                            handleChange("lenguajeComprensivoNivel", v)
+                          }
+                        >
                           <SelectTrigger id="lenguajeComprensivoNivel">
                             <SelectValue placeholder="Selecciona nivel" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_necesita">No necesita atención específica</SelectItem>
-                            <SelectItem value="apoyo_ocasional">Requiere apoyo/seguimiento ocasional</SelectItem>
-                            <SelectItem value="apoyo_frecuente">Necesita apoyo frecuente</SelectItem>
+                            <SelectItem value="no_necesita">
+                              No necesita atención específica
+                            </SelectItem>
+                            <SelectItem value="apoyo_ocasional">
+                              Requiere apoyo/seguimiento ocasional
+                            </SelectItem>
+                            <SelectItem value="apoyo_frecuente">
+                              Necesita apoyo frecuente
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -867,32 +2144,67 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
                   {/* Desarrollo social y afectivo */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-2">
-                    <p className="text-sm font-semibold text-gray-700">Desarrollo social y afectivo</p>
-                    <Textarea rows={4} value={form.descDesarrolloSocialAfectivo || ""} onChange={(e) => handleChange("descDesarrolloSocialAfectivo", e.target.value)} placeholder="Relaciones con iguales, clima aula, conductas observadas, etc." />
+                    <p className="text-sm font-semibold text-gray-700">
+                      Desarrollo social y afectivo
+                    </p>
+                    <Textarea
+                      rows={4}
+                      value={form.descDesarrolloSocialAfectivo || ""}
+                      onChange={(e) =>
+                        handleChange(
+                          "descDesarrolloSocialAfectivo",
+                          e.target.value,
+                        )
+                      }
+                      placeholder="Relaciones con iguales, clima aula, conductas observadas, etc."
+                    />
                   </div>
 
                   {/* Estilo de aprendizaje y motivación */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-2">
-                    <p className="text-sm font-semibold text-gray-700">Estilo de aprendizaje y motivación</p>
-                    <Textarea rows={4} value={form.descEstiloAprendizaje || ""} onChange={(e) => handleChange("descEstiloAprendizaje", e.target.value)} placeholder="Puntos fuertes, motivación, autonomía, persistencia, etc." />
+                    <p className="text-sm font-semibold text-gray-700">
+                      Estilo de aprendizaje y motivación
+                    </p>
+                    <Textarea
+                      rows={4}
+                      value={form.descEstiloAprendizaje || ""}
+                      onChange={(e) =>
+                        handleChange("descEstiloAprendizaje", e.target.value)
+                      }
+                      placeholder="Puntos fuertes, motivación, autonomía, persistencia, etc."
+                    />
                   </div>
 
                   {/* Otros */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-2">
                     <p className="text-sm font-semibold text-gray-700">Otros</p>
-                    <Textarea rows={3} value={form.infoOtros || ""} onChange={(e) => handleChange("infoOtros", e.target.value)} placeholder="Otra información relevante" />
+                    <Textarea
+                      rows={3}
+                      value={form.infoOtros || ""}
+                      onChange={(e) =>
+                        handleChange("infoOtros", e.target.value)
+                      }
+                      placeholder="Otra información relevante"
+                    />
                   </div>
 
                   {/* Guardar dentro de Información relevante */}
                   <div className="mt-6 flex justify-end">
-                    <Button type="button" className="bg-orange-600 hover:bg-orange-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Button
+                      type="button"
+                      className="bg-orange-600 hover:bg-orange-700 text-white shadow-sm"
+                      onClick={handleSaveDraft}
+                    >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="contextoEscolar" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionItem
+                value="contextoEscolar"
+                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
                 <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-teal-50 to-cyan-50 hover:from-teal-100 hover:to-cyan-100 transition-colors border-l-4 border-l-teal-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-teal-100 rounded-full flex-shrink-0">
@@ -901,9 +2213,13 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="flex-1 min-w-0">
                       <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
                         <span className="truncate">Contexto Escolar</span>
-                        {isSectionComplete("contextoEscolar") && <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />}
+                        {isSectionComplete("contextoEscolar") && (
+                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                        )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Información del entorno educativo</p>
+                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                        Información del entorno educativo
+                      </p>
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -912,28 +2228,51 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   <div className="rounded-lg border border-teal-200 bg-teal-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-teal-800">Datos del alumno o alumna</h3>
+                      <h3 className="text-sm font-semibold text-teal-800">
+                        Datos del alumno o alumna
+                      </h3>
                     </div>
-                    <IdentityFields idPrefix="ce-" form={form} handleChange={handleChange} errors={errors} />
+                    <IdentityFields
+                      idPrefix="ce-"
+                      form={form}
+                      handleChange={handleChange}
+                      errors={errors}
+                    />
                   </div>
                   {/* Texto principal de contexto escolar */}
                   <div className="rounded-lg border border-teal-200 bg-teal-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-teal-800">Información relevante sobre el contexto escolar</h3>
+                      <h3 className="text-sm font-semibold text-teal-800">
+                        Información relevante sobre el contexto escolar
+                      </h3>
                     </div>
-                    <Textarea rows={6} value={form.contextoEscolar || ""} onChange={(e) => handleChange("contextoEscolar", e.target.value)} placeholder="Ej.: Llegada reciente al centro, ratio de aula, recursos de PT/AL, disponibilidad de apoyos, características del centro, etc." />
+                    <Textarea
+                      rows={6}
+                      value={form.contextoEscolar || ""}
+                      onChange={(e) =>
+                        handleChange("contextoEscolar", e.target.value)
+                      }
+                      placeholder="Ej.: Llegada reciente al centro, ratio de aula, recursos de PT/AL, disponibilidad de apoyos, características del centro, etc."
+                    />
                   </div>
                   {/* Botón Guardar dentro de Contexto escolar */}
                   <div className="mt-6 flex justify-end">
-                    <Button type="button" className="bg-teal-600 hover:bg-teal-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Button
+                      type="button"
+                      className="bg-teal-600 hover:bg-teal-700 text-white shadow-sm"
+                      onClick={handleSaveDraft}
+                    >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="entornoFamiliar" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionItem
+                value="entornoFamiliar"
+                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
                 <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transition-colors border-l-4 border-l-pink-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-pink-100 rounded-full flex-shrink-0">
@@ -942,9 +2281,13 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="flex-1 min-w-0">
                       <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
                         <span className="truncate">Entorno Familiar</span>
-                        {isSectionComplete("entornoFamiliar") && <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />}
+                        {isSectionComplete("entornoFamiliar") && (
+                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                        )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Contexto familiar y social del alumno</p>
+                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                        Contexto familiar y social del alumno
+                      </p>
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -953,28 +2296,52 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   <div className="rounded-lg border border-pink-200 bg-pink-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-pink-800">Datos del alumno o alumna</h3>
+                      <h3 className="text-sm font-semibold text-pink-800">
+                        Datos del alumno o alumna
+                      </h3>
                     </div>
-                    <IdentityFields idPrefix="ef-" form={form} handleChange={handleChange} errors={errors} />
+                    <IdentityFields
+                      idPrefix="ef-"
+                      form={form}
+                      handleChange={handleChange}
+                      errors={errors}
+                    />
                   </div>
                   {/* Texto principal del entorno familiar/contexto social */}
                   <div className="rounded-lg border border-pink-200 bg-pink-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-pink-800">Información relevante sobre el entorno familiar y el contexto social</h3>
+                      <h3 className="text-sm font-semibold text-pink-800">
+                        Información relevante sobre el entorno familiar y el
+                        contexto social
+                      </h3>
                     </div>
-                    <Textarea rows={6} value={form.entornoFamiliar || ""} onChange={(e) => handleChange("entornoFamiliar", e.target.value)} placeholder="Ej.: Situación familiar (convivencia, custodia), red de apoyos, recursos sociales, factores de riesgo/protección, etc." />
+                    <Textarea
+                      rows={6}
+                      value={form.entornoFamiliar || ""}
+                      onChange={(e) =>
+                        handleChange("entornoFamiliar", e.target.value)
+                      }
+                      placeholder="Ej.: Situación familiar (convivencia, custodia), red de apoyos, recursos sociales, factores de riesgo/protección, etc."
+                    />
                   </div>
                   {/* Botón Guardar dentro de Entorno familiar */}
                   <div className="mt-6 flex justify-end">
-                    <Button type="button" className="bg-pink-600 hover:bg-pink-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Button
+                      type="button"
+                      className="bg-pink-600 hover:bg-pink-700 text-white shadow-sm"
+                      onClick={handleSaveDraft}
+                    >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="necesidadesApoyo" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionItem
+                value="necesidadesApoyo"
+                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
                 <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-indigo-50 to-blue-50 hover:from-indigo-100 hover:to-blue-100 transition-colors border-l-4 border-l-indigo-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-indigo-100 rounded-full flex-shrink-0">
@@ -982,10 +2349,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
-                        <span className="truncate">Necesidades de Apoyo Educativo</span>
-                        {isSectionComplete("necesidadesApoyo") && <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />}
+                        <span className="truncate">
+                          Necesidades de Apoyo Educativo
+                        </span>
+                        {isSectionComplete("necesidadesApoyo") && (
+                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                        )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Determinación de NEAE específicas</p>
+                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                        Determinación de NEAE específicas
+                      </p>
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -994,20 +2367,36 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-indigo-800">Datos del alumno o alumna</h3>
+                      <h3 className="text-sm font-semibold text-indigo-800">
+                        Datos del alumno o alumna
+                      </h3>
                     </div>
-                    <IdentityFields idPrefix="ne-" form={form} handleChange={handleChange} errors={errors} />
+                    <IdentityFields
+                      idPrefix="ne-"
+                      form={form}
+                      handleChange={handleChange}
+                      errors={errors}
+                    />
                   </div>
 
                   {/* Determinación de NEAE */}
                   <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm space-y-4">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-indigo-800">Determinación de las necesidades específicas de apoyo educativo</h3>
+                      <h3 className="text-sm font-semibold text-indigo-800">
+                        Determinación de las necesidades específicas de apoyo
+                        educativo
+                      </h3>
                     </div>
                     <div className="space-y-2">
-                      <Label>¿Presenta necesidades específicas de apoyo educativo?</Label>
-                      <RadioGroup className="flex gap-6" value={form.presentaNEAE || ""} onValueChange={(v) => handleChange("presentaNEAE", v)}>
+                      <Label>
+                        ¿Presenta necesidades específicas de apoyo educativo?
+                      </Label>
+                      <RadioGroup
+                        className="flex gap-6"
+                        value={form.presentaNEAE || ""}
+                        onValueChange={(v) => handleChange("presentaNEAE", v)}
+                      >
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem id="neae-si" value="si" />
                           <Label htmlFor="neae-si">Sí</Label>
@@ -1020,27 +2409,56 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
 
                     <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">
-                      Esta determinación de NEAE no es un diagnóstico clínico, sino la identificación de necesidades que requieren atención educativa diferente a la ordinaria según criterios de la Consejería.
+                      Esta determinación de NEAE no es un diagnóstico clínico,
+                      sino la identificación de necesidades que requieren
+                      atención educativa diferente a la ordinaria según
+                      criterios de la Consejería.
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                       <div className="md:col-span-2 space-y-2">
                         <Label htmlFor="necesidad">Necesidad</Label>
-                        <Select value={necesidadTemp || undefined} onValueChange={(v) => setNecesidadTemp(v)}>
+                        <Select
+                          value={necesidadTemp || undefined}
+                          onValueChange={(v) => setNecesidadTemp(v)}
+                        >
                           <SelectTrigger id="necesidad">
                             <SelectValue placeholder="Selecciona necesidad" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="discapacidad_intelectual_leve">Discapacidad Intelectual leve</SelectItem>
-                            <SelectItem value="trastorno_espectro_autista">Trastorno del Espectro Autista</SelectItem>
-                            <SelectItem value="trastorno_lenguaje">Trastorno del lenguaje</SelectItem>
-                            <SelectItem value="dificultades_aprendizaje">Dificultades específicas de aprendizaje</SelectItem>
-                            <SelectItem value="altas_capacidades">Altas Capacidades</SelectItem>
-                            <SelectItem value="otras_necesidades">Otras necesidades</SelectItem>
+                            <SelectItem value="discapacidad_intelectual_leve">
+                              Discapacidad Intelectual leve
+                            </SelectItem>
+                            <SelectItem value="trastorno_espectro_autista">
+                              Trastorno del Espectro Autista
+                            </SelectItem>
+                            <SelectItem value="trastorno_lenguaje">
+                              Trastorno del lenguaje
+                            </SelectItem>
+                            <SelectItem value="dificultades_aprendizaje">
+                              Dificultades específicas de aprendizaje
+                            </SelectItem>
+                            <SelectItem value="altas_capacidades">
+                              Altas Capacidades
+                            </SelectItem>
+                            <SelectItem value="otras_necesidades">
+                              Otras necesidades
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
-                      <Button type="button" variant="secondary" onClick={() => necesidadTemp && (handleChange("necesidadesListado", [...(form.necesidadesListado || []), necesidadTemp]), setNecesidadTemp(""))}>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() =>
+                          necesidadTemp &&
+                          (handleChange("necesidadesListado", [
+                            ...(form.necesidadesListado || []),
+                            necesidadTemp,
+                          ]),
+                          setNecesidadTemp(""))
+                        }
+                      >
                         Añadir
                       </Button>
                     </div>
@@ -1048,26 +2466,53 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     {(form.necesidadesListado?.length || 0) > 0 && (
                       <ul className="mt-2 divide-y rounded-md border bg-white">
                         {(form.necesidadesListado || []).map((n, i) => (
-                          <li key={`nec-${i}`} className="px-3 py-2 text-sm flex items-center justify-between">
+                          <li
+                            key={`nec-${i}`}
+                            className="px-3 py-2 text-sm flex items-center justify-between"
+                          >
                             <span className="truncate">
-                              {n.replace(/_/g, " ").replace(/\b\w/g, (m) => m.toUpperCase())}
+                              {n
+                                .replace(/_/g, " ")
+                                .replace(/\b\w/g, (m) => m.toUpperCase())}
                             </span>
-                            <button type="button" className="text-gray-500 hover:text-red-600" onClick={() => handleChange("necesidadesListado", (form.necesidadesListado || []).filter((_, idx) => idx !== i))}>Borrar</button>
+                            <button
+                              type="button"
+                              className="text-gray-500 hover:text-red-600"
+                              onClick={() =>
+                                handleChange(
+                                  "necesidadesListado",
+                                  (form.necesidadesListado || []).filter(
+                                    (_, idx) => idx !== i,
+                                  ),
+                                )
+                              }
+                            >
+                              Borrar
+                            </button>
                           </li>
                         ))}
                       </ul>
                     )}
 
                     <div className="space-y-2">
-                      <Label htmlFor="sindromeEspecifico">Síndrome específico</Label>
-                      <Select value={form.sindromeEspecifico || undefined} onValueChange={(v) => handleChange("sindromeEspecifico", v)}>
+                      <Label htmlFor="sindromeEspecifico">
+                        Síndrome específico
+                      </Label>
+                      <Select
+                        value={form.sindromeEspecifico || undefined}
+                        onValueChange={(v) =>
+                          handleChange("sindromeEspecifico", v)
+                        }
+                      >
                         <SelectTrigger id="sindromeEspecifico">
                           <SelectValue placeholder="Selecciona si procede" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="ninguno">Ninguno</SelectItem>
                           <SelectItem value="down">Síndrome de Down</SelectItem>
-                          <SelectItem value="asperger">Síndrome de Asperger</SelectItem>
+                          <SelectItem value="asperger">
+                            Síndrome de Asperger
+                          </SelectItem>
                           <SelectItem value="x_fragil">X Frágil</SelectItem>
                           <SelectItem value="otro">Otro</SelectItem>
                         </SelectContent>
@@ -1079,21 +2524,37 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-indigo-800">Observaciones</h3>
+                      <h3 className="text-sm font-semibold text-indigo-800">
+                        Observaciones
+                      </h3>
                     </div>
-                    <Textarea rows={4} value={form.observacionesNEAE || ""} onChange={(e) => handleChange("observacionesNEAE", e.target.value)} placeholder="Resumen de la necesidad y su correspondencia con el NCC, medidas de acceso necesarias, etc." />
+                    <Textarea
+                      rows={4}
+                      value={form.observacionesNEAE || ""}
+                      onChange={(e) =>
+                        handleChange("observacionesNEAE", e.target.value)
+                      }
+                      placeholder="Resumen de la necesidad y su correspondencia con el NCC, medidas de acceso necesarias, etc."
+                    />
                   </div>
 
                   {/* Botón Guardar */}
                   <div className="mt-6 flex justify-end">
-                    <Button type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Button
+                      type="button"
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm"
+                      onClick={handleSaveDraft}
+                    >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="propuestaAtencion" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionItem
+                value="propuestaAtencion"
+                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
                 <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-lime-50 to-green-50 hover:from-lime-100 hover:to-green-100 transition-colors border-l-4 border-l-lime-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-lime-100 rounded-full flex-shrink-0">
@@ -1101,10 +2562,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
-                        <span className="truncate">Propuesta de Atención Educativa</span>
-                        {isSectionComplete("propuestaAtencion") && <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />}
+                        <span className="truncate">
+                          Propuesta de Atención Educativa
+                        </span>
+                        {isSectionComplete("propuestaAtencion") && (
+                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                        )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Orientaciones y medidas para el profesorado</p>
+                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                        Orientaciones y medidas para el profesorado
+                      </p>
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -1113,157 +2580,415 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   <div className="rounded-lg border border-lime-200 bg-lime-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-lime-800">Datos del alumno o alumna</h3>
+                      <h3 className="text-sm font-semibold text-lime-800">
+                        Datos del alumno o alumna
+                      </h3>
                     </div>
-                    <IdentityFields idPrefix="pa-" form={form} handleChange={handleChange} errors={errors} />
+                    <IdentityFields
+                      idPrefix="pa-"
+                      form={form}
+                      handleChange={handleChange}
+                      errors={errors}
+                    />
                   </div>
 
                   {/* Propuesta de atención educativa */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">Especificar la propuesta de medidas y recursos necesarios para atender las NEAE identificadas.</p>
-                    <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">Medidas Educativas</div>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Especificar la propuesta de medidas y recursos necesarios
+                      para atender las NEAE identificadas.
+                    </p>
+                    <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">
+                      Medidas Educativas
+                    </div>
 
                     {/* Medidas educativas generales */}
                     <div className="space-y-2">
-                      <p className="text-sm font-medium">Medidas educativas generales</p>
+                      <p className="text-sm font-medium">
+                        Medidas educativas generales
+                      </p>
                       <div className="grid grid-cols-1 md:grid-cols-3 items-end gap-4">
                         <div className="md:col-span-2">
-                          <Select value={medidaTemp || undefined} onValueChange={(v) => setMedidaTemp(v)}>
+                          <Select
+                            value={medidaTemp || undefined}
+                            onValueChange={(v) => setMedidaTemp(v)}
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Selecciona medida" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="refuerzo_lcl_en_lugar_de_2LE">Refuerzo de LCL en lugar de 2ª Lengua Extranjera (Educación Primaria)</SelectItem>
-                              <SelectItem value="organizacion_flexible">Organización flexible de espacios/tiempos/recursos</SelectItem>
-                              <SelectItem value="actividades_refuerzo">Actividades de refuerzo educativo</SelectItem>
-                              <SelectItem value="apoyo_en_grupo_ordinario">Apoyo en grupo ordinario mediante 2º profesor/a dentro del aula</SelectItem>
+                              <SelectItem value="refuerzo_lcl_en_lugar_de_2LE">
+                                Refuerzo de LCL en lugar de 2ª Lengua Extranjera
+                                (Educación Primaria)
+                              </SelectItem>
+                              <SelectItem value="organizacion_flexible">
+                                Organización flexible de
+                                espacios/tiempos/recursos
+                              </SelectItem>
+                              <SelectItem value="actividades_refuerzo">
+                                Actividades de refuerzo educativo
+                              </SelectItem>
+                              <SelectItem value="apoyo_en_grupo_ordinario">
+                                Apoyo en grupo ordinario mediante 2º profesor/a
+                                dentro del aula
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button type="button" variant="secondary" onClick={() => medidaTemp && (handleChange("medidasEducativasGenerales", [...(form.medidasEducativasGenerales || []), medidaTemp]), setMedidaTemp(""))}>Añadir</Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={() =>
+                            medidaTemp &&
+                            (handleChange("medidasEducativasGenerales", [
+                              ...(form.medidasEducativasGenerales || []),
+                              medidaTemp,
+                            ]),
+                            setMedidaTemp(""))
+                          }
+                        >
+                          Añadir
+                        </Button>
                       </div>
                       {(form.medidasEducativasGenerales?.length || 0) > 0 && (
                         <ul className="mt-2 divide-y rounded-md border bg-white">
-                          {(form.medidasEducativasGenerales || []).map((m, i) => (
-                            <li key={`med-${i}`} className="px-3 py-2 text-sm flex items-center justify-between">
-                              <span>{m.replace(/_/g, " ").replace(/\b\w/g, (t) => t.toUpperCase())}</span>
-                              <button type="button" className="text-gray-500 hover:text-red-600" onClick={() => handleChange("medidasEducativasGenerales", (form.medidasEducativasGenerales || []).filter((_, idx) => idx !== i))}>Borrar</button>
-                            </li>
-                          ))}
+                          {(form.medidasEducativasGenerales || []).map(
+                            (m, i) => (
+                              <li
+                                key={`med-${i}`}
+                                className="px-3 py-2 text-sm flex items-center justify-between"
+                              >
+                                <span>
+                                  {m
+                                    .replace(/_/g, " ")
+                                    .replace(/\b\w/g, (t) => t.toUpperCase())}
+                                </span>
+                                <button
+                                  type="button"
+                                  className="text-gray-500 hover:text-red-600"
+                                  onClick={() =>
+                                    handleChange(
+                                      "medidasEducativasGenerales",
+                                      (
+                                        form.medidasEducativasGenerales || []
+                                      ).filter((_, idx) => idx !== i),
+                                    )
+                                  }
+                                >
+                                  Borrar
+                                </button>
+                              </li>
+                            ),
+                          )}
                         </ul>
                       )}
                     </div>
 
                     {/* Recursos materiales específicos */}
                     <div className="space-y-2">
-                      <p className="text-sm font-medium">Recursos materiales específicos</p>
-                      <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">La propuesta de Recursos Materiales Específicos requiere informe previo del E.O.E. Especializado. Adjuntar informe en Ficheros Externos.</div>
+                      <p className="text-sm font-medium">
+                        Recursos materiales específicos
+                      </p>
+                      <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">
+                        La propuesta de Recursos Materiales Específicos requiere
+                        informe previo del E.O.E. Especializado. Adjuntar
+                        informe en Ficheros Externos.
+                      </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 items-end gap-4">
                         <div className="md:col-span-2">
-                          <Select value={recursoMaterialTemp || undefined} onValueChange={(v) => setRecursoMaterialTemp(v)}>
+                          <Select
+                            value={recursoMaterialTemp || undefined}
+                            onValueChange={(v) => setRecursoMaterialTemp(v)}
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Selecciona recurso" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="software_apoyo_aprendizaje">Software de apoyo al aprendizaje</SelectItem>
-                              <SelectItem value="materiales_adaptados">Materiales adaptados</SelectItem>
-                              <SelectItem value="ayudas_tecnicas">Ayudas técnicas</SelectItem>
+                              <SelectItem value="software_apoyo_aprendizaje">
+                                Software de apoyo al aprendizaje
+                              </SelectItem>
+                              <SelectItem value="materiales_adaptados">
+                                Materiales adaptados
+                              </SelectItem>
+                              <SelectItem value="ayudas_tecnicas">
+                                Ayudas técnicas
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button type="button" variant="secondary" onClick={() => recursoMaterialTemp && (handleChange("recursosMaterialesEspecificos", [...(form.recursosMaterialesEspecificos || []), recursoMaterialTemp]), setRecursoMaterialTemp(""))}>Añadir</Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={() =>
+                            recursoMaterialTemp &&
+                            (handleChange("recursosMaterialesEspecificos", [
+                              ...(form.recursosMaterialesEspecificos || []),
+                              recursoMaterialTemp,
+                            ]),
+                            setRecursoMaterialTemp(""))
+                          }
+                        >
+                          Añadir
+                        </Button>
                       </div>
-                      {(form.recursosMaterialesEspecificos?.length || 0) > 0 && (
+                      {(form.recursosMaterialesEspecificos?.length || 0) >
+                        0 && (
                         <ul className="mt-2 divide-y rounded-md border bg-white">
-                          {(form.recursosMaterialesEspecificos || []).map((r, i) => (
-                            <li key={`rec-${i}`} className="px-3 py-2 text-sm flex items-center justify-between">
-                              <span>{r.replace(/_/g, " ").replace(/\b\w/g, (t) => t.toUpperCase())}</span>
-                              <button type="button" className="text-gray-500 hover:text-red-600" onClick={() => handleChange("recursosMaterialesEspecificos", (form.recursosMaterialesEspecificos || []).filter((_, idx) => idx !== i))}>Borrar</button>
-                            </li>
-                          ))}
+                          {(form.recursosMaterialesEspecificos || []).map(
+                            (r, i) => (
+                              <li
+                                key={`rec-${i}`}
+                                className="px-3 py-2 text-sm flex items-center justify-between"
+                              >
+                                <span>
+                                  {r
+                                    .replace(/_/g, " ")
+                                    .replace(/\b\w/g, (t) => t.toUpperCase())}
+                                </span>
+                                <button
+                                  type="button"
+                                  className="text-gray-500 hover:text-red-600"
+                                  onClick={() =>
+                                    handleChange(
+                                      "recursosMaterialesEspecificos",
+                                      (
+                                        form.recursosMaterialesEspecificos || []
+                                      ).filter((_, idx) => idx !== i),
+                                    )
+                                  }
+                                >
+                                  Borrar
+                                </button>
+                              </li>
+                            ),
+                          )}
                         </ul>
                       )}
                       <div className="space-y-2 mt-2">
-                        <Label htmlFor="recursosMaterialesObs">Observaciones</Label>
-                        <Textarea id="recursosMaterialesObs" rows={3} value={form.recursosMaterialesObs || ""} onChange={(e) => handleChange("recursosMaterialesObs", e.target.value)} placeholder="Aclaraciones sobre recursos materiales propuestos" />
+                        <Label htmlFor="recursosMaterialesObs">
+                          Observaciones
+                        </Label>
+                        <Textarea
+                          id="recursosMaterialesObs"
+                          rows={3}
+                          value={form.recursosMaterialesObs || ""}
+                          onChange={(e) =>
+                            handleChange(
+                              "recursosMaterialesObs",
+                              e.target.value,
+                            )
+                          }
+                          placeholder="Aclaraciones sobre recursos materiales propuestos"
+                        />
                       </div>
                     </div>
 
                     {/* Actuaciones personalizadas de acción tutorial y seguimiento */}
                     <div className="space-y-2">
-                      <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">Medidas de carácter ordinario sujetas a lo establecido en el Proyecto Educativo del Centro</div>
-                      <Label htmlFor="actuacionesObservaciones">Observaciones</Label>
-                      <Textarea id="actuacionesObservaciones" rows={3} value={form.actuacionesObservaciones || ""} onChange={(e) => handleChange("actuacionesObservaciones", e.target.value)} placeholder="Seguimiento, coordinación, acción tutorial, etc." />
+                      <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">
+                        Medidas de carácter ordinario sujetas a lo establecido
+                        en el Proyecto Educativo del Centro
+                      </div>
+                      <Label htmlFor="actuacionesObservaciones">
+                        Observaciones
+                      </Label>
+                      <Textarea
+                        id="actuacionesObservaciones"
+                        rows={3}
+                        value={form.actuacionesObservaciones || ""}
+                        onChange={(e) =>
+                          handleChange(
+                            "actuacionesObservaciones",
+                            e.target.value,
+                          )
+                        }
+                        placeholder="Seguimiento, coordinación, acción tutorial, etc."
+                      />
                     </div>
                   </div>
 
                   {/* Recursos personales */}
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">Recursos Personales</p>
+                    <p className="text-sm font-semibold text-gray-700">
+                      Recursos Personales
+                    </p>
                     {/* Profesorado especialista */}
                     <div className="space-y-2">
-                      <p className="text-sm font-medium">Profesorado especialista</p>
+                      <p className="text-sm font-medium">
+                        Profesorado especialista
+                      </p>
                       <div className="grid grid-cols-1 md:grid-cols-3 items-end gap-4">
                         <div className="md:col-span-2">
-                          <Select value={profEspecialistaTemp || undefined} onValueChange={(v) => setProfEspecialistaTemp(v)}>
+                          <Select
+                            value={profEspecialistaTemp || undefined}
+                            onValueChange={(v) => setProfEspecialistaTemp(v)}
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Selecciona perfil" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="pt">Prof.Esp. en Pedagogía Terapéutica (PT)</SelectItem>
-                              <SelectItem value="al">Prof.Esp. en Audición y Lenguaje (AL)</SelectItem>
+                              <SelectItem value="pt">
+                                Prof.Esp. en Pedagogía Terapéutica (PT)
+                              </SelectItem>
+                              <SelectItem value="al">
+                                Prof.Esp. en Audición y Lenguaje (AL)
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button type="button" variant="secondary" onClick={() => profEspecialistaTemp && (handleChange("profesoradoEspecialista", [...(form.profesoradoEspecialista || []), profEspecialistaTemp]), setProfEspecialistaTemp(""))}>Añadir</Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={() =>
+                            profEspecialistaTemp &&
+                            (handleChange("profesoradoEspecialista", [
+                              ...(form.profesoradoEspecialista || []),
+                              profEspecialistaTemp,
+                            ]),
+                            setProfEspecialistaTemp(""))
+                          }
+                        >
+                          Añadir
+                        </Button>
                       </div>
                       {(form.profesoradoEspecialista?.length || 0) > 0 && (
                         <ul className="mt-2 divide-y rounded-md border bg-white">
                           {(form.profesoradoEspecialista || []).map((p, i) => (
-                            <li key={`pe-${i}`} className="px-3 py-2 text-sm flex items-center justify-between">
-                              <span>{p === 'pt' ? 'Prof.Esp. en Pedagogía Terapéutica (PT)' : 'Prof.Esp. en Audición y Lenguaje (AL)'}</span>
-                              <button type="button" className="text-gray-500 hover:text-red-600" onClick={() => handleChange("profesoradoEspecialista", (form.profesoradoEspecialista || []).filter((_, idx) => idx !== i))}>Borrar</button>
+                            <li
+                              key={`pe-${i}`}
+                              className="px-3 py-2 text-sm flex items-center justify-between"
+                            >
+                              <span>
+                                {p === "pt"
+                                  ? "Prof.Esp. en Pedagogía Terapéutica (PT)"
+                                  : "Prof.Esp. en Audición y Lenguaje (AL)"}
+                              </span>
+                              <button
+                                type="button"
+                                className="text-gray-500 hover:text-red-600"
+                                onClick={() =>
+                                  handleChange(
+                                    "profesoradoEspecialista",
+                                    (form.profesoradoEspecialista || []).filter(
+                                      (_, idx) => idx !== i,
+                                    ),
+                                  )
+                                }
+                              >
+                                Borrar
+                              </button>
                             </li>
                           ))}
                         </ul>
                       )}
                       <div className="space-y-2 mt-2">
-                        <Label htmlFor="profesoradoEspecialistaObs">Observaciones</Label>
-                        <Textarea id="profesoradoEspecialistaObs" rows={3} value={form.profesoradoEspecialistaObs || ""} onChange={(e) => handleChange("profesoradoEspecialistaObs", e.target.value)} placeholder="Distribución horaria, coordinación, objetivos del apoyo, etc." />
+                        <Label htmlFor="profesoradoEspecialistaObs">
+                          Observaciones
+                        </Label>
+                        <Textarea
+                          id="profesoradoEspecialistaObs"
+                          rows={3}
+                          value={form.profesoradoEspecialistaObs || ""}
+                          onChange={(e) =>
+                            handleChange(
+                              "profesoradoEspecialistaObs",
+                              e.target.value,
+                            )
+                          }
+                          placeholder="Distribución horaria, coordinación, objetivos del apoyo, etc."
+                        />
                       </div>
                     </div>
 
                     {/* Personal no docente */}
                     <div className="space-y-2">
-                      <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">La propuesta de ILSE requiere informe previo del E.O.E. Especializado. La del Fisioterapeuta solo para Centro Específico de Educación Especial.</div>
+                      <div className="rounded-md border bg-slate-50 p-3 text-xs text-slate-700">
+                        La propuesta de ILSE requiere informe previo del E.O.E.
+                        Especializado. La del Fisioterapeuta solo para Centro
+                        Específico de Educación Especial.
+                      </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 items-end gap-4">
                         <div className="md:col-span-2">
-                          <Select value={personalNoDocenteTemp || undefined} onValueChange={(v) => setPersonalNoDocenteTemp(v)}>
+                          <Select
+                            value={personalNoDocenteTemp || undefined}
+                            onValueChange={(v) => setPersonalNoDocenteTemp(v)}
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Selecciona personal no docente" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="ilse">Intérprete de Lengua de Signos (ILSE)</SelectItem>
-                              <SelectItem value="fisioterapeuta">Fisioterapeuta</SelectItem>
-                              <SelectItem value="pteis">Personal Técnico de Integración Social (PTIS)</SelectItem>
+                              <SelectItem value="ilse">
+                                Intérprete de Lengua de Signos (ILSE)
+                              </SelectItem>
+                              <SelectItem value="fisioterapeuta">
+                                Fisioterapeuta
+                              </SelectItem>
+                              <SelectItem value="pteis">
+                                Personal Técnico de Integración Social (PTIS)
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button type="button" variant="secondary" onClick={() => personalNoDocenteTemp && (handleChange("personalNoDocente", [...(form.personalNoDocente || []), personalNoDocenteTemp]), setPersonalNoDocenteTemp(""))}>Añadir</Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={() =>
+                            personalNoDocenteTemp &&
+                            (handleChange("personalNoDocente", [
+                              ...(form.personalNoDocente || []),
+                              personalNoDocenteTemp,
+                            ]),
+                            setPersonalNoDocenteTemp(""))
+                          }
+                        >
+                          Añadir
+                        </Button>
                       </div>
                       {(form.personalNoDocente?.length || 0) > 0 && (
                         <ul className="mt-2 divide-y rounded-md border bg-white">
                           {(form.personalNoDocente || []).map((p, i) => (
-                            <li key={`pnd-${i}`} className="px-3 py-2 text-sm flex items-center justify-between">
-                              <span>{p === 'ilse' ? 'Intérprete de Lengua de Signos (ILSE)' : p === 'fisioterapeuta' ? 'Fisioterapeuta' : 'Personal Técnico de Integración Social (PTIS)'}</span>
-                              <button type="button" className="text-gray-500 hover:text-red-600" onClick={() => handleChange("personalNoDocente", (form.personalNoDocente || []).filter((_, idx) => idx !== i))}>Borrar</button>
+                            <li
+                              key={`pnd-${i}`}
+                              className="px-3 py-2 text-sm flex items-center justify-between"
+                            >
+                              <span>
+                                {p === "ilse"
+                                  ? "Intérprete de Lengua de Signos (ILSE)"
+                                  : p === "fisioterapeuta"
+                                    ? "Fisioterapeuta"
+                                    : "Personal Técnico de Integración Social (PTIS)"}
+                              </span>
+                              <button
+                                type="button"
+                                className="text-gray-500 hover:text-red-600"
+                                onClick={() =>
+                                  handleChange(
+                                    "personalNoDocente",
+                                    (form.personalNoDocente || []).filter(
+                                      (_, idx) => idx !== i,
+                                    ),
+                                  )
+                                }
+                              >
+                                Borrar
+                              </button>
                             </li>
                           ))}
                         </ul>
                       )}
                       <div className="space-y-2 mt-2">
-                        <Label htmlFor="personalNoDocenteObs">Observaciones</Label>
-                        <Textarea id="personalNoDocenteObs" rows={3} value={form.personalNoDocenteObs || ""} onChange={(e) => handleChange("personalNoDocenteObs", e.target.value)} placeholder="Justificación, tareas, coordinación..." />
+                        <Label htmlFor="personalNoDocenteObs">
+                          Observaciones
+                        </Label>
+                        <Textarea
+                          id="personalNoDocenteObs"
+                          rows={3}
+                          value={form.personalNoDocenteObs || ""}
+                          onChange={(e) =>
+                            handleChange("personalNoDocenteObs", e.target.value)
+                          }
+                          placeholder="Justificación, tareas, coordinación..."
+                        />
                       </div>
                     </div>
                   </div>
@@ -1272,22 +2997,42 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   <div className="rounded-lg border border-lime-200 bg-lime-50/50 p-5 shadow-sm space-y-2">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-lime-800">Orientaciones al profesorado</h3>
+                      <h3 className="text-sm font-semibold text-lime-800">
+                        Orientaciones al profesorado
+                      </h3>
                     </div>
-                    <p className="text-sm text-slate-600 mb-3">Especificar orientaciones para la organización de la respuesta educativa.</p>
-                    <Textarea id="propuestaAtencion" rows={6} value={form.propuestaAtencion || ""} onChange={(e) => handleChange("propuestaAtencion", e.target.value)} placeholder="Sugerencias metodológicas, organización del aula, apoyos, seguimiento, coordinación..." />
+                    <p className="text-sm text-slate-600 mb-3">
+                      Especificar orientaciones para la organización de la
+                      respuesta educativa.
+                    </p>
+                    <Textarea
+                      id="propuestaAtencion"
+                      rows={6}
+                      value={form.propuestaAtencion || ""}
+                      onChange={(e) =>
+                        handleChange("propuestaAtencion", e.target.value)
+                      }
+                      placeholder="Sugerencias metodológicas, organización del aula, apoyos, seguimiento, coordinación..."
+                    />
                   </div>
 
                   {/* Botón Guardar */}
                   <div className="mt-6 flex justify-end">
-                    <Button type="button" className="bg-lime-600 hover:bg-lime-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Button
+                      type="button"
+                      className="bg-lime-600 hover:bg-lime-700 text-white shadow-sm"
+                      onClick={handleSaveDraft}
+                    >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="orientacionesFamilia" className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <AccordionItem
+                value="orientacionesFamilia"
+                className="border border-slate-200 rounded-lg mb-3 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
                 <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 transition-colors border-l-4 border-l-violet-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-violet-100 rounded-full flex-shrink-0">
@@ -1295,10 +3040,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <span className="text-sm sm:text-lg font-semibold text-slate-800 flex items-center">
-                        <span className="truncate">Orientaciones a la Familia</span>
-                        {isSectionComplete("orientacionesFamilia") && <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />}
+                        <span className="truncate">
+                          Orientaciones a la Familia
+                        </span>
+                        {isSectionComplete("orientacionesFamilia") && (
+                          <CheckCircle2 className="ml-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                        )}
                       </span>
-                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">Guía para representantes legales</p>
+                      <p className="text-xs sm:text-sm text-slate-600 mt-0.5 hidden sm:block">
+                        Guía para representantes legales
+                      </p>
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -1307,37 +3058,75 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-violet-800">Datos del alumno o alumna</h3>
+                      <h3 className="text-sm font-semibold text-violet-800">
+                        Datos del alumno o alumna
+                      </h3>
                     </div>
-                    <IdentityFields idPrefix="of-" form={form} handleChange={handleChange} errors={errors} />
+                    <IdentityFields
+                      idPrefix="of-"
+                      form={form}
+                      handleChange={handleChange}
+                      errors={errors}
+                    />
                   </div>
 
                   {/* Orientaciones */}
                   <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-violet-800">Orientaciones a la familia o a los representantes legales</h3>
+                      <h3 className="text-sm font-semibold text-violet-800">
+                        Orientaciones a la familia o a los representantes
+                        legales
+                      </h3>
                     </div>
-                    <Textarea rows={8} value={form.orientacionesFamilia || ""} onChange={(e) => handleChange("orientacionesFamilia", e.target.value)} placeholder="Ej.: Establecer contactos periódicos con la tutora, reforzar logros, proporcionar apoyo y dedicación, fomentar expectativas positivas, coordinación con el centro, etc." />
+                    <Textarea
+                      rows={8}
+                      value={form.orientacionesFamilia || ""}
+                      onChange={(e) =>
+                        handleChange("orientacionesFamilia", e.target.value)
+                      }
+                      placeholder="Ej.: Establecer contactos periódicos con la tutora, reforzar logros, proporcionar apoyo y dedicación, fomentar expectativas positivas, coordinación con el centro, etc."
+                    />
                   </div>
 
                   {/* Fichero externo */}
                   <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-5 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
-                      <h3 className="text-sm font-semibold text-violet-800">Fichero externo</h3>
+                      <h3 className="text-sm font-semibold text-violet-800">
+                        Fichero externo
+                      </h3>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Input type="file" multiple onChange={(e) => handleOrientacionesFiles(e.target.files)} />
+                      <Input
+                        type="file"
+                        multiple
+                        onChange={(e) =>
+                          handleOrientacionesFiles(e.target.files)
+                        }
+                      />
                     </div>
                     <div className="mt-4 space-y-2">
-                      <p className="text-sm text-gray-600">Número total de ficheros: {(form.orientacionesAdjuntos?.length || 0)}</p>
+                      <p className="text-sm text-gray-600">
+                        Número total de ficheros:{" "}
+                        {form.orientacionesAdjuntos?.length || 0}
+                      </p>
                       {(form.orientacionesAdjuntos?.length || 0) > 0 && (
                         <ul className="divide-y rounded-md border bg-gray-50">
                           {(form.orientacionesAdjuntos || []).map((f, idx) => (
-                            <li key={`of-${idx}-${f.name}`} className="flex items-center justify-between px-3 py-2 text-sm">
-                              <span className="truncate" title={f.name}>{f.name}</span>
-                              <button type="button" className="text-gray-500 hover:text-red-600" onClick={() => removeOrientacionesAdjunto(idx)} aria-label={`Eliminar ${f.name}`}>
+                            <li
+                              key={`of-${idx}-${f.name}`}
+                              className="flex items-center justify-between px-3 py-2 text-sm"
+                            >
+                              <span className="truncate" title={f.name}>
+                                {f.name}
+                              </span>
+                              <button
+                                type="button"
+                                className="text-gray-500 hover:text-red-600"
+                                onClick={() => removeOrientacionesAdjunto(idx)}
+                                aria-label={`Eliminar ${f.name}`}
+                              >
                                 Eliminar
                               </button>
                             </li>
@@ -1349,7 +3138,11 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
                   {/* Botón Guardar dentro de Orientaciones a la familia */}
                   <div className="mt-6 flex justify-end">
-                    <Button type="button" className="bg-violet-600 hover:bg-violet-700 text-white shadow-sm" onClick={handleSaveDraft}>
+                    <Button
+                      type="button"
+                      className="bg-violet-600 hover:bg-violet-700 text-white shadow-sm"
+                      onClick={handleSaveDraft}
+                    >
                       <Save className="h-4 w-4 mr-2" /> Guardar Sección
                     </Button>
                   </div>

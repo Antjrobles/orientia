@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { generatePsychopedagogicalReport } from '@/lib/groq/client';
-import { GroqApiError } from '@/lib/groq/types';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from "next/server";
+import { generatePsychopedagogicalReport } from "@/lib/groq/client";
+import { GroqApiError } from "@/lib/groq/types";
+import { z } from "zod";
 
 const RequestSchema = z
   .object({
-    nombre: z.string().min(1, 'El nombre es requerido'),
-    curso: z.string().min(1, 'El curso es requerido'),
-    motivoConsulta: z.string().min(1, 'El motivo de consulta es requerido'),
+    nombre: z.string().min(1, "El nombre es requerido"),
+    curso: z.string().min(1, "El curso es requerido"),
+    motivoConsulta: z.string().min(1, "El motivo de consulta es requerido"),
     observaciones: z.string().optional(),
     fechaNacimiento: z.string().optional(),
     unidad: z.string().optional(),
@@ -28,19 +28,19 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      report
+      report,
     });
   } catch (error) {
-    console.error('Error in generate-report API:', error);
+    console.error("Error in generate-report API:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Datos inválidos',
-          details: error.errors
+          error: "Datos inválidos",
+          details: error.errors,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -48,18 +48,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: error.message
+          error: error.message,
         },
-        { status: error.statusCode || 500 }
+        { status: error.statusCode || 500 },
       );
     }
 
     return NextResponse.json(
       {
         success: false,
-        error: 'Error interno del servidor'
+        error: "Error interno del servidor",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

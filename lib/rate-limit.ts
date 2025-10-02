@@ -13,13 +13,17 @@ export function checkRateLimit(key: string, limit: number, windowMs: number) {
     return { allowed: false, remaining: 0, reset: entry.expires };
   }
   entry.count += 1;
-  return { allowed: true, remaining: limit - entry.count, reset: entry.expires };
+  return {
+    allowed: true,
+    remaining: limit - entry.count,
+    reset: entry.expires,
+  };
 }
 
 export function getClientIp(req: Request | { headers: Headers }) {
-  const h = 'headers' in req ? req.headers : (req as any).headers;
-  const xff = h.get('x-forwarded-for');
-  const ip = xff?.split(',')[0]?.trim() || (h as any).get('x-real-ip') || 'unknown';
+  const h = "headers" in req ? req.headers : (req as any).headers;
+  const xff = h.get("x-forwarded-for");
+  const ip =
+    xff?.split(",")[0]?.trim() || (h as any).get("x-real-ip") || "unknown";
   return ip;
 }
-

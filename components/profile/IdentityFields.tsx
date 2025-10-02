@@ -1,6 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Shield } from "lucide-react";
 
 interface IdentityFieldsProps {
@@ -17,12 +23,15 @@ export function IdentityFields({
   idPrefix = "",
   form,
   handleChange,
-  errors
+  errors,
 }: IdentityFieldsProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
       <div className="space-y-2">
-        <Label htmlFor={`${idPrefix}nombre`} className="flex items-center gap-2">
+        <Label
+          htmlFor={`${idPrefix}nombre`}
+          className="flex items-center gap-2"
+        >
           Nombre y Apellidos
           <Shield className="w-4 h-4 text-emerald-600" />
         </Label>
@@ -40,7 +49,9 @@ export function IdentityFields({
         </p>
       </div>
       <div className="space-y-2">
-        <Label htmlFor={`${idPrefix}fechaNacimiento`}>Fecha de nacimiento</Label>
+        <Label htmlFor={`${idPrefix}fechaNacimiento`}>
+          Fecha de nacimiento
+        </Label>
         <Input
           id={`${idPrefix}fechaNacimiento`}
           type="date"
@@ -64,15 +75,29 @@ export function IdentityFields({
             <SelectItem value="Infantil 3 años">Infantil 3 años</SelectItem>
             <SelectItem value="Infantil 4 años">Infantil 4 años</SelectItem>
             <SelectItem value="Infantil 5 años">Infantil 5 años</SelectItem>
-            <SelectItem value="1º Educación Primaria">1º Educación Primaria</SelectItem>
-            <SelectItem value="2º Educación Primaria">2º Educación Primaria</SelectItem>
-            <SelectItem value="3º Educación Primaria">3º Educación Primaria</SelectItem>
-            <SelectItem value="4º Educación Primaria">4º Educación Primaria</SelectItem>
-            <SelectItem value="5º Educación Primaria">5º Educación Primaria</SelectItem>
-            <SelectItem value="6º Educación Primaria">6º Educación Primaria</SelectItem>
+            <SelectItem value="1º Educación Primaria">
+              1º Educación Primaria
+            </SelectItem>
+            <SelectItem value="2º Educación Primaria">
+              2º Educación Primaria
+            </SelectItem>
+            <SelectItem value="3º Educación Primaria">
+              3º Educación Primaria
+            </SelectItem>
+            <SelectItem value="4º Educación Primaria">
+              4º Educación Primaria
+            </SelectItem>
+            <SelectItem value="5º Educación Primaria">
+              5º Educación Primaria
+            </SelectItem>
+            <SelectItem value="6º Educación Primaria">
+              6º Educación Primaria
+            </SelectItem>
           </SelectContent>
         </Select>
-        {errors?.curso && <p className="text-sm text-red-500">{errors.curso}</p>}
+        {errors?.curso && (
+          <p className="text-sm text-red-500">{errors.curso}</p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor={`${idPrefix}unidad`}>Unidad</Label>

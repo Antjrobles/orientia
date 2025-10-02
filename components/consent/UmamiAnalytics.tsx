@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Script from 'next/script';
-import { useConsent } from '@/components/consent/ConsentProvider';
+import Script from "next/script";
+import { useConsent } from "@/components/consent/ConsentProvider";
 
 export default function UmamiAnalytics() {
   const { consent } = useConsent();

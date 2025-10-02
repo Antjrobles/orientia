@@ -30,9 +30,9 @@ export class GroqApiError extends Error {
   constructor(
     message: string,
     public statusCode?: number,
-    public originalError?: any
+    public originalError?: any,
   ) {
     super(message);
-    this.name = 'GroqApiError';
+    this.name = "GroqApiError";
   }
 }

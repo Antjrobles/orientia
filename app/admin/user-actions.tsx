@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { MoreHorizontal, Trash2, Edit, UserCheck, UserX } from 'lucide-react'
-import { toast } from 'sonner'
+import * as React from "react";
+import { MoreHorizontal, Trash2, Edit, UserCheck, UserX } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   AlertDialog,
@@ -13,8 +13,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,50 +25,54 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { deleteUser, updateUserRole } from './actions'
-import type { User } from './columns'
+} from "@/components/ui/dropdown-menu";
+import { deleteUser, updateUserRole } from "./actions";
+import type { User } from "./columns";
 
 interface UserActionsProps {
-  user: User
+  user: User;
 }
 
 export function UserActions({ user }: UserActionsProps) {
-  const [isDeletePending, startDeleteTransition] = React.useTransition()
-  const [isUpdatePending, startUpdateTransition] = React.useTransition()
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
+  const [isDeletePending, startDeleteTransition] = React.useTransition();
+  const [isUpdatePending, startUpdateTransition] = React.useTransition();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-  const handleRoleChange = (newRole: 'admin' | 'usuario') => {
+  const handleRoleChange = (newRole: "admin" | "usuario") => {
     startUpdateTransition(async () => {
-      const result = await updateUserRole(user.id, newRole)
+      const result = await updateUserRole(user.id, newRole);
       if (result.success) {
-        toast.success(result.message)
+        toast.success(result.message);
       } else {
-        toast.error(result.message)
+        toast.error(result.message);
       }
-    })
-  }
+    });
+  };
 
   const handleDelete = () => {
     startDeleteTransition(async () => {
-      const result = await deleteUser(user.id)
+      const result = await deleteUser(user.id);
       if (result.success) {
-        toast.success(result.message)
-        setIsDeleteDialogOpen(false)
+        toast.success(result.message);
+        setIsDeleteDialogOpen(false);
       } else {
-        toast.error(result.message)
+        toast.error(result.message);
       }
-    })
-  }
+    });
+  };
 
   return (
     <>
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción no se puede deshacer. Esto eliminará permanentemente al usuario{' '}
+              Esta acción no se puede deshacer. Esto eliminará permanentemente
+              al usuario{" "}
               <span className="font-semibold">{user.name || user.email}</span>.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -79,7 +83,7 @@ export function UserActions({ user }: UserActionsProps) {
               disabled={isDeletePending}
               className="bg-red-600 hover:bg-red-700"
             >
-              {isDeletePending ? 'Eliminando...' : 'Sí, eliminar usuario'}
+              {isDeletePending ? "Eliminando..." : "Sí, eliminar usuario"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -94,18 +98,43 @@ export function UserActions({ user }: UserActionsProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user.id)}>Copiar ID de usuario</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => navigator.clipboard.writeText(user.id)}
+          >
+            Copiar ID de usuario
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger><Edit className="mr-2 h-4 w-4" /><span>Editar rol</span></DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger>
+              <Edit className="mr-2 h-4 w-4" />
+              <span>Editar rol</span>
+            </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
-              <DropdownMenuItem onClick={() => handleRoleChange('admin')} disabled={user.role === 'admin' || isUpdatePending}><UserCheck className="mr-2 h-4 w-4" /><span>Hacer Administrador</span></DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleRoleChange('usuario')} disabled={user.role === 'usuario' || isUpdatePending}><UserX className="mr-2 h-4 w-4" /><span>Hacer Usuario</span></DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleRoleChange("admin")}
+                disabled={user.role === "admin" || isUpdatePending}
+              >
+                <UserCheck className="mr-2 h-4 w-4" />
+                <span>Hacer Administrador</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleRoleChange("usuario")}
+                disabled={user.role === "usuario" || isUpdatePending}
+              >
+                <UserX className="mr-2 h-4 w-4" />
+                <span>Hacer Usuario</span>
+              </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
-          <DropdownMenuItem className="text-red-600 focus:text-red-600" onClick={() => setIsDeleteDialogOpen(true)}><Trash2 className="mr-2 h-4 w-4" /><span>Eliminar usuario</span></DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-red-600 focus:text-red-600"
+            onClick={() => setIsDeleteDialogOpen(true)}
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            <span>Eliminar usuario</span>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  )
+  );
 }

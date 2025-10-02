@@ -1,8 +1,11 @@
-import { MetadataRoute } from 'next';
+import { MetadataRoute } from "next";
 
 function getBaseUrl() {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'https://www.orientia.es';
-  return raw.endsWith('/') ? raw.slice(0, -1) : raw;
+  const raw =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXTAUTH_URL ||
+    "https://www.orientia.es";
+  return raw.endsWith("/") ? raw.slice(0, -1) : raw;
 }
 
 /**
@@ -16,22 +19,22 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: '*',
-        allow: '/',
+        userAgent: "*",
+        allow: "/",
         disallow: [
           // Autenticación / áreas privadas
-          '/login',
-          '/register',
-          '/profile',
-          '/alumnos',
-          '/informes',
-          '/centros',
-          '/admin',
-          '/not-permitted',
+          "/login",
+          "/register",
+          "/profile",
+          "/alumnos",
+          "/informes",
+          "/centros",
+          "/admin",
+          "/not-permitted",
           // Rutas técnicas que no aportan valor SEO
-          '/api',
-          '/_next',
-          '/static',
+          "/api",
+          "/_next",
+          "/static",
           // Páginas con querystrings (si tu buscador usa /buscar?q=…, deja esta línea comentada)
           // '/*?*',
         ],

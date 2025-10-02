@@ -3,7 +3,7 @@
  * Incluye las secciones JSONB tipadas.
  */
 
-import type { UUID, ISODateTimeString, EstadoInforme } from './informe.base';
+import type { UUID, ISODateTimeString, EstadoInforme } from "./informe.base";
 import type {
   DatosIdentificativos,
   HistoriaYMedidas,
@@ -12,7 +12,7 @@ import type {
   InformacionAlumno,
   ContextoGeneral,
   Orientaciones,
-} from './informe.secciones';
+} from "./informe.secciones";
 
 export interface Informe {
   id: UUID;
@@ -30,4 +30,3 @@ export interface Informe {
   necesidades_apoyo_educativo: string | null;
   orientaciones: Orientaciones | null;
 }
-

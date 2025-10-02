@@ -1,23 +1,30 @@
-"use client"
+"use client";
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 interface Props {
-  data: { dia: string; total: number }[]
+  data: { dia: string; total: number }[];
 }
 
-const diasOrden = ["L", "M", "X", "J", "V", "S", "D"]
+const diasOrden = ["L", "M", "X", "J", "V", "S", "D"];
 
 export function AnalyticsChart({ data }: Props) {
   // Aseguramos que los días vayan en orden lógico
   const datosOrdenados = diasOrden.map((letra) => {
-    const encontrado = data.find((d) => d.dia === letra)
+    const encontrado = data.find((d) => d.dia === letra);
     return {
       dia: letra,
       total: encontrado?.total || 0,
-    }
-  })
+    };
+  });
 
   return (
     <Card className="col-span-full lg:col-span-3">
@@ -35,5 +42,5 @@ export function AnalyticsChart({ data }: Props) {
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

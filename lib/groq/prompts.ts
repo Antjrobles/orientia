@@ -1,4 +1,4 @@
-import { StudentData } from './types';
+import { StudentData } from "./types";
 
 export const SYSTEM_PROMPT = `
 Eres un orientador educativo experto de la junta de Andalucia  en la elaboración de informes psicopedagógicos.
@@ -36,17 +36,17 @@ El informe debe ser detallado, específico y personalizado para el alumno en cue
 `;
 
 export function buildReportPrompt(params: StudentData): string {
-   return `
+  return `
 Genera un informe psicopedagógico completo y profesional para el siguiente alumno:
 
 **DATOS DEL ALUMNO:**
 - Nombre: ${params.nombre}
 - Curso: ${params.curso}
 - Motivo de consulta: ${params.motivoConsulta}
-${params.observaciones ? `- Observaciones adicionales: ${params.observaciones}` : ''}
-${params.fechaNacimiento ? `- Fecha de nacimiento: ${params.fechaNacimiento}` : ''}
-${params.unidad ? `- Unidad: ${params.unidad}` : ''}
-${params.etapaEscolar ? `- Etapa de escolarización: ${params.etapaEscolar}` : ''}
+${params.observaciones ? `- Observaciones adicionales: ${params.observaciones}` : ""}
+${params.fechaNacimiento ? `- Fecha de nacimiento: ${params.fechaNacimiento}` : ""}
+${params.unidad ? `- Unidad: ${params.unidad}` : ""}
+${params.etapaEscolar ? `- Etapa de escolarización: ${params.etapaEscolar}` : ""}
 
 **INSTRUCCIONES:**
 - Elabora un informe psicopedagógico profesional y detallado

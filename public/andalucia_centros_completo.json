@@ -318,7 +318,14 @@
           },
           {
             "name": "El Alquián",
-            "schools": ["El Alquián", "Ne-Nes", "Pequemar Pita", "Pequeños Genios", "San Bernardo", "San Vicente"]
+            "schools": [
+              "El Alquián",
+              "Ne-Nes",
+              "Pequemar Pita",
+              "Pequeños Genios",
+              "San Bernardo",
+              "San Vicente"
+            ]
           },
           {
             "name": "El Cabo De Gata",
@@ -343,7 +350,13 @@
           },
           {
             "name": "Retamar",
-            "schools": ["Duendes", "Luna Lunera", "Pekes", "Retamar", "Torremar"]
+            "schools": [
+              "Duendes",
+              "Luna Lunera",
+              "Pekes",
+              "Retamar",
+              "Torremar"
+            ]
           }
         ]
       },
@@ -352,7 +365,13 @@
         "localities": [
           {
             "name": "Antas",
-            "schools": ["Azahar", "El Argar", "Fuente Vermeja", "Háblame Bonito", "La Pernera"]
+            "schools": [
+              "Azahar",
+              "El Argar",
+              "Fuente Vermeja",
+              "Háblame Bonito",
+              "La Pernera"
+            ]
           }
         ]
       },
@@ -445,7 +464,12 @@
         "localities": [
           {
             "name": "Cantoria",
-            "schools": ["Cantoria", "Cerro Castillo", "El Cantar Del Río", "Valle Del Almanzora"]
+            "schools": [
+              "Cantoria",
+              "Cerro Castillo",
+              "El Cantar Del Río",
+              "Valle Del Almanzora"
+            ]
           }
         ]
       },
@@ -514,7 +538,12 @@
         "localities": [
           {
             "name": "Dalías",
-            "schools": ["Al-Hudry", "Ciudad De Dalías", "Luis Vives", "Madre Ignacia"]
+            "schools": [
+              "Al-Hudry",
+              "Ciudad De Dalías",
+              "Luis Vives",
+              "Madre Ignacia"
+            ]
           }
         ]
       },
@@ -523,7 +552,11 @@
         "localities": [
           {
             "name": "Almerimar",
-            "schools": ["Bahía De Almerimar", "Burbujas De Colores", "Castillo De Arena"]
+            "schools": [
+              "Bahía De Almerimar",
+              "Burbujas De Colores",
+              "Castillo De Arena"
+            ]
           },
           {
             "name": "Balerma",
@@ -645,7 +678,12 @@
         "localities": [
           {
             "name": "Fiñana",
-            "schools": ["Alfiñame", "Fiñana-Abrucena", "San Sebastián", "Sierra Nevada"]
+            "schools": [
+              "Alfiñame",
+              "Fiñana-Abrucena",
+              "San Sebastián",
+              "Sierra Nevada"
+            ]
           }
         ]
       },
@@ -654,7 +692,10 @@
         "localities": [
           {
             "name": "Fondón",
-            "schools": ["Ceta (Centro De Enseñanza De Técnicos Andaluces)", "Virgen De Las Angustias(Fondón-Benecid)"]
+            "schools": [
+              "Ceta (Centro De Enseñanza De Técnicos Andaluces)",
+              "Virgen De Las Angustias(Fondón-Benecid)"
+            ]
           }
         ]
       },
@@ -663,7 +704,14 @@
         "localities": [
           {
             "name": "Garrucha",
-            "schools": ["Atalaya", "Bambi", "Ex Mari Orta", "Hispanidad", "La Sirenita", "Mediterráneo"]
+            "schools": [
+              "Atalaya",
+              "Bambi",
+              "Ex Mari Orta",
+              "Hispanidad",
+              "La Sirenita",
+              "Mediterráneo"
+            ]
           }
         ]
       },
@@ -777,7 +825,12 @@
         "localities": [
           {
             "name": "Laujar De Andarax",
-            "schools": ["Emilio Manzano", "Laujar De Andarax", "Ntra. Sra. De La Salud", "San Vicente"]
+            "schools": [
+              "Emilio Manzano",
+              "Laujar De Andarax",
+              "Ntra. Sra. De La Salud",
+              "San Vicente"
+            ]
           }
         ]
       },
@@ -852,7 +905,12 @@
         "localities": [
           {
             "name": "Mojácar",
-            "schools": ["Bartolomé Flores", "Garabato", "Murgis Akra", "Rey Alabez"]
+            "schools": [
+              "Bartolomé Flores",
+              "Garabato",
+              "Murgis Akra",
+              "Rey Alabez"
+            ]
           }
         ]
       },
@@ -906,7 +964,13 @@
           },
           {
             "name": "San Isidro De Níjar",
-            "schools": ["Andalucía", "Federico García Lorca", "Juan Sebastián Elcano", "Las Gaviotas", "San Isidro"]
+            "schools": [
+              "Andalucía",
+              "Federico García Lorca",
+              "Juan Sebastián Elcano",
+              "Las Gaviotas",
+              "San Isidro"
+            ]
           },
           {
             "name": "San José",
@@ -945,7 +1009,11 @@
         "localities": [
           {
             "name": "Oria",
-            "schools": ["El Cañico De Oria", "Maestra María González Reche", "San Gregorio"]
+            "schools": [
+              "El Cañico De Oria",
+              "Maestra María González Reche",
+              "San Gregorio"
+            ]
           }
         ]
       },
@@ -963,7 +1031,12 @@
         "localities": [
           {
             "name": "Pechina",
-            "schools": ["Bayyana", "José Díaz Díaz", "Pechina", "Puerta De Pechina"]
+            "schools": [
+              "Bayyana",
+              "José Díaz Díaz",
+              "Pechina",
+              "Puerta De Pechina"
+            ]
           }
         ]
       },
@@ -980,7 +1053,13 @@
           },
           {
             "name": "Pulpí",
-            "schools": ["Emilio Zurano Muñoz", "Iundenia Pulpí", "Los Duendecillos", "Mar Serena", "Paloma De La Paz"]
+            "schools": [
+              "Emilio Zurano Muñoz",
+              "Iundenia Pulpí",
+              "Los Duendecillos",
+              "Mar Serena",
+              "Paloma De La Paz"
+            ]
           }
         ]
       },
@@ -1097,7 +1176,12 @@
         "localities": [
           {
             "name": "Serón",
-            "schools": ["Miguel Zubeldia", "Serón", "Sierra De Los Filabres", "Trovero Castillo"]
+            "schools": [
+              "Miguel Zubeldia",
+              "Serón",
+              "Sierra De Los Filabres",
+              "Trovero Castillo"
+            ]
           }
         ]
       },
@@ -1106,7 +1190,13 @@
         "localities": [
           {
             "name": "Sorbas",
-            "schools": ["Fuente Nueva", "Lusor", "Padre González Ros", "Río Aguas", "San Roquillo"]
+            "schools": [
+              "Fuente Nueva",
+              "Lusor",
+              "Padre González Ros",
+              "Río Aguas",
+              "San Roquillo"
+            ]
           }
         ]
       },
@@ -1124,7 +1214,11 @@
         "localities": [
           {
             "name": "Tabernas",
-            "schools": ["Manuel De Góngora", "Tabernas", "Virgen De Las Angustias"]
+            "schools": [
+              "Manuel De Góngora",
+              "Tabernas",
+              "Virgen De Las Angustias"
+            ]
           }
         ]
       },
@@ -1196,7 +1290,13 @@
         "localities": [
           {
             "name": "Viator",
-            "schools": ["Joaquín Visiedo", "La Rayuela", "Torreserena", "Viator", "Álvarez De Sotomayor"]
+            "schools": [
+              "Joaquín Visiedo",
+              "La Rayuela",
+              "Torreserena",
+              "Viator",
+              "Álvarez De Sotomayor"
+            ]
           }
         ]
       },
@@ -1259,7 +1359,12 @@
           },
           {
             "name": "Puebla De Vícar",
-            "schools": ["José Saramago", "La Puebla", "Los Jazmines", "Virgen De La Paz"]
+            "schools": [
+              "José Saramago",
+              "La Puebla",
+              "Los Jazmines",
+              "Virgen De La Paz"
+            ]
           },
           {
             "name": "Vícar",
@@ -1328,7 +1433,11 @@
         "localities": [
           {
             "name": "Algar",
-            "schools": ["La Pequeña Pandilla", "Sierra De Cádiz", "Tajo Del Águila"]
+            "schools": [
+              "La Pequeña Pandilla",
+              "Sierra De Cádiz",
+              "Tajo Del Águila"
+            ]
           }
         ]
       },
@@ -1842,7 +1951,12 @@
         "localities": [
           {
             "name": "Espera",
-            "schools": ["Angostura", "Antonio Machado", "Castillo De Fatetar", "Rafael Alberti"]
+            "schools": [
+              "Angostura",
+              "Antonio Machado",
+              "Castillo De Fatetar",
+              "Rafael Alberti"
+            ]
           }
         ]
       },
@@ -1851,7 +1965,12 @@
         "localities": [
           {
             "name": "Grazalema",
-            "schools": ["Antonio Machado", "Grazalema", "La Amapola", "Sierra De Grazalema"]
+            "schools": [
+              "Antonio Machado",
+              "Grazalema",
+              "La Amapola",
+              "Sierra De Grazalema"
+            ]
           }
         ]
       },
@@ -1876,7 +1995,13 @@
           },
           {
             "name": "Guadalcacín",
-            "schools": ["Guadalcacín", "Guadaluz", "La Campiña", "Perezoso", "Tomasa Pinilla"]
+            "schools": [
+              "Guadalcacín",
+              "Guadaluz",
+              "La Campiña",
+              "Perezoso",
+              "Tomasa Pinilla"
+            ]
           },
           {
             "name": "Jerez De La Frontera",
@@ -2004,7 +2129,12 @@
           },
           {
             "name": "La Barca De La Florida",
-            "schools": ["Barca De La Florida", "Bucharaque(La Barca De La Florida)", "El Paje", "Vega De Guadalete"]
+            "schools": [
+              "Barca De La Florida",
+              "Bucharaque(La Barca De La Florida)",
+              "El Paje",
+              "Vega De Guadalete"
+            ]
           },
           {
             "name": "La Ina",
@@ -2037,7 +2167,14 @@
         "localities": [
           {
             "name": "Jimena De La Frontera",
-            "schools": ["Aljibe", "El Osito", "Hozgarganta", "Los Pitufos", "Ntra. Sra. Reina De Los Ángeles", "Xémina"]
+            "schools": [
+              "Aljibe",
+              "El Osito",
+              "Hozgarganta",
+              "Los Pitufos",
+              "Ntra. Sra. Reina De Los Ángeles",
+              "Xémina"
+            ]
           },
           {
             "name": "San Pablo De Buceite",
@@ -2161,7 +2298,13 @@
         "localities": [
           {
             "name": "Paterna De Rivera",
-            "schools": ["Arco Iris", "El Llano", "Los Pasitos", "Paterna", "Perafán De Rivera"]
+            "schools": [
+              "Arco Iris",
+              "El Llano",
+              "Los Pasitos",
+              "Paterna",
+              "Perafán De Rivera"
+            ]
           }
         ]
       },
@@ -2212,7 +2355,12 @@
           },
           {
             "name": "Río San Pedro",
-            "schools": ["El Columpio", "La Algaida", "Río San Pedro", "Viento Del Sur"]
+            "schools": [
+              "El Columpio",
+              "La Algaida",
+              "Río San Pedro",
+              "Viento Del Sur"
+            ]
           }
         ]
       },
@@ -2221,7 +2369,14 @@
         "localities": [
           {
             "name": "Puerto Serrano",
-            "schools": ["Blas Infante", "Escuelas Verdes", "Guadalete", "La Adelfa", "La Toleta", "Vía Verde"]
+            "schools": [
+              "Blas Infante",
+              "Escuelas Verdes",
+              "Guadalete",
+              "La Adelfa",
+              "La Toleta",
+              "Vía Verde"
+            ]
           }
         ]
       },
@@ -2458,7 +2613,12 @@
         "localities": [
           {
             "name": "Setenil De Las Bodegas",
-            "schools": ["La Villa", "Setenil De Las Bodegas", "Villa De Setenil", "Virgen Del Carmen"]
+            "schools": [
+              "La Villa",
+              "Setenil De Las Bodegas",
+              "Villa De Setenil",
+              "Virgen Del Carmen"
+            ]
           }
         ]
       },
@@ -2595,7 +2755,11 @@
         "localities": [
           {
             "name": "Zahara",
-            "schools": ["Castillo De Zahara", "La Rayuela", "Maestro Juan María Marín"]
+            "schools": [
+              "Castillo De Zahara",
+              "La Rayuela",
+              "Maestro Juan María Marín"
+            ]
           }
         ]
       }
@@ -2656,7 +2820,11 @@
         "localities": [
           {
             "name": "Almedinilla",
-            "schools": ["Almedinilla-Fuente Tójar", "Antaviana", "Rodríguez Vega"]
+            "schools": [
+              "Almedinilla-Fuente Tójar",
+              "Antaviana",
+              "Rodríguez Vega"
+            ]
           }
         ]
       },
@@ -2724,7 +2892,12 @@
         "localities": [
           {
             "name": "Belalcázar",
-            "schools": ["Belalcázar", "Don Pimpón", "Juan De Soto Alvarado", "Sor Felipa De La Cruz"]
+            "schools": [
+              "Belalcázar",
+              "Don Pimpón",
+              "Juan De Soto Alvarado",
+              "Sor Felipa De La Cruz"
+            ]
           }
         ]
       },
@@ -2733,7 +2906,12 @@
         "localities": [
           {
             "name": "Belmez",
-            "schools": ["Belmez", "El Castillo", "José Alcántara", "Ntra. Sra. De Los Remedios"]
+            "schools": [
+              "Belmez",
+              "El Castillo",
+              "José Alcántara",
+              "Ntra. Sra. De Los Remedios"
+            ]
           }
         ]
       },
@@ -2843,7 +3021,12 @@
         "localities": [
           {
             "name": "Cañete De Las Torres",
-            "schools": ["Babysol", "María Bejarano", "Ramón Hernández Martínez", "Virgen Del Campo"]
+            "schools": [
+              "Babysol",
+              "María Bejarano",
+              "Ramón Hernández Martínez",
+              "Virgen Del Campo"
+            ]
           }
         ]
       },
@@ -2865,7 +3048,13 @@
           },
           {
             "name": "Alcolea",
-            "schools": ["Alcolea", "Joaquín Tena Artigas", "Los Duendecillos", "Los Ángeles", "Puente De Alcolea"]
+            "schools": [
+              "Alcolea",
+              "Joaquín Tena Artigas",
+              "Los Duendecillos",
+              "Los Ángeles",
+              "Puente De Alcolea"
+            ]
           },
           {
             "name": "Cerro Muriano",
@@ -3170,7 +3359,12 @@
         "localities": [
           {
             "name": "Dos Torres",
-            "schools": ["Dos Torres", "Ntra. Sra. De Loreto", "San Roque", "Usías"]
+            "schools": [
+              "Dos Torres",
+              "Ntra. Sra. De Loreto",
+              "San Roque",
+              "Usías"
+            ]
           }
         ]
       },
@@ -3179,7 +3373,12 @@
         "localities": [
           {
             "name": "Doña Mencía",
-            "schools": ["Juanita La Larga", "Los Alcalá Galiano", "Mencía López De Haro", "San Pedro Mártir De Verona"]
+            "schools": [
+              "Juanita La Larga",
+              "Los Alcalá Galiano",
+              "Mencía López De Haro",
+              "San Pedro Mártir De Verona"
+            ]
           }
         ]
       },
@@ -3188,7 +3387,13 @@
         "localities": [
           {
             "name": "El Carpio",
-            "schools": ["Aema Mi Primer Cole", "El Carpio", "Garci Méndez", "Ilusión", "Ramón Y Cajal"]
+            "schools": [
+              "Aema Mi Primer Cole",
+              "El Carpio",
+              "Garci Méndez",
+              "Ilusión",
+              "Ramón Y Cajal"
+            ]
           }
         ]
       },
@@ -3206,7 +3411,12 @@
         "localities": [
           {
             "name": "El Viso",
-            "schools": ["Abuela Santa Ana I", "Cecilio Jiménez", "El Viso", "La Inmaculada"]
+            "schools": [
+              "Abuela Santa Ana I",
+              "Cecilio Jiménez",
+              "El Viso",
+              "La Inmaculada"
+            ]
           }
         ]
       },
@@ -3215,7 +3425,11 @@
         "localities": [
           {
             "name": "Encinas Reales",
-            "schools": ["Encinas Reales", "Las Encinas", "Ntra. Sra. De La Expectación"]
+            "schools": [
+              "Encinas Reales",
+              "Las Encinas",
+              "Ntra. Sra. De La Expectación"
+            ]
           }
         ]
       },
@@ -3351,7 +3565,11 @@
         "localities": [
           {
             "name": "Guadalcázar",
-            "schools": ["Concepción Cadenas Rodríguez", "Marqués De Guadalcázar", "María Isidra De Guzmán"]
+            "schools": [
+              "Concepción Cadenas Rodríguez",
+              "Marqués De Guadalcázar",
+              "María Isidra De Guzmán"
+            ]
           }
         ]
       },
@@ -3360,7 +3578,13 @@
         "localities": [
           {
             "name": "Hinojosa Del Duque",
-            "schools": ["Hinojosa Del Duque", "Inmaculada", "Jerez Y Caballero", "Maestro Jurado", "Padre Juan Ruiz"]
+            "schools": [
+              "Hinojosa Del Duque",
+              "Inmaculada",
+              "Jerez Y Caballero",
+              "Maestro Jurado",
+              "Padre Juan Ruiz"
+            ]
           }
         ]
       },
@@ -3386,7 +3610,12 @@
           },
           {
             "name": "Iznájar",
-            "schools": ["Hins-Ashar", "Iznájar", "Mirador Del Genil", "Ntra. Sra. De La Piedad"]
+            "schools": [
+              "Hins-Ashar",
+              "Iznájar",
+              "Mirador Del Genil",
+              "Ntra. Sra. De La Piedad"
+            ]
           },
           {
             "name": "Ventorros De Balerma",
@@ -3515,7 +3744,12 @@
         "localities": [
           {
             "name": "Luque",
-            "schools": ["Albenzaide", "Luque", "Ntra. Sra. Del Rosario", "Pinocho"]
+            "schools": [
+              "Albenzaide",
+              "Luque",
+              "Ntra. Sra. Del Rosario",
+              "Pinocho"
+            ]
           }
         ]
       },
@@ -3524,7 +3758,12 @@
         "localities": [
           {
             "name": "Montalbán De Córdoba",
-            "schools": ["Carmela Sillero", "La Paz", "Maestro Eloy Vaquero", "Monte Albo"]
+            "schools": [
+              "Carmela Sillero",
+              "La Paz",
+              "Maestro Eloy Vaquero",
+              "Monte Albo"
+            ]
           }
         ]
       },
@@ -3533,7 +3772,12 @@
         "localities": [
           {
             "name": "Montemayor",
-            "schools": ["8 De Marzo", "Miguel De Cervantes", "Montemayor", "Ulia Fidentia"]
+            "schools": [
+              "8 De Marzo",
+              "Miguel De Cervantes",
+              "Montemayor",
+              "Ulia Fidentia"
+            ]
           }
         ]
       },
@@ -3612,7 +3856,12 @@
         "localities": [
           {
             "name": "Nueva Carteya",
-            "schools": ["Clara Campoamor", "Cumbres Altas", "Francisco García Amo", "José Pérez Arenas"]
+            "schools": [
+              "Clara Campoamor",
+              "Cumbres Altas",
+              "Francisco García Amo",
+              "José Pérez Arenas"
+            ]
           }
         ]
       },
@@ -3848,7 +4097,10 @@
         "localities": [
           {
             "name": "San Sebastián De Los Ballesteros",
-            "schools": ["San Sebastián De Los Ballesteros", "Santo Tomás De Aquino"]
+            "schools": [
+              "San Sebastián De Los Ballesteros",
+              "Santo Tomás De Aquino"
+            ]
           }
         ]
       },
@@ -3870,7 +4122,12 @@
           },
           {
             "name": "Santaella",
-            "schools": ["Alcalde Serrano", "Arcelacis", "Pepita Pérez Acuña", "Urbano Palma"]
+            "schools": [
+              "Alcalde Serrano",
+              "Arcelacis",
+              "Pepita Pérez Acuña",
+              "Urbano Palma"
+            ]
           }
         ]
       },
@@ -3955,7 +4212,11 @@
         "localities": [
           {
             "name": "Villanueva Del Duque",
-            "schools": ["Maestro Rogelio Fernández", "Villanueva Del Duque", "Villanueva Del Duque - Fuente La Lancha"]
+            "schools": [
+              "Maestro Rogelio Fernández",
+              "Villanueva Del Duque",
+              "Villanueva Del Duque - Fuente La Lancha"
+            ]
           }
         ]
       },
@@ -3982,7 +4243,12 @@
         "localities": [
           {
             "name": "Villaviciosa De Córdoba",
-            "schools": ["La Escribana", "Las Cruces", "Ntra. Sra. De Villaviciosa", "Villaviciosa De Córdoba"]
+            "schools": [
+              "La Escribana",
+              "Las Cruces",
+              "Ntra. Sra. De Villaviciosa",
+              "Villaviciosa De Córdoba"
+            ]
           }
         ]
       },
@@ -4041,7 +4307,12 @@
         "localities": [
           {
             "name": "Albuñol",
-            "schools": ["Cehel", "La Alpujarra", "La Contraviesa", "Natalio Rivas"]
+            "schools": [
+              "Cehel",
+              "La Alpujarra",
+              "La Contraviesa",
+              "Natalio Rivas"
+            ]
           },
           {
             "name": "El Pozuelo",
@@ -4067,7 +4338,13 @@
         "localities": [
           {
             "name": "Alfacar",
-            "schools": ["Al-Fakar", "Alborada", "Alfacar", "Alfaguarilla", "Las Encinas"]
+            "schools": [
+              "Al-Fakar",
+              "Alborada",
+              "Alfacar",
+              "Alfaguarilla",
+              "Las Encinas"
+            ]
           }
         ]
       },
@@ -4076,7 +4353,11 @@
         "localities": [
           {
             "name": "Algarinejo",
-            "schools": ["Andrés Manjón", "El Trenecito", "Ventura Rodríguez-Algarinejo"]
+            "schools": [
+              "Andrés Manjón",
+              "El Trenecito",
+              "Ventura Rodríguez-Algarinejo"
+            ]
           },
           {
             "name": "Fuentes De Cesna",
@@ -4089,7 +4370,13 @@
         "localities": [
           {
             "name": "Alhama De Granada",
-            "schools": ["Alhama", "Alhucema", "Cervantes", "Conde De Tendilla", "Nido"]
+            "schools": [
+              "Alhama",
+              "Alhucema",
+              "Cervantes",
+              "Conde De Tendilla",
+              "Nido"
+            ]
           },
           {
             "name": "Ventas De Zafarraya",
@@ -4119,7 +4406,9 @@
         "localities": [
           {
             "name": "Alicún De Ortega",
-            "schools": ["Alicún De Ortega-Dehesa De Guadix-Gorafe-Villanueva De Las Torres"]
+            "schools": [
+              "Alicún De Ortega-Dehesa De Guadix-Gorafe-Villanueva De Las Torres"
+            ]
           }
         ]
       },
@@ -4162,7 +4451,10 @@
         "localities": [
           {
             "name": "Mecina Bombarón",
-            "schools": ["Las Acequias", "Los Molinos(Alpujarra De La Sierra-Mecina Bombarón.-Yegen)"]
+            "schools": [
+              "Las Acequias",
+              "Los Molinos(Alpujarra De La Sierra-Mecina Bombarón.-Yegen)"
+            ]
           }
         ]
       },
@@ -4310,7 +4602,12 @@
         "localities": [
           {
             "name": "Benamaurel",
-            "schools": ["Amancia Burgos", "Avenmoriel", "Guardal(Benamaurel-Cortes De Baza)", "Virgen De La Cabeza"]
+            "schools": [
+              "Amancia Burgos",
+              "Avenmoriel",
+              "Guardal(Benamaurel-Cortes De Baza)",
+              "Virgen De La Cabeza"
+            ]
           }
         ]
       },
@@ -4319,7 +4616,10 @@
         "localities": [
           {
             "name": "Bérchules",
-            "schools": ["Alpujarra", "Nacimiento Del Guadalfeo(Bérchules-Alcutar)"]
+            "schools": [
+              "Alpujarra",
+              "Nacimiento Del Guadalfeo(Bérchules-Alcutar)"
+            ]
           }
         ]
       },
@@ -4346,7 +4646,12 @@
         "localities": [
           {
             "name": "Caniles",
-            "schools": ["Casa Del Agua", "El Fuerte", "Fantasía Caniles", "Juan Xxiii"]
+            "schools": [
+              "Casa Del Agua",
+              "El Fuerte",
+              "Fantasía Caniles",
+              "Juan Xxiii"
+            ]
           }
         ]
       },
@@ -4456,7 +4761,9 @@
         "localities": [
           {
             "name": "Cogollos De Guadix",
-            "schools": ["Cogollos De Guadix-Albuñal-Jerez Del Marquesado-Valle De Zalabi"]
+            "schools": [
+              "Cogollos De Guadix-Albuñal-Jerez Del Marquesado-Valle De Zalabi"
+            ]
           }
         ]
       },
@@ -4514,7 +4821,12 @@
         "localities": [
           {
             "name": "Cádiar",
-            "schools": ["Al-Cadí", "La Esperanza(Cádiar-Yátor-Narila)", "Nube De Colores", "Río Chico"]
+            "schools": [
+              "Al-Cadí",
+              "La Esperanza(Cádiar-Yátor-Narila)",
+              "Nube De Colores",
+              "Río Chico"
+            ]
           }
         ]
       },
@@ -4617,7 +4929,11 @@
         "localities": [
           {
             "name": "Dílar",
-            "schools": ["Ecoduendes", "Federico García Lorca", "Internacional De Granada"]
+            "schools": [
+              "Ecoduendes",
+              "Federico García Lorca",
+              "Internacional De Granada"
+            ]
           }
         ]
       },
@@ -4626,7 +4942,13 @@
         "localities": [
           {
             "name": "Dúrcal",
-            "schools": ["Alonso Cano", "Garbancito", "La Cruz", "Maestro Manuel Morales", "Valle De Lecrín"]
+            "schools": [
+              "Alonso Cano",
+              "Garbancito",
+              "La Cruz",
+              "Maestro Manuel Morales",
+              "Valle De Lecrín"
+            ]
           }
         ]
       },
@@ -4644,7 +4966,10 @@
         "localities": [
           {
             "name": "Restabal",
-            "schools": ["El Valle - Joaquín Muñoz Ruiz", "El Valle(Restabal.-Saleres-Melegís)"]
+            "schools": [
+              "El Valle - Joaquín Muñoz Ruiz",
+              "El Valle(Restabal.-Saleres-Melegís)"
+            ]
           }
         ]
       },
@@ -4698,7 +5023,11 @@
         "localities": [
           {
             "name": "Fuente Vaqueros",
-            "schools": ["Federico García Lorca", "Fernando De Los Ríos", "Fuente Vaqueros"]
+            "schools": [
+              "Federico García Lorca",
+              "Fernando De Los Ríos",
+              "Fuente Vaqueros"
+            ]
           }
         ]
       },
@@ -4937,7 +5266,11 @@
         "localities": [
           {
             "name": "Guadahortuna",
-            "schools": ["Guadahortuna-Campotéjar", "Isabel La Católica", "Virgen De Loreto"]
+            "schools": [
+              "Guadahortuna-Campotéjar",
+              "Isabel La Católica",
+              "Virgen De Loreto"
+            ]
           }
         ]
       },
@@ -4985,7 +5318,11 @@
         "localities": [
           {
             "name": "Gójar",
-            "schools": ["El Castillo De Los Gnomos", "Mariló", "Virgen De La Paz"]
+            "schools": [
+              "El Castillo De Los Gnomos",
+              "Mariló",
+              "Virgen De La Paz"
+            ]
           }
         ]
       },
@@ -5048,7 +5385,11 @@
         "localities": [
           {
             "name": "Huétor De Santillán",
-            "schools": ["Casería De Los Recuerdos", "Huetor Santillán", "Sierra De Huétor"]
+            "schools": [
+              "Casería De Los Recuerdos",
+              "Huetor Santillán",
+              "Sierra De Huétor"
+            ]
           }
         ]
       },
@@ -5200,7 +5541,12 @@
         "localities": [
           {
             "name": "Lanjarón",
-            "schools": ["El Bosque De Tello", "La Bordaila", "Lanjarón", "Lucena Rivas"]
+            "schools": [
+              "El Bosque De Tello",
+              "La Bordaila",
+              "Lanjarón",
+              "Lucena Rivas"
+            ]
           }
         ]
       },
@@ -5292,7 +5638,10 @@
         "localities": [
           {
             "name": "Guajar Faragüit",
-            "schools": ["Los Guajares", "Los Guájares (Guajar Fondón-Guajar Faragüit-Guajar Alto)"]
+            "schools": [
+              "Los Guajares",
+              "Los Guájares (Guajar Fondón-Guajar Faragüit-Guajar Alto)"
+            ]
           }
         ]
       },
@@ -5301,7 +5650,12 @@
         "localities": [
           {
             "name": "Láchar",
-            "schools": ["Fantasía", "Francisca Hurtado", "Láchar", "Láchar-Peñuelas"]
+            "schools": [
+              "Fantasía",
+              "Francisca Hurtado",
+              "Láchar",
+              "Láchar-Peñuelas"
+            ]
           },
           {
             "name": "Peñuelas",
@@ -5372,7 +5726,12 @@
           },
           {
             "name": "Monachil",
-            "schools": ["Burbujas", "El  Barrio", "La Casita Del Niño", "Miraflores"]
+            "schools": [
+              "Burbujas",
+              "El  Barrio",
+              "La Casita Del Niño",
+              "Miraflores"
+            ]
           },
           {
             "name": "Sierra Nevada",
@@ -5412,7 +5771,12 @@
         "localities": [
           {
             "name": "Moraleda De Zafayona",
-            "schools": ["La Amistad", "Manuel Cañadas", "Moraleda", "Ruiz Carvajal"]
+            "schools": [
+              "La Amistad",
+              "Manuel Cañadas",
+              "Moraleda",
+              "Ruiz Carvajal"
+            ]
           }
         ]
       },
@@ -5496,7 +5860,11 @@
         "localities": [
           {
             "name": "Laroles",
-            "schools": ["Arco Iris", "La Ragua(Laroles-Picena-Mairena)", "Nevada"]
+            "schools": [
+              "Arco Iris",
+              "La Ragua(Laroles-Picena-Mairena)",
+              "Nevada"
+            ]
           }
         ]
       },
@@ -5505,7 +5873,12 @@
         "localities": [
           {
             "name": "Nigüelas",
-            "schools": ["El Zahor", "Escuela Comarcal De Música Valle De Lecrín", "Los Almendros", "Nigüelas"]
+            "schools": [
+              "El Zahor",
+              "Escuela Comarcal De Música Valle De Lecrín",
+              "Los Almendros",
+              "Nigüelas"
+            ]
           }
         ]
       },
@@ -5564,7 +5937,13 @@
         "localities": [
           {
             "name": "Padul",
-            "schools": ["Al-Badul", "El Olivarillo", "La Laguna", "La Paloma", "San Sebastián"]
+            "schools": [
+              "Al-Badul",
+              "El Olivarillo",
+              "La Laguna",
+              "La Paloma",
+              "San Sebastián"
+            ]
           }
         ]
       },
@@ -5657,7 +6036,13 @@
         "localities": [
           {
             "name": "Pulianas",
-            "schools": ["Bulyana", "Francisco Giner De Los Ríos", "Pingu", "Profesor Tierno Galván", "Sierra Y Agua"]
+            "schools": [
+              "Bulyana",
+              "Francisco Giner De Los Ríos",
+              "Pingu",
+              "Profesor Tierno Galván",
+              "Sierra Y Agua"
+            ]
           }
         ]
       },
@@ -5666,7 +6051,12 @@
         "localities": [
           {
             "name": "Purullena",
-            "schools": ["Los Sueños De Disney", "Purullena", "Reina Isabel", "Ribera Del Fardes"]
+            "schools": [
+              "Los Sueños De Disney",
+              "Purullena",
+              "Reina Isabel",
+              "Ribera Del Fardes"
+            ]
           }
         ]
       },
@@ -5702,7 +6092,12 @@
         "localities": [
           {
             "name": "Salar",
-            "schools": ["Ecoescuela La Inmaculada", "El Bañuelo", "El Sueño De Eme", "Gloria Fuertes"]
+            "schools": [
+              "Ecoescuela La Inmaculada",
+              "El Bañuelo",
+              "El Sueño De Eme",
+              "Gloria Fuertes"
+            ]
           }
         ]
       },
@@ -5814,7 +6209,12 @@
         "localities": [
           {
             "name": "Ugíjar",
-            "schools": ["Maestro Luis Ortega Manrique", "Sánchez Velayos", "Ulyssea", "Virgen Del Martirio"]
+            "schools": [
+              "Maestro Luis Ortega Manrique",
+              "Sánchez Velayos",
+              "Ulyssea",
+              "Virgen Del Martirio"
+            ]
           }
         ]
       },
@@ -5841,11 +6241,20 @@
         "localities": [
           {
             "name": "Ambroz",
-            "schools": ["Baúl De Ilusiones", "Ntra. Sra. De Los Remedios", "Sueños"]
+            "schools": [
+              "Baúl De Ilusiones",
+              "Ntra. Sra. De Los Remedios",
+              "Sueños"
+            ]
           },
           {
             "name": "Belicena",
-            "schools": ["La Almohada", "La Casita De Juguete", "La Guarde", "Patucos"]
+            "schools": [
+              "La Almohada",
+              "La Casita De Juguete",
+              "La Guarde",
+              "Patucos"
+            ]
           },
           {
             "name": "Purchil",
@@ -5867,7 +6276,12 @@
         "localities": [
           {
             "name": "Villa De Otura",
-            "schools": ["Escultor Sánchez Mesa", "Montessori Community Granada", "Oturitos", "Virgen De La Paz"]
+            "schools": [
+              "Escultor Sánchez Mesa",
+              "Montessori Community Granada",
+              "Oturitos",
+              "Virgen De La Paz"
+            ]
           }
         ]
       },
@@ -5939,7 +6353,12 @@
         "localities": [
           {
             "name": "Zújar",
-            "schools": ["Al-Zujáyr", "Fernando De Los Ríos", "Negratín(Zújar-Cuevas Del Campo-Freila)", "Santo Ángel"]
+            "schools": [
+              "Al-Zujáyr",
+              "Fernando De Los Ríos",
+              "Negratín(Zújar-Cuevas Del Campo-Freila)",
+              "Santo Ángel"
+            ]
           }
         ]
       },
@@ -5960,7 +6379,12 @@
           },
           {
             "name": "Íllora",
-            "schools": ["Diego De Siloé", "El Castillo", "Gran Capitán", "Íllora"]
+            "schools": [
+              "Diego De Siloé",
+              "El Castillo",
+              "Gran Capitán",
+              "Íllora"
+            ]
           }
         ]
       },
@@ -6013,7 +6437,11 @@
           },
           {
             "name": "Corrales",
-            "schools": ["Juan Antonio Pérez Mercader", "La Brújula", "Profesor Tierno Galván"]
+            "schools": [
+              "Juan Antonio Pérez Mercader",
+              "La Brújula",
+              "Profesor Tierno Galván"
+            ]
           }
         ]
       },
@@ -6110,7 +6538,12 @@
         "localities": [
           {
             "name": "Aroche",
-            "schools": ["Gente Menuda", "José Romero Macías", "Sierra De Aroche", "Turóbriga"]
+            "schools": [
+              "Gente Menuda",
+              "José Romero Macías",
+              "Sierra De Aroche",
+              "Turóbriga"
+            ]
           }
         ]
       },
@@ -6119,7 +6552,10 @@
         "localities": [
           {
             "name": "Arroyomolinos De León",
-            "schools": ["Montemayor(Arroyomolinos De León-Cañaveral De León)", "Virgen De Los Remedios"]
+            "schools": [
+              "Montemayor(Arroyomolinos De León-Cañaveral De León)",
+              "Virgen De Los Remedios"
+            ]
           }
         ]
       },
@@ -6207,7 +6643,13 @@
         "localities": [
           {
             "name": "Bonares",
-            "schools": ["Babel", "Buena Tierra", "Catedrático Pulido Rubio", "Lora Tamayo", "Mafalda"]
+            "schools": [
+              "Babel",
+              "Buena Tierra",
+              "Catedrático Pulido Rubio",
+              "Lora Tamayo",
+              "Mafalda"
+            ]
           }
         ]
       },
@@ -6216,7 +6658,11 @@
         "localities": [
           {
             "name": "Cabezas Rubias",
-            "schools": ["Aderán 1", "Mi Primer Cole", "San Pedro(Cabezas Rubias-Santa Bárbara De Casas)"]
+            "schools": [
+              "Aderán 1",
+              "Mi Primer Cole",
+              "San Pedro(Cabezas Rubias-Santa Bárbara De Casas)"
+            ]
           }
         ]
       },
@@ -6234,7 +6680,12 @@
         "localities": [
           {
             "name": "Calañas",
-            "schools": ["Diego Macías", "La Esesita", "Platero Y Yo", "San José De Calasanz"]
+            "schools": [
+              "Diego Macías",
+              "La Esesita",
+              "Platero Y Yo",
+              "San José De Calasanz"
+            ]
           }
         ]
       },
@@ -6312,7 +6763,11 @@
         "localities": [
           {
             "name": "Cumbres Mayores",
-            "schools": ["José M. Morón Y Barrientos", "Juan Gómez Márquez", "Nertóbriga"]
+            "schools": [
+              "José M. Morón Y Barrientos",
+              "Juan Gómez Márquez",
+              "Nertóbriga"
+            ]
           }
         ]
       },
@@ -6330,7 +6785,12 @@
         "localities": [
           {
             "name": "El Campillo",
-            "schools": ["La Rábida", "Ntra. Sra. De Los Milagros", "Platerillo", "Virgen De La Granada"]
+            "schools": [
+              "La Rábida",
+              "Ntra. Sra. De Los Milagros",
+              "Platerillo",
+              "Virgen De La Granada"
+            ]
           }
         ]
       },
@@ -6339,7 +6799,11 @@
         "localities": [
           {
             "name": "El Cerro De Andévalo",
-            "schools": ["Los Pitufos", "Virgen De Albricias", "Virgen De Andévalo"]
+            "schools": [
+              "Los Pitufos",
+              "Virgen De Albricias",
+              "Virgen De Andévalo"
+            ]
           }
         ]
       },
@@ -6384,7 +6848,11 @@
         "localities": [
           {
             "name": "Galaroza",
-            "schools": ["Hermanos Arellano", "Las Carmelitas", "Los Jarritos(Galaroza-Jabugo)"]
+            "schools": [
+              "Hermanos Arellano",
+              "Las Carmelitas",
+              "Los Jarritos(Galaroza-Jabugo)"
+            ]
           }
         ]
       },
@@ -6422,7 +6890,12 @@
         "localities": [
           {
             "name": "Hinojos",
-            "schools": ["Diego Franco Izquierdo", "El Valle", "Los Pinos", "Marismas De Hinojos"]
+            "schools": [
+              "Diego Franco Izquierdo",
+              "El Valle",
+              "Los Pinos",
+              "Marismas De Hinojos"
+            ]
           }
         ]
       },
@@ -6681,7 +7154,11 @@
         "localities": [
           {
             "name": "Lucena Del Puerto",
-            "schools": ["El Pinalillo", "Miguel De Cervantes", "Virgen De La Luz"]
+            "schools": [
+              "El Pinalillo",
+              "Miguel De Cervantes",
+              "Virgen De La Luz"
+            ]
           }
         ]
       },
@@ -6699,7 +7176,12 @@
         "localities": [
           {
             "name": "Minas De Riotinto",
-            "schools": ["Cuenca Minera", "La Corta", "Santa Bárbara", "Virgen Del Rosario"]
+            "schools": [
+              "Cuenca Minera",
+              "La Corta",
+              "Santa Bárbara",
+              "Virgen Del Rosario"
+            ]
           }
         ]
       },
@@ -6708,7 +7190,12 @@
         "localities": [
           {
             "name": "Mazagón",
-            "schools": ["El Barquito De Papel", "El Faro", "El Vígia(Mazagón)", "Odón Betanzos Palacios"]
+            "schools": [
+              "El Barquito De Papel",
+              "El Faro",
+              "El Vígia(Mazagón)",
+              "Odón Betanzos Palacios"
+            ]
           },
           {
             "name": "Moguer",
@@ -6730,7 +7217,13 @@
         "localities": [
           {
             "name": "Nerva",
-            "schools": ["Adela Frigolet Moreno", "Colorines", "Maestro Rojas", "Manuel Rojas", "Vázquez Díaz"]
+            "schools": [
+              "Adela Frigolet Moreno",
+              "Colorines",
+              "Maestro Rojas",
+              "Manuel Rojas",
+              "Vázquez Díaz"
+            ]
           }
         ]
       },
@@ -6739,7 +7232,12 @@
         "localities": [
           {
             "name": "Niebla",
-            "schools": ["Alfonso Romero Barcojo", "Lebla", "Rayuela", "San Walabonso"]
+            "schools": [
+              "Alfonso Romero Barcojo",
+              "Lebla",
+              "Rayuela",
+              "San Walabonso"
+            ]
           }
         ]
       },
@@ -6767,7 +7265,12 @@
         "localities": [
           {
             "name": "Paterna Del Campo",
-            "schools": ["Campo De Tejada", "Hermana Pilar", "Sánchez Arjona", "Talyata(Paterna Del Campo-Escacena)"]
+            "schools": [
+              "Campo De Tejada",
+              "Hermana Pilar",
+              "Sánchez Arjona",
+              "Talyata(Paterna Del Campo-Escacena)"
+            ]
           }
         ]
       },
@@ -6776,7 +7279,11 @@
         "localities": [
           {
             "name": "Paymogo",
-            "schools": ["Cipriano Mora Ramirez", "Emilio Pérez Molina", "País Del Mago"]
+            "schools": [
+              "Cipriano Mora Ramirez",
+              "Emilio Pérez Molina",
+              "País Del Mago"
+            ]
           }
         ]
       },
@@ -6785,7 +7292,12 @@
         "localities": [
           {
             "name": "Puebla De Guzmán",
-            "schools": ["Alfayat", "Del Andévalo", "Platero", "Sebastián García Vázquez"]
+            "schools": [
+              "Alfayat",
+              "Del Andévalo",
+              "Platero",
+              "Sebastián García Vázquez"
+            ]
           }
         ]
       },
@@ -6819,7 +7331,13 @@
         "localities": [
           {
             "name": "Rociana Del Condado",
-            "schools": ["El Principito", "Los Perales", "Luisillo", "San Sebastián", "Virgen Del Socorro"]
+            "schools": [
+              "El Principito",
+              "Los Perales",
+              "Luisillo",
+              "San Sebastián",
+              "Virgen Del Socorro"
+            ]
           }
         ]
       },
@@ -6828,7 +7346,11 @@
         "localities": [
           {
             "name": "Rosal De La Frontera",
-            "schools": ["Maestro Francisco Correa", "Nuestra Señora Del Rosario", "San Isidro"]
+            "schools": [
+              "Maestro Francisco Correa",
+              "Nuestra Señora Del Rosario",
+              "San Isidro"
+            ]
           }
         ]
       },
@@ -6837,7 +7359,12 @@
         "localities": [
           {
             "name": "San Bartolomé De La Torre",
-            "schools": ["Anamoreta", "Calimero", "Naranjo Moreno", "Puerta Del Andévalo"]
+            "schools": [
+              "Anamoreta",
+              "Calimero",
+              "Naranjo Moreno",
+              "Puerta Del Andévalo"
+            ]
           }
         ]
       },
@@ -6882,7 +7409,12 @@
         "localities": [
           {
             "name": "Santa Olalla Del Cala",
-            "schools": ["Arco Iris", "Matías Flores", "Puerta De Andalucía", "Ruta De La Plata"]
+            "schools": [
+              "Arco Iris",
+              "Matías Flores",
+              "Puerta De Andalucía",
+              "Ruta De La Plata"
+            ]
           }
         ]
       },
@@ -6930,7 +7462,12 @@
         "localities": [
           {
             "name": "Villablanca",
-            "schools": ["Algodón De Azúcar", "Azamor", "La Casita De Chocolate", "San Roque"]
+            "schools": [
+              "Algodón De Azúcar",
+              "Azamor",
+              "La Casita De Chocolate",
+              "San Roque"
+            ]
           }
         ]
       },
@@ -6939,7 +7476,12 @@
         "localities": [
           {
             "name": "Villalba Del Alcor",
-            "schools": ["Alcor", "El Alcor", "Francisco Alcalá", "Los Cinco Lobitos"]
+            "schools": [
+              "Alcor",
+              "El Alcor",
+              "Francisco Alcalá",
+              "Los Cinco Lobitos"
+            ]
           }
         ]
       },
@@ -6980,7 +7522,12 @@
         "localities": [
           {
             "name": "Zalamea La Real",
-            "schools": ["El Jardín", "Nuevo Milenio", "San Vicente Mártir", "Zalarines"]
+            "schools": [
+              "El Jardín",
+              "Nuevo Milenio",
+              "San Vicente Mártir",
+              "Zalarines"
+            ]
           }
         ]
       },
@@ -7119,7 +7666,12 @@
         "localities": [
           {
             "name": "Arjona",
-            "schools": ["Ciudad De Arjona", "Regente María Cristina", "San Bonoso Y San Maximiano", "Urgavo"]
+            "schools": [
+              "Ciudad De Arjona",
+              "Regente María Cristina",
+              "San Bonoso Y San Maximiano",
+              "Urgavo"
+            ]
           }
         ]
       },
@@ -7128,7 +7680,13 @@
         "localities": [
           {
             "name": "Arjonilla",
-            "schools": ["El Castillo", "García Morente", "Juan Del Villar", "Paidos", "Trovador Macías"]
+            "schools": [
+              "El Castillo",
+              "García Morente",
+              "Juan Del Villar",
+              "Paidos",
+              "Trovador Macías"
+            ]
           }
         ]
       },
@@ -7137,7 +7695,12 @@
         "localities": [
           {
             "name": "Arquillos",
-            "schools": ["Helinga", "Inma Cuesta", "Puerta Del Condado", "San Antón"]
+            "schools": [
+              "Helinga",
+              "Inma Cuesta",
+              "Puerta Del Condado",
+              "San Antón"
+            ]
           }
         ]
       },
@@ -7146,7 +7709,11 @@
         "localities": [
           {
             "name": "Arroyo Del Ojanco",
-            "schools": ["Francisco Vílchez", "Fuentebuena", "María De La Sierra"]
+            "schools": [
+              "Francisco Vílchez",
+              "Fuentebuena",
+              "María De La Sierra"
+            ]
           }
         ]
       },
@@ -7203,7 +7770,11 @@
         "localities": [
           {
             "name": "Baños De La Encina",
-            "schools": ["Bury Al-Hamma", "Nuestro Padre Jesús Del Llano", "Tamujoso"]
+            "schools": [
+              "Bury Al-Hamma",
+              "Nuestro Padre Jesús Del Llano",
+              "Tamujoso"
+            ]
           }
         ]
       },
@@ -7212,7 +7783,13 @@
         "localities": [
           {
             "name": "Beas De Segura",
-            "schools": ["Carmen De Michelena", "La Villa", "San Fernando", "Sierra De Segura", "Víctor García Hoz"]
+            "schools": [
+              "Carmen De Michelena",
+              "La Villa",
+              "San Fernando",
+              "Sierra De Segura",
+              "Víctor García Hoz"
+            ]
           }
         ]
       },
@@ -7221,7 +7798,12 @@
         "localities": [
           {
             "name": "Bedmar",
-            "schools": ["Accabe", "La Serrezuela", "Puerta De Mágina(Bedmar Y Garcíez-Jimena)", "Virgen De Cuadros"]
+            "schools": [
+              "Accabe",
+              "La Serrezuela",
+              "Puerta De Mágina(Bedmar Y Garcíez-Jimena)",
+              "Virgen De Cuadros"
+            ]
           },
           {
             "name": "Garcíez",
@@ -7297,7 +7879,12 @@
         "localities": [
           {
             "name": "Canena",
-            "schools": ["Kinana", "Los Parvulitos", "Maestro Joaquín Moya", "Ntra. Sra. De Los Remedios"]
+            "schools": [
+              "Kinana",
+              "Los Parvulitos",
+              "Maestro Joaquín Moya",
+              "Ntra. Sra. De Los Remedios"
+            ]
           }
         ]
       },
@@ -7315,7 +7902,12 @@
         "localities": [
           {
             "name": "Castellar",
-            "schools": ["Colegiata De Santiago", "Cuenta Cuentos", "Román Crespo Hoyo", "Vicente Soto"]
+            "schools": [
+              "Colegiata De Santiago",
+              "Cuenta Cuentos",
+              "Román Crespo Hoyo",
+              "Vicente Soto"
+            ]
           }
         ]
       },
@@ -7324,7 +7916,12 @@
         "localities": [
           {
             "name": "Castillo De Locubín",
-            "schools": ["El Castillo De Los Peques", "El Cerezo", "Miguel Hernández", "Pablo Rueda"]
+            "schools": [
+              "El Castillo De Los Peques",
+              "El Cerezo",
+              "Miguel Hernández",
+              "Pablo Rueda"
+            ]
           },
           {
             "name": "Ventas Del Carrizal",
@@ -7429,7 +8026,11 @@
         "localities": [
           {
             "name": "Fuerte Del Rey",
-            "schools": ["Arco-Iris Fuerte Del Rey", "Francisco De Paula Garrido", "Ntra. Sra. Del Rosario"]
+            "schools": [
+              "Arco-Iris Fuerte Del Rey",
+              "Francisco De Paula Garrido",
+              "Ntra. Sra. Del Rosario"
+            ]
           }
         ]
       },
@@ -7438,7 +8039,12 @@
         "localities": [
           {
             "name": "Guarromán",
-            "schools": ["Carlos Iii", "Martín Scheroff Avi", "Nicolás Kerche", "Río De Los Granados"]
+            "schools": [
+              "Carlos Iii",
+              "Martín Scheroff Avi",
+              "Nicolás Kerche",
+              "Río De Los Granados"
+            ]
           }
         ]
       },
@@ -7484,7 +8090,12 @@
         "localities": [
           {
             "name": "Huesa",
-            "schools": ["Alférez Segura", "Guadiana Menor", "Los Caños", "Picos Del Guadiana"]
+            "schools": [
+              "Alférez Segura",
+              "Guadiana Menor",
+              "Los Caños",
+              "Picos Del Guadiana"
+            ]
           }
         ]
       },
@@ -7493,7 +8104,11 @@
         "localities": [
           {
             "name": "Ibros",
-            "schools": ["Los Olivos", "Ntra. Sra. De Los Remedios", "Pedro Pablo López De Los Arcos"]
+            "schools": [
+              "Los Olivos",
+              "Ntra. Sra. De Los Remedios",
+              "Pedro Pablo López De Los Arcos"
+            ]
           }
         ]
       },
@@ -7511,7 +8126,11 @@
         "localities": [
           {
             "name": "Jabalquinto",
-            "schools": ["Mateo Francisco De Rivas", "Ntro. Padre Jesús", "Torre Estiviel(Jabalquinto-Torreblascopedro)"]
+            "schools": [
+              "Mateo Francisco De Rivas",
+              "Ntro. Padre Jesús",
+              "Torre Estiviel(Jabalquinto-Torreblascopedro)"
+            ]
           }
         ]
       },
@@ -7520,7 +8139,12 @@
         "localities": [
           {
             "name": "Jamilena",
-            "schools": ["Los Peques", "Los Picones", "Padre Rejas", "Sierra De La Grana"]
+            "schools": [
+              "Los Peques",
+              "Los Picones",
+              "Padre Rejas",
+              "Sierra De La Grana"
+            ]
           }
         ]
       },
@@ -7809,7 +8433,12 @@
         "localities": [
           {
             "name": "Lopera",
-            "schools": ["Gamonares", "Luparia", "Miguel De Cervantes", "Niño Jesús"]
+            "schools": [
+              "Gamonares",
+              "Luparia",
+              "Miguel De Cervantes",
+              "Niño Jesús"
+            ]
           }
         ]
       },
@@ -7818,7 +8447,12 @@
         "localities": [
           {
             "name": "Los Villares",
-            "schools": ["Generación Del 27", "La Pandera", "Ntra. Sra. Del Rosario", "San Juan Bautista"]
+            "schools": [
+              "Generación Del 27",
+              "La Pandera",
+              "Ntra. Sra. Del Rosario",
+              "San Juan Bautista"
+            ]
           }
         ]
       },
@@ -7923,7 +8557,12 @@
         "localities": [
           {
             "name": "Navas De San Juan",
-            "schools": ["Alcalde Parrilla De Lara", "Euterpe", "San Juan Bautista", "Virgen De La Estrella"]
+            "schools": [
+              "Alcalde Parrilla De Lara",
+              "Euterpe",
+              "San Juan Bautista",
+              "Virgen De La Estrella"
+            ]
           }
         ]
       },
@@ -7932,7 +8571,11 @@
         "localities": [
           {
             "name": "Noalejo",
-            "schools": ["Encinar", "Ntra. Sra. De Belén", "Nuestra Señora De Belén"]
+            "schools": [
+              "Encinar",
+              "Ntra. Sra. De Belén",
+              "Nuestra Señora De Belén"
+            ]
           }
         ]
       },
@@ -7941,7 +8584,13 @@
         "localities": [
           {
             "name": "Orcera",
-            "schools": ["Gandhi", "Los Pinos", "Orcera", "Peñalta", "Santa María De La Peña"]
+            "schools": [
+              "Gandhi",
+              "Los Pinos",
+              "Orcera",
+              "Peñalta",
+              "Santa María De La Peña"
+            ]
           }
         ]
       },
@@ -7965,7 +8614,12 @@
         "localities": [
           {
             "name": "Pegalajar",
-            "schools": ["Alhajar", "El Colache", "Francisco Almagro(Pegalajar-La Guardia)", "Ntra. Sra. De Las Nieves"]
+            "schools": [
+              "Alhajar",
+              "El Colache",
+              "Francisco Almagro(Pegalajar-La Guardia)",
+              "Ntra. Sra. De Las Nieves"
+            ]
           }
         ]
       },
@@ -7974,7 +8628,13 @@
         "localities": [
           {
             "name": "Porcuna",
-            "schools": ["Juan Carlos I", "Molinillo Viejo", "Ntra. Sra. De Alharilla", "Porcuna", "Santa Teresa"]
+            "schools": [
+              "Juan Carlos I",
+              "Molinillo Viejo",
+              "Ntra. Sra. De Alharilla",
+              "Porcuna",
+              "Santa Teresa"
+            ]
           }
         ]
       },
@@ -7983,7 +8643,12 @@
         "localities": [
           {
             "name": "Pozo Alcón",
-            "schools": ["Guadalentín", "Ntra. Sra. De Los Dolores", "Sierra Del Pozo", "Superpeques"]
+            "schools": [
+              "Guadalentín",
+              "Ntra. Sra. De Los Dolores",
+              "Sierra Del Pozo",
+              "Superpeques"
+            ]
           }
         ]
       },
@@ -7992,7 +8657,11 @@
         "localities": [
           {
             "name": "Puente De Génave",
-            "schools": ["Carmen Medina", "San Isidro Labrador", "Valle Del Guadalimar"]
+            "schools": [
+              "Carmen Medina",
+              "San Isidro Labrador",
+              "Valle Del Guadalimar"
+            ]
           }
         ]
       },
@@ -8005,7 +8674,13 @@
           },
           {
             "name": "Quesada",
-            "schools": ["Casa Chaida", "Cañada De Las Fuentes", "Chipi", "José Luis Verdes", "Virgen Del Tíscar"]
+            "schools": [
+              "Casa Chaida",
+              "Cañada De Las Fuentes",
+              "Chipi",
+              "José Luis Verdes",
+              "Virgen Del Tíscar"
+            ]
           }
         ]
       },
@@ -8023,7 +8698,12 @@
         "localities": [
           {
             "name": "Sabiote",
-            "schools": ["Arturo Rodríguez", "Iulia Salaria", "Pequelunis", "San Ginés De La Jara"]
+            "schools": [
+              "Arturo Rodríguez",
+              "Iulia Salaria",
+              "Pequelunis",
+              "San Ginés De La Jara"
+            ]
           }
         ]
       },
@@ -8067,7 +8747,13 @@
         "localities": [
           {
             "name": "Santisteban Del Puerto",
-            "schools": ["Bachiller Pérez De Moya", "Comarca El Condado", "Ilucia", "Simba", "Virgen Del Collado"]
+            "schools": [
+              "Bachiller Pérez De Moya",
+              "Comarca El Condado",
+              "Ilucia",
+              "Simba",
+              "Virgen Del Collado"
+            ]
           }
         ]
       },
@@ -8213,7 +8899,12 @@
         "localities": [
           {
             "name": "Valdepeñas De Jaén",
-            "schools": ["Los Colorines", "San Juan", "Santiago Apóstol", "Sierra Sur"]
+            "schools": [
+              "Los Colorines",
+              "San Juan",
+              "Santiago Apóstol",
+              "Sierra Sur"
+            ]
           }
         ]
       },
@@ -8226,7 +8917,12 @@
           },
           {
             "name": "Vilches",
-            "schools": ["Abula", "Giribaile", "Ntra. Sra. Del Castillo", "Vilches"]
+            "schools": [
+              "Abula",
+              "Giribaile",
+              "Ntra. Sra. Del Castillo",
+              "Vilches"
+            ]
           }
         ]
       },
@@ -8263,7 +8959,12 @@
         "localities": [
           {
             "name": "Villanueva De La Reina",
-            "schools": ["Juan De Barrionuevo Moya", "Santa Potenciana", "Villanueva De La Reina", "Ximena Jurado"]
+            "schools": [
+              "Juan De Barrionuevo Moya",
+              "Santa Potenciana",
+              "Villanueva De La Reina",
+              "Ximena Jurado"
+            ]
           }
         ]
       },
@@ -8310,7 +9011,13 @@
           },
           {
             "name": "Villargordo",
-            "schools": ["El Olivo", "El Sonajero", "Francisco Badillo", "Llano De La Viña", "Pequeños Gigantes"]
+            "schools": [
+              "El Olivo",
+              "El Sonajero",
+              "Francisco Badillo",
+              "Llano De La Viña",
+              "Pequeños Gigantes"
+            ]
           }
         ]
       },
@@ -8367,7 +9074,12 @@
         "localities": [
           {
             "name": "Alameda",
-            "schools": ["Alameda", "Jacobo Orellana Garrido", "Las Eras", "San Francisco De Asís"]
+            "schools": [
+              "Alameda",
+              "Jacobo Orellana Garrido",
+              "Las Eras",
+              "San Francisco De Asís"
+            ]
           }
         ]
       },
@@ -8376,7 +9088,11 @@
         "localities": [
           {
             "name": "Alcaucín",
-            "schools": ["Alcaucín", "Alejandro García Garrido", "Manuel Hurtado Soto(Canillas De Aceituno-Alcaucín)"]
+            "schools": [
+              "Alcaucín",
+              "Alejandro García Garrido",
+              "Manuel Hurtado Soto(Canillas De Aceituno-Alcaucín)"
+            ]
           }
         ]
       },
@@ -8394,7 +9110,13 @@
         "localities": [
           {
             "name": "Algarrobo",
-            "schools": ["Arco Iris", "Colorines", "José Gil López", "Mediterráneo", "Trayamar"]
+            "schools": [
+              "Arco Iris",
+              "Colorines",
+              "José Gil López",
+              "Mediterráneo",
+              "Trayamar"
+            ]
           },
           {
             "name": "Algarrobo-Costa",
@@ -8407,7 +9129,11 @@
         "localities": [
           {
             "name": "Algatocín",
-            "schools": ["El Llano Del Rey", "Sierra Del Espino", "Valle Del Genal"]
+            "schools": [
+              "El Llano Del Rey",
+              "Sierra Del Espino",
+              "Valle Del Genal"
+            ]
           }
         ]
       },
@@ -8504,7 +9230,12 @@
         "localities": [
           {
             "name": "Almogía",
-            "schools": ["Antonio Vergara Mancera", "Diego Gaitán", "Miguel Hernández", "Padre Miguel Sánchez"]
+            "schools": [
+              "Antonio Vergara Mancera",
+              "Diego Gaitán",
+              "Miguel Hernández",
+              "Padre Miguel Sánchez"
+            ]
           },
           {
             "name": "Arroyo De Coche",
@@ -8635,7 +9366,12 @@
         "localities": [
           {
             "name": "Arriate",
-            "schools": ["El Calcetín De La Luna", "Escultor Marín Higuero", "Los Vergeles", "Virgen De La Aurora"]
+            "schools": [
+              "El Calcetín De La Luna",
+              "Escultor Marín Higuero",
+              "Los Vergeles",
+              "Virgen De La Aurora"
+            ]
           }
         ]
       },
@@ -8730,7 +9466,12 @@
         "localities": [
           {
             "name": "Benamocarra",
-            "schools": ["Benamocarra-Iznate", "Eduardo Ocón Rivas", "La Maroma", "Pedro Muñoz Arroyo"]
+            "schools": [
+              "Benamocarra-Iznate",
+              "Eduardo Ocón Rivas",
+              "La Maroma",
+              "Pedro Muñoz Arroyo"
+            ]
           }
         ]
       },
@@ -8810,7 +9551,11 @@
         "localities": [
           {
             "name": "Casarabonela",
-            "schools": ["Casarabonela", "Osito Panda", "Serafín Estébanez Calderón"]
+            "schools": [
+              "Casarabonela",
+              "Osito Panda",
+              "Serafín Estébanez Calderón"
+            ]
           }
         ]
       },
@@ -8841,7 +9586,12 @@
         "localities": [
           {
             "name": "Colmenar",
-            "schools": ["Doña María Claros", "La Cruz", "Los Montes", "Virgen De La Candelaria"]
+            "schools": [
+              "Doña María Claros",
+              "La Cruz",
+              "Los Montes",
+              "Virgen De La Candelaria"
+            ]
           }
         ]
       },
@@ -8916,7 +9666,12 @@
         "localities": [
           {
             "name": "Cuevas De San Marcos",
-            "schools": ["Blas Infante", "Ciudad De Belda", "Cuevas De San Marcos", "Genil"]
+            "schools": [
+              "Blas Infante",
+              "Ciudad De Belda",
+              "Cuevas De San Marcos",
+              "Genil"
+            ]
           }
         ]
       },
@@ -8972,7 +9727,12 @@
         "localities": [
           {
             "name": "Cómpeta",
-            "schools": ["Almijara", "Cándido Lara", "El Almijar", "Matrona Ángeles Cabra"]
+            "schools": [
+              "Almijara",
+              "Cándido Lara",
+              "El Almijar",
+              "Matrona Ángeles Cabra"
+            ]
           }
         ]
       },
@@ -8999,7 +9759,11 @@
         "localities": [
           {
             "name": "Cancelada",
-            "schools": ["Isdabe Del Mar", "Profesor Tomás Hormigo", "Ramón Lago"]
+            "schools": [
+              "Isdabe Del Mar",
+              "Profesor Tomás Hormigo",
+              "Ramón Lago"
+            ]
           },
           {
             "name": "Estepona",
@@ -9147,7 +9911,12 @@
         "localities": [
           {
             "name": "Humilladero",
-            "schools": ["Gabriela Mistral", "José Saramago", "Los Peques", "Ntra. Sra. Del Rosario"]
+            "schools": [
+              "Gabriela Mistral",
+              "José Saramago",
+              "Los Peques",
+              "Ntra. Sra. Del Rosario"
+            ]
           }
         ]
       },
@@ -9279,7 +10048,12 @@
           },
           {
             "name": "Nueva-Andalucía",
-            "schools": ["Centro Formativo La Campana", "José Banús", "La Campana", "Nueva Andalucía"]
+            "schools": [
+              "Centro Formativo La Campana",
+              "José Banús",
+              "La Campana",
+              "Nueva Andalucía"
+            ]
           },
           {
             "name": "San Pedro De Alcántara",
@@ -9382,7 +10156,12 @@
         "localities": [
           {
             "name": "Mollina",
-            "schools": ["Gerardo Fernández", "La Ascensión", "Las Viñas", "Santillán"]
+            "schools": [
+              "Gerardo Fernández",
+              "La Ascensión",
+              "Las Viñas",
+              "Santillán"
+            ]
           }
         ]
       },
@@ -9884,7 +10663,12 @@
           },
           {
             "name": "Periana",
-            "schools": ["Alta Axarquía", "José Alarcón", "La Casita", "San Isidro"]
+            "schools": [
+              "Alta Axarquía",
+              "José Alarcón",
+              "La Casita",
+              "San Isidro"
+            ]
           }
         ]
       },
@@ -9897,7 +10681,13 @@
           },
           {
             "name": "Pizarra",
-            "schools": ["Fuente Luna", "Guadalhorce", "Los Pitufos", "Ntra. Sra. De Fuensanta", "Pizarra"]
+            "schools": [
+              "Fuente Luna",
+              "Guadalhorce",
+              "Los Pitufos",
+              "Ntra. Sra. De Fuensanta",
+              "Pizarra"
+            ]
           },
           {
             "name": "Zalea",
@@ -9946,7 +10736,12 @@
           },
           {
             "name": "Torre De Benagalbón",
-            "schools": ["Josefina Aldecoa", "La Marina", "Los Jarales", "Margarita Salas"]
+            "schools": [
+              "Josefina Aldecoa",
+              "La Marina",
+              "Los Jarales",
+              "Margarita Salas"
+            ]
           }
         ]
       },
@@ -10016,7 +10811,11 @@
         "localities": [
           {
             "name": "Sierra De Yeguas",
-            "schools": ["García Lorca", "Santísima Trinidad", "Sierra De Yeguas"]
+            "schools": [
+              "García Lorca",
+              "Santísima Trinidad",
+              "Sierra De Yeguas"
+            ]
           }
         ]
       },
@@ -10025,7 +10824,12 @@
         "localities": [
           {
             "name": "Teba",
-            "schools": ["Antonio Machado", "Itaba", "Ntra. Sra. Del Rosario", "Sagrada Familia"]
+            "schools": [
+              "Antonio Machado",
+              "Itaba",
+              "Ntra. Sra. Del Rosario",
+              "Sagrada Familia"
+            ]
           }
         ]
       },
@@ -10136,7 +10940,12 @@
         "localities": [
           {
             "name": "Villanueva De La Concepción",
-            "schools": ["Ciudad De Oscua", "Dolores Ligero Ligero", "Manuel Romero", "Villanueva De La Concepción"]
+            "schools": [
+              "Ciudad De Oscua",
+              "Dolores Ligero Ligero",
+              "Manuel Romero",
+              "Villanueva De La Concepción"
+            ]
           }
         ]
       },
@@ -10145,7 +10954,11 @@
         "localities": [
           {
             "name": "Villanueva De Tapia",
-            "schools": ["El Entredicho", "Rafael Alberti", "Villanueva De Tapia"]
+            "schools": [
+              "El Entredicho",
+              "Rafael Alberti",
+              "Villanueva De Tapia"
+            ]
           }
         ]
       },
@@ -10154,7 +10967,12 @@
         "localities": [
           {
             "name": "Villanueva Del Rosario",
-            "schools": ["Camarolos", "Pablo Picasso", "Pintor José Hernández", "Velasco Y Merino"]
+            "schools": [
+              "Camarolos",
+              "Pablo Picasso",
+              "Pintor José Hernández",
+              "Velasco Y Merino"
+            ]
           }
         ]
       },
@@ -10307,7 +11125,12 @@
         "localities": [
           {
             "name": "Aguadulce",
-            "schools": ["Aguadulce", "Antonio Fermín Montero Montaño", "El Castillo", "Maestro José Páez Moriana"]
+            "schools": [
+              "Aguadulce",
+              "Antonio Fermín Montero Montaño",
+              "El Castillo",
+              "Maestro José Páez Moriana"
+            ]
           }
         ]
       },
@@ -10426,7 +11249,12 @@
         "localities": [
           {
             "name": "Alcolea Del Río",
-            "schools": ["1, 2, 3.", "Alcolea Del Río", "Las Aceñas", "Miguel De Cervantes"]
+            "schools": [
+              "1, 2, 3.",
+              "Alcolea Del Río",
+              "Las Aceñas",
+              "Miguel De Cervantes"
+            ]
           }
         ]
       },
@@ -10491,7 +11319,14 @@
         "localities": [
           {
             "name": "Aznalcázar",
-            "schools": ["Cepa", "Doñana", "La Abeja Maya", "Las Marismas De Doñana", "Nuestro Padre Jesús", "Olontigi"]
+            "schools": [
+              "Cepa",
+              "Doñana",
+              "La Abeja Maya",
+              "Las Marismas De Doñana",
+              "Nuestro Padre Jesús",
+              "Olontigi"
+            ]
           }
         ]
       },
@@ -10500,7 +11335,14 @@
         "localities": [
           {
             "name": "Aznalcóllar",
-            "schools": ["8 De Marzo", "Aznalcóllar", "Cruz Blanca", "Hermanas De Betania", "Las Erillas", "Zawiya"]
+            "schools": [
+              "8 De Marzo",
+              "Aznalcóllar",
+              "Cruz Blanca",
+              "Hermanas De Betania",
+              "Las Erillas",
+              "Zawiya"
+            ]
           }
         ]
       },
@@ -10509,7 +11351,12 @@
         "localities": [
           {
             "name": "Badolatosa",
-            "schools": ["Badolatosa", "La Pasionaria", "San Plácido", "Vadus Latus"]
+            "schools": [
+              "Badolatosa",
+              "La Pasionaria",
+              "San Plácido",
+              "Vadus Latus"
+            ]
           },
           {
             "name": "Corcoya",
@@ -10612,7 +11459,14 @@
         "localities": [
           {
             "name": "Burguillos",
-            "schools": ["Burguillos", "La Madroña", "Manuel Medina", "Pio'S School", "Polo' S School", "Ágora"]
+            "schools": [
+              "Burguillos",
+              "La Madroña",
+              "Manuel Medina",
+              "Pio'S School",
+              "Polo' S School",
+              "Ágora"
+            ]
           }
         ]
       },
@@ -10718,7 +11572,12 @@
         "localities": [
           {
             "name": "Casariche",
-            "schools": ["Atalaya", "Casariche", "Concepción Arenal", "Lope De Vega"]
+            "schools": [
+              "Atalaya",
+              "Casariche",
+              "Concepción Arenal",
+              "Lope De Vega"
+            ]
           }
         ]
       },
@@ -10860,7 +11719,12 @@
         "localities": [
           {
             "name": "Coripe",
-            "schools": ["Colorines", "Coripe", "Irippo", "Nuestra Señora De Fátima"]
+            "schools": [
+              "Colorines",
+              "Coripe",
+              "Irippo",
+              "Nuestra Señora De Fátima"
+            ]
           }
         ]
       },
@@ -10999,7 +11863,11 @@
         "localities": [
           {
             "name": "El Coronil",
-            "schools": ["Adultos Del Barranco", "El Coronil", "María Ana De La Calle"]
+            "schools": [
+              "Adultos Del Barranco",
+              "El Coronil",
+              "María Ana De La Calle"
+            ]
           }
         ]
       },
@@ -11043,7 +11911,11 @@
         "localities": [
           {
             "name": "El Palmar De Troya",
-            "schools": ["Federico García Lorca", "Nuestra Señora Del Carmen", "Torre Del Águila"]
+            "schools": [
+              "Federico García Lorca",
+              "Nuestra Señora Del Carmen",
+              "Torre Del Águila"
+            ]
           }
         ]
       },
@@ -11052,7 +11924,12 @@
         "localities": [
           {
             "name": "El Pedroso",
-            "schools": ["Aníbal González", "Cervantes", "Colorín Colorado", "El Pedroso"]
+            "schools": [
+              "Aníbal González",
+              "Cervantes",
+              "Colorín Colorado",
+              "El Pedroso"
+            ]
           }
         ]
       },
@@ -11061,7 +11938,11 @@
         "localities": [
           {
             "name": "El Real De La Jara",
-            "schools": ["El Real De La Jara", "Federico García Lorca", "Sierra Norte"]
+            "schools": [
+              "El Real De La Jara",
+              "Federico García Lorca",
+              "Sierra Norte"
+            ]
           }
         ]
       },
@@ -11079,7 +11960,12 @@
         "localities": [
           {
             "name": "El Rubio",
-            "schools": ["Carmen Borrego", "El Rubio", "Maestro Don José Jurado Espada", "Pablo Ruiz Picasso"]
+            "schools": [
+              "Carmen Borrego",
+              "El Rubio",
+              "Maestro Don José Jurado Espada",
+              "Pablo Ruiz Picasso"
+            ]
           }
         ]
       },
@@ -11199,7 +12085,13 @@
         "localities": [
           {
             "name": "Gerena",
-            "schools": ["Fernando Feliú", "Gerena", "Jardín De Colores", "Maestro Manuel Martel", "Pachín"]
+            "schools": [
+              "Fernando Feliú",
+              "Gerena",
+              "Jardín De Colores",
+              "Maestro Manuel Martel",
+              "Pachín"
+            ]
           }
         ]
       },
@@ -11208,7 +12100,12 @@
         "localities": [
           {
             "name": "Gilena",
-            "schools": ["Gilena", "Maestro Juan Corrales", "Platero Y Yo", "Silena"]
+            "schools": [
+              "Gilena",
+              "Maestro Juan Corrales",
+              "Platero Y Yo",
+              "Silena"
+            ]
           }
         ]
       },
@@ -11241,7 +12138,12 @@
         "localities": [
           {
             "name": "Guadalcanal",
-            "schools": ["Guadalcanal", "La Luna", "Ntra. Sra. De Guaditoca", "Sierra Del Agua"]
+            "schools": [
+              "Guadalcanal",
+              "La Luna",
+              "Ntra. Sra. De Guaditoca",
+              "Sierra Del Agua"
+            ]
           }
         ]
       },
@@ -11352,7 +12254,13 @@
           },
           {
             "name": "La Luisiana",
-            "schools": ["Antonio Machado", "Carlos Iii", "Director Manuel Somoza", "Pablo De Olavide", "Platero"]
+            "schools": [
+              "Antonio Machado",
+              "Carlos Iii",
+              "Director Manuel Somoza",
+              "Pablo De Olavide",
+              "Platero"
+            ]
           }
         ]
       },
@@ -11381,7 +12289,12 @@
         "localities": [
           {
             "name": "La Puebla De Los Infantes",
-            "schools": ["Celti", "La Puebla De Los Infantes", "Las Parras", "San José De Calasanz"]
+            "schools": [
+              "Celti",
+              "La Puebla De Los Infantes",
+              "Las Parras",
+              "San José De Calasanz"
+            ]
           }
         ]
       },
@@ -11456,7 +12369,12 @@
         "localities": [
           {
             "name": "La Roda De Andalucía",
-            "schools": ["La Roda", "La Roda De Andalucía", "Manuel Siurot", "Panda"]
+            "schools": [
+              "La Roda",
+              "La Roda De Andalucía",
+              "Manuel Siurot",
+              "Panda"
+            ]
           }
         ]
       },
@@ -11465,7 +12383,12 @@
         "localities": [
           {
             "name": "Lantejuela",
-            "schools": ["Carmen Núñez", "La Cometa", "Sagrado Corazón De Jesús", "Tierra De Lagunas"]
+            "schools": [
+              "Carmen Núñez",
+              "La Cometa",
+              "Sagrado Corazón De Jesús",
+              "Tierra De Lagunas"
+            ]
           }
         ]
       },
@@ -11499,7 +12422,11 @@
         "localities": [
           {
             "name": "Las Navas De La Concepción",
-            "schools": ["Las Navas", "Las Navas De La Concepción", "Ribera De Ciudadeja"]
+            "schools": [
+              "Las Navas",
+              "Las Navas De La Concepción",
+              "Ribera De Ciudadeja"
+            ]
           }
         ]
       },
@@ -11580,7 +12507,12 @@
         "localities": [
           {
             "name": "Los Corrales",
-            "schools": ["Arco Iris", "Los Corrales", "Maestro Francisco Gallardo", "San José De Calasanz"]
+            "schools": [
+              "Arco Iris",
+              "Los Corrales",
+              "Maestro Francisco Gallardo",
+              "San José De Calasanz"
+            ]
           }
         ]
       },
@@ -11589,7 +12521,12 @@
         "localities": [
           {
             "name": "Los Molares",
-            "schools": ["El Molar", "Francisco Rivero", "Los Molares", "San Juan De Ribera"]
+            "schools": [
+              "El Molar",
+              "Francisco Rivero",
+              "Los Molares",
+              "San Juan De Ribera"
+            ]
           }
         ]
       },
@@ -11891,7 +12828,12 @@
         "localities": [
           {
             "name": "Paradas",
-            "schools": ["Maestro Castejón", "Miguel Rueda", "Paradas", "San Albino"]
+            "schools": [
+              "Maestro Castejón",
+              "Miguel Rueda",
+              "Paradas",
+              "San Albino"
+            ]
           }
         ]
       },
@@ -11900,7 +12842,13 @@
         "localities": [
           {
             "name": "Pedrera",
-            "schools": ["Carlos Cano", "Doña Lola", "Las Huertas", "Nueva Ilusión", "Tartessos"]
+            "schools": [
+              "Carlos Cano",
+              "Doña Lola",
+              "Las Huertas",
+              "Nueva Ilusión",
+              "Tartessos"
+            ]
           }
         ]
       },
@@ -11909,7 +12857,12 @@
         "localities": [
           {
             "name": "Peñaflor",
-            "schools": ["Peñaflor", "Santa Cruz", "Vega Del Guadalquivir", "Virgen De Villadiego"]
+            "schools": [
+              "Peñaflor",
+              "Santa Cruz",
+              "Vega Del Guadalquivir",
+              "Virgen De Villadiego"
+            ]
           }
         ]
       },
@@ -11942,7 +12895,12 @@
         "localities": [
           {
             "name": "Pruna",
-            "schools": ["La Inmaculada", "Maestro José Zamudio", "Pequeños Gigantes", "Pruna"]
+            "schools": [
+              "La Inmaculada",
+              "Maestro José Zamudio",
+              "Pequeños Gigantes",
+              "Pruna"
+            ]
           }
         ]
       },
@@ -11951,7 +12909,12 @@
         "localities": [
           {
             "name": "Salteras",
-            "schools": ["Antonio Rodríguez Almodóvar", "Francisca Pérez Cerpa", "Pésula", "Salteras"]
+            "schools": [
+              "Antonio Rodríguez Almodóvar",
+              "Francisca Pérez Cerpa",
+              "Pésula",
+              "Salteras"
+            ]
           }
         ]
       },
@@ -12015,7 +12978,13 @@
         "localities": [
           {
             "name": "Santiponce",
-            "schools": ["El Tren De Los Colores", "Itálica", "Josefa Frías", "Mosaico", "Santiponce"]
+            "schools": [
+              "El Tren De Los Colores",
+              "Itálica",
+              "Josefa Frías",
+              "Mosaico",
+              "Santiponce"
+            ]
           }
         ]
       },
@@ -12524,11 +13493,21 @@
         "localities": [
           {
             "name": "Los Rosales",
-            "schools": ["De Sol A Sol-Los Rosales", "Menéndez Pidal", "Silbidito"]
+            "schools": [
+              "De Sol A Sol-Los Rosales",
+              "Menéndez Pidal",
+              "Silbidito"
+            ]
           },
           {
             "name": "Tocina",
-            "schools": ["De Sol A Sol", "Jesús Del Gran Poder", "Juan De Mesa", "Manuel Machado", "Ramón Y Cajal"]
+            "schools": [
+              "De Sol A Sol",
+              "Jesús Del Gran Poder",
+              "Juan De Mesa",
+              "Manuel Machado",
+              "Ramón Y Cajal"
+            ]
           }
         ]
       },
@@ -12638,7 +13617,13 @@
         "localities": [
           {
             "name": "Valencina De La Concepción",
-            "schools": ["El Algarrobillo", "La Estrella", "Las Encinas", "Matarrubilla", "Valencina De La Concepción"]
+            "schools": [
+              "El Algarrobillo",
+              "La Estrella",
+              "Las Encinas",
+              "Matarrubilla",
+              "Valencina De La Concepción"
+            ]
           }
         ]
       },
@@ -12647,7 +13632,13 @@
         "localities": [
           {
             "name": "Villamanrique De La Condesa",
-            "schools": ["Garabatos", "Mures", "Nuestra Señora Del Rocío", "San Pedro De Zúñiga", "Tartessos"]
+            "schools": [
+              "Garabatos",
+              "Mures",
+              "Nuestra Señora Del Rocío",
+              "San Pedro De Zúñiga",
+              "Tartessos"
+            ]
           }
         ]
       },
@@ -12656,7 +13647,11 @@
         "localities": [
           {
             "name": "Villanueva De San Juan",
-            "schools": ["Ntra. Sra. Del Rosario", "Rayuela", "Villanueva De San Juan"]
+            "schools": [
+              "Ntra. Sra. Del Rosario",
+              "Rayuela",
+              "Villanueva De San Juan"
+            ]
           }
         ]
       },
@@ -12686,7 +13681,12 @@
           },
           {
             "name": "Villanueva Del Río Y Minas",
-            "schools": ["Las Minas", "Munigua", "Muniguense", "Virgilio Fernández Pérez"]
+            "schools": [
+              "Las Minas",
+              "Munigua",
+              "Muniguense",
+              "Virgilio Fernández Pérez"
+            ]
           }
         ]
       },
