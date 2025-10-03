@@ -25,7 +25,7 @@ export default async function AdminLayout({
         <ProfileSidebar />
         <SidebarInset className="flex-1 bg-gray-50">
           <DynamicBreadcrumb />
-          <div className="container mx-auto">
+          <div className="container mx-auto px-4">
             <div className="py-10">
               <main id="main" role="main" tabIndex={-1}>
                 {children}
