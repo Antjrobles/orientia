@@ -20,12 +20,10 @@ export default function ProfileLayout({ children }: ProfileLayoutProps) {
         <ProfileSidebar />
         <SidebarInset className="flex-1 bg-gray-50">
           <DynamicBreadcrumb />
-          <div className="container mx-auto">
-            <div className="py-10">
-              <main id="main" role="main" tabIndex={-1}>
-                {children}
-              </main>
-            </div>
+          <div className="py-10">
+            <main id="main" role="main" tabIndex={-1}>
+              {children}
+            </main>
           </div>
         </SidebarInset>
       </SidebarProvider>
