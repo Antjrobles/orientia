@@ -14,13 +14,13 @@ interface ProfileLayoutProps {
 
 export default function ProfileLayout({ children }: ProfileLayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div className="min-h-screen bg-gray-50">
       <ProfileHeader />
       <SidebarProvider style={{ "--sidebar-width": "13rem" } as any}>
         <ProfileSidebar />
-        <SidebarInset className="flex-1 bg-gray-50 overflow-x-hidden">
+        <SidebarInset className="flex-1 bg-gray-50">
           <DynamicBreadcrumb />
-          <div className="container mx-auto px-4 overflow-x-hidden">
+          <div className="container mx-auto">
             <div className="py-10">
               <main id="main" role="main" tabIndex={-1}>
                 {children}

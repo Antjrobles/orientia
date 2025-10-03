@@ -553,7 +553,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <Card className="border-0 bg-gray-50 w-full overflow-x-hidden">
+      <Card className="border-0 bg-gray-50">
         <CardHeader className="border-b border-slate-200 p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <CardTitle className="text-lg sm:text-xl">
@@ -586,31 +586,31 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             />
           </div>
         </CardHeader>
-        <CardContent className="p-0 sm:p-2 overflow-x-hidden">
-          <form onSubmit={handleSubmit} className="space-y-1 w-full overflow-x-hidden">
+        <CardContent className="p-0 sm:p-2">
+          <form onSubmit={handleSubmit} className="space-y-1">
             <Accordion
               type="multiple"
               value={open}
               onValueChange={(v) => setOpen(v as SectionKey[])}
-              className="w-full overflow-x-hidden"
+              className="w-full"
             >
               {/* Datos personales */}
               <AccordionItem
                 value="datosPersonales"
                 className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-blue-500 no-underline hover:no-underline">
-                  <div className="flex items-center gap-3 text-left">
+                <AccordionTrigger className="w-full px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-blue-500 no-underline hover:no-underline">
+                  <div className="flex items-center gap-2 sm:gap-3 text-left w-full">
                     <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full flex-shrink-0">
                       <User className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
+                      <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center flex-wrap gap-2">
                         <span className="truncate">Datos Personales</span>
                         {isSectionComplete("datosPersonales") && (
                           <Badge
                             variant="outline"
-                            className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                            className="text-xs font-bold text-green-800 border-green-300 bg-green-100 whitespace-nowrap"
                           >
                             Completado
                           </Badge>
@@ -843,7 +843,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 value="datosEscolares"
                 className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-emerald-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-emerald-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-8 h-8 bg-emerald-100 rounded-full flex-shrink-0">
                       <GraduationCap className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-600" />
@@ -1740,7 +1740,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 value="evaluacionPsicopedagogica"
                 className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-purple-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-purple-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-8 h-8 bg-purple-100 rounded-full flex-shrink-0">
                       <Brain className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600" />
@@ -2096,7 +2096,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 value="infoAlumno"
                 className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-orange-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-orange-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-full flex-shrink-0">
                       <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-orange-600" />
@@ -2825,7 +2825,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 value="contextoEscolar"
                 className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-teal-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-teal-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-8 h-8 bg-teal-100 rounded-full flex-shrink-0">
                       <Building2 className="h-3 w-3 sm:h-4 sm:w-4 text-teal-600" />
@@ -2928,7 +2928,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 value="entornoFamiliar"
                 className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-pink-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-pink-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-8 h-8 bg-pink-100 rounded-full flex-shrink-0">
                       <Home className="h-3 w-3 sm:h-4 sm:w-4 text-pink-600" />
@@ -3056,7 +3056,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 value="necesidadesApoyo"
                 className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-indigo-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-indigo-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full flex-shrink-0">
                       <Target className="h-3 w-3 sm:h-4 sm:w-4 text-indigo-600" />
@@ -3316,7 +3316,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 value="propuestaAtencion"
                 className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-lime-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-lime-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-8 h-8 bg-lime-100 rounded-full flex-shrink-0">
                       <ClipboardCheck className="h-3 w-3 sm:h-4 sm:w-4 text-lime-600" />
@@ -3878,7 +3878,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 value="orientacionesFamilia"
                 className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="w-full px-4 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-violet-500 no-underline hover:no-underline">
+                <AccordionTrigger className="w-full px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-violet-500 no-underline hover:no-underline">
                   <div className="flex items-center gap-3 text-left">
                     <div className="flex items-center justify-center w-8 h-8 bg-violet-100 rounded-full flex-shrink-0">
                       <Users className="h-3 w-3 sm:h-4 sm:w-4 text-violet-600" />

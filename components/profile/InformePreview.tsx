@@ -53,7 +53,7 @@ export function InformePreview({
   };
 
   return (
-    <Card className="h-fit w-full overflow-x-hidden">
+    <Card className="h-fit">
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
           <CardTitle>Informe Generado</CardTitle>
@@ -79,7 +79,7 @@ export function InformePreview({
           )}
         </div>
       </CardHeader>
-      <CardContent className="overflow-x-hidden">
+      <CardContent>
         {isLoading && <LoadingIndicator />}
 
         {error && (
@@ -92,7 +92,7 @@ export function InformePreview({
         )}
 
         {report && !isLoading && (
-          <div className="prose prose-sm max-w-none break-words overflow-x-hidden">
+          <div className="prose prose-sm max-w-none break-words">
             <ReactMarkdown
               components={{
                 h1: ({ children }) => (

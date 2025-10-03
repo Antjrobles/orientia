@@ -102,16 +102,15 @@ export default function GenerarInformePage() {
   };
 
   return (
-    <div className="w-full overflow-x-hidden">
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gray-50">
-        <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-            Generar Informe Psicopedagógico
-          </h1>
-          <p className="text-gray-600">
-            Complete el formulario para generar un informe
-          </p>
-        </div>
+    <div className="max-w-7xl mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gray-50">
+      <div className="mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          Generar Informe Psicopedagógico
+        </h1>
+        <p className="text-gray-600">
+          Complete el formulario para generar un informe
+        </p>
+      </div>
 
       {/* Mostrar formulario si no hay informe generado */}
       {!generatedReport && (
@@ -126,7 +125,7 @@ export default function GenerarInformePage() {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <h2 className="text-2xl font-bold">Informe Generado</h2>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <Button
                 variant="outline"
                 onClick={() => {
@@ -150,7 +149,6 @@ export default function GenerarInformePage() {
           />
         </div>
       )}
-      </div>
     </div>
   );
 }
