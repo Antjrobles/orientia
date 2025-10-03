@@ -553,9 +553,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <Card className="border-0  bg-gray-50">
+      <Card className="border-0 bg-gray-50 w-full overflow-x-hidden">
         <CardHeader className="border-b border-slate-200 p-4 sm:p-6">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <CardTitle className="text-lg sm:text-xl">
               Secciones del Informe
             </CardTitle>
@@ -586,13 +586,13 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             />
           </div>
         </CardHeader>
-        <CardContent className="p-0 sm:p-2">
-          <form onSubmit={handleSubmit} className="space-y-1">
+        <CardContent className="p-0 sm:p-2 overflow-x-hidden">
+          <form onSubmit={handleSubmit} className="space-y-1 w-full overflow-x-hidden">
             <Accordion
               type="multiple"
               value={open}
               onValueChange={(v) => setOpen(v as SectionKey[])}
-              className="w-full"
+              className="w-full overflow-x-hidden"
             >
               {/* Datos personales */}
               <AccordionItem
