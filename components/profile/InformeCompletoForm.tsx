@@ -553,7 +553,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <Card className="border-0 bg-gray-50">
+      <Card className="border-0 bg-gray-50 w-full max-w-full overflow-x-hidden">
         <CardHeader className="border-b border-slate-200 p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <CardTitle className="text-lg sm:text-xl">

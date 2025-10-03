@@ -102,7 +102,7 @@ export default function GenerarInformePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6 bg-gray-50">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6 bg-gray-50 overflow-x-hidden">
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
           Generar Informe Psicopedagógico
