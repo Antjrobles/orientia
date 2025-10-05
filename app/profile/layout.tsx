@@ -21,7 +21,12 @@ export default function ProfileLayout({ children }: ProfileLayoutProps) {
         <SidebarInset className="flex-1 bg-gray-50 overflow-x-hidden">
           <DynamicBreadcrumb />
           <div className="py-10 overflow-x-hidden">
-            <main id="main" role="main" tabIndex={-1} className="overflow-x-hidden">
+            <main
+              id="main"
+              role="main"
+              tabIndex={-1}
+              className="overflow-x-hidden"
+            >
               {children}
             </main>
           </div>

@@ -98,6 +98,7 @@ interface FormState {
   fechaInicioEvaluacion?: string;
   fechaFinEvaluacion?: string;
   motivoEvaluacion?: string; // selección
+  motivoEvaluacionDetalle?: string; // textarea
   instrumentosInformacion?: string;
   numeroSesiones?: string;
 
@@ -123,6 +124,7 @@ interface FormState {
   // Información relevante del alumno/a
   datosClinicosSociales?: string;
   descDesarrolloCognitivo?: string;
+  desarrolloCognitivoNivel?: string;
   autonomiaWC?: string;
   autonomiaWCObs?: string;
   descDesarrolloSensorial?: string;
@@ -2157,7 +2159,10 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           rows={4}
                           value={form.datosClinicosSociales || ""}
                           onChange={(e) =>
-                            handleChange("datosClinicosSociales", e.target.value)
+                            handleChange(
+                              "datosClinicosSociales",
+                              e.target.value,
+                            )
                           }
                           placeholder="Descripción médica/social relevante (diagnósticos, tratamientos, informes externos, etc.)"
                         />
@@ -2198,7 +2203,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="1.No necesita atención específica. Su desarrollo cognitivo es funcional">
-                              1.No necesita atención específica. Su desarrollo cognitivo es funcional
+                              1.No necesita atención específica. Su desarrollo
+                              cognitivo es funcional
                             </SelectItem>
                             <SelectItem value="2.Requiere apoyo/seguimiento ocasional">
                               2.Requiere apoyo/seguimiento ocasional
@@ -2207,15 +2213,14 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               3.Necesita apoyo específico frecuente
                             </SelectItem>
                             <SelectItem value="4.Medio o superior respecto a su edad, intervención procesos cognitivos (PE)">
-                              4.Medio o superior respecto a su edad, intervención procesos cognitivos (PE)
+                              4.Medio o superior respecto a su edad,
+                              intervención procesos cognitivos (PE)
                             </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
                   </div>
-
-
 
                   {/* Desarrollo psicomotor */}
                   <div className="space-y-3">
@@ -2250,7 +2255,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="1.No necesita atención específica. Su desarrollo psicomotor es funcional">
-                              1.No necesita atención específica. Su desarrollo psicomotor es funcional
+                              1.No necesita atención específica. Su desarrollo
+                              psicomotor es funcional
                             </SelectItem>
                             <SelectItem value="2.Requiere apoyo/seguimiento ocasional">
                               2.Requiere apoyo/seguimiento ocasional
@@ -2259,14 +2265,14 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               3.Necesita apoyo específico frecuente
                             </SelectItem>
                             <SelectItem value="4.No necesita atención específica. Su desarrollo psicomotor es funcional">
-                              4.No necesita atención específica. Su desarrollo psicomotor es funcional
+                              4.No necesita atención específica. Su desarrollo
+                              psicomotor es funcional
                             </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
                   </div>
-
 
                   {/* Guardar dentro de Información relevante */}
                   <div className="mt-6 flex justify-end">
