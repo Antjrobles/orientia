@@ -529,6 +529,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     // Cerrar acordeones
     setOpen([]);
 
+    // Limpiar borrador del localStorage
+    localStorage.removeItem("informe-borrador");
+
     toast.info("Formulario limpiado", {
       description: "Se han generado nuevos códigos anónimos",
     });
@@ -1748,7 +1751,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="flex-1 min-w-0">
                       <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">
-                          Evaluación Psicopedagógica
+                          Datos de la Evaluación Psicopedagógica
                         </span>
                         {isSectionComplete("evaluacionPsicopedagogica") && (
                           <Badge
@@ -1938,6 +1941,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <span className="flex items-center gap-1 cursor-help">
+                                      <span className="text-red-500">*</span>
                                       Motivo de la evaluación psicopedagógica
                                       <Info className="w-3 h-3 text-slate-500" />
                                     </span>
@@ -2007,6 +2011,24 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                   </Tooltip>
                                 )}
                               </div>
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="motivoEvaluacionDetalle">
+                                Motivo de la evaluación psicopedagógica
+                              </Label>
+                              <Textarea
+                                id="motivoEvaluacionDetalle"
+                                value={form.motivoEvaluacionDetalle || ""}
+                                onChange={(e) =>
+                                  handleChange(
+                                    "motivoEvaluacionDetalle",
+                                    e.target.value,
+                                  )
+                                }
+                                placeholder="Describe con más detalle el motivo..."
+                                className="min-h-[100px]"
+                              />
                             </div>
                           </div>
 
@@ -2104,7 +2126,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="flex-1 min-w-0">
                       <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">
-                          Información Relevante del Alumno
+                          Información Relevante del Alumno/a
                         </span>
                         {isSectionComplete("infoAlumno") && (
                           <Badge
@@ -2121,640 +2143,123 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="px-6 py-4 bg-white space-y-6">
-                  {/* Datos del alumno o alumna: reutiliza identidad */}
-                  <Collapsible
-                    open={openCollapsibles["ir"]}
-                    onOpenChange={() => toggleCollapsible("ir")}
-                  >
-                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
-                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                          <h3 className="text-sm font-semibold text-slate-700">
-                            Datos del alumno o alumna
-                          </h3>
-                          {isCollapsibleSectionComplete("identity") && (
-                            <CheckCircle2 className="ml-2 h-4 w-4 text-green-500 flex-shrink-0" />
-                          )}
-                        </div>
-                        {openCollapsibles["ir"] ? (
-                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
-                        ) : (
-                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
-                        )}
-                      </CollapsibleTrigger>
-                      <CollapsibleContent className="mt-4">
-                        <IdentityFields
-                          idPrefix="ir-"
-                          form={form}
-                          handleChange={handleChange}
-                          errors={errors}
-                        />
-                      </CollapsibleContent>
-                    </div>
-                  </Collapsible>
-
+                <AccordionContent className="px-6 py-4 bg-white space-y-4">
                   {/* Datos clínicos y/o sociales relevantes */}
-                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center gap-2 cursor-help">
-                            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                            <h3 className="text-sm font-semibold text-slate-700">
-                              Datos clínicos y/o sociales relevantes
-                            </h3>
-                            <Info className="w-3 h-3 text-slate-500" />
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs">
-                            Diagnósticos médicos, tratamientos, informes
-                            externos, situación social, etc.
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
+                  <div className="space-y-3">
+                    <div className="bg-blue-50 px-4 py-2 rounded-md">
+                      <h3 className="text-sm font-medium text-gray-700">
+                        Datos clínicos y/o sociales relevantes
+                      </h3>
                     </div>
-                    <Textarea
-                      rows={4}
-                      value={form.datosClinicosSociales || ""}
-                      onChange={(e) =>
-                        handleChange("datosClinicosSociales", e.target.value)
-                      }
-                      placeholder="Descripción médica/social relevante (diagnósticos, tratamientos, informes externos, etc.)"
-                    />
+                    <div className="space-y-3 px-2">
+                      <div className="space-y-2">
+                        <Textarea
+                          rows={4}
+                          value={form.datosClinicosSociales || ""}
+                          onChange={(e) =>
+                            handleChange("datosClinicosSociales", e.target.value)
+                          }
+                          placeholder="Descripción médica/social relevante (diagnósticos, tratamientos, informes externos, etc.)"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   {/* Datos relativos al: Desarrollo cognitivo */}
-                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5 space-y-3">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center gap-2 cursor-help">
-                            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                            <h3 className="text-sm font-semibold text-slate-700">
-                              Desarrollo cognitivo
-                            </h3>
-                            <Info className="w-3 h-3 text-slate-500" />
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs">
-                            Resultados de pruebas (CI, memoria, atención),
-                            razonamiento, funciones ejecutivas...
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
+                  <div className="space-y-3">
+                    <div className="bg-blue-50 px-4 py-2 rounded-md">
+                      <h3 className="text-sm font-medium text-gray-700">
+                        Desarrollo cognitivo
+                      </h3>
                     </div>
-                    <div className="space-y-2">
-                      <Textarea
-                        rows={4}
-                        value={form.descDesarrolloCognitivo || ""}
-                        onChange={(e) =>
-                          handleChange(
-                            "descDesarrolloCognitivo",
-                            e.target.value,
-                          )
-                        }
-                        placeholder="Descripción de resultados, CI, memoria de trabajo, razonamiento, etc."
-                      />
-                    </div>
-                  </div>
-
-                  {/* Autonomía en el uso de WC */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-3">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Autonomía en el uso de WC
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3 px-2">
                       <div className="space-y-2">
-                        <Label htmlFor="autonomiaWC">Nivel</Label>
-                        <Select
-                          value={form.autonomiaWC || undefined}
-                          onValueChange={(v) => handleChange("autonomiaWC", v)}
-                        >
-                          <SelectTrigger id="autonomiaWC">
-                            <SelectValue placeholder="Selecciona nivel" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="no_necesita">
-                              No necesita atención específica en relación con el
-                              uso del W.C.
-                            </SelectItem>
-                            <SelectItem value="necesita_apoyo">
-                              Necesita atención específica o supervisión
-                              ocasional
-                            </SelectItem>
-                            <SelectItem value="necesita_apoyo_extenso">
-                              Necesita ayuda frecuente/constante
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="autonomiaWCObs">Observaciones</Label>
                         <Textarea
-                          id="autonomiaWCObs"
-                          rows={3}
-                          value={form.autonomiaWCObs || ""}
-                          onChange={(e) =>
-                            handleChange("autonomiaWCObs", e.target.value)
-                          }
-                          placeholder="Observaciones relevantes"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Desarrollo sensorial */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Desarrollo sensorial
-                    </p>
-                    <div className="space-y-2">
-                      <Label>Descripción</Label>
-                      <Textarea
-                        rows={3}
-                        value={form.descDesarrolloSensorial || ""}
-                        onChange={(e) =>
-                          handleChange(
-                            "descDesarrolloSensorial",
-                            e.target.value,
-                          )
-                        }
-                        placeholder="Nada que destacar / descripción"
-                      />
-                    </div>
-                    {/* Visión */}
-                    <div className="space-y-2">
-                      <Label>Desarrollo sensorial visión</Label>
-                      <div className="flex items-center gap-2">
-                        <Select
-                          value={visionTemp || undefined}
-                          onValueChange={(v) => setVisionTemp(v)}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Selecciona valoración" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="No necesita ayuda acceso lectura/escritura/tarea escol. Su visión es funcional">
-                              No necesita ayuda acceso lectura/escritura/tarea
-                              escol. Su visión es funcional
-                            </SelectItem>
-                            <SelectItem value="Requiere adaptaciones de acceso a la lectura/escritura">
-                              Requiere adaptaciones de acceso a la
-                              lectura/escritura
-                            </SelectItem>
-                            <SelectItem value="Necesita apoyo visual específico frecuente">
-                              Necesita apoyo visual específico frecuente
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          onClick={() =>
-                            visionTemp &&
-                            (handleChange("visionValoraciones", [
-                              ...(form.visionValoraciones || []),
-                              visionTemp,
-                            ]),
-                            setVisionTemp(""))
-                          }
-                        >
-                          Añadir
-                        </Button>
-                      </div>
-                      {(form.visionValoraciones?.length || 0) > 0 && (
-                        <ul className="mt-2 divide-y rounded-md border bg-white">
-                          {(form.visionValoraciones || []).map((v, i) => (
-                            <li
-                              key={`vision-${i}`}
-                              className="px-3 py-2 text-sm flex items-center justify-between"
-                            >
-                              <span>{v}</span>
-                              <button
-                                type="button"
-                                className="text-gray-500 hover:text-red-600"
-                                onClick={() =>
-                                  handleChange(
-                                    "visionValoraciones",
-                                    (form.visionValoraciones || []).filter(
-                                      (_, idx) => idx !== i,
-                                    ),
-                                  )
-                                }
-                              >
-                                Borrar
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                    {/* Audición */}
-                    <div className="space-y-2">
-                      <Label>Desarrollo sensorial audición</Label>
-                      <div className="flex items-center gap-2">
-                        <Select
-                          value={audicionTemp || undefined}
-                          onValueChange={(v) => setAudicionTemp(v)}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Selecciona valoración" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="No necesita ayuda acceso lenguaje y comunicación. Su audición es funcional">
-                              No necesita ayuda acceso lenguaje y comunicación.
-                              Su audición es funcional
-                            </SelectItem>
-                            <SelectItem value="Requiere apoyo auditivo específico ocasional">
-                              Requiere apoyo auditivo específico ocasional
-                            </SelectItem>
-                            <SelectItem value="Necesita apoyo auditivo específico frecuente">
-                              Necesita apoyo auditivo específico frecuente
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          onClick={() =>
-                            audicionTemp &&
-                            (handleChange("audicionValoraciones", [
-                              ...(form.audicionValoraciones || []),
-                              audicionTemp,
-                            ]),
-                            setAudicionTemp(""))
-                          }
-                        >
-                          Añadir
-                        </Button>
-                      </div>
-                      {(form.audicionValoraciones?.length || 0) > 0 && (
-                        <ul className="mt-2 divide-y rounded-md border bg-white">
-                          {(form.audicionValoraciones || []).map((v, i) => (
-                            <li
-                              key={`aud-${i}`}
-                              className="px-3 py-2 text-sm flex items-center justify-between"
-                            >
-                              <span>{v}</span>
-                              <button
-                                type="button"
-                                className="text-gray-500 hover:text-red-600"
-                                onClick={() =>
-                                  handleChange(
-                                    "audicionValoraciones",
-                                    (form.audicionValoraciones || []).filter(
-                                      (_, idx) => idx !== i,
-                                    ),
-                                  )
-                                }
-                              >
-                                Borrar
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Desarrollo psicomotor */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-3">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Desarrollo psicomotor
-                    </p>
-                    <div className="space-y-2">
-                      <Label>Descripción</Label>
-                      <Textarea
-                        rows={3}
-                        value={form.descDesarrolloPsicomotor || ""}
-                        onChange={(e) =>
-                          handleChange(
-                            "descDesarrolloPsicomotor",
-                            e.target.value,
-                          )
-                        }
-                        placeholder="Nada que destacar / descripción"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="psicomotorNivel">Nivel</Label>
-                      <Select
-                        value={form.psicomotorNivel || undefined}
-                        onValueChange={(v) =>
-                          handleChange("psicomotorNivel", v)
-                        }
-                      >
-                        <SelectTrigger id="psicomotorNivel">
-                          <SelectValue placeholder="Selecciona nivel" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="no_necesita">
-                            No necesita atención específica. Su desarrollo
-                            psicomotor es funcional
-                          </SelectItem>
-                          <SelectItem value="apoyo_ocasional">
-                            Requiere apoyo/seguimiento ocasional
-                          </SelectItem>
-                          <SelectItem value="apoyo_frecuente">
-                            Necesita apoyo frecuente
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  {/* Movilidad y autonomía personal */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Autonomía en los desplazamientos (movilidad)
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="movilidadNivel">Nivel</Label>
-                        <Select
-                          value={form.movilidadNivel || undefined}
-                          onValueChange={(v) =>
-                            handleChange("movilidadNivel", v)
-                          }
-                        >
-                          <SelectTrigger id="movilidadNivel">
-                            <SelectValue placeholder="Selecciona nivel" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="no_necesita">
-                              No necesita atención específica en relación con el
-                              desplazamiento
-                            </SelectItem>
-                            <SelectItem value="apoyo_ocasional">
-                              Requiere apoyo/seguimiento ocasional
-                            </SelectItem>
-                            <SelectItem value="apoyo_frecuente">
-                              Necesita apoyo frecuente
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="movilidadObs">Observaciones</Label>
-                        <Textarea
-                          id="movilidadObs"
-                          rows={3}
-                          value={form.movilidadObs || ""}
-                          onChange={(e) =>
-                            handleChange("movilidadObs", e.target.value)
-                          }
-                          placeholder="Observaciones"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Control postural en sedestación */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Posibilidades de control postural en sedestación
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="controlPosturalNivel">Nivel</Label>
-                        <Select
-                          value={form.controlPosturalNivel || undefined}
-                          onValueChange={(v) =>
-                            handleChange("controlPosturalNivel", v)
-                          }
-                        >
-                          <SelectTrigger id="controlPosturalNivel">
-                            <SelectValue placeholder="Selecciona nivel" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="no_necesita">
-                              No necesita atención específica en relación con el
-                              control postural
-                            </SelectItem>
-                            <SelectItem value="apoyo_ocasional">
-                              Requiere apoyo/seguimiento ocasional
-                            </SelectItem>
-                            <SelectItem value="apoyo_frecuente">
-                              Necesita apoyo frecuente
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="controlPosturalObs">
-                          Observaciones
-                        </Label>
-                        <Textarea
-                          id="controlPosturalObs"
-                          rows={3}
-                          value={form.controlPosturalObs || ""}
-                          onChange={(e) =>
-                            handleChange("controlPosturalObs", e.target.value)
-                          }
-                          placeholder="Observaciones"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Acceso a las enseñanzas: manipulación y materiales */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Acceso a las enseñanzas: manipulación y materiales
-                      didácticos
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="manipulacionMaterialesNivel">
-                          Nivel
-                        </Label>
-                        <Select
-                          value={form.manipulacionMaterialesNivel || undefined}
-                          onValueChange={(v) =>
-                            handleChange("manipulacionMaterialesNivel", v)
-                          }
-                        >
-                          <SelectTrigger id="manipulacionMaterialesNivel">
-                            <SelectValue placeholder="Selecciona nivel" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="no_necesita">
-                              No necesita atención específica en manipulación y
-                              uso de materiales didácticos
-                            </SelectItem>
-                            <SelectItem value="apoyo_ocasional">
-                              Requiere apoyo/seguimiento ocasional
-                            </SelectItem>
-                            <SelectItem value="apoyo_frecuente">
-                              Necesita apoyo frecuente
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="manipulacionMaterialesObs">
-                          Observaciones
-                        </Label>
-                        <Textarea
-                          id="manipulacionMaterialesObs"
-                          rows={3}
-                          value={form.manipulacionMaterialesObs || ""}
+                          rows={4}
+                          value={form.descDesarrolloCognitivo || ""}
                           onChange={(e) =>
                             handleChange(
-                              "manipulacionMaterialesObs",
+                              "descDesarrolloCognitivo",
                               e.target.value,
                             )
                           }
-                          placeholder="Observaciones"
+                          placeholder="Descripción de resultados, CI, memoria de trabajo, razonamiento, etc."
                         />
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Autonomía en la alimentación */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Autonomía en la alimentación
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="alimentacionNivel">Nivel</Label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Select
-                          value={form.alimentacionNivel || undefined}
+                          value={form.desarrolloCognitivoNivel || undefined}
                           onValueChange={(v) =>
-                            handleChange("alimentacionNivel", v)
+                            handleChange("desarrolloCognitivoNivel", v)
                           }
                         >
-                          <SelectTrigger id="alimentacionNivel">
-                            <SelectValue placeholder="Selecciona nivel" />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona el nivel o intervención" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_necesita">
-                              No necesita atención específica en relación con la
-                              alimentación
+                            <SelectItem value="1.No necesita atención específica. Su desarrollo cognitivo es funcional">
+                              1.No necesita atención específica. Su desarrollo cognitivo es funcional
                             </SelectItem>
-                            <SelectItem value="apoyo_ocasional">
-                              Requiere apoyo/seguimiento ocasional
+                            <SelectItem value="2.Requiere apoyo/seguimiento ocasional">
+                              2.Requiere apoyo/seguimiento ocasional
                             </SelectItem>
-                            <SelectItem value="apoyo_frecuente">
-                              Necesita apoyo frecuente
+                            <SelectItem value="3.Necesita apoyo específico frecuente">
+                              3.Necesita apoyo específico frecuente
+                            </SelectItem>
+                            <SelectItem value="4.Medio o superior respecto a su edad, intervención procesos cognitivos (PE)">
+                              4.Medio o superior respecto a su edad, intervención procesos cognitivos (PE)
                             </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
+                    </div>
+                  </div>
+
+
+
+                  {/* Desarrollo psicomotor */}
+                  <div className="space-y-3">
+                    <div className="bg-blue-50 px-4 py-2 rounded-md">
+                      <h3 className="text-sm font-medium text-gray-700">
+                        Desarrollo psicomotor
+                      </h3>
+                    </div>
+                    <div className="space-y-3 px-2">
                       <div className="space-y-2">
-                        <Label htmlFor="alimentacionObs">Observaciones</Label>
                         <Textarea
-                          id="alimentacionObs"
                           rows={3}
-                          value={form.alimentacionObs || ""}
+                          value={form.descDesarrolloPsicomotor || ""}
                           onChange={(e) =>
-                            handleChange("alimentacionObs", e.target.value)
+                            handleChange(
+                              "descDesarrolloPsicomotor",
+                              e.target.value,
+                            )
                           }
-                          placeholder="Observaciones"
+                          placeholder="Nada que destacar / descripción"
                         />
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Desarrollo comunicativo y lingüístico */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-4">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Desarrollo comunicativo y lingüístico
-                    </p>
-                    <div className="space-y-2">
-                      <Label>Descripción</Label>
-                      <Textarea
-                        rows={4}
-                        value={form.descDesarrolloComunicativo || ""}
-                        onChange={(e) =>
-                          handleChange(
-                            "descDesarrolloComunicativo",
-                            e.target.value,
-                          )
-                        }
-                        placeholder="Vocabulario, información, comprensión, aritmética..."
-                      />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="comunicacionNivel">Comunicación</Label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Select
-                          value={form.comunicacionNivel || undefined}
+                          value={form.psicomotorNivel || undefined}
                           onValueChange={(v) =>
-                            handleChange("comunicacionNivel", v)
+                            handleChange("psicomotorNivel", v)
                           }
                         >
-                          <SelectTrigger id="comunicacionNivel">
-                            <SelectValue placeholder="Selecciona nivel" />
+                          <SelectTrigger id="psicomotorNivel">
+                            <SelectValue placeholder="Selecciona el nivel o intervención" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="no_necesita">
-                              No necesita atención específica. Comunicación
-                              intencional funcional
+                            <SelectItem value="1.No necesita atención específica. Su desarrollo psicomotor es funcional">
+                              1.No necesita atención específica. Su desarrollo psicomotor es funcional
                             </SelectItem>
-                            <SelectItem value="apoyo_ocasional">
-                              Requiere apoyo/seguimiento ocasional
+                            <SelectItem value="2.Requiere apoyo/seguimiento ocasional">
+                              2.Requiere apoyo/seguimiento ocasional
                             </SelectItem>
-                            <SelectItem value="apoyo_frecuente">
-                              Necesita apoyo frecuente
+                            <SelectItem value="3.Necesita apoyo específico frecuente">
+                              3.Necesita apoyo específico frecuente
                             </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lenguajeExpresivoNivel">
-                          Lenguaje expresivo
-                        </Label>
-                        <Select
-                          value={form.lenguajeExpresivoNivel || undefined}
-                          onValueChange={(v) =>
-                            handleChange("lenguajeExpresivoNivel", v)
-                          }
-                        >
-                          <SelectTrigger id="lenguajeExpresivoNivel">
-                            <SelectValue placeholder="Selecciona nivel" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="no_necesita">
-                              No necesita atención específica en el dllo
-                              lingüístico expresivo
-                            </SelectItem>
-                            <SelectItem value="apoyo_ocasional">
-                              Requiere apoyo/seguimiento ocasional
-                            </SelectItem>
-                            <SelectItem value="apoyo_frecuente">
-                              Necesita apoyo frecuente
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lenguajeComprensivoNivel">
-                          Lenguaje comprensivo
-                        </Label>
-                        <Select
-                          value={form.lenguajeComprensivoNivel || undefined}
-                          onValueChange={(v) =>
-                            handleChange("lenguajeComprensivoNivel", v)
-                          }
-                        >
-                          <SelectTrigger id="lenguajeComprensivoNivel">
-                            <SelectValue placeholder="Selecciona nivel" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="no_necesita">
-                              No necesita atención específica
-                            </SelectItem>
-                            <SelectItem value="apoyo_ocasional">
-                              Requiere apoyo/seguimiento ocasional
-                            </SelectItem>
-                            <SelectItem value="apoyo_frecuente">
-                              Necesita apoyo frecuente
+                            <SelectItem value="4.No necesita atención específica. Su desarrollo psicomotor es funcional">
+                              4.No necesita atención específica. Su desarrollo psicomotor es funcional
                             </SelectItem>
                           </SelectContent>
                         </Select>
@@ -2762,51 +2267,6 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </div>
                   </div>
 
-                  {/* Desarrollo social y afectivo */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-2">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Desarrollo social y afectivo
-                    </p>
-                    <Textarea
-                      rows={4}
-                      value={form.descDesarrolloSocialAfectivo || ""}
-                      onChange={(e) =>
-                        handleChange(
-                          "descDesarrolloSocialAfectivo",
-                          e.target.value,
-                        )
-                      }
-                      placeholder="Relaciones con iguales, clima aula, conductas observadas, etc."
-                    />
-                  </div>
-
-                  {/* Estilo de aprendizaje y motivación */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-2">
-                    <p className="text-sm font-semibold text-gray-700">
-                      Estilo de aprendizaje y motivación
-                    </p>
-                    <Textarea
-                      rows={4}
-                      value={form.descEstiloAprendizaje || ""}
-                      onChange={(e) =>
-                        handleChange("descEstiloAprendizaje", e.target.value)
-                      }
-                      placeholder="Puntos fuertes, motivación, autonomía, persistencia, etc."
-                    />
-                  </div>
-
-                  {/* Otros */}
-                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 shadow-sm space-y-2">
-                    <p className="text-sm font-semibold text-gray-700">Otros</p>
-                    <Textarea
-                      rows={3}
-                      value={form.infoOtros || ""}
-                      onChange={(e) =>
-                        handleChange("infoOtros", e.target.value)
-                      }
-                      placeholder="Otra información relevante"
-                    />
-                  </div>
 
                   {/* Guardar dentro de Información relevante */}
                   <div className="mt-6 flex justify-end">
