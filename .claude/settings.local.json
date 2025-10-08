@@ -9,7 +9,15 @@
       "Bash(timeout 10s npm run dev)",
       "Bash(tree:*)",
       "Bash(npm run dev:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(awk:*)",
+      "Bash(cat:*)",
+      "Bash(timeout 15s npm run dev)",
+      "Bash(node -e \"require(''''fs'''').readFileSync(''''components/profile/InformeCompletoForm.tsx'''', ''''utf8'''')\")",
+      "Bash(npx eslint:*)",
+      "Bash(for line in 3657 3658 3659 3660)",
+      "Bash(do echo -n \"$line: \" sed -n \"$linep\" components/profile/InformeCompletoForm.tsx)",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []

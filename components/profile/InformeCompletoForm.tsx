@@ -21,8 +21,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { SectionHeader } from "@/components/profile/SectionHeader";
+import { SubSection } from "@/components/profile/SubSection";
+import { MultiSelectWithChips } from "@/components/profile/MultiSelectWithChips";
+import { FormField } from "@/components/profile/FormField";
 import { toast } from "sonner";
 import {
   Save,
@@ -57,6 +60,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { IdentityFields } from "./IdentityFields";
+import { FormTextarea } from "./FormTextarea";
 
 type SectionKey =
   | "datosPersonales"
@@ -147,6 +151,10 @@ interface FormState {
   descDesarrolloSocialAfectivo?: string;
   descEstiloAprendizaje?: string;
   infoOtros?: string;
+  nivelCompetenciaCurricular?: string;
+  estiloAprendizajeMotivacion?: string;
+  otrosInfoRelevante?: string;
+  ficheroExterno?: string;
   // NEAE - Determinación de necesidades
   presentaNEAE?: string; // 'si' | 'no'
   necesidadesListado?: string[];
@@ -950,7 +958,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                   </TooltipContent>
                                 </Tooltip>
                               </Label>
-                              <Textarea
+                              <FormTextarea
                                 id="esc-escolarizacionPrevia"
                                 rows={4}
                                 value={form.escolarizacionPrevia || ""}
@@ -1226,7 +1234,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                             Otras Actuaciones
                                           </h4>
                                           <div className="space-y-2">
-                                            <Textarea
+                                            <FormTextarea
                                               id="otrasOrientacionesInfantil"
                                               rows={4}
                                               value={
@@ -1461,7 +1469,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                             Otras Actuaciones
                                           </h4>
                                           <div className="space-y-2">
-                                            <Textarea
+                                            <FormTextarea
                                               id="otrasOrientacionesPrimaria"
                                               rows={4}
                                               value={
@@ -1699,7 +1707,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                             Otras Actuaciones
                                           </h4>
                                           <div className="space-y-2">
-                                            <Textarea
+                                            <FormTextarea
                                               id="otrasOrientacionesSecundaria"
                                               rows={4}
                                               value={
@@ -2019,8 +2027,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               <Label htmlFor="motivoEvaluacionDetalle">
                                 Motivo de la evaluación psicopedagógica
                               </Label>
-                              <Textarea
+                              <FormTextarea
                                 id="motivoEvaluacionDetalle"
+                                rows={4}
                                 value={form.motivoEvaluacionDetalle || ""}
                                 onChange={(e) =>
                                   handleChange(
@@ -2029,7 +2038,6 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                   )
                                 }
                                 placeholder="Describe con más detalle el motivo..."
-                                className="min-h-[100px]"
                               />
                             </div>
                           </div>
@@ -2052,7 +2060,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                 </TooltipContent>
                               </Tooltip>
                             </Label>
-                            <Textarea
+                            <FormTextarea
                               id="instrumentosInformacion"
                               rows={4}
                               value={form.instrumentosInformacion || ""}
@@ -2085,7 +2093,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                               <Label htmlFor="observaciones">
                                 Observaciones
                               </Label>
-                              <Textarea
+                              <FormTextarea
                                 id="observaciones"
                                 rows={3}
                                 value={form.observaciones || ""}
@@ -2147,132 +2155,576 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-6 py-4 bg-white space-y-4">
                   {/* Datos clínicos y/o sociales relevantes */}
-                  <div className="space-y-3">
-                    <div className="bg-blue-50 px-4 py-2 rounded-md">
-                      <h3 className="text-sm font-medium text-gray-700">
-                        Datos clínicos y/o sociales relevantes
-                      </h3>
+                  <Collapsible
+                    open={openCollapsibles["datosClinicos"]}
+                    onOpenChange={() => toggleCollapsible("datosClinicos")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Datos clínicos y/o sociales relevantes
+                          </h3>
+                        </div>
+                        {openCollapsibles["datosClinicos"] ? (
+                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-600">
+                            Descripción:
+                          </label>
+                          <FormTextarea
+                            rows={4}
+                            value={form.datosClinicosSociales || ""}
+                            onChange={(e) =>
+                              handleChange(
+                                "datosClinicosSociales",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Descripción médica/social relevante (diagnósticos, tratamientos, informes externos, etc.)"
+                          />
+                        </div>
+                      </CollapsibleContent>
                     </div>
-                    <div className="space-y-3 px-2">
-                      <div className="space-y-2">
-                        <Textarea
-                          rows={4}
-                          value={form.datosClinicosSociales || ""}
-                          onChange={(e) =>
-                            handleChange(
-                              "datosClinicosSociales",
-                              e.target.value,
-                            )
-                          }
-                          placeholder="Descripción médica/social relevante (diagnósticos, tratamientos, informes externos, etc.)"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  </Collapsible>
 
-                  {/* Datos relativos al: Desarrollo cognitivo */}
-                  <div className="space-y-3">
-                    <div className="bg-blue-50 px-4 py-2 rounded-md">
-                      <h3 className="text-sm font-medium text-gray-700">
-                        Desarrollo cognitivo
-                      </h3>
-                    </div>
-                    <div className="space-y-3 px-2">
-                      <div className="space-y-2">
-                        <Textarea
-                          rows={4}
-                          value={form.descDesarrolloCognitivo || ""}
-                          onChange={(e) =>
-                            handleChange(
-                              "descDesarrolloCognitivo",
-                              e.target.value,
-                            )
-                          }
-                          placeholder="Descripción de resultados, CI, memoria de trabajo, razonamiento, etc."
-                        />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Select
-                          value={form.desarrolloCognitivoNivel || undefined}
-                          onValueChange={(v) =>
-                            handleChange("desarrolloCognitivoNivel", v)
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecciona el nivel o intervención" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1.No necesita atención específica. Su desarrollo cognitivo es funcional">
-                              1.No necesita atención específica. Su desarrollo
-                              cognitivo es funcional
-                            </SelectItem>
-                            <SelectItem value="2.Requiere apoyo/seguimiento ocasional">
-                              2.Requiere apoyo/seguimiento ocasional
-                            </SelectItem>
-                            <SelectItem value="3.Necesita apoyo específico frecuente">
-                              3.Necesita apoyo específico frecuente
-                            </SelectItem>
-                            <SelectItem value="4.Medio o superior respecto a su edad, intervención procesos cognitivos (PE)">
-                              4.Medio o superior respecto a su edad,
-                              intervención procesos cognitivos (PE)
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                  </div>
+                  {/* Datos relativos al: */}
+                  <Collapsible
+                    open={openCollapsibles["datosRelativosAl"]}
+                    onOpenChange={() => toggleCollapsible("datosRelativosAl")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Datos relativos al:
+                          </h3>
+                        </div>
+                        {openCollapsibles["datosRelativosAl"] ? (
+                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4 space-y-4">
+                        {/* Desarrollo cognitivo */}
+                        <div className="bg-white p-4 rounded-lg border-2 border-slate-300">
+                          <SectionHeader title="Desarrollo cognitivo" />
+                          <div className="space-y-3">
+                            <div className="space-y-2">
+                              <label className="text-xs font-medium text-slate-600">
+                                Descripción:
+                              </label>
+                              <FormTextarea
+                                rows={4}
+                                value={form.descDesarrolloCognitivo || ""}
+                                onChange={(e) =>
+                                  handleChange(
+                                    "descDesarrolloCognitivo",
+                                    e.target.value,
+                                  )
+                                }
+                                placeholder="Descripción de resultados, CI, memoria de trabajo, razonamiento, etc."
+                              />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="flex gap-2">
+                                <Select
+                                  value={
+                                    form.desarrolloCognitivoNivel || undefined
+                                  }
+                                  onValueChange={(v) =>
+                                    handleChange("desarrolloCognitivoNivel", v)
+                                  }
+                                >
+                                  <SelectTrigger className="flex-1">
+                                    <SelectValue placeholder="Selecciona el nivel o intervención" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="1.Significativ. inferior respecto a su edad. At. Específica permanente-FBO/PTVAL">
+                                      1.Significativ. inferior respecto a su
+                                      edad. At. Específica permanente-FBO/PTVAL
+                                    </SelectItem>
+                                    <SelectItem value="2.Inferior respecto a su edad. Atención Específica continuada">
+                                      2.Inferior respecto a su edad. Atención
+                                      Específica continuada
+                                    </SelectItem>
+                                    <SelectItem value="3.Inferior respecto a su edad, intervención en procesos cognitivos (PE)">
+                                      3.Inferior respecto a su edad,
+                                      intervención en procesos cognitivos (PE)
+                                    </SelectItem>
+                                    <SelectItem value="4.Medio o superior respecto a su edad, intervención procesos cognitivos (PE)">
+                                      4.Medio o superior respecto a su edad,
+                                      intervención procesos cognitivos (PE)
+                                    </SelectItem>
+                                    <SelectItem value="5.No necesita atención específica en relación con el desarrollo cognitivo">
+                                      5.No necesita atención específica en
+                                      relación con el desarrollo cognitivo
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                {form.desarrolloCognitivoNivel && (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        onClick={() =>
+                                          handleChange(
+                                            "desarrolloCognitivoNivel",
+                                            "",
+                                          )
+                                        }
+                                        className="flex-shrink-0"
+                                      >
+                                        <X className="w-4 h-4" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Limpiar selección</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
 
-                  {/* Desarrollo psicomotor */}
-                  <div className="space-y-3">
-                    <div className="bg-blue-50 px-4 py-2 rounded-md">
-                      <h3 className="text-sm font-medium text-gray-700">
-                        Desarrollo psicomotor
-                      </h3>
+                        {/* Desarrollo psicomotor */}
+                        <div className="bg-white p-4 rounded-lg border-2 border-slate-300">
+                          <SectionHeader title="Desarrollo psicomotor" />
+                          <div className="space-y-3">
+                            <div className="space-y-2">
+                              <label className="text-xs font-medium text-slate-600">
+                                Descripción:
+                              </label>
+                              <FormTextarea
+                                rows={3}
+                                value={form.descDesarrolloPsicomotor || ""}
+                                onChange={(e) =>
+                                  handleChange(
+                                    "descDesarrolloPsicomotor",
+                                    e.target.value,
+                                  )
+                                }
+                                placeholder="Nada que destacar / descripción"
+                              />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <Select
+                                value={form.psicomotorNivel || undefined}
+                                onValueChange={(v) =>
+                                  handleChange("psicomotorNivel", v)
+                                }
+                              >
+                                <SelectTrigger id="psicomotorNivel">
+                                  <SelectValue placeholder="Selecciona el nivel o intervención" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="1.Retraso específico: correr, saltar, dibujar,... sin déficit. At. Específica">
+                                    1.Retraso específico: correr, saltar,
+                                    dibujar,... sin déficit. At. Específica
+                                  </SelectItem>
+                                  <SelectItem value="2.Significativ. inferior para su edad (retraso psicomotor grave). At. Específica">
+                                    2.Significativ. inferior para su edad
+                                    (retraso psicomotor grave). At. Específica
+                                  </SelectItem>
+                                  <SelectItem value="3.Inferior para su edad (retraso psicomotor simple). At. Específica transitoria">
+                                    3.Inferior para su edad (retraso psicomotor
+                                    simple). At. Específica transitoria
+                                  </SelectItem>
+                                  <SelectItem value="4.No necesita atención específica. Su desarrollo psicomotor es funcional">
+                                    4.No necesita atención específica. Su
+                                    desarrollo psicomotor es funcional
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                      </CollapsibleContent>
                     </div>
-                    <div className="space-y-3 px-2">
-                      <div className="space-y-2">
-                        <Textarea
-                          rows={3}
-                          value={form.descDesarrolloPsicomotor || ""}
-                          onChange={(e) =>
-                            handleChange(
-                              "descDesarrolloPsicomotor",
-                              e.target.value,
-                            )
-                          }
-                          placeholder="Nada que destacar / descripción"
-                        />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Select
-                          value={form.psicomotorNivel || undefined}
-                          onValueChange={(v) =>
-                            handleChange("psicomotorNivel", v)
-                          }
+                  </Collapsible>
+
+                  {/* Desarrollo sensorial */}
+                  <Collapsible
+                    open={openCollapsibles["desarrolloSensorial"]}
+                    onOpenChange={() =>
+                      toggleCollapsible("desarrolloSensorial")
+                    }
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Desarrollo sensorial
+                          </h3>
+                        </div>
+                        {openCollapsibles["desarrolloSensorial"] ? (
+                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-600">
+                            Descripción:
+                          </label>
+                          <FormTextarea
+                            rows={3}
+                            value={form.descDesarrolloSensorial || ""}
+                            onChange={(e) =>
+                              handleChange(
+                                "descDesarrolloSensorial",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Información sobre desarrollo sensorial (visión, audición, etc.)"
+                          />
+                        </div>
+
+                        {/* Desarrollo sensorial visión */}
+                        <SubSection
+                          title="Desarrollo sensorial visión"
+                          className="mt-4"
                         >
-                          <SelectTrigger id="psicomotorNivel">
-                            <SelectValue placeholder="Selecciona el nivel o intervención" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1.No necesita atención específica. Su desarrollo psicomotor es funcional">
-                              1.No necesita atención específica. Su desarrollo
-                              psicomotor es funcional
-                            </SelectItem>
-                            <SelectItem value="2.Requiere apoyo/seguimiento ocasional">
-                              2.Requiere apoyo/seguimiento ocasional
-                            </SelectItem>
-                            <SelectItem value="3.Necesita apoyo específico frecuente">
-                              3.Necesita apoyo específico frecuente
-                            </SelectItem>
-                            <SelectItem value="4.No necesita atención específica. Su desarrollo psicomotor es funcional">
-                              4.No necesita atención específica. Su desarrollo
-                              psicomotor es funcional
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                          <MultiSelectWithChips
+                            value={form.visionValoraciones || []}
+                            onChange={(v) =>
+                              handleChange("visionValoraciones", v)
+                            }
+                            options={[
+                              {
+                                value:
+                                  "1.Necesita iniciarse Braille lectura/escritura/tareas escol. At. Específica-ONCE",
+                                label:
+                                  "1.Necesita iniciarse Braille lectura/escritura/tareas escol. At. Específica-ONCE",
+                              },
+                              {
+                                value:
+                                  "2.Necesita/utiliza Braille lectura/escritura/tarea escolar. At. Específica-ONCE",
+                                label:
+                                  "2.Necesita/utiliza Braille lectura/escritura/tarea escolar. At. Específica-ONCE",
+                              },
+                              {
+                                value:
+                                  "3.Ayudas opticas/tecnicas especif. lectura/escritura/tarea escol. At. Específica",
+                                label:
+                                  "3.Ayudas opticas/tecnicas especif. lectura/escritura/tarea escol. At. Específica",
+                              },
+                              {
+                                value:
+                                  "4.Ayudas opticas/tecnicas especif. lectura/escritura/tarea escol. No At.Especif.",
+                                label:
+                                  "4.Ayudas opticas/tecnicas especif. lectura/escritura/tarea escol. No At.Especif.",
+                              },
+                              {
+                                value:
+                                  "5.No necesita ayuda acceso lectura/escritura/tarea escol. Su visión es funcional",
+                                label:
+                                  "5.No necesita ayuda acceso lectura/escritura/tarea escol. Su visión es funcional",
+                              },
+                            ]}
+                          />
+                        </SubSection>
+
+                        {/* Desarrollo sensorial audición */}
+                        <SubSection
+                          title="Desarrollo sensorial audición"
+                          className="mt-4"
+                        >
+                          <MultiSelectWithChips
+                            value={form.audicionValoraciones || []}
+                            onChange={(v) =>
+                              handleChange("audicionValoraciones", v)
+                            }
+                            options={[
+                              {
+                                value:
+                                  "1.Necesita iniciarse en algún SAC (L.S.E., Bimodal, etc). At. Específica",
+                                label:
+                                  "1.Necesita iniciarse en algún SAC (L.S.E., Bimodal, etc). At. Específica",
+                              },
+                              {
+                                value:
+                                  "2.Necesita/utiliza algún SAC (L.S.E., Bimodal, etc). Atención Específica",
+                                label:
+                                  "2.Necesita/utiliza algún SAC (L.S.E., Bimodal, etc). Atención Específica",
+                              },
+                              {
+                                value:
+                                  "3.Puede adquirir leng. oral/percibir palabras-sonidos prótesis. At. Específica",
+                                label:
+                                  "3.Puede adquirir leng. oral/percibir palabras-sonidos prótesis. At. Específica",
+                              },
+                              {
+                                value:
+                                  "4.Ayudas técnicas/tecnológicas para un adecuado dllo de las tareas escolares",
+                                label:
+                                  "4.Ayudas técnicas/tecnológicas para un adecuado dllo de las tareas escolares",
+                              },
+                              {
+                                value:
+                                  "5.No necesita ayuda acceso lenguaje y comunicación. Su audición es funcional desarrollo comunicativo y lingüístico",
+                                label:
+                                  "5.No necesita ayuda acceso lenguaje y comunicación. Su audición es funcional desarrollo comunicativo y lingüístico",
+                              },
+                            ]}
+                          />
+                        </SubSection>
+                      </CollapsibleContent>
                     </div>
-                  </div>
+                  </Collapsible>
+
+                  {/* Desarrollo comunicativo y lingüístico */}
+                  <Collapsible
+                    open={openCollapsibles["desarrolloComunicativo"]}
+                    onOpenChange={() =>
+                      toggleCollapsible("desarrolloComunicativo")
+                    }
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Desarrollo comunicativo y lingüístico
+                          </h3>
+                        </div>
+                        {openCollapsibles["desarrolloComunicativo"] ? (
+                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-600">
+                            Descripción:
+                          </label>
+                          <FormTextarea
+                            rows={3}
+                            value={form.descDesarrolloComunicativo || ""}
+                            onChange={(e) =>
+                              handleChange(
+                                "descDesarrolloComunicativo",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Información sobre desarrollo comunicativo y del lenguaje"
+                          />
+                        </div>
+                      </CollapsibleContent>
+                    </div>
+                  </Collapsible>
+
+                  {/* Desarrollo social y afectivo */}
+                  <Collapsible
+                    open={openCollapsibles["desarrolloSocialAfectivo"]}
+                    onOpenChange={() =>
+                      toggleCollapsible("desarrolloSocialAfectivo")
+                    }
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Desarrollo social y afectivo
+                          </h3>
+                        </div>
+                        {openCollapsibles["desarrolloSocialAfectivo"] ? (
+                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-600">
+                            Descripción:
+                          </label>
+                          <FormTextarea
+                            rows={3}
+                            value={form.descDesarrolloSocialAfectivo || ""}
+                            onChange={(e) =>
+                              handleChange(
+                                "descDesarrolloSocialAfectivo",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Información sobre desarrollo social y afectivo"
+                          />
+                        </div>
+                      </CollapsibleContent>
+                    </div>
+                  </Collapsible>
+
+                  {/* Nivel de competencia curricular */}
+                  <Collapsible
+                    open={openCollapsibles["nivelCompetenciaCurricular"]}
+                    onOpenChange={() =>
+                      toggleCollapsible("nivelCompetenciaCurricular")
+                    }
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Nivel de competencia curricular
+                          </h3>
+                        </div>
+                        {openCollapsibles["nivelCompetenciaCurricular"] ? (
+                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-600">
+                            Descripción:
+                          </label>
+                          <FormTextarea
+                            rows={3}
+                            value={form.nivelCompetenciaCurricular || ""}
+                            onChange={(e) =>
+                              handleChange(
+                                "nivelCompetenciaCurricular",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Información sobre el nivel de competencia curricular"
+                          />
+                        </div>
+                      </CollapsibleContent>
+                    </div>
+                  </Collapsible>
+
+                  {/* Estilo de aprendizaje y motivación */}
+                  <Collapsible
+                    open={openCollapsibles["estiloAprendizaje"]}
+                    onOpenChange={() => toggleCollapsible("estiloAprendizaje")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Estilo de aprendizaje y motivación
+                          </h3>
+                        </div>
+                        {openCollapsibles["estiloAprendizaje"] ? (
+                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-600">
+                            Descripción:
+                          </label>
+                          <FormTextarea
+                            rows={3}
+                            value={form.estiloAprendizajeMotivacion || ""}
+                            onChange={(e) =>
+                              handleChange(
+                                "estiloAprendizajeMotivacion",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Información sobre estilo de aprendizaje y motivación"
+                          />
+                        </div>
+                      </CollapsibleContent>
+                    </div>
+                  </Collapsible>
+
+                  {/* Otros */}
+                  <Collapsible
+                    open={openCollapsibles["otrosInfo"]}
+                    onOpenChange={() => toggleCollapsible("otrosInfo")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Otros
+                          </h3>
+                        </div>
+                        {openCollapsibles["otrosInfo"] ? (
+                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-600">
+                            Descripción:
+                          </label>
+                          <FormTextarea
+                            rows={3}
+                            value={form.otrosInfoRelevante || ""}
+                            onChange={(e) =>
+                              handleChange("otrosInfoRelevante", e.target.value)
+                            }
+                            placeholder="Otra información relevante"
+                          />
+                        </div>
+                      </CollapsibleContent>
+                    </div>
+                  </Collapsible>
+
+                  {/* Fichero externo */}
+                  <Collapsible
+                    open={openCollapsibles["ficheroExterno"]}
+                    onOpenChange={() => toggleCollapsible("ficheroExterno")}
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Fichero externo
+                          </h3>
+                        </div>
+                        {openCollapsibles["ficheroExterno"] ? (
+                          <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-600">
+                            Descripción:
+                          </label>
+                          <FormTextarea
+                            rows={3}
+                            value={form.ficheroExterno || ""}
+                            onChange={(e) =>
+                              handleChange("ficheroExterno", e.target.value)
+                            }
+                            placeholder="Referencias a ficheros externos"
+                          />
+                        </div>
+                      </CollapsibleContent>
+                    </div>
+                  </Collapsible>
 
                   {/* Guardar dentro de Información relevante */}
                   <div className="mt-6 flex justify-end">
@@ -2368,7 +2820,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                         </TooltipContent>
                       </Tooltip>
                     </div>
-                    <Textarea
+                    <FormTextarea
                       rows={6}
                       value={form.contextoEscolar || ""}
                       onChange={(e) =>
@@ -2494,7 +2946,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                             </p>
                           </TooltipContent>
                         </Tooltip>
-                        <Textarea
+                        <FormTextarea
                           rows={6}
                           value={form.entornoFamiliar || ""}
                           onChange={(e) =>
@@ -2755,7 +3207,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                         </TooltipContent>
                       </Tooltip>
                     </div>
-                    <Textarea
+                    <FormTextarea
                       rows={4}
                       value={form.observacionesNEAE || ""}
                       onChange={(e) =>
@@ -2790,7 +3242,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     <div className="flex-1 min-w-0">
                       <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
                         <span className="truncate">
-                          Propuesta de Atención Educativa
+                          Propuesta de Atención Educativa. Orientaciones al
+                          profesorado (*)
                         </span>
                         {isSectionComplete("propuestaAtencion") && (
                           <Badge
@@ -2843,11 +3296,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
                   {/* Propuesta de atención educativa */}
                   <div className="rounded-md border border-slate-200 bg-slate-50/50 p-4 space-y-4">
-                    <p className="text-sm font-semibold text-slate-700">
-                      Especificar la propuesta de medidas y recursos necesarios
-                      para atender las NEAE identificadas.
-                    </p>
-                    <div className="rounded-md border bg-slate-100 p-3 text-xs text-slate-600">
+                    <div className="rounded-md border bg-blue-50 p-3 text-xs text-gray-700 font-medium">
                       Medidas Educativas
                     </div>
 
@@ -2933,6 +3382,28 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                             ) && "✓ "}
                             Actuaciones de prevención y control del absentismo
                           </SelectItem>
+                          <SelectItem
+                            value="refuerzo_troncales_4eso"
+                            disabled={form.medidasEducativasGenerales?.includes(
+                              "refuerzo_troncales_4eso",
+                            )}
+                          >
+                            {form.medidasEducativasGenerales?.includes(
+                              "refuerzo_troncales_4eso",
+                            ) && "✓ "}
+                            Programa de refuerzo de troncales para 4º ESO
+                          </SelectItem>
+                          <SelectItem
+                            value="pmar"
+                            disabled={form.medidasEducativasGenerales?.includes(
+                              "pmar",
+                            )}
+                          >
+                            {form.medidasEducativasGenerales?.includes(
+                              "pmar",
+                            ) && "✓ "}
+                            Programa mejora aprendizaje y rendimiento (PMAR)
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                       {(form.medidasEducativasGenerales?.length || 0) > 0 && (
@@ -2949,6 +3420,9 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                                   "Actuaciones de coordinación en el proceso de tránsito entre ciclos, o entre etapas",
                                 actuaciones_prevencion:
                                   "Actuaciones de prevención y control del absentismo",
+                                refuerzo_troncales_4eso:
+                                  "Programa de refuerzo de troncales para 4º ESO",
+                                pmar: "Programa mejora aprendizaje y rendimiento (PMAR)",
                               };
 
                               return (
@@ -3066,7 +3540,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                         <Label htmlFor="recursosMaterialesObs">
                           Observaciones
                         </Label>
-                        <Textarea
+                        <FormTextarea
                           id="recursosMaterialesObs"
                           rows={3}
                           value={form.recursosMaterialesObs || ""}
@@ -3090,7 +3564,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                       <Label htmlFor="actuacionesObservaciones">
                         Observaciones
                       </Label>
-                      <Textarea
+                      <FormTextarea
                         id="actuacionesObservaciones"
                         rows={3}
                         value={form.actuacionesObservaciones || ""}
@@ -3183,7 +3657,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                         <Label htmlFor="profesoradoEspecialistaObs">
                           Observaciones
                         </Label>
-                        <Textarea
+                        <FormTextarea
                           id="profesoradoEspecialistaObs"
                           rows={3}
                           value={form.profesoradoEspecialistaObs || ""}
@@ -3278,7 +3752,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                         <Label htmlFor="personalNoDocenteObs">
                           Observaciones
                         </Label>
-                        <Textarea
+                        <FormTextarea
                           id="personalNoDocenteObs"
                           rows={3}
                           value={form.personalNoDocenteObs || ""}
@@ -3292,40 +3766,99 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </div>
 
                   {/* Orientaciones al profesorado */}
-                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5 space-y-2">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center gap-2 cursor-help">
-                            <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
-                            <h3 className="text-sm font-semibold text-slate-700">
-                              Orientaciones al profesorado
-                            </h3>
-                            <Info className="w-3 h-3 text-slate-500" />
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs">
-                            Sugerencias metodológicas, de organización,
-                            evaluación, etc.
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
+                  <Collapsible
+                    open={openCollapsibles["orientacionesProfesorado"]}
+                    onOpenChange={() =>
+                      toggleCollapsible("orientacionesProfesorado")
+                    }
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Orientaciones al profesorado
+                          </h3>
+                        </div>
+                        {openCollapsibles["orientacionesProfesorado"] ? (
+                          <ChevronUp className="h-4 w-4 text-lime-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-lime-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4 space-y-2">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex items-center gap-2 cursor-help mb-4">
+                              <Info className="w-3 h-3 text-slate-500" />
+                              <span className="text-xs text-slate-600">
+                                Sugerencias metodológicas, de organización,
+                                evaluación, etc.
+                              </span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs">
+                              Sugerencias metodológicas, de organización,
+                              evaluación, etc.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <p className="text-sm text-slate-600 mb-3">
+                          Especificar orientaciones para la organización de la
+                          respuesta educativa.
+                        </p>
+                        <FormTextarea
+                          id="propuestaAtencion"
+                          rows={6}
+                          value={form.propuestaAtencion || ""}
+                          onChange={(e) =>
+                            handleChange("propuestaAtencion", e.target.value)
+                          }
+                          placeholder="Sugerencias metodológicas, organización del aula, apoyos, seguimiento, coordinación..."
+                        />
+                      </CollapsibleContent>
                     </div>
-                    <p className="text-sm text-slate-600 mb-3">
-                      Especificar orientaciones para la organización de la
-                      respuesta educativa.
-                    </p>
-                    <Textarea
-                      id="propuestaAtencion"
-                      rows={6}
-                      value={form.propuestaAtencion || ""}
-                      onChange={(e) =>
-                        handleChange("propuestaAtencion", e.target.value)
-                      }
-                      placeholder="Sugerencias metodológicas, organización del aula, apoyos, seguimiento, coordinación..."
-                    />
-                  </div>
+                  </Collapsible>
+
+                  {/* Ficheros adjuntos */}
+                  <Collapsible
+                    open={openCollapsibles["ficherosAdjuntosProfesorado"]}
+                    onOpenChange={() =>
+                      toggleCollapsible("ficherosAdjuntosProfesorado")
+                    }
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-lime-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Ficheros adjuntos: Informe del EOE especializado
+                            para personal no docente y/o recursos específicos.
+                            Otros ficheros
+                          </h3>
+                        </div>
+                        {openCollapsibles["ficherosAdjuntosProfesorado"] ? (
+                          <ChevronUp className="h-4 w-4 text-lime-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-lime-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-2">
+                          <p className="text-sm text-slate-600">
+                            Adjuntar fichero:
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="file"
+                              className="flex-1 text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-lime-50 file:text-lime-700 hover:file:bg-lime-100"
+                            />
+                          </div>
+                        </div>
+                      </CollapsibleContent>
+                    </div>
+                  </Collapsible>
 
                   {/* Botón Guardar */}
                   <div className="mt-6 flex justify-end">
@@ -3404,36 +3937,56 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                   </Collapsible>
 
                   {/* Orientaciones */}
-                  <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center gap-2 cursor-help">
-                            <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
-                            <h3 className="text-sm font-semibold text-slate-700">
-                              Orientaciones a la familia o a los representantes
-                              legales
-                            </h3>
-                            <Info className="w-3 h-3 text-slate-500" />
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs">
-                            Pautas de actuación, fomento de la autonomía,
-                            coordinación con el centro, etc.
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
+                  <Collapsible
+                    open={openCollapsibles["orientacionesFamilia"]}
+                    onOpenChange={() =>
+                      toggleCollapsible("orientacionesFamilia")
+                    }
+                  >
+                    <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+                      <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
+                          <h3 className="text-sm font-semibold text-slate-700">
+                            Orientaciones a la familia o a los representantes
+                            legales
+                          </h3>
+                        </div>
+                        {openCollapsibles["orientacionesFamilia"] ? (
+                          <ChevronUp className="h-4 w-4 text-violet-600 transition-transform group-hover:scale-110" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-violet-600 transition-transform group-hover:scale-110" />
+                        )}
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex items-center gap-2 cursor-help mb-4">
+                              <Info className="w-3 h-3 text-slate-500" />
+                              <span className="text-xs text-slate-600">
+                                Pautas de actuación, fomento de la autonomía,
+                                coordinación con el centro, etc.
+                              </span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs">
+                              Pautas de actuación, fomento de la autonomía,
+                              coordinación con el centro, etc.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <FormTextarea
+                          rows={8}
+                          value={form.orientacionesFamilia || ""}
+                          onChange={(e) =>
+                            handleChange("orientacionesFamilia", e.target.value)
+                          }
+                          placeholder="Ej.: Establecer contactos periódicos con la tutora, reforzar logros, proporcionar apoyo y dedicación, fomentar expectativas positivas, coordinación con el centro, etc."
+                        />
+                      </CollapsibleContent>
                     </div>
-                    <Textarea
-                      rows={8}
-                      value={form.orientacionesFamilia || ""}
-                      onChange={(e) =>
-                        handleChange("orientacionesFamilia", e.target.value)
-                      }
-                      placeholder="Ej.: Establecer contactos periódicos con la tutora, reforzar logros, proporcionar apoyo y dedicación, fomentar expectativas positivas, coordinación con el centro, etc."
-                    />
-                  </div>
+                  </Collapsible>
 
                   {/* Fichero externo */}
                   <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
