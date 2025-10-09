@@ -3,7 +3,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 
-// Este cliente usa la SERVICE_ROLE_KEY para tener permisos de administrador
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -28,10 +27,6 @@ export async function updateUserRole(
 }
 
 export async function deleteUser(userId: string) {
-  // CORRECCIÓN: El error "User not found" ocurría porque intentábamos borrar
-  // desde 'auth.users' con un ID de 'public.users'.
-  // La acción correcta es borrar el perfil del usuario de la tabla 'users',
-  // que es la fuente de datos para tu aplicación.
   const { error } = await supabaseAdmin.from("users").delete().eq("id", userId);
 
   if (error) {

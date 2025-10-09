@@ -26,7 +26,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteUser, updateUserRole } from "./actions";
+import { deleteUser, updateUserRole } from "@/lib/admin/actions";
 import type { User } from "./columns";
 
 interface UserActionsProps {

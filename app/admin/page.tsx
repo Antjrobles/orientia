@@ -20,8 +20,8 @@ import { Badge } from "@/components/ui/badge";
 import { Users, FileText } from "lucide-react";
 import Link from "next/link";
 import { format, getDay, subDays, isAfter } from "date-fns";
-import { columns } from "./columns";
-import { DataTable } from "./data-table";
+import { columns } from "@/components/admin/columns";
+import { DataTable } from "../../components/admin/data-table";
 import { ResumenCards } from "@/components/admin/ResumenCards";
 import { AnalyticsChart } from "@/components/admin/AnalyticsChart";
 
