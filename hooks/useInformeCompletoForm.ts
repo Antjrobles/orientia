@@ -57,6 +57,8 @@ const INITIAL_COLLAPSIBLES: CollapsibleRecord = {
   orientacionesFamilia: false,
 };
 
+type NivelEducativo = "infantil" | "primaria" | "secundaria" | null;
+
 const buildAnonCode = (prefix: string) => {
   const timestamp = Date.now().toString(36);
   const random = Math.random().toString(36).substring(2, 7);
@@ -93,6 +95,7 @@ export function useInformeCompletoForm({
   const [openCollapsibles, setOpenCollapsibles] =
     useState<CollapsibleRecord>(INITIAL_COLLAPSIBLES);
   const [historiaEscolarOpen, setHistoriaEscolarOpen] = useState(true);
+  const [editingMedida, setEditingMedida] = useState<NivelEducativo>(null);
   const [necesidadTemp, setNecesidadTemp] = useState<string>("");
   const [recursoMaterialTemp, setRecursoMaterialTemp] = useState<string>("");
   const [profEspecialistaTemp, setProfEspecialistaTemp] = useState<string>("");
@@ -115,8 +118,24 @@ export function useInformeCompletoForm({
   >(
     (value) => {
       handleChange("nivelEducativoActuaciones", value);
+      if (!value) {
+        setEditingMedida(null);
+        return;
+      }
+
+      const hasSelection =
+        (value === "infantil" && Boolean(form.medidaSeleccionadaInfantil)) ||
+        (value === "primaria" && Boolean(form.medidaSeleccionadaPrimaria)) ||
+        (value === "secundaria" && Boolean(form.medidaSeleccionadaSecundaria));
+
+      setEditingMedida(hasSelection ? null : value);
     },
-    [handleChange],
+    [
+      handleChange,
+      form.medidaSeleccionadaInfantil,
+      form.medidaSeleccionadaPrimaria,
+      form.medidaSeleccionadaSecundaria,
+    ],
   );
 
   useEffect(() => {
@@ -321,6 +340,7 @@ export function useInformeCompletoForm({
     setRecursoMaterialTemp("");
     setProfEspecialistaTemp("");
     setPersonalNoDocenteTemp("");
+    setEditingMedida(null);
     setHistoriaEscolarOpen(true);
     setOpenCollapsibles(INITIAL_COLLAPSIBLES);
     setOpen([]);
@@ -360,6 +380,8 @@ export function useInformeCompletoForm({
     toggleCollapsible,
     historiaEscolarOpen,
     setHistoriaEscolarOpen,
+    editingMedida,
+    setEditingMedida,
     necesidadTemp,
     setNecesidadTemp,
     recursoMaterialTemp,
