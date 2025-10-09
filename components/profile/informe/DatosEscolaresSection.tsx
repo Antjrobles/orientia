@@ -46,8 +46,6 @@ import type {
   SectionStatusChecker,
 } from "@/types/informe-completo";
 
-type NivelEducativo = "infantil" | "primaria" | "secundaria" | null;
-
 interface DatosEscolaresSectionProps {
   form: FormState;
   errors: FormErrors;
@@ -62,9 +60,123 @@ interface DatosEscolaresSectionProps {
   handleNivelActuacionesChange: (
     value: "infantil" | "primaria" | "secundaria" | undefined,
   ) => void;
-  editingMedida: NivelEducativo;
-  onEditingMedidaChange: (value: NivelEducativo) => void;
 }
+
+const INFANTIL_MEDIDAS_GENERALES = [
+  "En el 2º ciclo, apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
+  "Acción tutorial",
+  "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por proyectos",
+  "Actuaciones en el proceso de tránsito entre ciclos, o etapas",
+  "Actuaciones de prevención y control del absentismo",
+] as const;
+
+const INFANTIL_PROGRAMAS = [
+  "Programa de refuerzo del aprendizaje",
+  "Programa de profundización",
+] as const;
+
+const INFANTIL_MEDIDAS_ESPECIFICAS = [
+  "El apoyo dentro del aula por profesorado especialista de PT o AL, personal complementario u otro personal externo al aula",
+  "El apoyo fuera del aula por profesorado especialista de PT o AL, personal complementario u otro personal externo al aula",
+  "Programas específicos para el tratamiento personalizado del alumnado neae",
+] as const;
+
+const INFANTIL_ADAPTACION_SUBOPCIONES = [
+  "La atención educativa al alumnado por situaciones personales de hospitalización o de convalecencia domiciliaria",
+  "Las adaptaciones de acceso a los elementos del currículo para el alumnado con neae",
+  "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado nee",
+  "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
+] as const;
+
+const PRIMARIA_MEDIDAS_GENERALES = [
+  "Agrupación de áreas en ámbitos",
+  "Apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
+  "Desdoblamiento de grupos",
+  "Agrupamientos flexibles",
+  "Sustitución de la Segunda Lengua Extranjera por un Área Lingüística de carácter transversal",
+  "Acción tutorial",
+  "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por Proyectos",
+  "Prevención y control del absentismo",
+  "Distribución del horario lectivo de autonomía del centro entre las opciones previstas",
+  "Actuaciones dentro del programa de tránsito",
+] as const;
+
+const PRIMARIA_PROGRAMAS = [
+  "Programa de refuerzo del aprendizaje",
+  "Programa de profundización",
+] as const;
+
+const PRIMARIA_MEDIDAS_ESPECIFICAS = [
+  "El apoyo dentro del aula por profesorado especialista de PT o AL, personal complementario u otro personal",
+  "Programas específicos para el tratamiento personalizado del alumnado NEAE",
+  "La atención educativa al alumnado por situaciones personales de hospitalización o de convalecencia domiciliaria",
+  "Escolarización un curso por debajo del que corresponde por edad para el alumnado de incorporación tardía",
+  "Atención específica para el alumnado que se incorpora tardíamente y que presenta graves carencias en la comunicación lingüística en Lengua Castellana",
+  "Flexibilización de la escolarización del alumnado con altas capacidades intelectuales",
+] as const;
+
+const PRIMARIA_ADAPTACION_SUBOPCIONES = [
+  "Las adaptaciones de acceso a los elementos del currículo para el alumnado NEAE",
+  "Las adaptaciones curriculares significativas de los elementos del currículo para alumnado NEE",
+  "Las adaptaciones curriculares dirigidas al alumnado con altas capacidades intelectuales",
+] as const;
+
+const SECUNDARIA_MEDIDAS_GENERALES = [
+  "Agrupación de materias en ámbitos de conocimiento",
+  "Apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
+  "Desdoblamientos de grupos",
+  "Agrupamientos flexibles con carácter temporal y abierto",
+  "Sustitución de la Segunda Lengua Extranjera por una Materia Lingüística de carácter transversal",
+  "Acción tutorial",
+  "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por proyectos que promuevan la inclusión",
+  "Actuaciones de coordinación en el proceso de tránsito entre etapas",
+  "Actuaciones de prevención y control del absentismo",
+  "Distribución del horario lectivo de las materias optativas propias de la Comunidad Andaluza",
+  "Actuaciones de coordinación en el proceso de tránsito entre etapas educativas",
+] as const;
+
+const SECUNDARIA_PROGRAMAS = [
+  "Programas de refuerzo del aprendizaje",
+  "Programas de profundización",
+  "Programa de Diversificación Curricular",
+] as const;
+
+const SECUNDARIA_MEDIDAS_ESPECIFICAS = [
+  "Apoyo dentro del aula por PT, AL, personal complementario u otro personal",
+  "Programas específicos para el tratamiento personalizado del alumnado NEAE",
+  "Atención educativa al alumnado por situaciones de hospitalización o convalecencia domiciliaria",
+  "Flexibilización del periodo de escolarización para el alumnado con altas capacidades",
+  "Permanencia extraordinaria (solo alumnado NEE)",
+  "Escolarización un curso inferior al que corresponde por edad para el alumnado de incorporación tardía con desfase en su nivel curricular de competencia de dos o más cursos",
+  "Atención específica para alumnado de incorporación tardía con graves carencias en la comunicación lingüística",
+] as const;
+
+const SECUNDARIA_ADAPTACION_SUBOPCIONES = [
+  "Adaptación curricular de acceso",
+  "Adaptación curricular significativa",
+  "Adaptación curricular para el alumnado con altas capacidades intelectuales",
+] as const;
+
+const createOptionId = (prefix: string, label: string) =>
+  `${prefix}-${label
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")}`;
+
+const INFANTIL_ADAPTACION_ID = createOptionId(
+  "inf",
+  "Programas de adaptación curricular",
+);
+const PRIMARIA_ADAPTACION_ID = createOptionId(
+  "prim",
+  "Programas de adaptación curricular",
+);
+const SECUNDARIA_ADAPTACION_ID = createOptionId(
+  "sec",
+  "Programas de adaptación curricular",
+);
 
 export function DatosEscolaresSection({
   form,
@@ -78,8 +190,6 @@ export function DatosEscolaresSection({
   historiaEscolarOpen,
   onHistoriaEscolarChange,
   handleNivelActuacionesChange,
-  editingMedida,
-  onEditingMedidaChange,
 }: DatosEscolaresSectionProps) {
   return (
     <AccordionItem
@@ -244,9 +354,8 @@ export function DatosEscolaresSection({
 
                       {/* Educación Infantil */}
                       {form.nivelEducativoActuaciones === "infantil" && (
-                        <div className="mt-4 border-l-4 border-emerald-400 pl-4">
-                          {form.medidaSeleccionadaInfantil &&
-                          editingMedida !== "infantil" ? (
+                        <div className="mt-4 border-l-4 border-emerald-400 pl-4 space-y-4">
+                          {form.medidaSeleccionadaInfantil && (
                             <div className="p-4 bg-emerald-50 rounded-md border border-emerald-200">
                               <p className="text-sm font-semibold text-emerald-800 mb-2">
                                 Medida seleccionada:
@@ -254,98 +363,116 @@ export function DatosEscolaresSection({
                               <p className="text-sm text-gray-700">
                                 {form.medidaSeleccionadaInfantil}
                               </p>
-                              <Button
-                                type="button"
-                                variant="link"
-                                className="p-0 h-auto mt-3 text-sm text-emerald-700"
-                                onClick={() =>
-                                  onEditingMedidaChange("infantil")
-                                }
-                              >
-                                Cambiar selección
-                              </Button>
                             </div>
-                          ) : (
-                            <RadioGroup
-                              value={
-                                form.medidaSeleccionadaInfantil || undefined
-                              }
-                              onValueChange={(value) => {
-                                handleChange(
-                                  "medidaSeleccionadaInfantil",
-                                  value,
-                                );
-                                if (
-                                  !value.startsWith(
-                                    "Programas de adaptación curricular",
-                                  )
-                                ) {
-                                  onEditingMedidaChange(null);
-                                }
-                              }}
-                            >
-                              <div className="space-y-3">
-                                <h4 className="font-semibold text-sm text-emerald-800 uppercase">
-                                  Medidas Generales
-                                </h4>
-                                <div className="space-y-2">
-                                  {[
-                                    "En el 2º ciclo, apoyo en grupos ordinarios mediante un segundo profesor/a dentro del aula",
-                                    "Acción tutorial",
-                                    "Metodologías didácticas basadas en el trabajo colaborativo en grupos heterogéneos, tutoría entre iguales y aprendizaje por proyectos",
-                                    "Actuaciones en el proceso de tránsito entre ciclos, o etapas",
-                                    "Actuaciones de prevención y control del absentismo",
-                                  ].map((medida) => (
+                          )}
+
+                          <RadioGroup
+                            value={form.medidaSeleccionadaInfantil || undefined}
+                            onValueChange={(value) =>
+                              handleChange("medidaSeleccionadaInfantil", value)
+                            }
+                          >
+                            <div className="space-y-3">
+                              <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                Medidas Generales
+                              </h4>
+                              <div className="space-y-2">
+                                {INFANTIL_MEDIDAS_GENERALES.map((medida) => {
+                                  const id = createOptionId("inf", medida);
+                                  return (
                                     <div
                                       key={medida}
                                       className="flex items-start gap-2"
                                     >
                                       <RadioGroupItem
                                         value={medida}
-                                        id={`inf-${medida}`}
+                                        id={id}
                                         className="mt-1"
                                       />
                                       <label
-                                        htmlFor={`inf-${medida}`}
+                                        htmlFor={id}
                                         className="text-sm text-gray-700 cursor-pointer"
                                       >
                                         {medida}
                                       </label>
                                     </div>
-                                  ))}
-                                </div>
+                                  );
+                                })}
                               </div>
+                            </div>
 
-                              <div className="space-y-3 mt-4">
-                                <h4 className="font-semibold text-sm text-emerald-800 uppercase">
-                                  Programas específicos
-                                </h4>
-                                <div className="space-y-2">
-                                  {[
-                                    "Programas específicos de refuerzo y apoyo",
-                                    "Programas de adaptación curricular",
-                                    "Programas de ayuda a la integración",
-                                  ].map((medida) => (
+                            <div className="space-y-3 mt-4">
+                              <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                Programas
+                              </h4>
+                              <div className="space-y-2">
+                                {INFANTIL_PROGRAMAS.map((programa) => {
+                                  const id = createOptionId("inf", programa);
+                                  return (
+                                    <div
+                                      key={programa}
+                                      className="flex items-start gap-2"
+                                    >
+                                      <RadioGroupItem
+                                        value={programa}
+                                        id={id}
+                                        className="mt-1"
+                                      />
+                                      <label
+                                        htmlFor={id}
+                                        className="text-sm text-gray-700 cursor-pointer"
+                                      >
+                                        {programa}
+                                      </label>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            <div className="space-y-3 mt-4">
+                              <h4 className="font-semibold text-sm text-emerald-800 uppercase">
+                                Medidas Específicas
+                              </h4>
+                              <div className="space-y-2">
+                                {INFANTIL_MEDIDAS_ESPECIFICAS.map((medida) => {
+                                  const id = createOptionId("inf", medida);
+                                  return (
                                     <div
                                       key={medida}
                                       className="flex items-start gap-2"
                                     >
                                       <RadioGroupItem
                                         value={medida}
-                                        id={`inf-prog-${medida}`}
+                                        id={id}
                                         className="mt-1"
                                       />
                                       <label
-                                        htmlFor={`inf-prog-${medida}`}
+                                        htmlFor={id}
                                         className="text-sm text-gray-700 cursor-pointer"
                                       >
                                         {medida}
                                       </label>
                                     </div>
-                                  ))}
-                                </div>
+                                  );
+                                })}
                               </div>
-
+                              <div className="flex items-start gap-2">
+                                <RadioGroupItem
+                                  value="Programas de adaptación curricular"
+                                  id={INFANTIL_ADAPTACION_ID}
+                                  className="mt-1"
+                                />
+                                <label
+                                  htmlFor={INFANTIL_ADAPTACION_ID}
+                                  className="text-sm text-gray-800 cursor-pointer font-medium flex items-center gap-2"
+                                >
+                                  Programas de adaptación curricular
+                                  <span className="text-xs text-emerald-600">
+                                    (Ver opciones)
+                                  </span>
+                                </label>
+                              </div>
                               {form.medidaSeleccionadaInfantil?.startsWith(
                                 "Programas de adaptación curricular",
                               ) && (
@@ -353,279 +480,321 @@ export function DatosEscolaresSection({
                                   <p className="text-xs font-medium text-gray-600 mb-2">
                                     Selecciona el tipo de programa:
                                   </p>
-                                  {[
-                                    "Adaptación curricular de acceso",
-                                    "Adaptación curricular significativa",
-                                    "Adaptación curricular para el alumnado con altas capacidades intelectuales",
-                                  ].map((submedida) => (
-                                    <div
-                                      key={submedida}
-                                      className="flex items-start gap-2"
-                                    >
-                                      <RadioGroupItem
-                                        value={`Programas de adaptación curricular: ${submedida}`}
-                                        id={`inf-sub-${submedida}`}
-                                        className="mt-1"
-                                      />
-                                      <label
-                                        htmlFor={`inf-sub-${submedida}`}
-                                        className="text-sm text-gray-600 cursor-pointer"
-                                      >
-                                        {submedida}
-                                      </label>
-                                    </div>
-                                  ))}
+                                  {INFANTIL_ADAPTACION_SUBOPCIONES.map(
+                                    (submedida) => {
+                                      const id = createOptionId(
+                                        "inf-sub",
+                                        submedida,
+                                      );
+                                      return (
+                                        <div
+                                          key={submedida}
+                                          className="flex items-start gap-2"
+                                        >
+                                          <RadioGroupItem
+                                            value={`Programas de adaptación curricular: ${submedida}`}
+                                            id={id}
+                                            className="mt-1"
+                                          />
+                                          <label
+                                            htmlFor={id}
+                                            className="text-sm text-gray-600 cursor-pointer"
+                                          >
+                                            {submedida}
+                                          </label>
+                                        </div>
+                                      );
+                                    },
+                                  )}
                                 </div>
                               )}
-                            </RadioGroup>
-                          )}
+                            </div>
+                          </RadioGroup>
                         </div>
                       )}
 
                       {/* Educación Primaria */}
                       {form.nivelEducativoActuaciones === "primaria" && (
-                        <div className="mt-4 border-l-4 border-emerald-400 pl-4">
-                          {form.medidaSeleccionadaPrimaria &&
-                          editingMedida !== "primaria" ? (
-                            <div className="p-4 bg-emerald-50 rounded-md border border-emerald-200">
-                              <p className="text-sm font-semibold text-emerald-800 mb-2">
+                        <div className="mt-4 border-l-4 border-l-blue-500 pl-4 space-y-4">
+                          {form.medidaSeleccionadaPrimaria && (
+                            <div className="p-4 bg-blue-50 rounded-md border border-blue-200">
+                              <p className="text-sm font-semibold text-blue-800 mb-2">
                                 Medida seleccionada:
                               </p>
                               <p className="text-sm text-gray-700">
                                 {form.medidaSeleccionadaPrimaria}
                               </p>
-                              <Button
-                                type="button"
-                                variant="link"
-                                className="p-0 h-auto mt-3 text-sm text-emerald-700"
-                                onClick={() =>
-                                  onEditingMedidaChange("primaria")
-                                }
-                              >
-                                Cambiar selección
-                              </Button>
                             </div>
-                          ) : (
-                            <RadioGroup
-                              value={
-                                form.medidaSeleccionadaPrimaria || undefined
-                              }
-                              onValueChange={(value) => {
-                                handleChange(
-                                  "medidaSeleccionadaPrimaria",
-                                  value,
-                                );
-                                if (
-                                  !value.startsWith(
-                                    "Programas de adaptación curricular",
-                                  )
-                                ) {
-                                  onEditingMedidaChange(null);
-                                }
-                              }}
-                            >
-                              <div className="space-y-3">
-                                <h4 className="font-semibold text-sm text-emerald-800 uppercase">
-                                  Medidas Generales
-                                </h4>
-                                <div className="space-y-2">
-                                  {[
-                                    "Desdoblamiento de grupos en áreas instrumentales",
-                                    "Refuerzo pedagógico dentro del grupo ordinario",
-                                    "Apoyo educativo fuera del aula ordinaria",
-                                    "Adaptaciones curriculares no significativas",
-                                  ].map((medida) => (
+                          )}
+
+                          <RadioGroup
+                            value={form.medidaSeleccionadaPrimaria || undefined}
+                            onValueChange={(value) =>
+                              handleChange("medidaSeleccionadaPrimaria", value)
+                            }
+                          >
+                            <div className="space-y-3">
+                              <h4 className="font-semibold text-sm text-blue-800 uppercase">
+                                Medidas Generales
+                              </h4>
+                              <div className="space-y-2 pl-2">
+                                {PRIMARIA_MEDIDAS_GENERALES.map((medida) => {
+                                  const id = createOptionId("prim", medida);
+                                  return (
                                     <div
                                       key={medida}
                                       className="flex items-start gap-2"
                                     >
                                       <RadioGroupItem
                                         value={medida}
-                                        id={`pri-${medida}`}
+                                        id={id}
                                         className="mt-1"
                                       />
                                       <label
-                                        htmlFor={`pri-${medida}`}
+                                        htmlFor={id}
                                         className="text-sm text-gray-700 cursor-pointer"
                                       >
                                         {medida}
                                       </label>
                                     </div>
-                                  ))}
-                                </div>
+                                  );
+                                })}
                               </div>
+                            </div>
 
-                              <div className="space-y-3 mt-4">
-                                <h4 className="font-semibold text-sm text-emerald-800 uppercase">
-                                  Programas específicos
-                                </h4>
-                                <div className="space-y-2">
-                                  {[
-                                    "Programas de refuerzo y recuperación de aprendizajes no adquiridos",
-                                    "Programas de apoyo lingüístico",
-                                    "Programas de profundización y enriquecimiento curricular",
-                                    "Programas de adaptación curricular",
-                                  ].map((medida) => (
+                            <div className="space-y-3 mt-4">
+                              <h4 className="font-semibold text-sm text-blue-800 uppercase">
+                                Programas
+                              </h4>
+                              <div className="space-y-2 pl-2">
+                                {PRIMARIA_PROGRAMAS.map((programa) => {
+                                  const id = createOptionId("prim", programa);
+                                  return (
+                                    <div
+                                      key={programa}
+                                      className="flex items-start gap-2"
+                                    >
+                                      <RadioGroupItem
+                                        value={programa}
+                                        id={id}
+                                        className="mt-1"
+                                      />
+                                      <label
+                                        htmlFor={id}
+                                        className="text-sm text-gray-700 cursor-pointer"
+                                      >
+                                        {programa}
+                                      </label>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            <div className="space-y-3 mt-4">
+                              <h4 className="font-semibold text-sm text-blue-800 uppercase">
+                                Medidas Específicas
+                              </h4>
+                              <div className="space-y-2 pl-2">
+                                {PRIMARIA_MEDIDAS_ESPECIFICAS.map((medida) => {
+                                  const id = createOptionId("prim", medida);
+                                  return (
                                     <div
                                       key={medida}
                                       className="flex items-start gap-2"
                                     >
                                       <RadioGroupItem
                                         value={medida}
-                                        id={`pri-prog-${medida}`}
+                                        id={id}
                                         className="mt-1"
                                       />
                                       <label
-                                        htmlFor={`pri-prog-${medida}`}
+                                        htmlFor={id}
                                         className="text-sm text-gray-700 cursor-pointer"
                                       >
                                         {medida}
                                       </label>
                                     </div>
-                                  ))}
-                                </div>
+                                  );
+                                })}
                               </div>
-
+                              <div className="flex items-start gap-2">
+                                <RadioGroupItem
+                                  value="Programas de adaptación curricular"
+                                  id={PRIMARIA_ADAPTACION_ID}
+                                  className="mt-1"
+                                />
+                                <label
+                                  htmlFor={PRIMARIA_ADAPTACION_ID}
+                                  className="text-sm text-gray-800 cursor-pointer font-medium flex items-center gap-2"
+                                >
+                                  Programas de adaptación curricular
+                                  <span className="text-xs text-blue-600">
+                                    (Ver opciones)
+                                  </span>
+                                </label>
+                              </div>
                               {form.medidaSeleccionadaPrimaria?.startsWith(
                                 "Programas de adaptación curricular",
                               ) && (
-                                <div className="ml-6 pl-4 border-l-2 border-emerald-300 space-y-2 mt-2">
+                                <div className="ml-6 pl-4 border-l-2 border-blue-300 space-y-2 mt-2">
                                   <p className="text-xs font-medium text-gray-600 mb-2">
                                     Selecciona el tipo de programa:
                                   </p>
-                                  {[
-                                    "Adaptación curricular de acceso",
-                                    "Adaptación curricular significativa",
-                                    "Adaptación curricular para el alumnado con altas capacidades intelectuales",
-                                  ].map((submedida) => (
-                                    <div
-                                      key={submedida}
-                                      className="flex items-start gap-2"
-                                    >
-                                      <RadioGroupItem
-                                        value={`Programas de adaptación curricular: ${submedida}`}
-                                        id={`pri-sub-${submedida}`}
-                                        className="mt-1"
-                                      />
-                                      <label
-                                        htmlFor={`pri-sub-${submedida}`}
-                                        className="text-sm text-gray-600 cursor-pointer"
-                                      >
-                                        {submedida}
-                                      </label>
-                                    </div>
-                                  ))}
+                                  {PRIMARIA_ADAPTACION_SUBOPCIONES.map(
+                                    (submedida) => {
+                                      const id = createOptionId(
+                                        "prim-sub",
+                                        submedida,
+                                      );
+                                      return (
+                                        <div
+                                          key={submedida}
+                                          className="flex items-start gap-2"
+                                        >
+                                          <RadioGroupItem
+                                            value={`Programas de adaptación curricular: ${submedida}`}
+                                            id={id}
+                                            className="mt-1"
+                                          />
+                                          <label
+                                            htmlFor={id}
+                                            className="text-sm text-gray-600 cursor-pointer"
+                                          >
+                                            {submedida}
+                                          </label>
+                                        </div>
+                                      );
+                                    },
+                                  )}
                                 </div>
                               )}
-                            </RadioGroup>
-                          )}
+                            </div>
+                          </RadioGroup>
                         </div>
                       )}
 
                       {/* Educación Secundaria */}
                       {form.nivelEducativoActuaciones === "secundaria" && (
-                        <div className="mt-4 border-l-4 border-emerald-400 pl-4">
-                          {form.medidaSeleccionadaSecundaria &&
-                          editingMedida !== "secundaria" ? (
-                            <div className="p-4 bg-emerald-50 rounded-md border border-emerald-200">
-                              <p className="text-sm font-semibold text-emerald-800 mb-2">
+                        <div className="mt-4 border-l-4 border-l-purple-500 pl-4 space-y-4">
+                          {form.medidaSeleccionadaSecundaria && (
+                            <div className="p-4 bg-purple-50 rounded-md border border-purple-200">
+                              <p className="text-sm font-semibold text-purple-800 mb-2">
                                 Medida seleccionada:
                               </p>
                               <p className="text-sm text-gray-700">
                                 {form.medidaSeleccionadaSecundaria}
                               </p>
-                              <Button
-                                type="button"
-                                variant="link"
-                                className="p-0 h-auto mt-3 text-sm text-emerald-700"
-                                onClick={() =>
-                                  onEditingMedidaChange("secundaria")
-                                }
-                              >
-                                Cambiar selección
-                              </Button>
                             </div>
-                          ) : (
-                            <RadioGroup
-                              value={
-                                form.medidaSeleccionadaSecundaria || undefined
-                              }
-                              onValueChange={(value) => {
-                                handleChange(
-                                  "medidaSeleccionadaSecundaria",
-                                  value,
-                                );
-                                if (
-                                  !value.startsWith(
-                                    "Programas de adaptación curricular",
-                                  )
-                                ) {
-                                  onEditingMedidaChange(null);
-                                }
-                              }}
-                            >
-                              <div className="space-y-3">
-                                <h4 className="font-semibold text-sm text-emerald-800 uppercase">
-                                  Medidas Generales
-                                </h4>
-                                <div className="space-y-2">
-                                  {[
-                                    "Adaptaciones de los elementos prescriptivos del currículo",
-                                    "Refuerzos educativos específicos",
-                                    "Apoyo en materias instrumentales básicas",
-                                    "Programas de refuerzo para la mejora del aprendizaje y el rendimiento",
-                                  ].map((medida) => (
+                          )}
+
+                          <RadioGroup
+                            value={form.medidaSeleccionadaSecundaria || undefined}
+                            onValueChange={(value) =>
+                              handleChange("medidaSeleccionadaSecundaria", value)
+                            }
+                          >
+                            <div className="space-y-3">
+                              <h4 className="font-semibold text-sm text-purple-800 uppercase">
+                                Medidas Generales
+                              </h4>
+                              <div className="space-y-2 pl-2">
+                                {SECUNDARIA_MEDIDAS_GENERALES.map((medida) => {
+                                  const id = createOptionId("sec", medida);
+                                  return (
                                     <div
                                       key={medida}
                                       className="flex items-start gap-2"
                                     >
                                       <RadioGroupItem
                                         value={medida}
-                                        id={`sec-${medida}`}
+                                        id={id}
                                         className="mt-1"
                                       />
                                       <label
-                                        htmlFor={`sec-${medida}`}
+                                        htmlFor={id}
                                         className="text-sm text-gray-700 cursor-pointer"
                                       >
                                         {medida}
                                       </label>
                                     </div>
-                                  ))}
-                                </div>
+                                  );
+                                })}
                               </div>
+                            </div>
 
-                              <div className="space-y-3 mt-4">
-                                <h4 className="font-semibold text-sm text-emerald-800 uppercase">
-                                  Programas específicos
-                                </h4>
-                                <div className="space-y-2">
-                                  {[
-                                    "Programas de mejora del aprendizaje y del rendimiento",
-                                    "Programas de diversificación curricular",
-                                    "Programas de adaptación curricular",
-                                    "Programas de refuerzo para la titulación",
-                                  ].map((medida) => (
+                            <div className="space-y-3 mt-4">
+                              <h4 className="font-semibold text-sm text-purple-800 uppercase">
+                                Programas
+                              </h4>
+                              <div className="space-y-2 pl-2">
+                                {SECUNDARIA_PROGRAMAS.map((programa) => {
+                                  const id = createOptionId("sec", programa);
+                                  return (
+                                    <div
+                                      key={programa}
+                                      className="flex items-start gap-2"
+                                    >
+                                      <RadioGroupItem
+                                        value={programa}
+                                        id={id}
+                                        className="mt-1"
+                                      />
+                                      <label
+                                        htmlFor={id}
+                                        className="text-sm text-gray-700 cursor-pointer"
+                                      >
+                                        {programa}
+                                      </label>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            <div className="space-y-3 mt-4">
+                              <h4 className="font-semibold text-sm text-purple-800 uppercase">
+                                Medidas Específicas
+                              </h4>
+                              <div className="space-y-2 pl-2">
+                                {SECUNDARIA_MEDIDAS_ESPECIFICAS.map((medida) => {
+                                  const id = createOptionId("sec", medida);
+                                  return (
                                     <div
                                       key={medida}
                                       className="flex items-start gap-2"
                                     >
                                       <RadioGroupItem
                                         value={medida}
-                                        id={`sec-prog-${medida}`}
+                                        id={id}
                                         className="mt-1"
                                       />
                                       <label
-                                        htmlFor={`sec-prog-${medida}`}
+                                        htmlFor={id}
                                         className="text-sm text-gray-700 cursor-pointer"
                                       >
                                         {medida}
                                       </label>
                                     </div>
-                                  ))}
-                                </div>
+                                  );
+                                })}
                               </div>
-
+                              <div className="flex items-start gap-2">
+                                <RadioGroupItem
+                                  value="Programas de adaptación curricular"
+                                  id={SECUNDARIA_ADAPTACION_ID}
+                                  className="mt-1"
+                                />
+                                <label
+                                  htmlFor={SECUNDARIA_ADAPTACION_ID}
+                                  className="text-sm text-gray-800 cursor-pointer font-medium flex items-center gap-2"
+                                >
+                                  Programas de adaptación curricular
+                                  <span className="text-xs text-purple-600">
+                                    (Ver opciones)
+                                  </span>
+                                </label>
+                              </div>
                               {form.medidaSeleccionadaSecundaria?.startsWith(
                                 "Programas de adaptación curricular",
                               ) && (
@@ -633,32 +802,36 @@ export function DatosEscolaresSection({
                                   <p className="text-xs font-medium text-gray-600 mb-2">
                                     Selecciona el tipo de programa:
                                   </p>
-                                  {[
-                                    "Adaptación curricular de acceso",
-                                    "Adaptación curricular significativa",
-                                    "Adaptación curricular para el alumnado con altas capacidades intelectuales",
-                                  ].map((submedida) => (
-                                    <div
-                                      key={submedida}
-                                      className="flex items-start gap-2"
-                                    >
-                                      <RadioGroupItem
-                                        value={`Programas de adaptación curricular: ${submedida}`}
-                                        id={`sec-${submedida}`}
-                                        className="mt-1"
-                                      />
-                                      <label
-                                        htmlFor={`sec-${submedida}`}
-                                        className="text-sm text-gray-600 cursor-pointer"
-                                      >
-                                        {submedida}
-                                      </label>
-                                    </div>
-                                  ))}
+                                  {SECUNDARIA_ADAPTACION_SUBOPCIONES.map(
+                                    (submedida) => {
+                                      const id = createOptionId(
+                                        "sec-sub",
+                                        submedida,
+                                      );
+                                      return (
+                                        <div
+                                          key={submedida}
+                                          className="flex items-start gap-2"
+                                        >
+                                          <RadioGroupItem
+                                            value={`Programas de adaptación curricular: ${submedida}`}
+                                            id={id}
+                                            className="mt-1"
+                                          />
+                                          <label
+                                            htmlFor={id}
+                                            className="text-sm text-gray-600 cursor-pointer"
+                                          >
+                                            {submedida}
+                                          </label>
+                                        </div>
+                                      );
+                                    },
+                                  )}
                                 </div>
                               )}
-                            </RadioGroup>
-                          )}
+                            </div>
+                          </RadioGroup>
                         </div>
                       )}
 

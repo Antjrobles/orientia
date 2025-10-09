@@ -34,8 +34,6 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     toggleCollapsible,
     historiaEscolarOpen,
     setHistoriaEscolarOpen,
-    editingMedida,
-    setEditingMedida,
     necesidadTemp,
     setNecesidadTemp,
     recursoMaterialTemp,
@@ -130,8 +128,6 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 historiaEscolarOpen={historiaEscolarOpen}
                 onHistoriaEscolarChange={setHistoriaEscolarOpen}
                 handleNivelActuacionesChange={handleNivelActuacionesChange}
-                editingMedida={editingMedida}
-                onEditingMedidaChange={setEditingMedida}
               />
 
               {/* Evaluación psicopedagógica */}

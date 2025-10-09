@@ -57,8 +57,6 @@ const INITIAL_COLLAPSIBLES: CollapsibleRecord = {
   orientacionesFamilia: false,
 };
 
-type NivelEducativo = "infantil" | "primaria" | "secundaria" | null;
-
 const buildAnonCode = (prefix: string) => {
   const timestamp = Date.now().toString(36);
   const random = Math.random().toString(36).substring(2, 7);
@@ -95,7 +93,6 @@ export function useInformeCompletoForm({
   const [openCollapsibles, setOpenCollapsibles] =
     useState<CollapsibleRecord>(INITIAL_COLLAPSIBLES);
   const [historiaEscolarOpen, setHistoriaEscolarOpen] = useState(true);
-  const [editingMedida, setEditingMedida] = useState<NivelEducativo>(null);
   const [necesidadTemp, setNecesidadTemp] = useState<string>("");
   const [recursoMaterialTemp, setRecursoMaterialTemp] = useState<string>("");
   const [profEspecialistaTemp, setProfEspecialistaTemp] = useState<string>("");
@@ -118,7 +115,6 @@ export function useInformeCompletoForm({
   >(
     (value) => {
       handleChange("nivelEducativoActuaciones", value);
-      setEditingMedida(value ?? null);
     },
     [handleChange],
   );
@@ -325,7 +321,6 @@ export function useInformeCompletoForm({
     setRecursoMaterialTemp("");
     setProfEspecialistaTemp("");
     setPersonalNoDocenteTemp("");
-    setEditingMedida(null);
     setHistoriaEscolarOpen(true);
     setOpenCollapsibles(INITIAL_COLLAPSIBLES);
     setOpen([]);
@@ -365,8 +360,6 @@ export function useInformeCompletoForm({
     toggleCollapsible,
     historiaEscolarOpen,
     setHistoriaEscolarOpen,
-    editingMedida,
-    setEditingMedida,
     necesidadTemp,
     setNecesidadTemp,
     recursoMaterialTemp,
