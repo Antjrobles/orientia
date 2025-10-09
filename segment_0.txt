@@ -1,0 +1,200 @@
+import {
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { FormTextarea } from "../FormTextarea";
+import { SectionHeader } from "@/components/profile/SectionHeader";
+import { SubSection } from "@/components/profile/SubSection";
+import { MultiSelectWithChips } from "@/components/profile/MultiSelectWithChips";
+import {
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Info,
+  Save,
+} from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import type {
+  CollapsibleRecord,
+  CollapsibleStatusChecker,
+  CollapsibleToggleHandler,
+  FormChangeHandler,
+  FormErrors,
+  FormState,
+  SaveDraftHandler,
+  SectionStatusChecker,
+} from "@/types/informe-completo";
+
+interface InformacionAlumnoSectionProps {
+  form: FormState;
+  errors: FormErrors;
+  handleChange: FormChangeHandler;
+  handleSaveDraft: SaveDraftHandler;
+  isSectionComplete: SectionStatusChecker;
+  isCollapsibleSectionComplete: CollapsibleStatusChecker;
+  openCollapsibles: CollapsibleRecord;
+  toggleCollapsible: CollapsibleToggleHandler;
+}
+
+const DESARROLLO_COGNITIVO_OPTIONS = [
+  "1.Significativ. inferior respecto a su edad. At. Específica permanente-FBO/PTVAL",
+  "2.Inferior respecto a su edad. Atención Específica continuada",
+  "3.Inferior respecto a su edad, intervención en procesos cognitivos (PE)",
+  "4.Medio o superior respecto a su edad, intervención procesos cognitivos (PE)",
+  "5.No necesita atención específica en relación con el desarrollo cognitivo",
+] as const;
+
+const DESARROLLO_SENSORIAL_VISION = [
+  "1.Necesita iniciarse Braille lectura/escritura/tareas escol. At. Específica-ONCE",
+  "2.Necesita/utiliza Braille lectura/escritura/tarea escolar. At. Específica-ONCE",
+  "3.Ayudas opticas/tecnicas especif. lectura/escritura/tarea escol. At. Específica",
+  "4.Ayudas opticas/tecnicas especif. lectura/escritura/tarea escol. No At.Especif.",
+  "5.No necesita ayuda acceso lectura/escritura/tarea escol. Su visión es funcional",
+] as const;
+
+const DESARROLLO_SENSORIAL_AUDICION = [
+  "1.Necesita iniciarse en algún SAC (L.S.E., Bimodal, etc). At. Específica",
+  "2.Necesita/utiliza algún SAC (L.S.E., Bimodal, etc). Atención Específica",
+  "3.Puede adquirir leng. oral/percibir palabras-sonidos prótesis. At. Específica",
+  "4.Ayudas técnicas/tecnológicas para un adecuado dllo de las tareas escolares",
+  "5.No necesita ayuda acceso lenguaje y comunicación. Su audición es funcional desarrollo comunicativo y lingüístico",
+] as const;
+
+export function InformacionAlumnoSection({
+  form,
+  errors,
+  handleChange,
+  handleSaveDraft,
+  isSectionComplete,
+  isCollapsibleSectionComplete,
+  openCollapsibles,
+  toggleCollapsible,
+}: InformacionAlumnoSectionProps) {
+  return (
+    <AccordionItem
+      value="infoAlumno"
+      className="border-b-0 rounded-lg mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
+    >
+      <AccordionTrigger className="w-full px-3 sm:px-6 py-3 sm:py-4 hover:bg-slate-50 transition-colors border-l-4 border-l-orange-500 no-underline hover:no-underline">
+        <div className="flex items-center gap-3 text-left">
+          <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-full flex-shrink-0">
+            <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-orange-600" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <span className="text-base sm:text-lg font-bold text-slate-800 flex items-center">
+              <span className="truncate">Información Relevante del Alumno/a</span>
+              {isSectionComplete("infoAlumno") && (
+                <Badge
+                  variant="outline"
+                  className="ml-2 text-xs font-bold text-green-800 border-green-300 bg-green-100"
+                >
+                  Completado
+                </Badge>
+              )}
+            </span>
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
+              Desarrollo y características específicas
+            </p>
+          </div>
+        </div>
+      </AccordionTrigger>
+      <AccordionContent className="px-6 py-4 bg-white space-y-4">
+        <Collapsible
+          open={openCollapsibles["datosClinicos"]}
+          onOpenChange={() => toggleCollapsible("datosClinicos")}
+        >
+          <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+            <CollapsibleTrigger className="flex items-center justify-between w-full group">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <h3 className="text-sm font-semibold text-slate-700">
+                  Datos clínicos y/o sociales relevantes
+                </h3>
+              </div>
+              {openCollapsibles["datosClinicos"] ? (
+                <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+              )}
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-4">
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-slate-600">
+                  Descripción:
+                </label>
+                <FormTextarea
+                  rows={4}
+                  value={form.datosClinicosSociales || ""}
+                  onChange={(e) =>
+                    handleChange("datosClinicosSociales", e.target.value)
+                  }
+                  placeholder="Descripción de antecedentes médicos, informes sociales, situación familiar, etc."
+                />
+              </div>
+            </CollapsibleContent>
+          </div>
+        </Collapsible>
+
+        <Collapsible
+          open={openCollapsibles["datosRelativosAl"]}
+          onOpenChange={() => toggleCollapsible("datosRelativosAl")}
+        >
+          <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-5">
+            <CollapsibleTrigger className="flex items-center justify-between w-full group">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <h3 className="text-sm font-semibold text-slate-700">
+                  Datos relativos al:
+                </h3>
+              </div>
+              {openCollapsibles["datosRelativosAl"] ? (
+                <ChevronUp className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-orange-600 transition-transform group-hover:scale-110" />
+              )}
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-4 space-y-4">
+              <div className="bg-white p-4 rounded-lg border-2 border-slate-300">
+                <SectionHeader title="Desarrollo cognitivo" />
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-600">
+                      Descripción:
+                    </label>
+                    <FormTextarea
+                      rows={4}
+                      value={form.descDesarrolloCognitivo || ""}
+                      onChange={(e) =>
+                        handleChange("descDesarrolloCognitivo", e.target.value)
+                      }
+                      placeholder="Descripción de resultados, CI, memoria de trabajo, razonamiento, etc."
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex gap-2">
+                      <Select
+                        value={form.desarrolloCognitivoNivel || undefined}
+                        onValueChange={(v) =>
+                          handleChange("desarrolloCognitivoNivel", v)
+                        }
