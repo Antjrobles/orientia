@@ -12,10 +12,7 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
     return (
       <Textarea
         ref={ref}
-        className={cn(
-          "w-full border border-slate-300 bg-white shadow-sm focus-visible:border-violet-500 focus-visible:ring-violet-200",
-          className,
-        )}
+        className={cn("bg-white", className)}
         {...props}
       />
     );

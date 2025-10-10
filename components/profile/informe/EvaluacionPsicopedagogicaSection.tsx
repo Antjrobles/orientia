@@ -303,7 +303,7 @@ export function EvaluacionPsicopedagogicaSection({
                   <Label htmlFor="instrumentosInformacion">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="flex items-center gap-1 cursor-help">
+                        <span className="flex items-center gap-1 cursor-help mt-4">
                           Instrumentos de recogida de información
                           <Info className="w-3 h-3 text-slate-500" />
                         </span>
