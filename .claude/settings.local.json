@@ -17,7 +17,8 @@
       "Bash(npx eslint:*)",
       "Bash(for line in 3657 3658 3659 3660)",
       "Bash(do echo -n \"$line: \" sed -n \"$linep\" components/profile/InformeCompletoForm.tsx)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(pnpm install:*)"
     ],
     "deny": [],
     "ask": []
