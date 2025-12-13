@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight, Send } from "lucide-react";
 
 // Definiciones de Tipos que coinciden EXACTAMENTE con tu JSON
@@ -31,9 +31,37 @@ const ContactForm: React.FC = () => {
   const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
   const [localities, setLocalities] = useState<Locality[]>([]);
   const [schools, setSchools] = useState<string[]>([]);
-  const [dataStatus, setDataStatus] = useState<"loading" | "error" | "success">(
-    "loading",
-  );
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [shouldLoadLocations, setShouldLoadLocations] = useState(false);
+  const [dataStatus, setDataStatus] = useState<
+    "idle" | "loading" | "error" | "success"
+  >("idle");
+
+  const ensureLocationsLoaded = () => setShouldLoadLocations(true);
+
+  useEffect(() => {
+    if (shouldLoadLocations) return;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      setShouldLoadLocations(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShouldLoadLocations(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "600px 0px" },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [shouldLoadLocations]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [submitStatus, setSubmitStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -41,6 +69,7 @@ const ContactForm: React.FC = () => {
 
   // Lógica de carga del JSON. Esto ya funciona.
   useEffect(() => {
+    if (!shouldLoadLocations) return;
     const fetchLocations = async () => {
       setDataStatus("loading");
       try {
@@ -64,7 +93,7 @@ const ContactForm: React.FC = () => {
       }
     };
     fetchLocations();
-  }, []);
+  }, [shouldLoadLocations]);
 
   // Lógica de actualización de desplegables.
   useEffect(() => {
@@ -138,6 +167,19 @@ const ContactForm: React.FC = () => {
   };
 
   const renderLocationSelectors = () => {
+    if (dataStatus === "idle") {
+      return (
+        <div className="text-center p-4 text-gray-600">
+          <button
+            type="button"
+            onClick={ensureLocationsLoaded}
+            className="inline-flex items-center justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700"
+          >
+            Cargar centros
+          </button>
+        </div>
+      );
+    }
     if (dataStatus === "loading") {
       return (
         <div className="text-center p-4 text-gray-500">
@@ -262,7 +304,10 @@ const ContactForm: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="contacto"
+      onFocusCapture={ensureLocationsLoaded}
+      onPointerEnter={ensureLocationsLoaded}
       className="py-10 bg-primary-300 text-white scroll-mt-16"
     >
       <div className="container mx-auto px-4 md:px-6">

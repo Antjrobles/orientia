@@ -1,4 +1,4 @@
-# TODO - Mejoras e Implementaciones Futuras
+# TODO - Mejoras e Implementaciones Futuras (actualizado)
 
 ## 🔐 Seguridad
 
@@ -735,9 +735,9 @@
 ### 🚨 PROBLEMAS CRÍTICOS - ALTA PRIORIDAD
 
 #### 1. Optimización de Imágenes ⚠️ CRÍTICO
-**Ubicación:** `next.config.mjs:4`
-- [ ] Eliminar `images: { unoptimized: true }` de next.config.mjs
-- [ ] Habilitar optimización automática de Next.js Image
+**Ubicación:** `next.config.mjs:2`
+- [x] Eliminar `images: { unoptimized: true }` de next.config.mjs
+- [x] Habilitar optimización automática de Next.js Image
 - [ ] Configurar loader personalizado si es necesario para Vercel
 - [ ] Convertir imágenes a formato WebP/AVIF
 - [ ] Implementar responsive images con srcset
@@ -745,23 +745,23 @@
 - [ ] **Impacto esperado:** Mejora de LCP en ~40%, reducción de peso ~60%
 
 #### 2. JSON Grande Cargando Síncronamente ⚠️ ALTO IMPACTO
-**Ubicación:** `ContactForm.tsx:47` (372KB)
+**Ubicación:** `ContactForm.tsx:76` (372KB)
 - [ ] Implementar lazy loading del componente ContactForm con dynamic import
 - [ ] Mover JSON a API con búsqueda paginada/autocompletado
 - [ ] Comprimir JSON y servir con gzip/brotli desde CDN
 - [ ] Agregar suspense boundary para mejor UX
-- [ ] Implementar carga solo cuando el usuario scrollea a la sección
+- [x] Implementar carga solo cuando el usuario scrollea a la sección
 - [ ] Considerar dividir el JSON en archivos más pequeños por provincia
 - [ ] **Impacto esperado:** Mejora de TTI en ~50%, reducción de bundle inicial 372KB
 
 #### 3. Client Components Innecesarios ⚠️ MEDIO IMPACTO
 **Ubicación:** `components/marketing/*`
-- [ ] Convertir Hero.tsx a Server Component (eliminar "use client")
-- [ ] Convertir Features.tsx a Server Component
-- [ ] Convertir Benefits.tsx a Server Component
-- [ ] Convertir SecuritySection.tsx a Server Component
-- [ ] Convertir CTASection.tsx a Server Component
-- [ ] Mantener solo Pricing y ContactForm como Client Components
+- [x] Convertir Hero.tsx a Server Component (eliminar "use client")
+- [x] Convertir Features.tsx a Server Component
+- [x] Convertir Benefits.tsx a Server Component
+- [x] Convertir SecuritySection.tsx a Server Component
+- [x] Convertir CTASection.tsx a Server Component
+- [x] Mantener solo Pricing y ContactForm como Client Components
 - [ ] **Impacto esperado:** Reducción de bundle JS ~30-40KB, mejor SSR
 
 #### 4. Importaciones No Utilizadas ⚠️ BAJO IMPACTO
