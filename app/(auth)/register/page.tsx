@@ -20,6 +20,7 @@ import { PasswordInput } from "@/components/auth/PasswordInput";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { AuthHeader } from "@/components/auth/AuthHeader";
 import { AuthDivider } from "@/components/auth/AuthDivider";
+import TurnstileWidget from "@/components/security/TurnstileWidget";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -28,6 +29,7 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,11 +37,17 @@ export default function RegisterPage() {
     setError(null);
     setSuccess(null);
 
+    if (!turnstileToken) {
+      setError("Por favor, completa la verificación de seguridad.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, turnstileToken }),
       });
 
       const data = await res.json();
@@ -145,10 +153,17 @@ export default function RegisterPage() {
               />
             </div>
 
+            {/* CAPTCHA de seguridad */}
+            <TurnstileWidget
+              onSuccess={(token) => setTurnstileToken(token)}
+              onError={() => setTurnstileToken(null)}
+              onExpire={() => setTurnstileToken(null)}
+            />
+
             <Button
               type="submit"
-              disabled={isLoading}
-              className="flex w-full h-10 items-center justify-center gap-2 bg-emerald-600 text-sm font-semibold text-white transition-all hover:bg-emerald-700"
+              disabled={isLoading || !turnstileToken}
+              className="flex w-full h-10 items-center justify-center gap-2 bg-emerald-600 text-sm font-semibold text-white transition-all hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>

@@ -1,12 +1,13 @@
 import Plunk from "@plunk/node";
 import validator from "validator";
 import { NextResponse } from "next/server";
+import { validateTurnstileToken } from "@/lib/turnstile";
 
 const plunk = new Plunk(process.env.PLUNK_API_KEY);
 
 export async function POST(request) {
   try {
-    const { name, email, province, municipality, locality, school, message } =
+    const { name, email, province, municipality, locality, school, message, turnstileToken } =
       await request.json();
 
     // Validation
@@ -21,6 +22,22 @@ export async function POST(request) {
     if (!validator.isEmail(email)) {
       return NextResponse.json(
         { message: "El email proporcionado no es válido" },
+        { status: 400 },
+      );
+    }
+
+    // Validar el token de Turnstile (CAPTCHA)
+    if (!turnstileToken) {
+      return NextResponse.json(
+        { message: "Token de seguridad requerido" },
+        { status: 400 },
+      );
+    }
+
+    const isValidCaptcha = await validateTurnstileToken(turnstileToken);
+    if (!isValidCaptcha) {
+      return NextResponse.json(
+        { message: "Verificación de seguridad fallida. Por favor, inténtalo de nuevo." },
         { status: 400 },
       );
     }

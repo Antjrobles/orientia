@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight, Send } from "lucide-react";
+import TurnstileWidget from "@/components/security/TurnstileWidget";
 
 // Definiciones de Tipos que coinciden EXACTAMENTE con tu JSON
 interface Locality {
@@ -66,6 +67,7 @@ const ContactForm: React.FC = () => {
   const [submitStatus, setSubmitStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   // Lógica de carga del JSON. Esto ya funciona.
   useEffect(() => {
@@ -130,10 +132,19 @@ const ContactForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!turnstileToken) {
+      setSubmitStatus("error");
+      setErrorMessage("Por favor, completa la verificación de seguridad.");
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+      return;
+    }
+
     setSubmitStatus("loading");
     const submissionData = {
       ...form,
       school: `${form.school} (${form.locality}, ${form.municipality}, ${form.province})`,
+      turnstileToken,
     };
     try {
       const res = await fetch("/api/contact", {
@@ -391,11 +402,19 @@ const ContactForm: React.FC = () => {
                     placeholder="Cuéntanos lo que necesitas..."
                   ></textarea>
                 </div>
+
+                {/* CAPTCHA de seguridad */}
+                <TurnstileWidget
+                  onSuccess={(token) => setTurnstileToken(token)}
+                  onError={() => setTurnstileToken(null)}
+                  onExpire={() => setTurnstileToken(null)}
+                />
+
                 {/* Slightly refined button padding and rounded corners */}
                 <button
                   type="submit"
                   className="w-full bg-green-600 text-white px-5 py-3 rounded-md font-medium hover:bg-primary-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 focus:ring-offset-white"
-                  disabled={submitStatus === "loading"}
+                  disabled={submitStatus === "loading" || !turnstileToken}
                 >
                   {submitStatus === "loading"
                     ? "Enviando..."
@@ -417,8 +436,7 @@ const ContactForm: React.FC = () => {
                   <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
                     <p className="font-medium">Error al enviar el formulario</p>
                     <p className="text-sm">
-                      Por favor, inténtalo de nuevo o contacta con nosotros
-                      directamente.
+                      {errorMessage || "Por favor, inténtalo de nuevo o contacta con nosotros directamente."}
                     </p>
                   </div>
                 )}

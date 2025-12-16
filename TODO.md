@@ -5,7 +5,7 @@
 - [ ] Implementar autenticación de dos factores (2FA) para todos los usuarios
 - [ ] Agregar 2FA obligatorio para cuentas de administrador
 - [ ] Implementar sistema de auditoría y logging de acciones críticas
-- [ ] Agregar CAPTCHA (hCaptcha/reCAPTCHA) en formularios de registro y login
+- [x] Agregar CAPTCHA (Cloudflare Turnstile) en formularios de registro, login y contacto
 - [ ] Implementar detección de intentos de fuerza bruta con bloqueo temporal de IP
 - [ ] Agregar política de expiración de contraseñas (90 días)
 - [ ] Implementar sistema de recuperación de contraseña con tokens temporales

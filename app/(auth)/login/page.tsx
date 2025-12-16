@@ -15,6 +15,7 @@ import { PasswordInput } from "@/components/auth/PasswordInput";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { AuthHeader } from "@/components/auth/AuthHeader";
 import { AuthDivider } from "@/components/auth/AuthDivider";
+import TurnstileWidget from "@/components/security/TurnstileWidget";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [justRegistered, setJustRegistered] = useState(false);
   const [verificationSent, setVerificationSent] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   useEffect(() => {
     // Mensaje tras registro
@@ -49,6 +51,12 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    if (!turnstileToken) {
+      setError("Por favor, completa la verificación de seguridad.");
+      setLoading(false);
+      return;
+    }
 
     const callbackUrl = searchParams.get("callbackUrl") || "/profile";
     const result = await signIn("credentials", {
@@ -146,10 +154,18 @@ export default function LoginPage() {
                   autoComplete="current-password"
                 />
               </div>
+
+              {/* CAPTCHA de seguridad */}
+              <TurnstileWidget
+                onSuccess={(token) => setTurnstileToken(token)}
+                onError={() => setTurnstileToken(null)}
+                onExpire={() => setTurnstileToken(null)}
+              />
+
               <Button
                 type="submit"
-                disabled={loading}
-                className="w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold transition-all flex items-center justify-center gap-2 text-sm"
+                disabled={loading || !turnstileToken}
+                className="w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>

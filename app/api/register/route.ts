@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { z } from "zod";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { validateTurnstileToken } from "@/lib/turnstile";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -15,6 +16,7 @@ const registerSchema = z.object({
   name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
   email: z.string().email("Email no válido"),
   password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+  turnstileToken: z.string().min(1, "Token de seguridad requerido"),
 });
 
 export async function POST(request: Request) {
@@ -38,7 +40,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, email, password } = validation.data;
+    const { name, email, password, turnstileToken } = validation.data;
+
+    // Validar el token de Turnstile (CAPTCHA)
+    const isValidCaptcha = await validateTurnstileToken(turnstileToken);
+    if (!isValidCaptcha) {
+      return NextResponse.json(
+        { error: "Verificación de seguridad fallida. Por favor, inténtalo de nuevo." },
+        { status: 400 },
+      );
+    }
 
     // 2. Comprobar si el usuario ya existe
     const { data: existingUser, error: existingUserError } = await supabase
