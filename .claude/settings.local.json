@@ -19,7 +19,9 @@
       "Bash(do echo -n \"$line: \" sed -n \"$linep\" components/profile/InformeCompletoForm.tsx)",
       "Bash(python3:*)",
       "Bash(pnpm install:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(node scripts/convert-images.mjs:*)",
+      "Bash(node scripts/create-pwa-icons.mjs:*)"
     ],
     "deny": [],
     "ask": []
