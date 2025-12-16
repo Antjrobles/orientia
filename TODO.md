@@ -808,11 +808,11 @@
 - [x] Implementar tree-shaking agresivo
 
 #### Analytics y Scripts Externos
-- [ ] Cargar GoogleAnalytics con requestIdleCallback
-- [ ] Cargar UmamiAnalytics con requestIdleCallback
-- [ ] Implementar defer para scripts no críticos
-- [ ] Usar strategy="afterInteractive" para analytics
-- [ ] Considerar mover scripts a Web Workers
+- [x] Cargar GoogleAnalytics con lazyOnload (mejor que requestIdleCallback)
+- [x] Cargar UmamiAnalytics con lazyOnload (mejor que requestIdleCallback)
+- [x] Implementar defer para scripts no críticos (lazyOnload lo hace automáticamente)
+- [x] Optimizar strategy de "afterInteractive" a "lazyOnload" para analytics
+- [ ] Considerar mover scripts a Web Workers (no necesario con lazyOnload)
 
 #### CSS y Estilos
 - [ ] Simplificar gradient de transición en SecuritySection.tsx:160

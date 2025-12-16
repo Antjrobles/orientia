@@ -11,10 +11,11 @@ export default function UmamiAnalytics() {
   }
 
   return (
+    // Umami Analytics se carga solo cuando el navegador está idle (desocupado)
     <Script
       src="https://umami.antjrobles.tech/script.js"
       data-website-id="884d7a2c-48fd-48ab-9111-01e0ae92f232"
-      strategy="afterInteractive"
+      strategy="lazyOnload"
     />
   );
 }
