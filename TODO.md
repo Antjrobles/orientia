@@ -26,7 +26,7 @@
 - [ ] Agregar protección contra inyección SQL avanzada
 - [ ] Implementar protección XSS en campos de texto rico
 - [ ] Agregar detección de anomalías en comportamiento de usuarios
-- [ ] Implementar logout automático por inactividad
+- [x] Implementar logout automático por inactividad (30 minutos de inactividad)
 - [ ] Agregar verificación de dispositivos confiables
 - [ ] Implementar protección contra clickjacking
 - [ ] Agregar sanitización estricta de inputs HTML
