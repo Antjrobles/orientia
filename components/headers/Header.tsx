@@ -29,6 +29,10 @@ export default function Header() {
     <>
       <header
         className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50"
+        style={{
+          willChange: "backdrop-filter",
+          transform: "translateZ(0)",
+        }}
         role="banner"
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">

@@ -4,18 +4,11 @@ import {
   Brain,
   FileText,
   Shield,
-  Users,
-  Clock,
   CheckCircle,
   ArrowRight,
   Sparkles,
-  Lock,
-  Database,
-  Award,
-  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Hero() {
   return (

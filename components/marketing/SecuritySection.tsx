@@ -1,21 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
-  Brain,
-  FileText,
   Shield,
-  Users,
-  Clock,
   CheckCircle,
-  ArrowRight,
-  Sparkles,
   Lock,
-  Database,
   Award,
-  BookOpen,
+  Database,
 } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
 
 export default function SecuritySection() {
   return (
