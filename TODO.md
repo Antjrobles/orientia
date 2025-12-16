@@ -9,7 +9,7 @@
 - [ ] Implementar detección de intentos de fuerza bruta con bloqueo temporal de IP
 - [ ] Agregar política de expiración de contraseñas (90 días)
 - [ ] Implementar sistema de recuperación de contraseña con tokens temporales
-- [ ] Agregar headers de seguridad (CSP, HSTS, X-Frame-Options)
+- [x] Agregar headers de seguridad (HSTS, X-XSS-Protection, Permissions-Policy, X-Frame-Options)
 - [ ] Implementar rotación automática de API keys
 - [ ] Agregar escaneo de vulnerabilidades automatizado (Dependabot, Snyk)
 - [ ] Implementar cifrado de datos sensibles en base de datos
