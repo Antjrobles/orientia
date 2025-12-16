@@ -17,6 +17,7 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+  preload: true, // Preload automático de Next.js
 });
 
 export const metadata: Metadata = {
@@ -105,6 +106,19 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        {/* Preload crítico para la fuente Inter - Mejora FCP (First Contentful Paint) */}
+        <link
+          rel="preconnect"
+          href="https://fonts.googleapis.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={inter.className}>
         <a
           href="#main"

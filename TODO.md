@@ -788,8 +788,8 @@
 ### ⚡ OPTIMIZACIONES ADICIONALES - MEDIA PRIORIDAD
 
 #### Carga Inicial (LCP, FCP)
-- [ ] Agregar preload para fuente Inter en layout.tsx
-- [ ] Implementar preconnect para recursos externos críticos
+- [x] Agregar preload para fuente Inter en layout.tsx
+- [x] Implementar preconnect para Google Fonts (recursos críticos)
 - [x] Lazy load de secciones below-the-fold con next/dynamic
   - [x] Features con dynamic import
   - [x] Benefits con dynamic import
