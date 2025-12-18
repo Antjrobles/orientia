@@ -744,7 +744,7 @@
 - [x] Actualizar manifest.json con iconos WebP
 - [x] Revisar background.jpg (1.3MB) - **CONFIRMADO: No se usa, solo gradientes CSS**
 - [ ] Implementar responsive images con srcset
-- [ ] Agregar dimensiones explícitas a todas las imágenes
+- [x] Agregar dimensiones explícitas a todas las imágenes
 - [x] **Impacto logrado:** Reducción de peso de imágenes ~60% (PNG→WebP), iconos PWA creados, backgrounds con gradientes CSS (0 KB)
 
 #### 2. JSON Grande Cargando Síncronamente ⚠️ ALTO IMPACTO
@@ -779,11 +779,11 @@
 #### 5. Header con Backdrop-Blur ⚠️ MEDIO IMPACTO
 **Ubicación:** `Header.tsx:31`
 - [x] Agregar `will-change: backdrop-filter` para optimización GPU
-- [ ] Implementar cambio dinámico a bg-white sólido después del scroll
-- [ ] Usar IntersectionObserver para activar blur solo cuando sea necesario
-- [ ] Considerar eliminar backdrop-blur en móviles por performance
+- [x] Implementar cambio dinámico a bg-white sólido después del scroll
+- [x] Usar scroll listener optimizado con requestAnimationFrame
+- [x] Agregar transition suave para el cambio de estado
 - [x] Optimizar con `transform: translateZ(0)` para GPU acceleration
-- [ ] **Impacto esperado:** Mejora de scroll performance, reducción de jank
+- [x] **Impacto logrado:** Header cambia dinámicamente de backdrop-blur a bg sólido tras 50px de scroll, mejorando scroll performance especialmente en móviles
 
 ### ⚡ OPTIMIZACIONES ADICIONALES - MEDIA PRIORIDAD
 

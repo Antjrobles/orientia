@@ -10,6 +10,29 @@ import { cn } from "@/lib/utils";
 export default function Header() {
   const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Detectar scroll para optimizar backdrop-blur
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 50);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Check initial scroll position
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Prevenir scroll cuando el menú móvil está abierto
   useEffect(() => {
@@ -28,9 +51,14 @@ export default function Header() {
   return (
     <>
       <header
-        className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50"
+        className={cn(
+          "border-b border-gray-200 sticky top-0 z-50 transition-all duration-300",
+          scrolled
+            ? "bg-white shadow-sm"
+            : "bg-white/80 backdrop-blur-sm"
+        )}
         style={{
-          willChange: "backdrop-filter",
+          willChange: scrolled ? "auto" : "backdrop-filter",
           transform: "translateZ(0)",
         }}
         role="banner"
