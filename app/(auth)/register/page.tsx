@@ -22,14 +22,27 @@ import { AuthHeader } from "@/components/auth/AuthHeader";
 import { AuthDivider } from "@/components/auth/AuthDivider";
 import TurnstileWidget from "@/components/security/TurnstileWidget";
 
+const passwordRequirements = [
+  { regex: /.{8,}/ },
+  { regex: /[A-Z]/ },
+  { regex: /[a-z]/ },
+  { regex: /[0-9]/ },
+  { regex: /[^A-Za-z0-9]/ },
+];
+
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const isPasswordValid = passwordRequirements.every((req) =>
+    req.regex.test(password)
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +52,18 @@ export default function RegisterPage() {
 
     if (!turnstileToken) {
       setError("Por favor, completa la verificación de seguridad.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!isPasswordValid) {
+      setError("La contraseña no cumple con los requisitos de seguridad.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Las contraseñas no coinciden.");
       setIsLoading(false);
       return;
     }
@@ -144,10 +169,31 @@ export default function RegisterPage() {
               </Label>
               <PasswordInput
                 id="password"
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Mínimo 8 caracteres, mayúscula, número y símbolo"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
+                autoComplete="new-password"
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Debe contener: mínimo 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.
+              </p>
+            </div>
+
+            <div>
+              <Label
+                htmlFor="confirmPassword"
+                className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-gray-700"
+              >
+                <Key className="h-4 w-4 text-emerald-600" /> Confirmar contraseña
+              </Label>
+              <PasswordInput
+                id="confirmPassword"
+                placeholder="Repite la contraseña"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 disabled={isLoading}
                 autoComplete="new-password"
               />

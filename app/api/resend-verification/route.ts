@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+    const normalizedEmail = email.trim().toLowerCase();
     const rlEmail = checkRateLimit(`resend-email:${email}`, 3, 60_000);
     if (!rlEmail.allowed) {
       return NextResponse.json(
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("name, email")
-      .eq("email", email)
+      .ilike("email", normalizedEmail)
       .single();
 
     if (userError) {
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
     const { error: tokenError } = await supabase
       .from("verification_tokens")
       .insert({
-        identifier: email,
+        identifier: normalizedEmail,
         token,
         expires,
       });
@@ -66,12 +67,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Enviar email usando la ruta existente
-    const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}`;
-    await fetch(`${process.env.NEXTAUTH_URL}/api/send-verification-email`, {
+    const origin = request.nextUrl.origin;
+    const verificationUrl = `${origin}/verify-email?token=${token}`;
+    await fetch(`${origin}/api/send-verification-email`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email,
+        email: normalizedEmail,
         name: user?.name ?? "usuario",
         verificationUrl,
       }),

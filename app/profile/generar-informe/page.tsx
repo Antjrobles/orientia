@@ -5,8 +5,20 @@ import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { StudentData } from "@/lib/groq/types";
 import { InformeCompletoForm } from "@/components/profile/InformeCompletoForm";
-import { InformePreview } from "@/components/profile/InformePreview";
 import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
+
+// Code-split: react-markdown solo se carga cuando hay un informe generado
+const InformePreview = dynamic(
+  () => import("@/components/profile/InformePreview").then((mod) => ({ default: mod.InformePreview })),
+  {
+    loading: () => (
+      <div className="flex items-center justify-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    ),
+  }
+);
 
 export default function GenerarInformePage() {
   const { data: session } = useSession();

@@ -8,7 +8,8 @@
     "lint": "next lint",
     "start": "next start",
     "format": "prettier --write .",
-    "pre-push": "npm run format && npm run lint && npm run build"
+    "pre-push": "npm run format && npm run lint && npm run build",
+    "analyze": "set ANALYZE=true&& npm run build"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",
@@ -76,6 +77,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.0.10",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22",
     "@types/react": "^18.2.45",

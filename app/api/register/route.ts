@@ -15,7 +15,16 @@ const supabase = createClient(
 const registerSchema = z.object({
   name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
   email: z.string().email("Email no válido"),
-  password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+  password: z
+    .string()
+    .min(8, "La contraseña debe tener al menos 8 caracteres")
+    .regex(/[A-Z]/, "La contraseña debe contener al menos una mayúscula")
+    .regex(/[a-z]/, "La contraseña debe contener al menos una minúscula")
+    .regex(/[0-9]/, "La contraseña debe contener al menos un número")
+    .regex(
+      /[^A-Za-z0-9]/,
+      "La contraseña debe contener al menos un carácter especial"
+    ),
   turnstileToken: z.string().min(1, "Token de seguridad requerido"),
 });
 
@@ -41,6 +50,7 @@ export async function POST(request: Request) {
     }
 
     const { name, email, password, turnstileToken } = validation.data;
+    const normalizedEmail = email.trim().toLowerCase();
 
     // Validar el token de Turnstile (CAPTCHA)
     const isValidCaptcha = await validateTurnstileToken(turnstileToken);
@@ -55,7 +65,7 @@ export async function POST(request: Request) {
     const { data: existingUser, error: existingUserError } = await supabase
       .from("users")
       .select("email")
-      .eq("email", email)
+      .ilike("email", normalizedEmail)
       .single();
 
     if (existingUser) {
@@ -79,7 +89,7 @@ export async function POST(request: Request) {
     // 5. Insertar el nuevo usuario en la base de datos
     const { error: insertError } = await supabase.from("users").insert({
       name,
-      email,
+      email: normalizedEmail,
       hashed_password: hashedPassword,
       role: "usuario", // USUARIO POR DEFECTO
       emailVerified: null, // No verificado inicialmente
@@ -104,7 +114,7 @@ export async function POST(request: Request) {
     const { error: tokenError } = await supabase
       .from("verification_tokens")
       .insert({
-        identifier: email,
+        identifier: normalizedEmail,
         token: verificationToken,
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 horas
       });
@@ -115,13 +125,18 @@ export async function POST(request: Request) {
 
     // 7. Enviar email de verificación
     try {
-      const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${verificationToken}`;
+      const origin =
+        "nextUrl" in request ? (request as any).nextUrl.origin : process.env.NEXTAUTH_URL;
+      if (!origin) {
+        throw new Error("Missing origin for verification email");
+      }
+      const verificationUrl = `${origin}/verify-email?token=${verificationToken}`;
 
-      await fetch(`${process.env.NEXTAUTH_URL}/api/send-verification-email`, {
+      await fetch(`${origin}/api/send-verification-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
+          email: normalizedEmail,
           name,
           verificationUrl,
         }),

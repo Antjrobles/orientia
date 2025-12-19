@@ -16,10 +16,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
     const { data, error } = await supabase
       .from("users")
       .select("emailVerified")
-      .eq("email", email)
+      .ilike("email", normalizedEmail)
       .single();
 
     if (error) {

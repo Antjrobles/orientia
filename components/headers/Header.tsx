@@ -1,14 +1,18 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import AuthButtons from "@/components/auth/AuthButtons";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+
+// Lazy load: AuthButtons carga next-auth + DropdownMenu + iconos pesados
+const AuthButtons = dynamic(() => import("@/components/auth/AuthButtons"), {
+  loading: () => <div className="h-9 w-20 bg-gray-200 animate-pulse rounded" />,
+  ssr: false
+});
 
 export default function Header() {
-  const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 

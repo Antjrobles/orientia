@@ -23,7 +23,12 @@ import { format, getDay, subDays, isAfter } from "date-fns";
 import { columns } from "@/components/admin/columns";
 import { DataTable } from "../../components/admin/data-table";
 import { ResumenCards } from "@/components/admin/ResumenCards";
-import { AnalyticsChart } from "@/components/admin/AnalyticsChart";
+import dynamic from "next/dynamic";
+
+// Code-split: recharts solo se carga en esta página
+const AnalyticsChart = dynamic(
+  () => import("@/components/admin/AnalyticsChart").then((mod) => ({ default: mod.AnalyticsChart }))
+);
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,

@@ -11,35 +11,37 @@ interface BreadcrumbItem {
 
 const pathLabels: Record<string, string> = {
   // Auth pages
-  login: "Iniciar Sesión",
+  login: "Iniciar sesión",
   register: "Registrarse",
-  "verify-email": "Verificar Email",
+  "verify-email": "Verificar email",
+  "forgot-password": "Recuperar contraseña",
+  "reset-password": "Nueva contraseña",
 
   // Profile pages
   profile: "Perfil",
   informes: "Informes",
-  "generar-informe": "Generar Informe",
+  "generar-informe": "Generar informe",
 
   // Admin pages
   admin: "Administración",
 
   // Resources pages
-  faq: "Preguntas Frecuentes",
+  faq: "Preguntas frecuentes",
   formacion: "Formación",
   manual: "Manual",
   soporte: "Soporte",
 
   // Legal pages
-  cookies: "Política de Cookies",
-  privacidad: "Política de Privacidad",
+  cookies: "Política de cookies",
+  privacidad: "Política de privacidad",
   rgpd: "RGPD",
-  "ajustes-cookies": "Ajustes de Cookies",
+  "ajustes-cookies": "Ajustes de cookies",
   accesibilidad: "Accesibilidad",
-  "eliminacion-de-datos-de-usuario": "Eliminación de Datos",
-  terminos: "Términos y Condiciones",
+  "eliminacion-de-datos-de-usuario": "Eliminación de datos",
+  terminos: "Términos y condiciones",
 
   // Error pages
-  "not-permitted": "Acceso Denegado",
+  "not-permitted": "Acceso denegado",
 };
 
 export default function DynamicBreadcrumb() {
@@ -78,7 +80,7 @@ export default function DynamicBreadcrumb() {
 
   // Build breadcrumb items from path segments
   let currentPath = "";
-  pathSegments.forEach((segment, index) => {
+  pathSegments.forEach((segment) => {
     currentPath += `/${segment}`;
     const label =
       pathLabels[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);

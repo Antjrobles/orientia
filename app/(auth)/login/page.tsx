@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +20,7 @@ import TurnstileWidget from "@/components/security/TurnstileWidget";
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { status } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,12 +30,11 @@ export default function LoginPage() {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // Mensaje tras registro
     if (searchParams.get("registered") === "true") {
       setJustRegistered(true);
       router.replace("/login", { scroll: false });
     }
-    // Errores de NextAuth en query
+
     const errorParam = searchParams.get("error");
     if (errorParam) {
       const map: Record<string, string> = {
@@ -47,10 +47,17 @@ export default function LoginPage() {
     }
   }, [searchParams, router]);
 
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    const callbackUrl = searchParams.get("callbackUrl") || "/profile";
+    router.replace(callbackUrl);
+  }, [status, searchParams, router]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setVerificationSent(null);
 
     if (!turnstileToken) {
       setError("Por favor, completa la verificación de seguridad.");
@@ -60,7 +67,7 @@ export default function LoginPage() {
 
     const callbackUrl = searchParams.get("callbackUrl") || "/profile";
     const result = await signIn("credentials", {
-      redirect: false,
+      redirect: true,
       email,
       password,
       callbackUrl,
@@ -69,8 +76,6 @@ export default function LoginPage() {
     setLoading(false);
 
     if (result?.error) {
-      // NextAuth devuelve 'CredentialsSignin' para cualquier fallo de authorize().
-      // Diferenciamos si es email no verificado consultando a la API.
       try {
         const resp = await fetch("/api/auth/check-email-verified", {
           method: "POST",
@@ -87,18 +92,14 @@ export default function LoginPage() {
           }
         }
       } catch {}
-      setError(
-        "Email o contraseña incorrectos. Por favor, verifica tus datos.",
-      );
-    } else if (result?.ok) {
-      router.push(callbackUrl);
+      setError("Email o contraseña incorrectos. Por favor, verifica tus datos.");
     }
   };
 
   return (
     <AuthCard>
-      {/* El layout de (auth) aporta el botón de volver */}
       <AuthHeader title="Accede a tu cuenta" subtitle="Bienvenido/a de nuevo" />
+
       <div className="space-y-4">
         <AuthProviderButtons
           isLoading={loading}
@@ -115,6 +116,7 @@ export default function LoginPage() {
               </AlertDescription>
             </Alert>
           )}
+
           <div className="space-y-4">
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
@@ -137,6 +139,7 @@ export default function LoginPage() {
                   className="h-10 bg-gray-50 border-gray-200 rounded-lg px-3 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 text-sm"
                 />
               </div>
+
               <div>
                 <Label
                   htmlFor="password"
@@ -153,9 +156,16 @@ export default function LoginPage() {
                   disabled={loading}
                   autoComplete="current-password"
                 />
+                <div className="mt-2 text-right">
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs font-medium text-emerald-600 hover:underline"
+                  >
+                    ¿Has olvidado tu contraseña?
+                  </Link>
+                </div>
               </div>
 
-              {/* CAPTCHA de seguridad */}
               <TurnstileWidget
                 onSuccess={(token) => setTurnstileToken(token)}
                 onError={() => setTurnstileToken(null)}
@@ -180,6 +190,7 @@ export default function LoginPage() {
                 )}
               </Button>
             </form>
+
             {error && (
               <div className="space-y-2">
                 <Alert
@@ -191,6 +202,7 @@ export default function LoginPage() {
                     {error}
                   </AlertDescription>
                 </Alert>
+
                 {error.includes("verificar tu email") && (
                   <Button
                     variant="outline"
@@ -215,6 +227,7 @@ export default function LoginPage() {
                     Reenviar verificación
                   </Button>
                 )}
+
                 {verificationSent && (
                   <Alert className="rounded-lg flex items-center gap-2 px-3 py-2">
                     <CheckCircle className="h-4 w-4 text-emerald-600" />

@@ -14,7 +14,7 @@
 - [ ] Agregar escaneo de vulnerabilidades automatizado (Dependabot, Snyk)
 - [ ] Implementar cifrado de datos sensibles en base de datos
 - [ ] Agregar sistema de sesiones concurrentes limitadas
-- [ ] Implementar política de contraseñas seguras (complejidad mínima)
+- [x] Implementar política de contraseñas seguras (complejidad mínima)
 - [ ] Agregar detección de credenciales comprometidas (HaveIBeenPwned API)
 - [ ] Implementar IP whitelisting para administradores
 - [ ] Agregar verificación de email obligatoria para cambios críticos
@@ -803,8 +803,17 @@
 - [x] Implementar code splitting por sección con dynamic()
 - [x] Agregar loading="lazy" a componentes pesados
 - [ ] Implementar prefetching inteligente de rutas
-- [ ] Analizar bundle con @next/bundle-analyzer
-- [ ] Identificar y code-split dependencias grandes
+- [x] Analizar bundle con @next/bundle-analyzer
+- [x] Identificar y code-split dependencias grandes
+  - [x] Code-split de recharts (solo cargar en /admin, no en bundle global)
+  - [x] Code-split de groq-sdk (ya estaba server-side only, no afecta bundle cliente)
+  - [x] Optimizar imports de date-fns (ya estaba usando subpath imports específicos)
+  - [ ] Revisar y optimizar imports de Radix UI (tree-shaking)
+  - [x] Code-split de react-markdown (solo cargar cuando se genera informe)
+  - [x] Optimizar Header para reducir bundle inicial
+    - [x] Lazy load de AuthButtons en Header (implementado pero sin mejora significativa)
+    - [x] Code-split de next-auth useSession en Header (eliminado import no usado)
+    - [ ] Crear Header ligero para páginas públicas sin autenticación (requiere refactor mayor)
 - [x] Implementar tree-shaking agresivo
 
 #### Analytics y Scripts Externos

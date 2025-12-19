@@ -1,3 +1,4 @@
+import "server-only";
 import { type AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import AppleProvider from "next-auth/providers/apple";
@@ -12,6 +13,10 @@ const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
+
+function normalizeEmail(value: string) {
+  return value.trim().toLowerCase();
+}
 
 // Construye la lista de proveedores de forma condicional según env vars
 const providers: any[] = [];
@@ -55,10 +60,11 @@ providers.push(
         return null;
       }
 
+      const email = normalizeEmail(credentials.email);
       const { data: user } = await supabase
         .from("users")
         .select("*, hashed_password, emailVerified") // Incluir emailVerified
-        .eq("email", credentials.email)
+        .ilike("email", email)
         .single();
 
       if (!user || !user.hashed_password) {
@@ -131,11 +137,12 @@ export const authOptions: AuthOptions = {
           console.error("No se encontró un email en el perfil de Google.");
           return false; // Bloquea el inicio de sesión si no hay email
         }
+        const email = normalizeEmail(user.email);
         try {
           const { data: existingUser, error: selectError } = await supabase
             .from("users")
             .select("id")
-            .eq("email", user.email)
+            .ilike("email", email)
             .single();
 
           // Ignoramos el error que indica que no se encontró el usuario, que es lo esperado para nuevos registros.
@@ -151,7 +158,7 @@ export const authOptions: AuthOptions = {
             // El usuario es nuevo, lo insertamos con el rol por defecto.
             const { error: insertError } = await supabase.from("users").insert({
               name: user.name,
-              email: user.email,
+              email,
               image: user.image,
               role: "usuario", // Asignamos el rol por defecto
             });
@@ -172,10 +179,11 @@ export const authOptions: AuthOptions = {
       // Al iniciar sesión (cuando el objeto 'user' está disponible),
       // buscamos al usuario en nuestra base de datos para obtener el ID (UUID) y el rol correctos.
       if (user) {
+        const email = user.email ? normalizeEmail(user.email) : null;
         const { data: dbUser } = await supabase
           .from("users")
           .select("id, role") // Obtenemos el ID de la BD y el rol
-          .eq("email", user.email!)
+          .ilike("email", email!)
           .single();
 
         // Si encontramos al usuario, enriquecemos el token con los datos de la BD.

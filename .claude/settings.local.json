@@ -21,7 +21,11 @@
       "Bash(pnpm install:*)",
       "Bash(ls:*)",
       "Bash(node scripts/convert-images.mjs:*)",
-      "Bash(node scripts/create-pwa-icons.mjs:*)"
+      "Bash(node scripts/create-pwa-icons.mjs:*)",
+      "Bash(npm run analyze:*)",
+      "Bash(start .nextanalyzeclient.html)",
+      "Bash(start \"\" \"C:\\Users\\arobl\\Documents\\Github\\orientia\\.next\\analyze\\client.html\")",
+      "Bash(set ANALYZE=true)"
     ],
     "deny": [],
     "ask": []
