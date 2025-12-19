@@ -8,7 +8,7 @@
 - [x] Agregar CAPTCHA (Cloudflare Turnstile) en formularios de registro, login y contacto
 - [ ] Implementar detección de intentos de fuerza bruta con bloqueo temporal de IP
 - [ ] Agregar política de expiración de contraseñas (90 días)
-- [ ] Implementar sistema de recuperación de contraseña con tokens temporales
+- [x] Implementar sistema de recuperación de contraseña con tokens temporales
 - [x] Agregar headers de seguridad (HSTS, X-XSS-Protection, Permissions-Policy, X-Frame-Options)
 - [ ] Implementar rotación automática de API keys
 - [ ] Agregar escaneo de vulnerabilidades automatizado (Dependabot, Snyk)
@@ -27,6 +27,7 @@
 - [ ] Implementar protección XSS en campos de texto rico
 - [ ] Agregar detección de anomalías en comportamiento de usuarios
 - [x] Implementar logout automático por inactividad (30 minutos de inactividad)
+- [ ] Mejorar entregabilidad de emails (DMARC + remitente/alias en dominio)
 - [ ] Agregar verificación de dispositivos confiables
 - [ ] Implementar protección contra clickjacking
 - [ ] Agregar sanitización estricta de inputs HTML
