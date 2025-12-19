@@ -2,6 +2,9 @@ import ProfileHeader from "@/components/headers/ProfileHeader";
 import { ProfileSidebar } from "@/components/sidebars/ProfileSidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { authOptions } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
+import { DEVICE_COOKIE_NAME } from "@/lib/device";
+import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import DynamicBreadcrumb from "@/components/navigation/DynamicBreadcrumb";
@@ -16,6 +19,22 @@ export default async function AdminLayout({
   // Protegemos toda la sección de administración
   if (session?.user?.role !== "admin") {
     redirect("/profile");
+  }
+
+  const deviceId = cookies().get(DEVICE_COOKIE_NAME)?.value;
+  if (!deviceId) {
+    redirect("/login?error=DeviceVerificationRequired");
+  }
+
+  const { data: trusted } = await supabase
+    .from("trusted_devices")
+    .select("id")
+    .eq("user_id", session.user.id)
+    .eq("device_id", deviceId)
+    .single();
+
+  if (!trusted) {
+    redirect("/login?error=DeviceVerificationRequired");
   }
 
   return (

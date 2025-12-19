@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import DynamicBreadcrumb from "@/components/navigation/DynamicBreadcrumb";
+import DeviceIdHydrator from "@/components/security/DeviceIdHydrator";
 
 export const metadata: Metadata = {
   title: {
@@ -38,6 +39,7 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col overflow-hidden">
+      <DeviceIdHydrator />
       <DynamicBreadcrumb />
       <main
         id="main"

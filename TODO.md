@@ -17,7 +17,7 @@
 - [x] Implementar política de contraseñas seguras (complejidad mínima)
 - [ ] Agregar detección de credenciales comprometidas (HaveIBeenPwned API)
 - [ ] Implementar IP whitelisting para administradores
-- [ ] Agregar verificación de email obligatoria para cambios críticos
+- [x] Agregar verificación de email obligatoria para cambios críticos
 - [ ] Implementar firma de código para verificación de integridad
 - [ ] Agregar sandbox para ejecución de código generado por IA
 - [ ] Implementar rate limiting por usuario (no solo por IP)
@@ -28,7 +28,7 @@
 - [ ] Agregar detección de anomalías en comportamiento de usuarios
 - [x] Implementar logout automático por inactividad (30 minutos de inactividad)
 - [ ] Mejorar entregabilidad de emails (DMARC + remitente/alias en dominio)
-- [ ] Agregar verificación de dispositivos confiables
+- [x] Agregar verificación de dispositivos confiables
 - [ ] Implementar protección contra clickjacking
 - [ ] Agregar sanitización estricta de inputs HTML
 - [ ] Implementar Content Security Policy v3

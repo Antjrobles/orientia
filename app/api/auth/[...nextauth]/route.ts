@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 const options = {
   ...authOptions,
   pages: {
+    ...authOptions.pages,
     signIn: "/login",
   },
 };

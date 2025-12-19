@@ -5,7 +5,10 @@ import AppleProvider from "next-auth/providers/apple";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
 import bcrypt from "bcryptjs";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { DEVICE_COOKIE_NAME, getCookieFromHeader } from "@/lib/device";
 
 // Es una buena práctica crear el cliente de Supabase en un archivo separado
 // para poder reutilizarlo en otras partes de la aplicación (ej. en la API de registro).
@@ -16,6 +19,32 @@ const supabase = createClient(
 
 function normalizeEmail(value: string) {
   return value.trim().toLowerCase();
+}
+
+function toHeaders(input: Headers | Record<string, any> | undefined) {
+  if (!input) return new Headers();
+  if (input instanceof Headers) return input;
+  return new Headers(input);
+}
+
+function getRequestOrigin(req: { headers?: Headers | Record<string, any> } | undefined) {
+  if (!req) return process.env.NEXTAUTH_URL || "";
+  const headers = toHeaders(req.headers);
+  const proto = headers.get("x-forwarded-proto") || "https";
+  const host =
+    headers.get("x-forwarded-host") || headers.get("host") || "";
+  if (!host) return process.env.NEXTAUTH_URL || "";
+  return `${proto}://${host}`;
+}
+
+function getDeviceIdFromReq(req: { headers?: Headers | Record<string, any> } | undefined) {
+  if (!req) return null;
+  const cookie = toHeaders(req.headers).get("cookie");
+  return getCookieFromHeader(cookie, DEVICE_COOKIE_NAME);
+}
+
+function hashToken(token: string) {
+  return crypto.createHash("sha256").update(token).digest("hex");
 }
 
 // Construye la lista de proveedores de forma condicional según env vars
@@ -54,8 +83,9 @@ providers.push(
     credentials: {
       email: { label: "Email", type: "email", placeholder: "tu@email.com" },
       password: { label: "Contraseña", type: "password" },
+      deviceId: { label: "DeviceId", type: "text" },
     },
-    async authorize(credentials) {
+    async authorize(credentials, req) {
       if (!credentials?.email || !credentials.password) {
         return null;
       }
@@ -84,12 +114,61 @@ providers.push(
       );
 
       if (passwordsMatch) {
+        const deviceIdFromCredentials =
+          typeof credentials.deviceId === "string" &&
+          credentials.deviceId.trim().length > 0
+            ? credentials.deviceId.trim()
+            : null;
+        const deviceId =
+          deviceIdFromCredentials || getDeviceIdFromReq(req) || crypto.randomUUID();
+        const { data: trusted, error: trustedError } = await supabase
+          .from("trusted_devices")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("device_id", deviceId)
+          .single();
+
+        const isTrusted = Boolean(trusted) && !trustedError;
+        if (!isTrusted) {
+          const origin = getRequestOrigin(req);
+          const ip = getClientIp({ headers: toHeaders(req?.headers) });
+          const rl = checkRateLimit(`device-verify:${user.id}:${ip}`, 3, 60_000);
+
+          if (rl.allowed && origin) {
+            const token = crypto.randomBytes(32).toString("base64url");
+            const tokenHash = hashToken(token);
+            const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+
+            await supabase.from("device_verification_tokens").insert({
+              user_id: user.id,
+              device_id: deviceId,
+              token_hash: tokenHash,
+              expires,
+              used_at: null,
+            });
+
+            const verifyUrl = `${origin}/verify-device?token=${encodeURIComponent(token)}`;
+            await fetch(`${origin}/api/send-device-verification-email`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: user.email,
+                name: user.name ?? "usuario",
+                verifyUrl,
+              }),
+            });
+          }
+
+          throw new Error("DeviceVerificationRequired");
+        }
         // Devuelve solo los datos necesarios para la sesión, excluyendo la contraseña
         return {
           id: user.id,
           name: user.name,
           email: user.email,
           image: user.image,
+          deviceId,
+          provider: "credentials",
         };
       }
 
@@ -175,7 +254,7 @@ export const authOptions: AuthOptions = {
       }
       return true; // Permite el inicio de sesión para todos los demás casos
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       // Al iniciar sesión (cuando el objeto 'user' está disponible),
       // buscamos al usuario en nuestra base de datos para obtener el ID (UUID) y el rol correctos.
       if (user) {
@@ -190,6 +269,37 @@ export const authOptions: AuthOptions = {
         if (dbUser) {
           token.sub = dbUser.id; // ¡Esta es la corrección clave! Usamos el UUID de la base de datos.
           token.role = dbUser.role;
+
+          const rawDeviceId = (user as { deviceId?: string } | null)?.deviceId;
+          const deviceId = rawDeviceId ?? (token as { deviceId?: string }).deviceId;
+          if (deviceId) {
+            (token as { deviceId?: string }).deviceId = deviceId;
+          }
+
+          const authProvider =
+            account?.provider ??
+            (user as { provider?: string } | null)?.provider ??
+            (token as { provider?: string }).provider;
+          if (authProvider) {
+            (token as { provider?: string }).provider = authProvider;
+          }
+
+          if (authProvider === "credentials") {
+            if (deviceId) {
+              const { data: trusted, error: trustedError } = await supabase
+                .from("trusted_devices")
+                .select("id")
+                .eq("user_id", dbUser.id)
+                .eq("device_id", deviceId)
+                .single();
+              (token as { deviceVerified?: boolean }).deviceVerified =
+                Boolean(trusted) && !trustedError;
+            } else {
+              (token as { deviceVerified?: boolean }).deviceVerified = false;
+            }
+          } else {
+            (token as { deviceVerified?: boolean }).deviceVerified = true;
+          }
         }
       }
       return token;

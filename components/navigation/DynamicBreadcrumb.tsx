@@ -14,6 +14,7 @@ const pathLabels: Record<string, string> = {
   login: "Iniciar sesión",
   register: "Registrarse",
   "verify-email": "Verificar email",
+  "verify-device": "Verificar dispositivo",
   "forgot-password": "Recuperar contraseña",
   "reset-password": "Nueva contraseña",
 
