@@ -64,6 +64,8 @@ const ContactForm: React.FC = () => {
     return () => observer.disconnect();
   }, [shouldLoadLocations]);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitStatus, setSubmitStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -105,6 +107,7 @@ const ContactForm: React.FC = () => {
     setSchools([]);
     if (form.province)
       setForm((f) => ({ ...f, municipality: "", locality: "", school: "" }));
+    clearValidation(["municipality", "locality", "school"]);
   }, [form.province, locations]);
 
   useEffect(() => {
@@ -114,24 +117,112 @@ const ContactForm: React.FC = () => {
     setLocalities(municipalityData ? municipalityData.localities : []);
     setSchools([]);
     if (form.municipality) setForm((f) => ({ ...f, locality: "", school: "" }));
+    clearValidation(["locality", "school"]);
   }, [form.municipality, municipalities]);
 
   useEffect(() => {
     const localityData = localities.find((l) => l.name === form.locality);
     setSchools(localityData ? localityData.schools : []);
     if (form.locality) setForm((f) => ({ ...f, school: "" }));
+    clearValidation(["school"]);
   }, [form.locality, localities]);
+
+  const validateField = (field: string, value: string) => {
+    const trimmed = value.trim();
+    if (field === "name") {
+      if (!trimmed) return "El nombre es obligatorio.";
+      if (trimmed.length < 2) return "El nombre es demasiado corto.";
+    }
+    if (field === "email") {
+      if (!trimmed) return "El email es obligatorio.";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+        return "El email no es valido.";
+      }
+    }
+    if (field === "province" && !value) return "Selecciona una provincia.";
+    if (field === "municipality" && !value) return "Selecciona un municipio.";
+    if (field === "locality" && !value) return "Selecciona una localidad.";
+    if (field === "school" && !value) return "Selecciona un centro.";
+    return "";
+  };
+
+  const setFieldError = (field: string, value: string) => {
+    const error = validateField(field, value);
+    setErrors((prev) => ({ ...prev, [field]: error }));
+    return error;
+  };
+
+  const markTouched = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const clearValidation = (fields: string[]) => {
+    if (fields.length === 0) return;
+    setErrors((prev) => {
+      const next = { ...prev };
+      fields.forEach((field) => delete next[field]);
+      return next;
+    });
+    setTouched((prev) => {
+      const next = { ...prev };
+      fields.forEach((field) => delete next[field]);
+      return next;
+    });
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+    setForm({ ...form, [id]: value });
+    if (touched[id]) {
+      setFieldError(id, value);
+    }
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const { id, value } = e.target;
+    markTouched(id);
+    setFieldError(id, value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const requiredFields = [
+      "name",
+      "email",
+      "province",
+      "municipality",
+      "locality",
+      "school",
+    ];
+    const newErrors: Record<string, string> = {};
+    requiredFields.forEach((field) => {
+      const value = form[field as keyof typeof form] as string;
+      const error = validateField(field, value || "");
+      if (error) newErrors[field] = error;
+    });
+    if (Object.keys(newErrors).length > 0) {
+      setErrors((prev) => ({ ...prev, ...newErrors }));
+      setTouched((prev) => ({
+        ...prev,
+        ...requiredFields.reduce<Record<string, boolean>>(
+          (acc, field) => ({ ...acc, [field]: true }),
+          {},
+        ),
+      }));
+      setSubmitStatus("error");
+      setErrorMessage("Revisa los campos marcados.");
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+      return;
+    }
 
     if (!turnstileToken) {
       setSubmitStatus("error");
@@ -164,6 +255,8 @@ const ContactForm: React.FC = () => {
           school: "",
           message: "",
         });
+        setErrors({});
+        setTouched({});
         // Auto-hide success message after 5 seconds
         setTimeout(() => setSubmitStatus("idle"), 3000);
       } else {
@@ -175,6 +268,18 @@ const ContactForm: React.FC = () => {
       // Auto-hide error message after 5 seconds
       setTimeout(() => setSubmitStatus("idle"), 5000);
     }
+  };
+
+  const inputBaseClass =
+    "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500";
+  const getFieldClass = (field: string) => {
+    if (errors[field]) {
+      return `${inputBaseClass} border-red-500 focus:ring-red-500 focus:border-red-500`;
+    }
+    if (touched[field]) {
+      return `${inputBaseClass} border-green-500 focus:ring-green-500 focus:border-green-500`;
+    }
+    return inputBaseClass;
   };
 
   const renderLocationSelectors = () => {
@@ -221,7 +326,8 @@ const ContactForm: React.FC = () => {
             id="province"
             value={form.province}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500"
+            onBlur={handleBlur}
+            className={getFieldClass("province")}
             required
           >
             <option value="">Selecciona provincia...</option>
@@ -233,6 +339,9 @@ const ContactForm: React.FC = () => {
                 </option>
               ))}
           </select>
+          {touched.province && errors.province && (
+            <p className="mt-1 text-xs text-red-600">{errors.province}</p>
+          )}
         </div>
         <div>
           <label
@@ -245,8 +354,9 @@ const ContactForm: React.FC = () => {
             id="municipality"
             value={form.municipality}
             onChange={handleChange}
+            onBlur={handleBlur}
             disabled={!form.province}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500 disabled:opacity-50"
+            className={`${getFieldClass("municipality")} disabled:opacity-50`}
             required
           >
             <option value="">Selecciona municipio...</option>
@@ -258,6 +368,9 @@ const ContactForm: React.FC = () => {
                 </option>
               ))}
           </select>
+          {touched.municipality && errors.municipality && (
+            <p className="mt-1 text-xs text-red-600">{errors.municipality}</p>
+          )}
         </div>
         <div>
           <label
@@ -270,8 +383,9 @@ const ContactForm: React.FC = () => {
             id="locality"
             value={form.locality}
             onChange={handleChange}
+            onBlur={handleBlur}
             disabled={!form.municipality}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500 disabled:opacity-50"
+            className={`${getFieldClass("locality")} disabled:opacity-50`}
             required
           >
             <option value="">Selecciona localidad...</option>
@@ -283,6 +397,9 @@ const ContactForm: React.FC = () => {
                 </option>
               ))}
           </select>
+          {touched.locality && errors.locality && (
+            <p className="mt-1 text-xs text-red-600">{errors.locality}</p>
+          )}
         </div>
         <div>
           <label
@@ -295,8 +412,9 @@ const ContactForm: React.FC = () => {
             id="school"
             value={form.school}
             onChange={handleChange}
+            onBlur={handleBlur}
             disabled={!form.locality}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500 disabled:opacity-50"
+            className={`${getFieldClass("school")} disabled:opacity-50`}
             required
           >
             <option value="">Selecciona un centro...</option>
@@ -308,6 +426,9 @@ const ContactForm: React.FC = () => {
                 </option>
               ))}
           </select>
+          {touched.school && errors.school && (
+            <p className="mt-1 text-xs text-red-600">{errors.school}</p>
+          )}
         </div>
       </div>
     );
@@ -362,10 +483,16 @@ const ContactForm: React.FC = () => {
                       id="name"
                       value={form.name}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500"
+                      onBlur={handleBlur}
+                      className={getFieldClass("name")}
                       placeholder="Tu nombre"
                       required
                     />
+                    {touched.name && errors.name && (
+                      <p className="mt-1 text-xs text-red-600">
+                        {errors.name}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label
@@ -379,10 +506,16 @@ const ContactForm: React.FC = () => {
                       id="email"
                       value={form.email}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500"
+                      onBlur={handleBlur}
+                      className={getFieldClass("email")}
                       placeholder="correo@ejemplo.com"
                       required
                     />
+                    {touched.email && errors.email && (
+                      <p className="mt-1 text-xs text-red-600">
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
                 </div>
                 {renderLocationSelectors()}
@@ -398,7 +531,8 @@ const ContactForm: React.FC = () => {
                     rows={4}
                     value={form.message}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500"
+                    onBlur={handleBlur}
+                    className={getFieldClass("message")}
                     placeholder="Cuéntanos lo que necesitas..."
                   ></textarea>
                 </div>
