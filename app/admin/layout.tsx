@@ -21,7 +21,8 @@ export default async function AdminLayout({
     redirect("/profile");
   }
 
-  const deviceId = cookies().get(DEVICE_COOKIE_NAME)?.value;
+  const cookieStore = await cookies();
+  const deviceId = cookieStore.get(DEVICE_COOKIE_NAME)?.value;
   if (!deviceId) {
     redirect("/login?error=DeviceVerificationRequired");
   }
@@ -59,3 +60,4 @@ export default async function AdminLayout({
     </div>
   );
 }
+
