@@ -423,7 +423,7 @@ const ContactForm: React.FC = () => {
                 </button>
                 {/* Success Message */}
                 {submitStatus === "success" && (
-                  <div className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md">
+                  <div className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md animate-in fade-in slide-in-from-bottom-2">
                     <p className="font-medium">¡Gracias por tu interés!</p>
                     <p className="text-sm">
                       Hemos recibido tu solicitud y te contactaremos pronto.
