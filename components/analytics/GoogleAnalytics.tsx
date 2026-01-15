@@ -18,7 +18,7 @@ declare global {
 export default function GoogleAnalytics() {
   // Consentimiento desde el provider (usa la categoría 'analytics')
   const { consent, loaded } = useConsent();
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const searchParams = useSearchParams();
 
   // Mantener los hooks siempre al mismo orden; evitar returns antes de hooks.

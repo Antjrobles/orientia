@@ -46,7 +46,7 @@ const pathLabels: Record<string, string> = {
 };
 
 export default function DynamicBreadcrumb() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
 
   // Don't show breadcrumb on home page
   if (pathname === "/") {

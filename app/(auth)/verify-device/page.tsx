@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 export default function VerifyDevicePage() {
   const searchParams = useSearchParams();
-  const token = searchParams.get("token") || "";
+  const token = searchParams?.get("token") || "";
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -77,4 +77,3 @@ export default function VerifyDevicePage() {
     </AuthCard>
   );
 }
-

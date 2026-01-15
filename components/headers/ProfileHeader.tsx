@@ -17,7 +17,7 @@ import {
 import { useSession } from "next-auth/react";
 
 export default function ProfileHeader() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: session } = useSession();
 

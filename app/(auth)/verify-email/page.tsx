@@ -32,7 +32,7 @@ export default function VerifyEmailPage() {
   };
 
   useEffect(() => {
-    const token = searchParams.get("token");
+    const token = searchParams?.get("token");
 
     if (!token) {
       setStatus("error");

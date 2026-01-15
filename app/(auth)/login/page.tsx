@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
@@ -35,7 +35,7 @@ function setCookie(name: string, value: string) {
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { status } = useSession();
+  const { status, data: session } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,15 +46,16 @@ export default function LoginPage() {
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [resendStatus, setResendStatus] = useState<string | null>(null);
   const isDeviceVerificationError = error.includes("verificar este dispositivo");
+  const autoResendAttempted = useRef(false);
 
   useEffect(() => {
-    if (searchParams.get("registered") === "true") {
+    if (searchParams?.get("registered") === "true") {
       setJustRegistered(true);
       router.replace("/login", { scroll: false });
     }
 
-    const errorParam = searchParams.get("error");
-    const errorDescription = searchParams.get("error_description");
+    const errorParam = searchParams?.get("error");
+    const errorDescription = searchParams?.get("error_description");
     if (errorParam) {
       const map: Record<string, string> = {
         OAuthAccountNotLinked:
@@ -101,8 +102,59 @@ export default function LoginPage() {
   }, []);
 
   useEffect(() => {
+    if (!isDeviceVerificationError || status !== "authenticated") return;
+    const sessionEmail = session?.user?.email;
+    if (!sessionEmail || !deviceId || autoResendAttempted.current) return;
+    autoResendAttempted.current = true;
+    if (!email) {
+      setEmail(sessionEmail);
+    }
+    const resend = async () => {
+      setResendStatus(null);
+      try {
+        const res = await fetch("/api/resend-device-verification", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: sessionEmail, deviceId }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok) {
+          setResendStatus(
+            data.message ?? "Hemos reenviado el email de verificacion.",
+          );
+        } else {
+          setResendStatus(
+            data.error ??
+              "No se pudo enviar el email de verificacion. Intentalo de nuevo.",
+          );
+        }
+      } catch {
+        setResendStatus(
+          "No se pudo enviar el email de verificacion. Intentalo de nuevo.",
+        );
+      }
+    };
+    resend();
+  }, [
+    isDeviceVerificationError,
+    status,
+    session?.user?.email,
+    deviceId,
+    email,
+  ]);
+
+  useEffect(() => {
     if (status !== "authenticated") return;
-    const callbackUrl = searchParams.get("callbackUrl") || "/profile";
+    const errorParam = searchParams?.get("error");
+    const errorDescription = searchParams?.get("error_description");
+    if (
+      errorParam === "DeviceVerificationRequired" ||
+      (errorParam === "CredentialsSignin" &&
+        errorDescription === "DeviceVerificationRequired")
+    ) {
+      return;
+    }
+    const callbackUrl = searchParams?.get("callbackUrl") || "/profile";
     router.replace(callbackUrl);
   }, [status, searchParams, router]);
 
@@ -119,7 +171,7 @@ export default function LoginPage() {
       return;
     }
 
-    const callbackUrl = searchParams.get("callbackUrl") || "/profile";
+    const callbackUrl = searchParams?.get("callbackUrl") || "/profile";
     const result = await signIn("credentials", {
       redirect: true,
       email,
@@ -217,7 +269,7 @@ export default function LoginPage() {
         )}
         <AuthProviderButtons
           isLoading={loading}
-          callbackUrl={searchParams.get("callbackUrl") || "/profile"}
+          callbackUrl={searchParams?.get("callbackUrl") || "/profile"}
         />
         <AuthDivider>o con tu correo</AuthDivider>
 

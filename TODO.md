@@ -864,7 +864,6 @@
 - [ ] Implementar smooth scroll behavior
 
 #### Formulario de Contacto
-- [ ] Agregar checkmarks verdes a campos completados
 - [ ] Implementar progress bar visual del formulario
 - [x] Agregar validacion en tiempo real con feedback visual
 - [ ] Implementar estados de loading optimistas

@@ -22,7 +22,10 @@ const passwordRequirements = [
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
-  const token = useMemo(() => searchParams.get("token") || "", [searchParams]);
+  const token = useMemo(
+    () => searchParams?.get("token") || "",
+    [searchParams],
+  );
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

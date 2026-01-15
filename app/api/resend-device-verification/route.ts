@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     });
 
     const verifyUrl = `${origin}/verify-device?token=${encodeURIComponent(token)}`;
-    await fetch(`${origin}/api/send-device-verification-email`, {
+    const emailResponse = await fetch(`${origin}/api/send-device-verification-email`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -99,6 +99,16 @@ export async function POST(request: NextRequest) {
         verifyUrl,
       }),
     });
+
+    if (!emailResponse.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "No se pudo enviar el email de verificacion.",
+        },
+        { status: 502 },
+      );
+    }
 
     return NextResponse.json(
       { success: true, message: "Hemos reenviado el email de verificacion." },

@@ -34,7 +34,7 @@ const sidebarNavItems = [
 ];
 
 export function ProfileSidebar() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const { data: session } = useSession();
 
   const isAdmin = session?.user?.role === "admin";
