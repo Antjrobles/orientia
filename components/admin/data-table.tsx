@@ -29,7 +29,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<
-  TData extends { name?: string; email?: string },
+  TData extends { name?: string | null; email?: string | null },
   TValue,
 >({ columns, data }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);

@@ -17,10 +17,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Users, FileText } from "lucide-react";
-import Link from "next/link";
 import { format, getDay, subDays, isAfter } from "date-fns";
-import { columns } from "@/components/admin/columns";
+import { columns, type User } from "@/components/admin/columns";
 import { DataTable } from "../../components/admin/data-table";
 import { ResumenCards } from "@/components/admin/ResumenCards";
 import dynamic from "next/dynamic";
@@ -142,19 +140,26 @@ export default async function AdminPage() {
   }));
 
   return (
-    <div className="flex flex-col gap-8 bg-gray-50">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Panel de Administración
-          </h1>
-          <p className="text-muted-foreground">
-            Vista general de la actividad de la plataforma.
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-gray-50">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary">Admin</Badge>
+              <span className="text-xs text-muted-foreground">
+                Actualizado {format(new Date(), "dd/MM/yyyy")}
+              </span>
+            </div>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
+              Panel de Administraci¢n
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Vista general de la actividad de la plataforma.
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* TARJETAS DE RESUMEN */}
+{/* TARJETAS DE RESUMEN */}
       <ResumenCards
         totalUsuarios={totalUsers ?? 0}
         totalInformes={totalReports ?? 0}
@@ -173,7 +178,7 @@ export default async function AdminPage() {
 
       {/* INFORMES RECIENTES Y USUARIOS */}
       <div className="grid gap-8 lg:grid-cols-2">
-        <Card>
+        <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
           <CardHeader>
             <CardTitle>Informes Recientes</CardTitle>
             <CardDescription>
@@ -216,7 +221,7 @@ export default async function AdminPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
           <CardHeader>
             <CardTitle>Estadísticas Rápidas</CardTitle>
             <CardDescription>Resumen de actividad reciente.</CardDescription>
@@ -232,7 +237,7 @@ export default async function AdminPage() {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Completados</span>
-              <span className="text-2xl font-bold text-green-600">
+              <span className="text-2xl font-bold text-emerald-600">
                 {
                   informesRecientesSeguros.filter(
                     (i) => i.estado === "completado",
@@ -255,7 +260,7 @@ export default async function AdminPage() {
       </div>
 
       {/* TABLA DE USUARIOS */}
-      <Card>
+      <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
         <CardHeader>
           <CardTitle>Gestión de Usuarios</CardTitle>
           <CardDescription>
@@ -264,10 +269,11 @@ export default async function AdminPage() {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <DataTable columns={columns} data={usersWithStats} />
+              <DataTable<User> columns={columns} data={usersWithStats} />
           </div>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }
