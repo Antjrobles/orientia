@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format, getDay, subDays, isAfter } from "date-fns";
-import { columns, type User } from "@/components/admin/columns";
+import { columns } from "@/components/admin/columns";
 import { DataTable } from "../../components/admin/data-table";
 import { ResumenCards } from "@/components/admin/ResumenCards";
 import dynamic from "next/dynamic";
@@ -269,7 +269,7 @@ export default async function AdminPage() {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-              <DataTable<User> columns={columns} data={usersWithStats} />
+              <DataTable columns={columns} data={usersWithStats} />
           </div>
         </CardContent>
       </Card>
