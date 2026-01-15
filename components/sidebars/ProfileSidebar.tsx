@@ -92,7 +92,7 @@ export function ProfileSidebar() {
   const isAdmin = session?.user?.role === "admin";
 
   return (
-    <Sidebar collapsible="icon" className="border-r bg-white pt-[65px]">
+    <Sidebar collapsible="icon" scroll="page" className="border-r bg-white">
       <SidebarHeader className="relative z-[60] h-11 px-4 border-b border-gray-200 bg-gray-50 flex items-center justify-end">
         <SidebarTrigger
           aria-label="Contraer sidebar"
