@@ -51,6 +51,7 @@ export default async function AdminPage() {
     { count: totalReports, error: reportsCountError },
     { data: allReports, error: recentReportsError },
     { data: allUsers, error: allUsersError },
+    { data: allTrustedDevices, error: trustedDevicesError },
   ] = await Promise.all([
     supabase.from("users").select("*", { count: "exact", head: true }),
     supabase.from("informes").select("*", { count: "exact", head: true }),
@@ -60,25 +61,67 @@ export default async function AdminPage() {
       .order("creado_en", { ascending: false }),
     supabase
       .from("users")
-      .select("id, name, email, image, role")
+      .select("id, name, email, image, role, emailVerified")
       .order("name", { ascending: true }),
+    supabase.from("trusted_devices").select("user_id"),
   ]);
 
   if (
     usersCountError ||
     reportsCountError ||
     recentReportsError ||
-    allUsersError
+    allUsersError ||
+    trustedDevicesError
   ) {
     console.error("Error al obtener los datos para el dashboard de admin:", {
       usersCountError,
       reportsCountError,
       recentReportsError,
       allUsersError,
+      trustedDevicesError,
     });
   }
 
   const informesRecientesSeguros = (allReports || []) as InformeReciente[];
+  const trustedDevices = (allTrustedDevices || []) as { user_id: string }[];
+
+  const reportStats = new Map<string, { count: number; lastReportAt?: string }>();
+  informesRecientesSeguros.forEach((informe) => {
+    const current = reportStats.get(informe.autor_id);
+    if (!current) {
+      reportStats.set(informe.autor_id, {
+        count: 1,
+        lastReportAt: informe.creado_en,
+      });
+      return;
+    }
+    current.count += 1;
+    if (
+      informe.creado_en &&
+      (!current.lastReportAt ||
+        new Date(informe.creado_en) > new Date(current.lastReportAt))
+    ) {
+      current.lastReportAt = informe.creado_en;
+    }
+  });
+
+  const trustedDevicesCount = trustedDevices.reduce(
+    (acc, item) => {
+      acc[item.user_id] = (acc[item.user_id] ?? 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  const usersWithStats = (allUsers || []).map((user) => {
+    const stats = reportStats.get(user.id);
+    return {
+      ...user,
+      reportsCount: stats?.count ?? 0,
+      lastReportAt: stats?.lastReportAt ?? null,
+      trustedDevicesCount: trustedDevicesCount[user.id] ?? 0,
+    };
+  });
 
   // Datos para el gráfico (últimos 7 días)
   const hace7Dias = subDays(new Date(), 7);
@@ -221,7 +264,7 @@ export default async function AdminPage() {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <DataTable columns={columns} data={allUsers || []} />
+            <DataTable columns={columns} data={usersWithStats} />
           </div>
         </CardContent>
       </Card>

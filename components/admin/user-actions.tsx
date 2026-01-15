@@ -1,8 +1,17 @@
 "use client";
 
 import * as React from "react";
-import { MoreHorizontal, Trash2, Edit, UserCheck, UserX } from "lucide-react";
+import {
+  MoreHorizontal,
+  Trash2,
+  Edit,
+  UserCheck,
+  UserX,
+  ShieldCheck,
+  ShieldOff,
+} from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import {
   AlertDialog,
@@ -26,7 +35,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteUser, updateUserRole } from "@/lib/admin/actions";
+import {
+  deleteUser,
+  revokeTrustedDevices,
+  updateUserRole,
+  verifyUserEmail,
+} from "@/lib/admin/actions";
 import type { User } from "./columns";
 
 interface UserActionsProps {
@@ -34,8 +48,11 @@ interface UserActionsProps {
 }
 
 export function UserActions({ user }: UserActionsProps) {
+  const router = useRouter();
   const [isDeletePending, startDeleteTransition] = React.useTransition();
   const [isUpdatePending, startUpdateTransition] = React.useTransition();
+  const [isVerifyPending, startVerifyTransition] = React.useTransition();
+  const [isRevokePending, startRevokeTransition] = React.useTransition();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const handleRoleChange = (newRole: "admin" | "usuario") => {
@@ -55,6 +72,30 @@ export function UserActions({ user }: UserActionsProps) {
       if (result.success) {
         toast.success(result.message);
         setIsDeleteDialogOpen(false);
+      } else {
+        toast.error(result.message);
+      }
+    });
+  };
+
+  const handleVerifyEmail = () => {
+    startVerifyTransition(async () => {
+      const result = await verifyUserEmail(user.id);
+      if (result.success) {
+        toast.success(result.message);
+        router.refresh();
+      } else {
+        toast.error(result.message);
+      }
+    });
+  };
+
+  const handleRevokeDevices = () => {
+    startRevokeTransition(async () => {
+      const result = await revokeTrustedDevices(user.id);
+      if (result.success) {
+        toast.success(result.message);
+        router.refresh();
       } else {
         toast.error(result.message);
       }
@@ -102,6 +143,21 @@ export function UserActions({ user }: UserActionsProps) {
             onClick={() => navigator.clipboard.writeText(user.id)}
           >
             Copiar ID de usuario
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={handleVerifyEmail}
+            disabled={isVerifyPending || Boolean(user.emailVerified)}
+          >
+            <ShieldCheck className="mr-2 h-4 w-4" />
+            <span>Marcar email verificado</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={handleRevokeDevices}
+            disabled={isRevokePending || (user.trustedDevicesCount ?? 0) === 0}
+          >
+            <ShieldOff className="mr-2 h-4 w-4" />
+            <span>Revocar dispositivos</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuSub>

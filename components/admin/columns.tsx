@@ -17,6 +17,10 @@ export type User = {
   email: string | null;
   image: string | null;
   role: "admin" | "usuario";
+  emailVerified?: string | null;
+  reportsCount?: number;
+  lastReportAt?: string | null;
+  trustedDevicesCount?: number;
 };
 
 // Componente reutilizable para cabeceras de columna con ordenación
@@ -96,6 +100,39 @@ export const columns: ColumnDef<User>[] = [
           {role}
         </Badge>
       );
+    },
+  },
+  {
+    accessorKey: "emailVerified",
+    header: "Email verificado",
+    cell: ({ row }) => {
+      const verified = Boolean(row.getValue("emailVerified"));
+      return (
+        <Badge variant={verified ? "secondary" : "outline"}>
+          {verified ? "Si" : "No"}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "reportsCount",
+    header: "Informes",
+    cell: ({ row }) => {
+      const count = row.getValue("reportsCount") as number | undefined;
+      return <span className="text-sm font-medium">{count ?? 0}</span>;
+    },
+  },
+  {
+    accessorKey: "lastReportAt",
+    header: "Ultimo informe",
+    cell: ({ row }) => {
+      const value = row.getValue("lastReportAt") as string | null | undefined;
+      if (!value) return <span className="text-sm text-muted-foreground">-</span>;
+      const date = new Date(value);
+      const label = Number.isNaN(date.getTime())
+        ? "-"
+        : date.toLocaleDateString("es-ES");
+      return <span className="text-sm">{label}</span>;
     },
   },
   // --- COLUMNA ELIMINADA ---
