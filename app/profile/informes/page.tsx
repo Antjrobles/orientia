@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 
 interface Informe {
@@ -38,14 +39,25 @@ interface Informe {
     alumno?: {
       nombre?: string;
       curso?: string;
+      fecha_nacimiento?: string;
     };
     centro?: {
       nombre?: string;
+      localidad?: string;
     };
   };
   evaluacion_psicopedagogica?: {
     motivo_consulta?: string;
+    informe_ia_generado?: string;
+    observaciones?: string;
   };
+}
+
+interface InformeResumen {
+  total: number;
+  completados: number;
+  borradores: number;
+  otros: number;
 }
 
 function InformesContent() {
@@ -56,58 +68,57 @@ function InformesContent() {
   const [vista, setVista] = useState<"cards" | "list">("cards");
   const [informes, setInformes] = useState<Informe[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(12);
+  const [total, setTotal] = useState(0);
+  const [resumen, setResumen] = useState<InformeResumen>({
+    total: 0,
+    completados: 0,
+    borradores: 0,
+    otros: 0,
+  });
 
   const fetchInformes = useCallback(async () => {
     if (!session) return;
+    setLoading(true);
+
+    const params = new URLSearchParams({
+      page: String(page),
+      pageSize: String(pageSize),
+      estado: filtroEstado,
+      orden,
+    });
+    if (busqueda.trim().length > 0) {
+      params.set("search", busqueda.trim());
+    }
 
     try {
-      const response = await fetch("/api/informes/list");
+      const response = await fetch(`/api/informes/list?${params.toString()}`);
       const data = await response.json();
 
       if (data.success) {
         setInformes(data.informes || []);
+        setTotal(data.total || 0);
+        setResumen(data.resumen || resumen);
       }
     } catch (error) {
       console.error("Error al cargar informes:", error);
       setInformes([]);
+      setTotal(0);
     } finally {
       setLoading(false);
     }
-  }, [session]);
+  }, [session, page, pageSize, filtroEstado, orden, busqueda]);
 
   useEffect(() => {
     fetchInformes();
   }, [fetchInformes]);
 
-  const informesFiltrados = informes.filter((informe) => {
-    const alumnoNombre = informe.datos_identificativos?.alumno?.nombre || "";
-    const centroNombre = informe.datos_identificativos?.centro?.nombre || "";
+  useEffect(() => {
+    setPage(1);
+  }, [busqueda, filtroEstado, orden, pageSize]);
 
-    const coincideBusqueda =
-      alumnoNombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      centroNombre.toLowerCase().includes(busqueda.toLowerCase());
-    const coincideEstado =
-      filtroEstado === "todos" || informe.estado === filtroEstado;
-
-    return coincideBusqueda && coincideEstado;
-  });
-
-  const informesOrdenados = [...informesFiltrados].sort((a, b) => {
-    if (orden == "antiguos") {
-      return new Date(a.creado_en).getTime() - new Date(b.creado_en).getTime();
-    }
-    if (orden == "actualizados") {
-      return (
-        new Date(b.actualizado_en).getTime() -
-        new Date(a.actualizado_en).getTime()
-      );
-    }
-    return new Date(b.creado_en).getTime() - new Date(a.creado_en).getTime();
-  });
-
-  if (loading) {
-    return <Spinner variant="centered" />;
-  }
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   const getEstadoBadge = (estado: string) => {
     switch (estado) {
@@ -132,7 +143,26 @@ function InformesContent() {
     });
   };
 
-  if (informesFiltrados.length === 0 && informes.length === 0) {
+  const calcularProgreso = (informe: Informe) => {
+    const checks = [
+      informe.datos_identificativos?.alumno?.nombre,
+      informe.datos_identificativos?.alumno?.curso,
+      informe.datos_identificativos?.centro?.nombre,
+      informe.datos_identificativos?.centro?.localidad,
+      informe.evaluacion_psicopedagogica?.motivo_consulta,
+      informe.evaluacion_psicopedagogica?.observaciones,
+      informe.evaluacion_psicopedagogica?.informe_ia_generado,
+    ];
+    const totalChecks = checks.length;
+    const filled = checks.filter((value) => Boolean(value && String(value).trim())).length;
+    return Math.round((filled / totalChecks) * 100);
+  };
+
+  if (loading) {
+    return <Spinner variant="centered" />;
+  }
+
+  if (total === 0 && informes.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center py-12">
@@ -185,7 +215,7 @@ function InformesContent() {
             </CardHeader>
             <CardContent className="flex items-center justify-between">
               <span className="text-3xl font-bold text-gray-900">
-                {informes.length}
+                {resumen.total}
               </span>
               <FileText className="h-5 w-5 text-emerald-600" />
             </CardContent>
@@ -198,7 +228,7 @@ function InformesContent() {
             </CardHeader>
             <CardContent className="flex items-center justify-between">
               <span className="text-3xl font-bold text-gray-900">
-                {informes.filter((i) => i.estado === "completado").length}
+                {resumen.completados}
               </span>
               <CheckCircle2 className="h-5 w-5 text-emerald-600" />
             </CardContent>
@@ -211,7 +241,7 @@ function InformesContent() {
             </CardHeader>
             <CardContent className="flex items-center justify-between">
               <span className="text-3xl font-bold text-gray-900">
-                {informes.filter((i) => i.estado === "borrador").length}
+                {resumen.borradores}
               </span>
               <Clock3 className="h-5 w-5 text-emerald-600" />
             </CardContent>
@@ -224,11 +254,7 @@ function InformesContent() {
             </CardHeader>
             <CardContent className="flex items-center justify-between">
               <span className="text-3xl font-bold text-gray-900">
-                {
-                  informes.filter(
-                    (i) => i.estado !== "completado" && i.estado !== "borrador",
-                  ).length
-                }
+                {resumen.otros}
               </span>
               <Badge variant="secondary">Estado</Badge>
             </CardContent>
@@ -275,7 +301,22 @@ function InformesContent() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="sm:w-48">
+              <div className="sm:w-40">
+                <Select
+                  value={String(pageSize)}
+                  onValueChange={(value) => setPageSize(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Por pagina" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="6">6 por pagina</SelectItem>
+                    <SelectItem value="12">12 por pagina</SelectItem>
+                    <SelectItem value="24">24 por pagina</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="sm:w-40">
                 <Select value={vista} onValueChange={(value) => setVista(value as "cards" | "list")}>
                   <SelectTrigger>
                     <SelectValue placeholder="Vista" />
@@ -311,7 +352,7 @@ function InformesContent() {
           </CardContent>
         </Card>
 
-        {informesOrdenados.length === 0 ? (
+        {informes.length === 0 ? (
           <div className="text-center py-12">
             <div className="mx-auto w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4">
               <Search className="h-8 w-8 text-emerald-400" />
@@ -337,7 +378,7 @@ function InformesContent() {
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
               <span>
-                Mostrando {informesOrdenados.length} de {informes.length}
+                Mostrando {informes.length} de {total}
               </span>
               <span>
                 {filtroEstado === "todos"
@@ -347,7 +388,7 @@ function InformesContent() {
             </div>
             {vista === "cards" ? (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {informesOrdenados.map((informe) => (
+                {informes.map((informe) => (
                   <Card
                     key={informe.id}
                     className="border-emerald-100/70 bg-white/90 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
@@ -377,6 +418,16 @@ function InformesContent() {
                           {informe.evaluacion_psicopedagogica?.motivo_consulta ||
                             "Sin motivo especificado"}
                         </p>
+
+                        {informe.estado === "borrador" && (
+                          <div className="space-y-1">
+                            <div className="flex items-center justify-between text-xs text-muted-foreground">
+                              <span>Progreso</span>
+                              <span>{calcularProgreso(informe)}%</span>
+                            </div>
+                            <Progress value={calcularProgreso(informe)} className="h-2" />
+                          </div>
+                        )}
 
                         <div className="flex justify-between text-xs text-muted-foreground">
                           <span>
@@ -422,7 +473,7 @@ function InformesContent() {
               </div>
             ) : (
               <div className="space-y-3">
-                {informesOrdenados.map((informe) => (
+                {informes.map((informe) => (
                   <Card
                     key={informe.id}
                     className="border-emerald-100/70 bg-white/90 shadow-sm"
@@ -442,6 +493,15 @@ function InformesContent() {
                           {informe.datos_identificativos?.alumno?.curso ||
                             "Sin curso"}
                         </p>
+                        {informe.estado === "borrador" && (
+                          <div className="max-w-xs space-y-1">
+                            <div className="flex items-center justify-between text-xs text-muted-foreground">
+                              <span>Progreso</span>
+                              <span>{calcularProgreso(informe)}%</span>
+                            </div>
+                            <Progress value={calcularProgreso(informe)} className="h-2" />
+                          </div>
+                        )}
                         <p className="text-xs text-muted-foreground">
                           Creado: {formatearFecha(informe.creado_en)} ·
                           Modificado: {formatearFecha(informe.actualizado_en)}
@@ -480,6 +540,30 @@ function InformesContent() {
                 ))}
               </div>
             )}
+
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-sm">
+              <span className="text-muted-foreground">
+                Pagina {page} de {totalPages}
+              </span>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page <= 1}
+                >
+                  Anterior
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page >= totalPages}
+                >
+                  Siguiente
+                </Button>
+              </div>
+            </div>
           </div>
         )}
       </div>
