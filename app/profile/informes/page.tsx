@@ -391,7 +391,7 @@ function InformesContent() {
                 {informes.map((informe) => (
                   <Card
                     key={informe.id}
-                    className="border-emerald-100/70 bg-white/90 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                    className="border-emerald-100/70 bg-white/90 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md hover:border-emerald-200 hover:bg-emerald-50/40"
                   >
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-start">
@@ -476,7 +476,7 @@ function InformesContent() {
                 {informes.map((informe) => (
                   <Card
                     key={informe.id}
-                    className="border-emerald-100/70 bg-white/90 shadow-sm"
+                    className="border-emerald-100/70 bg-white/90 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md hover:border-emerald-200 hover:bg-emerald-50/40"
                   >
                     <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
                       <div className="space-y-1">
