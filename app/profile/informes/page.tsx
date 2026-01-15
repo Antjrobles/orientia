@@ -3,7 +3,19 @@
 import { Suspense, useState, useEffect, useCallback } from "react";
 import Spinner from "@/components/ui/Spinner";
 import { useSession } from "next-auth/react";
-import { Search, FileText, Eye, Edit, Copy, Trash2, Plus } from "lucide-react";
+import {
+  Search,
+  FileText,
+  Eye,
+  Edit,
+  Copy,
+  Trash2,
+  Plus,
+  CheckCircle2,
+  Clock3,
+  LayoutGrid,
+  List,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +52,8 @@ function InformesContent() {
   const { data: session } = useSession();
   const [busqueda, setBusqueda] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("todos");
+  const [orden, setOrden] = useState("recientes");
+  const [vista, setVista] = useState<"cards" | "list">("cards");
   const [informes, setInformes] = useState<Informe[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -65,7 +79,6 @@ function InformesContent() {
     fetchInformes();
   }, [fetchInformes]);
 
-  // Filtrar informes
   const informesFiltrados = informes.filter((informe) => {
     const alumnoNombre = informe.datos_identificativos?.alumno?.nombre || "";
     const centroNombre = informe.datos_identificativos?.centro?.nombre || "";
@@ -79,6 +92,19 @@ function InformesContent() {
     return coincideBusqueda && coincideEstado;
   });
 
+  const informesOrdenados = [...informesFiltrados].sort((a, b) => {
+    if (orden == "antiguos") {
+      return new Date(a.creado_en).getTime() - new Date(b.creado_en).getTime();
+    }
+    if (orden == "actualizados") {
+      return (
+        new Date(b.actualizado_en).getTime() -
+        new Date(a.actualizado_en).getTime()
+      );
+    }
+    return new Date(b.creado_en).getTime() - new Date(a.creado_en).getTime();
+  });
+
   if (loading) {
     return <Spinner variant="centered" />;
   }
@@ -87,7 +113,7 @@ function InformesContent() {
     switch (estado) {
       case "completado":
         return (
-          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+          <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
             Completado
           </Badge>
         );
@@ -110,14 +136,14 @@ function InformesContent() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center py-12">
-          <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-            <FileText className="h-12 w-12 text-gray-400" />
+          <div className="mx-auto w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mb-4">
+            <FileText className="h-12 w-12 text-emerald-400" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             No tienes informes creados
           </h3>
           <p className="text-gray-500 mb-6">
-            Comienza creando tu primer informe psicopedagógico
+            Comienza creando tu primer informe psicopedagogico
           </p>
           <Link href="/profile/generar-informe">
             <Button className="bg-green-600 hover:bg-green-700">
@@ -133,14 +159,13 @@ function InformesContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="space-y-6">
-        {/* Cabecera */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
               Mis Informes
             </h1>
             <p className="text-muted-foreground mt-1">
-              Gestiona todos tus informes psicopedagógicos
+              Gestiona todos tus informes psicopedagogicos
             </p>
           </div>
           <Link href="/profile/generar-informe">
@@ -151,10 +176,68 @@ function InformesContent() {
           </Link>
         </div>
 
-        {/* Filtros */}
-        <Card>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-emerald-900/80">
+                Total
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-center justify-between">
+              <span className="text-3xl font-bold text-gray-900">
+                {informes.length}
+              </span>
+              <FileText className="h-5 w-5 text-emerald-600" />
+            </CardContent>
+          </Card>
+          <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-emerald-900/80">
+                Completados
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-center justify-between">
+              <span className="text-3xl font-bold text-gray-900">
+                {informes.filter((i) => i.estado === "completado").length}
+              </span>
+              <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+            </CardContent>
+          </Card>
+          <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-emerald-900/80">
+                Borradores
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-center justify-between">
+              <span className="text-3xl font-bold text-gray-900">
+                {informes.filter((i) => i.estado === "borrador").length}
+              </span>
+              <Clock3 className="h-5 w-5 text-emerald-600" />
+            </CardContent>
+          </Card>
+          <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-emerald-900/80">
+                Otros estados
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-center justify-between">
+              <span className="text-3xl font-bold text-gray-900">
+                {
+                  informes.filter(
+                    (i) => i.estado !== "completado" && i.estado !== "borrador",
+                  ).length
+                }
+              </span>
+              <Badge variant="secondary">Estado</Badge>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
           <CardContent className="p-4">
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -178,86 +261,225 @@ function InformesContent() {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="sm:w-48">
+                <Select value={orden} onValueChange={setOrden}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Ordenar por" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="recientes">Mas recientes</SelectItem>
+                    <SelectItem value="antiguos">Mas antiguos</SelectItem>
+                    <SelectItem value="actualizados">
+                      Ultima actualizacion
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="sm:w-48">
+                <Select value={vista} onValueChange={(value) => setVista(value as "cards" | "list")}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Vista" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cards">
+                      <div className="flex items-center gap-2">
+                        <LayoutGrid className="h-4 w-4" />
+                        <span>Tarjetas</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="list">
+                      <div className="flex items-center gap-2">
+                        <List className="h-4 w-4" />
+                        <span>Lista</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {(busqueda || filtroEstado !== "todos") && (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setBusqueda("");
+                    setFiltroEstado("todos");
+                  }}
+                >
+                  Limpiar
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
 
-        {/* Lista de informes */}
-        {informesFiltrados.length === 0 ? (
+        {informesOrdenados.length === 0 ? (
           <div className="text-center py-12">
-            <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-              <Search className="h-8 w-8 text-gray-400" />
+            <div className="mx-auto w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4">
+              <Search className="h-8 w-8 text-emerald-400" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               No se encontraron informes
             </h3>
-            <p className="text-gray-500">
-              Intenta ajustar los filtros de búsqueda
-            </p>
+            <p className="text-gray-500">Intenta ajustar los filtros de busqueda</p>
+            {(busqueda || filtroEstado !== "todos") && (
+              <Button
+                variant="outline"
+                className="mt-4"
+                onClick={() => {
+                  setBusqueda("");
+                  setFiltroEstado("todos");
+                }}
+              >
+                Limpiar filtros
+              </Button>
+            )}
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {informesFiltrados.map((informe) => (
-              <Card
-                key={informe.id}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-1">
-                        {informe.datos_identificativos?.alumno?.nombre ||
-                          "Sin nombre"}
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {informe.datos_identificativos?.centro?.nombre ||
-                          "Sin centro"}{" "}
-                        •{" "}
-                        {informe.datos_identificativos?.alumno?.curso ||
-                          "Sin curso"}
-                      </p>
-                    </div>
-                    <div className="ml-2">{getEstadoBadge(informe.estado)}</div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="space-y-3">
-                    <p className="text-sm text-gray-600 line-clamp-2">
-                      {informe.evaluacion_psicopedagogica?.motivo_consulta ||
-                        "Sin motivo especificado"}
-                    </p>
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
+              <span>
+                Mostrando {informesOrdenados.length} de {informes.length}
+              </span>
+              <span>
+                {filtroEstado === "todos"
+                  ? "Todos los estados"
+                  : `Estado: ${filtroEstado}`}
+              </span>
+            </div>
+            {vista === "cards" ? (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {informesOrdenados.map((informe) => (
+                  <Card
+                    key={informe.id}
+                    className="border-emerald-100/70 bg-white/90 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-1">
+                            {informe.datos_identificativos?.alumno?.nombre ||
+                              "Sin nombre"}
+                          </CardTitle>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {informe.datos_identificativos?.centro?.nombre ||
+                              "Sin centro"}{" "}
+                            {informe.datos_identificativos?.alumno?.curso ||
+                              "Sin curso"}
+                          </p>
+                        </div>
+                        <div className="ml-2">
+                          {getEstadoBadge(informe.estado)}
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="space-y-3">
+                        <p className="text-sm text-gray-600 line-clamp-2">
+                          {informe.evaluacion_psicopedagogica?.motivo_consulta ||
+                            "Sin motivo especificado"}
+                        </p>
 
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>Creado: {formatearFecha(informe.creado_en)}</span>
-                      <span>
-                        Modificado: {formatearFecha(informe.actualizado_en)}
-                      </span>
-                    </div>
+                        <div className="flex justify-between text-xs text-muted-foreground">
+                          <span>
+                            Creado: {formatearFecha(informe.creado_en)}
+                          </span>
+                          <span>
+                            Modificado: {formatearFecha(informe.actualizado_en)}
+                          </span>
+                        </div>
 
-                    <div className="flex gap-2 pt-2">
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <Eye className="h-3 w-3 mr-1" />
-                        Ver
-                      </Button>
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <Edit className="h-3 w-3 mr-1" />
-                        Editar
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Copy className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                        <div className="flex gap-2 pt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                          >
+                            <Eye className="h-3 w-3 mr-1" />
+                            Ver
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                          >
+                            <Edit className="h-3 w-3 mr-1" />
+                            Editar
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {informesOrdenados.map((informe) => (
+                  <Card
+                    key={informe.id}
+                    className="border-emerald-100/70 bg-white/90 shadow-sm"
+                  >
+                    <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="space-y-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-base font-semibold text-gray-900">
+                            {informe.datos_identificativos?.alumno?.nombre ||
+                              "Sin nombre"}
+                          </span>
+                          {getEstadoBadge(informe.estado)}
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {informe.datos_identificativos?.centro?.nombre ||
+                            "Sin centro"}{" "}
+                          {informe.datos_identificativos?.alumno?.curso ||
+                            "Sin curso"}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Creado: {formatearFecha(informe.creado_en)} ·
+                          Modificado: {formatearFecha(informe.actualizado_en)}
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                        >
+                          <Eye className="h-3 w-3 mr-1" />
+                          Ver
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                        >
+                          <Edit className="h-3 w-3 mr-1" />
+                          Editar
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

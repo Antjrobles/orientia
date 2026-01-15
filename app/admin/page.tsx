@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Table,
   TableBody,
@@ -17,11 +18,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { AlertTriangle } from "lucide-react";
 import { format, getDay, subDays, isAfter } from "date-fns";
 import { columns } from "@/components/admin/columns";
 import { DataTable } from "../../components/admin/data-table";
 import { ResumenCards } from "@/components/admin/ResumenCards";
 import dynamic from "next/dynamic";
+import { isSupabasePausedError } from "@/lib/supabase-errors";
 
 // Code-split: recharts solo se carga en esta página
 const AnalyticsChart = dynamic(
@@ -79,6 +82,13 @@ export default async function AdminPage() {
       trustedDevicesError,
     });
   }
+  const supabasePaused = [
+    usersCountError,
+    reportsCountError,
+    recentReportsError,
+    allUsersError,
+    trustedDevicesError,
+  ].some(isSupabasePausedError);
 
   const informesRecientesSeguros = (allReports || []) as InformeReciente[];
   const trustedDevices = (allTrustedDevices || []) as { user_id: string }[];
@@ -158,6 +168,17 @@ export default async function AdminPage() {
             </p>
           </div>
         </div>
+
+        {supabasePaused && (
+          <Alert className="border-amber-200 bg-amber-50 text-amber-900">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Base de datos pausada</AlertTitle>
+            <AlertDescription>
+              No se pudo conectar con Supabase (ENOTFOUND). Reactiva el
+              proyecto en Supabase y vuelve a intentar.
+            </AlertDescription>
+          </Alert>
+        )}
 
 {/* TARJETAS DE RESUMEN */}
       <ResumenCards
