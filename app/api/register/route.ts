@@ -125,8 +125,7 @@ export async function POST(request: Request) {
 
     // 7. Enviar email de verificación
     try {
-      const origin =
-        "nextUrl" in request ? (request as any).nextUrl.origin : process.env.NEXTAUTH_URL;
+      const origin = process.env.NEXTAUTH_URL;
       if (!origin) {
         throw new Error("Missing origin for verification email");
       }
