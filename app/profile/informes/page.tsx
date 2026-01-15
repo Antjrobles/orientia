@@ -3,6 +3,7 @@
 import { Suspense, useState, useEffect, useCallback } from "react";
 import Spinner from "@/components/ui/Spinner";
 import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import {
   Search,
   FileText,
@@ -62,6 +63,7 @@ interface InformeResumen {
 
 function InformesContent() {
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
   const [busqueda, setBusqueda] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("todos");
   const [orden, setOrden] = useState("recientes");
@@ -113,6 +115,13 @@ function InformesContent() {
   useEffect(() => {
     fetchInformes();
   }, [fetchInformes]);
+
+  useEffect(() => {
+    const estadoParam = searchParams?.get("estado");
+    if (estadoParam === "borrador" || estadoParam === "completado") {
+      setFiltroEstado(estadoParam);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     setPage(1);

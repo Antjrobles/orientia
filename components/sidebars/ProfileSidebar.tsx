@@ -3,40 +3,92 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { LayoutDashboard, FilePlus2, FolderKanban, Shield } from "lucide-react";
+import {
+  LayoutDashboard,
+  FilePlus2,
+  FolderKanban,
+  ClipboardList,
+  CheckCircle2,
+  Shield,
+  User,
+  Lock,
+  SlidersHorizontal,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarTrigger,
   SidebarRail,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const sidebarNavItems = [
+const sidebarGroups = [
   {
-    title: "Panel Principal",
-    href: "/profile",
-    icon: LayoutDashboard,
+    label: "Cuenta",
+    items: [
+      {
+        title: "Panel",
+        href: "/profile",
+        icon: LayoutDashboard,
+      },
+      {
+        title: "Perfil y datos",
+        href: "/profile/ajustes",
+        icon: User,
+      },
+      {
+        title: "Seguridad",
+        href: "/profile/seguridad",
+        icon: Lock,
+      },
+      {
+        title: "Preferencias",
+        href: "/profile/preferencias",
+        icon: SlidersHorizontal,
+      },
+    ],
   },
   {
-    title: "Nuevo Informe",
-    href: "/profile/generar-informe",
-    icon: FilePlus2,
+    label: "Herramientas",
+    items: [
+      {
+        title: "Nuevo informe",
+        href: "/profile/generar-informe",
+        icon: FilePlus2,
+      },
+    ],
   },
   {
-    title: "Mis Informes",
-    href: "/profile/informes",
-    icon: FolderKanban,
+    label: "Informes",
+    items: [
+      {
+        title: "Mis informes",
+        href: "/profile/informes",
+        icon: FolderKanban,
+      },
+      {
+        title: "Borradores",
+        href: "/profile/informes?estado=borrador",
+        icon: ClipboardList,
+      },
+      {
+        title: "Completados",
+        href: "/profile/informes?estado=completado",
+        icon: CheckCircle2,
+      },
+    ],
   },
 ];
 
 export function ProfileSidebar() {
   const pathname = usePathname() ?? "";
   const { data: session } = useSession();
-
   const isAdmin = session?.user?.role === "admin";
 
   return (
@@ -48,50 +100,68 @@ export function ProfileSidebar() {
         />
       </SidebarHeader>
       <SidebarContent className="px-2 pt-2">
-        <SidebarMenu className="space-y-1">
-          {sidebarNavItems.map((item) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/profile" && pathname.startsWith(item.href));
-            const Icon = item.icon;
-            return (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={isActive}
-                  className="w-full justify-start"
-                >
-                  <Link
-                    href={item.href}
-                    className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 data-[active=true]:bg-green-50 data-[active=true]:text-green-600 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0"
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="group-data-[collapsible=icon]:hidden">
-                      {item.title}
-                    </span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
+        <SidebarMenu className="space-y-3">
+          {sidebarGroups.map((group) => (
+            <SidebarGroup key={group.label} className="p-0">
+              <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wide text-gray-400">
+                {group.label}
+              </SidebarGroupLabel>
+              <SidebarGroupContent className="space-y-1">
+                {group.items.map((item) => {
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href.startsWith("/profile/informes") &&
+                      pathname.startsWith("/profile/informes")) ||
+                    (item.href === "/profile" && pathname === "/profile");
+                  const Icon = item.icon;
+                  return (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive}
+                        className="w-full justify-start"
+                      >
+                        <Link
+                          href={item.href}
+                          className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 data-[active=true]:bg-green-50 data-[active=true]:text-green-600 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0"
+                        >
+                          <Icon className="h-4 w-4" />
+                          <span className="group-data-[collapsible=icon]:hidden">
+                            {item.title}
+                          </span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
           {isAdmin && (
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname.startsWith("/admin")}
-                className="w-full justify-start"
-              >
-                <Link
-                  href="/admin"
-                  className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-red-600 hover:bg-red-50 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0"
-                >
-                  <Shield className="h-4 w-4" />
-                  <span className="group-data-[collapsible=icon]:hidden">
-                    Administración
-                  </span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            <SidebarGroup className="p-0">
+              <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wide text-gray-400">
+                Admin
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname.startsWith("/admin")}
+                    className="w-full justify-start"
+                  >
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-red-600 hover:bg-red-50 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0"
+                    >
+                      <Shield className="h-4 w-4" />
+                      <span className="group-data-[collapsible=icon]:hidden">
+                        Administracion
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarGroupContent>
+            </SidebarGroup>
           )}
         </SidebarMenu>
       </SidebarContent>
