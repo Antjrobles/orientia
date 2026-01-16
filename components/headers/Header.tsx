@@ -77,7 +77,7 @@ export default function Header() {
                   alt="Logo Orientia"
                   width={150}
                   height={40}
-                  className="transform transition-transform hover:scale-105 mt-3"
+                  className="block transform translate-y-1 transition-transform hover:scale-105"
                   priority
                 />
               </Link>
