@@ -53,9 +53,12 @@ export default function DynamicBreadcrumb() {
     return (
       <div className="h-11 px-4 border-b border-gray-200 bg-gray-50 flex items-center justify-start">
         <nav aria-label="Breadcrumb" className="w-full">
-          <ol className="flex items-center space-x-2 text-sm text-gray-600">
+          <ol className="flex items-center gap-1 text-xs text-gray-600 sm:gap-2 sm:text-sm">
             <li>
-              <Link href="/" className="hover:text-green-600 flex items-center">
+              <Link
+                href="/"
+                className="hover:text-green-600 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 rounded"
+              >
                 <Home className="w-4 h-4 mr-1" />
                 Inicio
               </Link>
@@ -91,31 +94,42 @@ export default function DynamicBreadcrumb() {
   return (
     <div className="h-11 px-4 border-b border-gray-200 bg-gray-50 flex items-center justify-start">
       <nav aria-label="Breadcrumb" className="w-full">
-        <ol className="flex items-center space-x-2 text-sm text-gray-600">
-          {breadcrumbItems.map((item, index) => (
-            <li key={item.href} className="flex items-center">
-              {index > 0 && (
-                <ChevronRight className="w-4 h-4 mr-2" aria-hidden="true" />
-              )}
-              {index === breadcrumbItems.length - 1 ? (
-                <span
-                  className="text-gray-900 flex items-center"
-                  aria-current="page"
-                >
-                  {index === 0 && <Home className="w-4 h-4 mr-1" />}
-                  {item.label}
-                </span>
-              ) : (
-                <Link
-                  href={item.href}
-                  className="hover:text-green-600 flex items-center"
-                >
-                  {index === 0 && <Home className="w-4 h-4 mr-1" />}
-                  {item.label}
-                </Link>
-              )}
-            </li>
-          ))}
+        <ol className="flex items-center gap-1 text-xs text-gray-600 sm:gap-2 sm:text-sm">
+          {breadcrumbItems.map((item, index) => {
+            const isFirst = index === 0;
+            const isLast = index === breadcrumbItems.length - 1;
+            const hideOnMobile = !isFirst && !isLast;
+            return (
+              <li
+                key={item.href}
+                className={`items-center ${hideOnMobile ? "hidden sm:flex" : "flex"}`}
+              >
+                {index > 0 && (
+                  <ChevronRight
+                    className="w-3 h-3 mr-1 sm:w-4 sm:h-4 sm:mr-2"
+                    aria-hidden="true"
+                  />
+                )}
+                {isLast ? (
+                  <span
+                    className="text-gray-900 flex items-center"
+                    aria-current="page"
+                  >
+                    {isFirst && <Home className="w-4 h-4 mr-1" />}
+                    {item.label}
+                  </span>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="hover:text-green-600 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 rounded"
+                  >
+                    {isFirst && <Home className="w-4 h-4 mr-1" />}
+                    {item.label}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
         </ol>
       </nav>
     </div>

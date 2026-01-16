@@ -93,10 +93,21 @@ export const columns: ColumnDef<User>[] = [
     header: "Rol",
     cell: ({ row }) => {
       const role = row.getValue("role") as string;
-      // Asumiendo que los roles en la DB son 'admin' y 'usuario'
-      const variant = role === "admin" ? "destructive" : "secondary";
+      const isAdmin = role === "admin";
       return (
-        <Badge variant={variant} className="capitalize">
+        <Badge
+          variant="outline"
+          className={`capitalize border ${
+            isAdmin
+              ? "border-red-200 bg-red-50 text-red-700"
+              : "border-emerald-200 bg-emerald-50 text-emerald-700"
+          }`}
+        >
+          <span
+            className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full ${
+              isAdmin ? "bg-red-500" : "bg-emerald-500"
+            }`}
+          />
           {role}
         </Badge>
       );
@@ -108,8 +119,15 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const verified = Boolean(row.getValue("emailVerified"));
       return (
-        <Badge variant={verified ? "secondary" : "outline"}>
-          {verified ? "Si" : "No"}
+        <Badge
+          variant="outline"
+          className={`border ${
+            verified
+              ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+              : "border-amber-200 bg-amber-50 text-amber-700"
+          }`}
+        >
+          {verified ? "Verificado" : "Sin verificar"}
         </Badge>
       );
     },

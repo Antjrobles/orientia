@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Mail, Phone, Clock, MapPin, ExternalLink } from "lucide-react";
-import BackToTopButton from "@/components/navigation/BackToTopButton";
 
 // 1. SEO: Datos Estructurados (JSON-LD) para la organización
 const OrganizationSchema = {
@@ -34,7 +33,7 @@ export default function Footer() {
     <>
       <footer
         id="contacto"
-        className="bg-gray-900 text-white py-8"
+        className="bg-gray-900 text-white py-12"
         role="contentinfo"
       >
         <script
@@ -44,7 +43,7 @@ export default function Footer() {
           }}
         />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Columna de la Marca */}
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center space-x-3 mb-4">
@@ -72,7 +71,7 @@ export default function Footer() {
 
             {/* Columna de Recursos */}
             <div>
-              <h3 className="text-sm font-semibold mb-3 text-white">
+              <h3 className="text-xs font-semibold uppercase tracking-wider mb-3 text-white/80">
                 Recursos
               </h3>
               <nav aria-label="Recursos">
@@ -98,7 +97,7 @@ export default function Footer() {
                         href={link.href}
                         target={link.external ? "_blank" : undefined}
                         rel={link.external ? "noopener noreferrer" : undefined}
-                        className="text-gray-300 hover:text-white transition-colors text-sm flex items-center group"
+                        className="text-gray-300 hover:text-white transition-colors text-sm flex items-center group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded"
                       >
                         <span>{link.label}</span>
                         <ExternalLink
@@ -123,7 +122,9 @@ export default function Footer() {
 
             {/* Columna Legal */}
             <div>
-              <h3 className="text-sm font-semibold mb-3 text-white">Legal</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider mb-3 text-white/80">
+                Legal
+              </h3>
               <nav aria-label="Legal">
                 <ul className="space-y-2">
                   {[
@@ -141,7 +142,7 @@ export default function Footer() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-gray-300 hover:text-white transition-colors text-sm"
+                        className="text-gray-300 hover:text-white transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded"
                       >
                         {link.label}
                       </Link>
@@ -153,7 +154,7 @@ export default function Footer() {
 
             {/* Columna de Contacto (NAP para SEO) */}
             <div>
-              <h3 className="text-sm font-semibold mb-3 text-white">
+              <h3 className="text-xs font-semibold uppercase tracking-wider mb-3 text-white/80">
                 Contacto
               </h3>
               {/* 2. SEO y Semántica: Usar <address> para información de contacto */}
@@ -207,7 +208,6 @@ export default function Footer() {
           </div>
         </div>
       </footer>
-      <BackToTopButton />
     </>
   );
 }

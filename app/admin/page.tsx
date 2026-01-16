@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, FileText, Users } from "lucide-react";
 import { format, getDay, subDays, isAfter } from "date-fns";
 import { columns } from "@/components/admin/columns";
 import { DataTable } from "@/components/admin/data-table";
@@ -188,10 +188,16 @@ export default async function AdminPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Button asChild variant="outline" size="sm">
-              <a href="#recientes">Ver informes</a>
+              <a href="#recientes" className="inline-flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Informes
+              </a>
             </Button>
             <Button asChild size="sm">
-              <a href="#usuarios">Gestionar usuarios</a>
+              <a href="#usuarios" className="inline-flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Usuarios
+              </a>
             </Button>
           </div>
         </div>
@@ -214,6 +220,10 @@ export default async function AdminPage() {
           informesEnProgreso={informesEnProgreso}
         />
 
+        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-emerald-700/70">
+          <span>Resumen</span>
+          <span className="h-px flex-1 bg-emerald-100" />
+        </div>
         <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
           <AnalyticsChart data={datosGrafico} />
           <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
@@ -262,6 +272,10 @@ export default async function AdminPage() {
           </Card>
         </div>
 
+        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-emerald-700/70">
+          <span>Actividad</span>
+          <span className="h-px flex-1 bg-emerald-100" />
+        </div>
         <div id="recientes" className="grid gap-8 lg:grid-cols-2">
           <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between gap-4">
@@ -286,8 +300,20 @@ export default async function AdminPage() {
                     <TableHead className="text-right">Fecha</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
-                  {informesRecientesSeguros.slice(0, 5).map((report) => (
+              <TableBody>
+                {informesRecientesSeguros.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={3} className="py-6 text-center">
+                      <div className="text-sm font-semibold text-gray-900">
+                        Sin informes recientes
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Cuando se generen informes apareceran aqui.
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  informesRecientesSeguros.slice(0, 5).map((report) => (
                     <TableRow key={report.id}>
                       <TableCell>
                         <div className="font-medium">
@@ -307,11 +333,12 @@ export default async function AdminPage() {
                         {format(new Date(report.creado_en), "dd/MM/yyyy")}
                       </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
 
           <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
             <CardHeader>
@@ -343,6 +370,10 @@ export default async function AdminPage() {
           </Card>
         </div>
 
+        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-emerald-700/70">
+          <span>Usuarios</span>
+          <span className="h-px flex-1 bg-emerald-100" />
+        </div>
         <Card
           id="usuarios"
           className="border-emerald-100/70 bg-white/90 shadow-sm"

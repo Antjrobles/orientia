@@ -274,6 +274,13 @@
 - [ ] Implementar notificaciones en tiempo real (WebSockets)
 - [ ] Agregar animaciones y transiciones pulidas
 - [ ] Implementar skeleton loaders en todas las vistas
+- [x] Mejorar estados vacios en admin (tablas y tarjetas)
+- [ ] Agregar skeletons en admin (tablas y tarjetas)
+- [x] Mejorar tabla de usuarios (chips de estado, rol y email verificado)
+- [x] Ajustar layout admin con secciones claras y jerarquia visual
+- [x] Agregar modo denso/normal para tabla de usuarios
+- [x] Mejorar accesibilidad visual en admin (focus states visibles)
+- [x] Ajustar microcopy y botones con iconos en admin
 - [ ] Agregar tooltips contextuales en formularios complejos
 - [ ] Implementar responsive design optimizado para tablets
 - [ ] Agregar temas personalizables de color
