@@ -58,15 +58,33 @@ export function DataTable<
     },
   });
 
+  const hasFilter = globalFilter.trim().length > 0;
+  const filteredRows = table.getFilteredRowModel().rows.length;
+  const totalRows = table.getCoreRowModel().rows.length;
+
   return (
     <div>
-      <div className="flex items-center gap-2 ml-6 py-4">
-        <Input
-          placeholder="Buscar por nombre o email..."
-          value={globalFilter}
-          onChange={(event) => setGlobalFilter(event.target.value)}
-          className="max-w-sm"
-        />
+      <div className="flex flex-wrap items-center justify-between gap-3 py-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <Input
+            placeholder="Buscar por nombre o email..."
+            value={globalFilter}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+            className="w-full sm:w-64"
+          />
+          {hasFilter && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setGlobalFilter("")}
+            >
+              Limpiar
+            </Button>
+          )}
+        </div>
+        <div className="text-xs text-muted-foreground">
+          {filteredRows} de {totalRows} usuarios
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -116,27 +134,29 @@ export function DataTable<
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} de{" "}
           {table.getFilteredRowModel().rows.length} fila(s) seleccionadas.
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Anterior
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Siguiente
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Anterior
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Siguiente
+          </Button>
+        </div>
       </div>
     </div>
   );

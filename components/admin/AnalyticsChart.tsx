@@ -9,15 +9,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface Props {
   data: { dia: string; total: number }[];
+  className?: string;
 }
 
 const diasOrden = ["L", "M", "X", "J", "V", "S", "D"];
 
-export function AnalyticsChart({ data }: Props) {
-  // Aseguramos que los días vayan en orden lógico
+export function AnalyticsChart({ data, className }: Props) {
+  // Aseguramos que los dias vayan en orden logico
   const datosOrdenados = diasOrden.map((letra) => {
     const encontrado = data.find((d) => d.dia === letra);
     return {
@@ -27,10 +29,10 @@ export function AnalyticsChart({ data }: Props) {
   });
 
   return (
-    <Card className="col-span-full border-emerald-100/70 bg-white/90 shadow-sm lg:col-span-3">
+    <Card className={cn("border-emerald-100/70 bg-white/90 shadow-sm", className)}>
       <CardHeader>
         <CardTitle className="text-base font-semibold text-emerald-900/80">
-          Actividad Semanal
+          Actividad semanal
         </CardTitle>
       </CardHeader>
       <CardContent>

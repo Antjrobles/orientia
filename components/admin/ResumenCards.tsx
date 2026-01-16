@@ -1,4 +1,3 @@
-// components/admin/ResumenCards.tsx
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,27 +18,27 @@ export function ResumenCards({
 }: Props) {
   const tarjetas = [
     {
-      titulo: "Total de Usuarios",
+      titulo: "Total de usuarios",
       valor: totalUsuarios,
       descripcion: "Usuarios registrados",
       icono: <Users className="h-5 w-5 text-emerald-600" />,
     },
     {
-      titulo: "Total de Informes",
+      titulo: "Total de informes",
       valor: totalInformes,
       descripcion: "Informes generados",
       icono: <FileText className="h-5 w-5 text-emerald-600" />,
     },
     {
-      titulo: "Informes Completados",
+      titulo: "Informes completados",
       valor: informesCompletados,
       descripcion: "Marcados como completados",
       icono: <Activity className="h-5 w-5 text-emerald-600" />,
     },
     {
-      titulo: "En Progreso",
+      titulo: "En progreso",
       valor: informesEnProgreso,
-      descripcion: "Aún en desarrollo",
+      descripcion: "Aun en desarrollo",
       icono: <Hourglass className="h-5 w-5 text-emerald-600" />,
     },
   ];
@@ -49,7 +48,7 @@ export function ResumenCards({
       {tarjetas.map((tarjeta, i) => (
         <Card
           key={i}
-          className="border-emerald-100/70 bg-white/90 shadow-sm"
+          className="border-emerald-100/70 bg-white/90 shadow-sm transition-shadow hover:shadow-md"
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-semibold text-emerald-900/80">
