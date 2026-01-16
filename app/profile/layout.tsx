@@ -9,7 +9,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import DynamicBreadcrumb from "@/components/navigation/DynamicBreadcrumb";
-import BackToTopButton from "@/components/navigation/BackToTopButton";
 import { authOptions } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { DEVICE_COOKIE_NAME } from "@/lib/device";
@@ -60,7 +59,6 @@ export default async function ProfileLayout({ children }: ProfileLayoutProps) {
           </div>
         </SidebarInset>
       </SidebarProvider>
-      <BackToTopButton />
     </div>
   );
 }

@@ -8,7 +8,6 @@ import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import DynamicBreadcrumb from "@/components/navigation/DynamicBreadcrumb";
-import BackToTopButton from "@/components/navigation/BackToTopButton";
 
 export default async function AdminLayout({
   children,
@@ -58,7 +57,6 @@ export default async function AdminLayout({
           </div>
         </SidebarInset>
       </SidebarProvider>
-      <BackToTopButton />
     </div>
   );
 }

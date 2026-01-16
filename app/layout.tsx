@@ -12,6 +12,7 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { authOptions } from "../lib/auth";
 import UmamiAnalytics from "@/components/consent/UmamiAnalytics";
+import BackToTopButton from "@/components/navigation/BackToTopButton";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -135,6 +136,7 @@ export default async function RootLayout({
             <UmamiAnalytics />
           </ConsentProvider>
         </Providers>
+        <BackToTopButton />
         <Toaster richColors position="top-right" expand={true} />
         <SpeedInsights />
         <Analytics />
