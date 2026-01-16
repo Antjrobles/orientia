@@ -281,8 +281,6 @@
 - [x] Agregar modo denso/normal para tabla de usuarios
 - [x] Mejorar accesibilidad visual en admin (focus states visibles)
 - [x] Ajustar microcopy y botones con iconos en admin
-- [x] Acciones rapidas en panel admin (solo UI)
-- [x] Estados vacios pulidos en tarjetas de admin
 - [x] Footer con tipografia y espaciado mas coherentes
 - [ ] Agregar tooltips contextuales en formularios complejos
 - [ ] Implementar responsive design optimizado para tablets
