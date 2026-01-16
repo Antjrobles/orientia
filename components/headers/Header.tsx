@@ -68,7 +68,7 @@ export default function Header() {
         role="banner"
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16 w-full overflow-hidden">
+          <div className="flex items-center h-16 w-full">
             {/* Zona izquierda: Logo */}
             <div className="flex items-center shrink-0">
               <Link href="/" aria-label="Volver a la página de inicio">
@@ -77,7 +77,7 @@ export default function Header() {
                   alt="Logo Orientia"
                   width={150}
                   height={40}
-                  className="transform transition-transform hover:scale-105 mt-1"
+                  className="transform transition-transform hover:scale-105 mt-3"
                   priority
                 />
               </Link>
