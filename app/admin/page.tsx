@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, FileText, Users } from "lucide-react";
+import { AlertTriangle, FileText, Users, LayoutDashboard } from "lucide-react";
 import { format, getDay, subDays, isAfter } from "date-fns";
 import { columns } from "@/components/admin/columns";
 import { DataTable } from "@/components/admin/data-table";
@@ -212,6 +212,37 @@ export default async function AdminPage() {
             </AlertDescription>
           </Alert>
         )}
+
+        <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base font-semibold text-emerald-900/80">
+              Acciones rapidas
+            </CardTitle>
+            <CardDescription>
+              Atajos para ir directo a las secciones clave del panel.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-3">
+            <Button asChild variant="outline" size="sm">
+              <a href="#recientes" className="inline-flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Informes recientes
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a href="#usuarios" className="inline-flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Gestion de usuarios
+              </a>
+            </Button>
+            <Button asChild size="sm">
+              <a href="/profile" className="inline-flex items-center gap-2">
+                <LayoutDashboard className="h-4 w-4" />
+                Ir al panel
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
 
         <ResumenCards
           totalUsuarios={totalUsers ?? 0}

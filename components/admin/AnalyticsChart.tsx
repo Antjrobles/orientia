@@ -27,6 +27,7 @@ export function AnalyticsChart({ data, className }: Props) {
       total: encontrado?.total || 0,
     };
   });
+  const totalSemana = datosOrdenados.reduce((acc, item) => acc + item.total, 0);
 
   return (
     <Card className={cn("border-emerald-100/70 bg-white/90 shadow-sm", className)}>
@@ -36,14 +37,25 @@ export function AnalyticsChart({ data, className }: Props) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={datosOrdenados}>
-            <XAxis dataKey="dia" tickLine={false} axisLine={false} />
-            <YAxis tickLine={false} axisLine={false} />
-            <Tooltip cursor={{ fill: "rgba(16, 185, 129, 0.08)" }} />
-            <Bar dataKey="total" radius={[6, 6, 0, 0]} fill="#10b981" />
-          </BarChart>
-        </ResponsiveContainer>
+        {totalSemana === 0 ? (
+          <div className="flex h-[220px] flex-col items-center justify-center gap-2 text-center">
+            <div className="text-sm font-semibold text-gray-900">
+              Sin actividad reciente
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Cuando haya informes creados, veras el resumen semanal aqui.
+            </div>
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={datosOrdenados}>
+              <XAxis dataKey="dia" tickLine={false} axisLine={false} />
+              <YAxis tickLine={false} axisLine={false} />
+              <Tooltip cursor={{ fill: "rgba(16, 185, 129, 0.08)" }} />
+              <Bar dataKey="total" radius={[6, 6, 0, 0]} fill="#10b981" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
     </Card>
   );

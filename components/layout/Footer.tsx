@@ -33,7 +33,7 @@ export default function Footer() {
     <>
       <footer
         id="contacto"
-        className="bg-gray-900 text-white py-12"
+        className="bg-gray-900 text-white py-12 border-t border-white/10"
         role="contentinfo"
       >
         <script
@@ -43,7 +43,7 @@ export default function Footer() {
           }}
         />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             {/* Columna de la Marca */}
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center space-x-3 mb-4">
@@ -63,7 +63,7 @@ export default function Footer() {
                 </div>
               </div>
 
-              <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+              <p className="text-gray-300 text-sm mb-5 leading-relaxed">
                 Plataforma para orientadores educativos. Genera informes
                 psicopedagógicos profesionales con IA.
               </p>
