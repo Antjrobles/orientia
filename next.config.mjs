@@ -99,6 +99,10 @@ const nextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://umami.antjrobles.tech https://challenges.cloudflare.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://www.googletagmanager.com https://umami.antjrobles.tech; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' blob: https://www.google-analytics.com https://umami.antjrobles.tech https://challenges.cloudflare.com https://vitals.vercel-insights.com; frame-src 'self' https://challenges.cloudflare.com;",
+          },
         ],
       },
     ];
