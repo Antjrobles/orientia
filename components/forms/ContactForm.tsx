@@ -272,6 +272,9 @@ const ContactForm: React.FC = () => {
 
   const inputBaseClass =
     "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 focus:border-green-500";
+  const MESSAGE_MAX = 2000;
+  const messageLength = (form.message || "").length;
+  const remainingChars = Math.max(0, MESSAGE_MAX - messageLength);
   const getFieldClass = (field: string) => {
     if (errors[field]) {
       return `${inputBaseClass} border-red-500 focus:ring-red-500 focus:border-red-500`;
@@ -534,7 +537,11 @@ const ContactForm: React.FC = () => {
                     onBlur={handleBlur}
                     className={getFieldClass("message")}
                     placeholder="Cuéntanos lo que necesitas..."
+                    maxLength={MESSAGE_MAX}
                   ></textarea>
+                  <div className="mt-1 text-xs text-gray-500 text-right">
+                    {remainingChars} caracteres restantes
+                  </div>
                 </div>
 
                 {/* CAPTCHA de seguridad */}
