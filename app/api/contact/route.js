@@ -2,6 +2,7 @@ import Plunk from "@plunk/node";
 import validator from "validator";
 import { NextResponse } from "next/server";
 import { validateTurnstileToken } from "@/lib/turnstile";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const plunk = new Plunk(process.env.PLUNK_API_KEY);
 
@@ -10,10 +11,19 @@ export async function POST(request) {
     const { name, email, province, municipality, locality, school, message, turnstileToken } =
       await request.json();
 
+    const ip = getClientIp(request);
+    const rlIp = checkRateLimit(`contact:ip:${ip}`, 5, 10 * 60 * 1000);
+    if (!rlIp.allowed) {
+      return NextResponse.json(
+        { message: "Demasiadas solicitudes desde esta IP. Inténtalo más tarde.", success: false },
+        { status: 429 },
+      );
+    }
+
     // Validation
     if (!name || !email || !province || !municipality || !locality || !school) {
       return NextResponse.json(
-        { message: "Todos los campos obligatorios deben ser completados" },
+        { message: "Todos los campos obligatorios deben ser completados", success: false },
         { status: 400 },
       );
     }
@@ -21,15 +31,38 @@ export async function POST(request) {
     // Email validation
     if (!validator.isEmail(email)) {
       return NextResponse.json(
-        { message: "El email proporcionado no es válido" },
+        { message: "El email proporcionado no es válido", success: false },
         { status: 400 },
       );
     }
+    const normalizedEmail = validator.normalizeEmail(email) || email.trim().toLowerCase();
+    const rlEmail = checkRateLimit(`contact:email:${normalizedEmail}`, 3, 30 * 60 * 1000);
+    if (!rlEmail.allowed) {
+      return NextResponse.json(
+        { message: "Demasiados envíos para este email. Inténtalo más tarde.", success: false },
+        { status: 429 },
+      );
+    }
+
+    const rawMessage = typeof message === "string" ? message.trim() : "";
+    if (rawMessage.length > 2000) {
+      return NextResponse.json(
+        { message: "El mensaje no puede superar los 2000 caracteres.", success: false },
+        { status: 400 },
+      );
+    }
+    if (rawMessage && /<[^>]+>/.test(rawMessage)) {
+      return NextResponse.json(
+        { message: "El mensaje no puede contener HTML.", success: false },
+        { status: 400 },
+      );
+    }
+    const safeMessage = validator.escape(rawMessage);
 
     // Validar el token de Turnstile (CAPTCHA)
     if (!turnstileToken) {
       return NextResponse.json(
-        { message: "Token de seguridad requerido" },
+        { message: "Token de seguridad requerido", success: false },
         { status: 400 },
       );
     }
@@ -37,7 +70,7 @@ export async function POST(request) {
     const isValidCaptcha = await validateTurnstileToken(turnstileToken);
     if (!isValidCaptcha) {
       return NextResponse.json(
-        { message: "Verificación de seguridad fallida. Por favor, inténtalo de nuevo." },
+        { message: "Verificación de seguridad fallida. Por favor, inténtalo de nuevo.", success: false },
         { status: 400 },
       );
     }
@@ -49,7 +82,7 @@ export async function POST(request) {
       body: `
         <h1>Gracias por tu solicitud, ${name}!</h1>
         <p>Hemos recibido tu solicitud desde ${school} (${locality}, ${municipality}, ${province}).</p>
-        <p>Mensaje: ${message || "No se proporcionó mensaje."}</p>
+        <p>Mensaje: ${safeMessage || "No se proporcionó mensaje."}</p>
         <p>Te contactaremos pronto para proporcionarte más información.</p>
         <p>Atentamente,<br>El equipo de [Nombre de tu plataforma]</p>
       `,
@@ -67,7 +100,7 @@ export async function POST(request) {
         <p><strong>Municipio:</strong> ${municipality}</p>
         <p><strong>Localidad:</strong> ${locality}</p>
         <p><strong>Centro Educativo:</strong> ${school}</p>
-        <p><strong>Mensaje:</strong> ${message || "No se proporcionó mensaje."}</p>
+        <p><strong>Mensaje:</strong> ${safeMessage || "No se proporcionó mensaje."}</p>
       `,
     });
 
