@@ -879,7 +879,7 @@
 - [x] Agregar success animation al enviar
 
 #### Accesibilidad Visual
-- [ ] Agregar focus indicators más visibles
+- [x] Agregar focus indicators más visibles
 - [ ] Implementar skip navigation mejorado
 - [ ] Agregar motion reduction para prefers-reduced-motion
 - [ ] Mejorar contraste de colores (WCAG AAA)

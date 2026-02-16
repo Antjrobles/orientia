@@ -44,6 +44,8 @@
     /* Borde lateral para encabezados de sección */
     --section-odd-border: 142 72% 36%; /* emerald ~500 */
     --section-even-border: 201 96% 32%; /* sky ~600 */
+    --focus-ring: 142 76% 36%; /* emerald focus visible */
+    --focus-ring-offset: 0 0% 100%;
   }
 }
 
@@ -58,6 +60,22 @@
     @apply bg-background text-foreground;
     overflow-x: hidden;
     width: 100%;
+  }
+
+  /* Focus indicators globales visibles para navegacion por teclado */
+  :where(
+      a[href],
+      button,
+      input,
+      select,
+      textarea,
+      summary,
+      [role="button"],
+      [tabindex]:not([tabindex="-1"])
+    ):focus-visible {
+    outline: 2px solid hsl(var(--focus-ring));
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px hsl(var(--focus-ring-offset));
   }
 }
 
