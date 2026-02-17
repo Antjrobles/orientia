@@ -22,6 +22,7 @@ const pathLabels: Record<string, string> = {
   profile: "Perfil",
   informes: "Informes",
   "generar-informe": "Generar informe",
+  intervenciones: "Intervenciones",
 
   // Admin pages
   admin: "Administración",

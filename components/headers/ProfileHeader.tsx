@@ -12,6 +12,7 @@ import {
   Shield,
   LayoutDashboard,
   FilePlus2,
+  FileText,
   FolderKanban,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -91,6 +92,17 @@ export default function ProfileHeader() {
                 )}
               >
                 Mis Informes
+              </Link>
+              <Link
+                href="/profile/intervenciones"
+                className={cn(
+                  "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  pathname.startsWith("/profile/intervenciones")
+                    ? "text-green-600 bg-green-50 font-semibold"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+                )}
+              >
+                Intervenciones
               </Link>
               {isAdmin && (
                 <Link
@@ -189,6 +201,19 @@ export default function ProfileHeader() {
                   >
                     <FolderKanban className="w-5 h-5 mr-3 flex-shrink-0" />
                     Mis Informes
+                  </Link>
+                  <Link
+                    href="/profile/intervenciones"
+                    className={cn(
+                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
+                      pathname.startsWith("/profile/intervenciones")
+                        ? "text-green-600 bg-green-50 font-semibold"
+                        : "text-gray-700 hover:bg-gray-50",
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <FileText className="w-5 h-5 mr-3 flex-shrink-0" />
+                    Intervenciones
                   </Link>
                   {isAdmin && (
                     <Link

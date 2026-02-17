@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import {
   LayoutDashboard,
   FilePlus2,
+  FileText,
   FolderKanban,
   ClipboardList,
   CheckCircle2,
@@ -26,6 +27,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 const sidebarGroups = [
@@ -62,6 +64,11 @@ const sidebarGroups = [
         href: "/profile/generar-informe",
         icon: FilePlus2,
       },
+      {
+        title: "Intervenciones",
+        href: "/profile/intervenciones",
+        icon: FileText,
+      },
     ],
   },
   {
@@ -89,7 +96,12 @@ const sidebarGroups = [
 export function ProfileSidebar() {
   const pathname = usePathname() ?? "";
   const { data: session } = useSession();
+  const { isMobile, setOpenMobile } = useSidebar();
   const isAdmin = session?.user?.role === "admin";
+
+  const handleMobileNavClick = () => {
+    if (isMobile) setOpenMobile(false);
+  };
 
   return (
     <Sidebar collapsible="icon" scroll="page" className="border-r bg-white">
@@ -108,9 +120,11 @@ export function ProfileSidebar() {
               </SidebarGroupLabel>
               <SidebarGroupContent className="space-y-1">
                 {group.items.map((item) => {
+                  const itemPath = item.href.split("?")[0];
                   const isActive =
-                    pathname === item.href ||
-                    (item.href.startsWith("/profile/informes") &&
+                    pathname === itemPath ||
+                    pathname.startsWith(`${itemPath}/`) ||
+                    (itemPath === "/profile/informes" &&
                       pathname.startsWith("/profile/informes")) ||
                     (item.href === "/profile" && pathname === "/profile");
                   const Icon = item.icon;
@@ -123,6 +137,7 @@ export function ProfileSidebar() {
                       >
                         <Link
                           href={item.href}
+                          onClick={handleMobileNavClick}
                           className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 data-[active=true]:bg-green-50 data-[active=true]:text-green-600 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0"
                         >
                           <Icon className="h-4 w-4" />
@@ -151,6 +166,7 @@ export function ProfileSidebar() {
                   >
                     <Link
                       href="/admin"
+                      onClick={handleMobileNavClick}
                       className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-red-600 hover:bg-red-50 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0"
                     >
                       <Shield className="h-4 w-4" />
