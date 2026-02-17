@@ -20,10 +20,6 @@ const nextConfig = {
 
   // Configuración experimental
   experimental: {
-    allowedDevOrigins: [
-      "https://orientia.es",
-      "https://192.168.0.32:3003",
-    ],
     // Optimizar fuentes
     optimizePackageImports: ["lucide-react", "@radix-ui/react-icons"],
   },

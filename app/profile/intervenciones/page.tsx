@@ -360,7 +360,7 @@ export default function IntervencionesPage() {
       if (!res.ok || !data.success) {
         throw new Error(data.error || "No se pudieron cargar las intervenciones");
       }
-      const incomingInterventions = data.intervenciones || [];
+      const incomingInterventions: Intervencion[] = data.intervenciones || [];
       setInterventions(incomingInterventions);
 
       if (prefillLatestOnSelect) {
