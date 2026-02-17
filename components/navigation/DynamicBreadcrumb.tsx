@@ -51,9 +51,9 @@ export default function DynamicBreadcrumb() {
   // Don't show breadcrumb on home page
   if (pathname === "/") {
     return (
-      <div className="h-11 px-4 border-b border-gray-200 bg-gray-50 flex items-center justify-start">
-        <nav aria-label="Breadcrumb" className="w-full">
-          <ol className="flex items-center gap-1 text-xs text-gray-600 sm:gap-2 sm:text-sm">
+      <div className="min-h-11 px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-start sm:items-center justify-start">
+        <nav aria-label="Breadcrumb" className="w-full min-w-0">
+          <ol className="flex flex-wrap items-center gap-1 text-xs text-gray-600 sm:gap-2 sm:text-sm">
             <li>
               <Link
                 href="/"
@@ -66,7 +66,7 @@ export default function DynamicBreadcrumb() {
             <li aria-hidden="true">
               <ChevronRight className="w-4 h-4" />
             </li>
-            <li className="text-gray-900" aria-current="page">
+            <li className="text-gray-900 break-words" aria-current="page">
               Sistema de Informes Psicopedagógicos
             </li>
           </ol>
@@ -92,9 +92,9 @@ export default function DynamicBreadcrumb() {
   });
 
   return (
-    <div className="h-11 px-4 border-b border-gray-200 bg-gray-50 flex items-center justify-start">
-      <nav aria-label="Breadcrumb" className="w-full">
-        <ol className="flex items-center gap-1 text-xs text-gray-600 sm:gap-2 sm:text-sm">
+    <div className="min-h-11 px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-start sm:items-center justify-start">
+      <nav aria-label="Breadcrumb" className="w-full min-w-0">
+        <ol className="flex flex-wrap items-center gap-1 text-xs text-gray-600 sm:gap-2 sm:text-sm">
           {breadcrumbItems.map((item, index) => {
             const isFirst = index === 0;
             const isLast = index === breadcrumbItems.length - 1;
@@ -102,7 +102,7 @@ export default function DynamicBreadcrumb() {
             return (
               <li
                 key={item.href}
-                className={`items-center ${hideOnMobile ? "hidden sm:flex" : "flex"}`}
+                className={`items-center max-w-full ${hideOnMobile ? "hidden sm:flex" : "flex"}`}
               >
                 {index > 0 && (
                   <ChevronRight
@@ -112,7 +112,7 @@ export default function DynamicBreadcrumb() {
                 )}
                 {isLast ? (
                   <span
-                    className="text-gray-900 flex items-center"
+                    className="text-gray-900 flex items-center min-w-0 break-words"
                     aria-current="page"
                   >
                     {isFirst && <Home className="w-4 h-4 mr-1" />}

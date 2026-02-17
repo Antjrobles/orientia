@@ -443,32 +443,26 @@ const ContactForm: React.FC = () => {
       id="contacto"
       onFocusCapture={ensureLocationsLoaded}
       onPointerEnter={ensureLocationsLoaded}
-      className="py-10 bg-primary-300 text-white scroll-mt-16"
+      className="py-8 sm:py-10 bg-primary-300 text-white scroll-mt-16"
     >
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            {" "}
-            {/* Increased margin */}
-            <h2 className="text-3xl md:text-4xl text-black font-bold mb-4">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-[clamp(1.5rem,5.5vw,2.25rem)] leading-tight text-black font-bold mb-3 sm:mb-4">
               Comienza a transformar tus clases hoy mismo
             </h2>
-            <p className="text-xl text-gray-700 mb-4">
+            <p className="text-[clamp(1rem,3.8vw,1.25rem)] text-gray-700 mb-3 sm:mb-4">
               Únete a miles de profesores en Andalucía que ya están mejorando la
               experiencia educativa de sus alumnos
             </p>
           </div>
           {/* Subtle shadow and slightly less rounded corners for a modern feel */}
           <div className="bg-white rounded-lg  shadow-md overflow-hidden border-2 border-green-600">
-            <div className="p-8 md:p-10">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3 text-center">
-                {" "}
-                {/* Centered title */}
+            <div className="p-5 sm:p-6 md:p-8 lg:p-10">
+              <h2 className="text-[clamp(1.35rem,5vw,2.25rem)] leading-tight font-bold text-gray-900 mb-3 text-center">
                 Solicita información
               </h2>
-              <p className="text-gray-600 mb-6 text-center">
-                {" "}
-                {/* Centered subtitle */}
+              <p className="text-sm sm:text-base text-gray-600 mb-5 sm:mb-6 text-center">
                 Déjanos tus datos y te contactaremos para mostrarte cómo nuestra
                 plataforma puede ayudarte.
               </p>
