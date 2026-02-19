@@ -4,7 +4,6 @@ import GoogleProvider from "next-auth/providers/google";
 import AppleProvider from "next-auth/providers/apple";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { Provider } from "next-auth/providers";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
@@ -27,7 +26,19 @@ type HeaderInput = Headers | Record<string, string | string[] | undefined> | und
 function toHeaders(input: HeaderInput) {
   if (!input) return new Headers();
   if (input instanceof Headers) return input;
-  return new Headers(input);
+  const headers = new Headers();
+  for (const [key, value] of Object.entries(input)) {
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        if (typeof item === "string") headers.append(key, item);
+      }
+      continue;
+    }
+    if (typeof value === "string") {
+      headers.set(key, value);
+    }
+  }
+  return headers;
 }
 
 function getRequestOrigin(
@@ -55,7 +66,7 @@ function hashToken(token: string) {
 }
 
 // Construye la lista de proveedores de forma condicional según env vars
-const providers: Provider[] = [];
+const providers: AuthOptions["providers"] = [];
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   providers.push(

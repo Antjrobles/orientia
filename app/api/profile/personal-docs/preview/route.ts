@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const arrayBuffer = await data.arrayBuffer();
-    let result: mammoth.Result<{ value: string }>;
+    let result: Awaited<ReturnType<typeof mammoth.convertToHtml>>;
     try {
       result = await mammoth.convertToHtml({ arrayBuffer });
     } catch {

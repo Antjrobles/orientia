@@ -10,9 +10,6 @@ export async function validateTurnstileToken(
   const secretKey = process.env.TURNSTILE_SECRET_KEY;
 
   if (!secretKey) {
-    console.error(
-      "TURNSTILE_SECRET_KEY no está configurada en las variables de entorno"
-    );
     return false;
   }
 
@@ -36,7 +33,7 @@ export async function validateTurnstileToken(
     // Cloudflare devuelve { success: true } si el token es válido
     return data.success === true;
   } catch (error) {
-    console.error("Error al validar el token de Turnstile:", error);
+    void error;
     return false;
   }
 }
