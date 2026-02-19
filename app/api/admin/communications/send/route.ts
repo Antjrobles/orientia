@@ -32,23 +32,16 @@ function toHtmlBody(message: string, unsubscribeUrl: string) {
     <div style="margin:0;padding:0;background:#e8f7ef;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
         <tr>
-          <td style="background:linear-gradient(120deg,#047857,#10b981);padding:28px 20px;">
+          <td style="background:linear-gradient(120deg,#047857,#10b981);padding:14px 20px;">
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
               <tr>
                 <td style="vertical-align:middle;">
-                  <img src="https://www.orientia.es/icons/logo-250.png" alt="Orientia" width="140" style="display:block;border:0;outline:none;text-decoration:none;" />
+                  <img src="https://www.orientia.es/icons/logo-250.png" alt="Orientia" width="180" style="display:block;border:0;outline:none;text-decoration:none;" />
                 </td>
                 <td style="vertical-align:middle;text-align:right;">
                   <span style="display:inline-block;background:rgba(255,255,255,0.18);color:#ecfdf5;font-size:12px;font-weight:700;letter-spacing:.02em;padding:8px 12px;border-radius:999px;">
                     COMUNICACIÓN OFICIAL
                   </span>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" style="padding-top:18px;">
-                  <h1 style="margin:0;color:#ffffff;font-size:24px;line-height:1.25;font-weight:700;">
-                    Orientia | Información para profesionales de orientación educativa
-                  </h1>
                 </td>
               </tr>
             </table>

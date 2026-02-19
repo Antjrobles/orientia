@@ -26,21 +26,21 @@ type Recipient = {
   communicationsOptOut?: boolean;
 };
 
-const DEFAULT_SUBJECT = "Estado de Orientia";
+const DEFAULT_SUBJECT = "Comunicación de Orientia";
 const DEFAULT_MESSAGE = `Buenos días:
 
 Gracias por su registro y por la confianza depositada en Orientia.
 
-Actualmente, Orientia se encuentra en una fase de desarrollo progresivo. Ya puede utilizarse, pero algunas funcionalidades continúan en proceso de mejora para asegurar un funcionamiento completo, estable y plenamente alineado con el trabajo de orientación educativa.
+Les escribimos para trasladar una actualización sobre mejoras en la plataforma. Seguimos incorporando ajustes orientados a facilitar el trabajo técnico en orientación educativa y a reforzar la calidad del servicio.
 
-En esta etapa, las mejoras se están centrando en aspectos clave para la práctica profesional:
+En esta línea, estamos priorizando:
 - calidad técnica y utilidad de los informes psicopedagógicos;
 - organización y seguimiento de casos;
 - estabilidad, seguridad y claridad de uso.
 
-Si lo considera oportuno, puede enviar feedback, incidencias o sugerencias de mejora respondiendo a este correo. Todas las aportaciones se revisarán para priorizar próximos avances.
+Si lo consideran oportuno, pueden enviar feedback, incidencias o sugerencias de mejora respondiendo a este correo. Todas las aportaciones se revisarán para priorizar próximos avances.
 
-Si desea recibir un aviso cuando la plataforma esté plenamente operativa, indíquelo en su respuesta y se incluirá en la notificación de actualización.
+Si desean recibir aviso de nuevas funcionalidades, pueden indicarlo en su respuesta.
 
 Atentamente,
 Equipo de Orientia`;
