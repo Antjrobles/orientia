@@ -29,38 +29,62 @@ function escapeHtml(value: string) {
 function toHtmlBody(message: string, unsubscribeUrl: string) {
   const safe = escapeHtml(message).replace(/\n/g, "<br />");
   return `
-    <div style="margin:0;padding:0;background:#f6f7f9;font-family:Arial,Helvetica,sans-serif;color:#111827;">
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="padding:24px 0;">
+    <div style="margin:0;padding:0;background:#e8f7ef;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
         <tr>
-          <td align="center">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;">
+          <td style="background:linear-gradient(120deg,#047857,#10b981);padding:28px 20px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
               <tr>
-                <td style="padding:18px 24px;border-bottom:1px solid #e5e7eb;">
-                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td style="vertical-align:middle;">
-                        <img src="https://www.orientia.es/icons/logo2.svg" alt="Orientia" height="36" style="display:block;" />
-                      </td>
-                      <td style="vertical-align:middle;text-align:right;">
-                        <span style="font-size:12px;color:#6b7280;">Comunicación oficial</span>
-                      </td>
-                    </tr>
-                  </table>
+                <td style="vertical-align:middle;">
+                  <img src="https://www.orientia.es/icons/logo-250.png" alt="Orientia" width="140" style="display:block;border:0;outline:none;text-decoration:none;" />
+                </td>
+                <td style="vertical-align:middle;text-align:right;">
+                  <span style="display:inline-block;background:rgba(255,255,255,0.18);color:#ecfdf5;font-size:12px;font-weight:700;letter-spacing:.02em;padding:8px 12px;border-radius:999px;">
+                    COMUNICACIÓN OFICIAL
+                  </span>
                 </td>
               </tr>
               <tr>
-                <td style="padding:24px;">
-                  <div style="font-size:15px;line-height:1.7;color:#1f2937;">${safe}</div>
+                <td colspan="2" style="padding-top:18px;">
+                  <h1 style="margin:0;color:#ffffff;font-size:24px;line-height:1.25;font-weight:700;">
+                    Orientia | Información para profesionales de orientación educativa
+                  </h1>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 20px 20px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#ffffff;border:1px solid #bbf7d0;">
+              <tr>
+                <td style="padding:20px 22px 8px;">
+                  <p style="margin:0;font-size:13px;line-height:1.6;color:#047857;font-weight:700;">
+                    Actualización de plataforma
+                  </p>
                 </td>
               </tr>
               <tr>
-                <td style="padding:16px 24px;background:#ecfdf5;border-top:1px solid #d1fae5;">
-                  <p style="margin:0;font-size:12px;color:#065f46;">
+                <td style="padding:4px 22px 22px;">
+                  <div style="font-size:16px;line-height:1.75;color:#1f2937;">
+                    ${safe}
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 20px 24px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#dcfce7;border:1px solid #86efac;">
+              <tr>
+                <td style="padding:14px 18px;">
+                  <p style="margin:0 0 6px 0;font-size:13px;line-height:1.6;color:#065f46;font-weight:700;">
                     Equipo de Orientia
                   </p>
-                  <p style="margin:8px 0 0 0;font-size:12px;line-height:1.6;color:#065f46;">
-                    Si no desea recibir más comunicaciones, puede gestionar su baja en este enlace:
-                    <a href="${unsubscribeUrl}" style="color:#065f46;">Gestionar baja</a>
+                  <p style="margin:0;font-size:12px;line-height:1.6;color:#065f46;">
+                    Si no desea recibir más comunicaciones, puede gestionar su baja aquí:
+                    <a href="${unsubscribeUrl}" style="color:#065f46;font-weight:700;">Gestionar baja</a>
                   </p>
                 </td>
               </tr>
