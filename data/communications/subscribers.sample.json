@@ -1,0 +1,12 @@
+[
+  {
+    "id": "sub_aaaaaaaa",
+    "email": "example.orientadora@centro.edu",
+    "created_at": "2026-02-19T00:00:00.000Z",
+    "locale": "es-ES",
+    "wants_updates": true,
+    "source": "orientia-web",
+    "last_notified_at": null,
+    "status": "active"
+  }
+]

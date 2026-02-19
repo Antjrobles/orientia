@@ -11,6 +11,7 @@ import {
   ClipboardList,
   CheckCircle2,
   Shield,
+  Mail,
   User,
   Lock,
   SlidersHorizontal,
@@ -161,7 +162,7 @@ export function ProfileSidebar() {
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname.startsWith("/admin")}
+                    isActive={pathname === "/admin"}
                     className="w-full justify-start"
                   >
                     <Link
@@ -172,6 +173,24 @@ export function ProfileSidebar() {
                       <Shield className="h-4 w-4" />
                       <span className="group-data-[collapsible=icon]:hidden">
                         Administracion
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname.startsWith("/admin/comunicaciones")}
+                    className="w-full justify-start"
+                  >
+                    <Link
+                      href="/admin/comunicaciones"
+                      onClick={handleMobileNavClick}
+                      className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-red-600 hover:bg-red-50 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0"
+                    >
+                      <Mail className="h-4 w-4" />
+                      <span className="group-data-[collapsible=icon]:hidden">
+                        Comunicaciones
                       </span>
                     </Link>
                   </SidebarMenuButton>

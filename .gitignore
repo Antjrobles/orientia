@@ -41,3 +41,7 @@ docs/
 ANALISIS_Y_MEJORAS.md
 AGENTS.mddocs/
 docs/
+
+# Communications private data
+data/communications/*.json
+!data/communications/subscribers.sample.json

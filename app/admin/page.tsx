@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, FileText, Users } from "lucide-react";
+import { AlertTriangle, FileText, Mail, Users } from "lucide-react";
 import { format, getDay, subDays, isAfter } from "date-fns";
 import { columns } from "@/components/admin/columns";
 import { DataTable } from "@/components/admin/data-table";
@@ -191,6 +191,15 @@ export default async function AdminPage() {
               <a href="#recientes" className="inline-flex items-center gap-2">
                 <FileText className="h-4 w-4" />
                 Informes
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a
+                href="/admin/comunicaciones"
+                className="inline-flex items-center gap-2"
+              >
+                <Mail className="h-4 w-4" />
+                Comunicaciones
               </a>
             </Button>
             <Button asChild size="sm">

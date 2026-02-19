@@ -9,7 +9,11 @@
     "start": "next start",
     "format": "prettier --write .",
     "pre-push": "npm run format && npm run lint && npm run build",
-    "analyze": "set ANALYZE=true&& npm run build"
+    "analyze": "set ANALYZE=true&& npm run build",
+    "comm:migrate": "node scripts/communications/migrate-users-mail.mjs",
+    "comm:audit": "node scripts/communications/audit-subscribers.mjs",
+    "comm:prepare-send": "node scripts/communications/prepare-send-queue.mjs",
+    "comm:unsubscribe": "node scripts/communications/unsubscribe.mjs"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",
