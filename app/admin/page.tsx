@@ -170,7 +170,7 @@ export default async function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-gray-50">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+      <div className="flex w-full flex-col gap-8 px-4 pb-12 pt-8 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2">

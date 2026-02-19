@@ -157,8 +157,10 @@ function formatDateEs(value: string) {
 }
 
 export default function IntervencionesPage() {
-  const [searchInitials, setSearchInitials] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchCenter, setSearchCenter] = useState("");
+  const [searchAmbito, setSearchAmbito] = useState<"" | AmbitoIntervencion>("");
+  const [searchContextos, setSearchContextos] = useState<ContextoEspecifico[]>([]);
   const [cases, setCases] = useState<CasoIntervencion[]>([]);
   const [selectedCaseId, setSelectedCaseId] = useState("");
   const [interventions, setInterventions] = useState<Intervencion[]>([]);
@@ -229,6 +231,23 @@ export default function IntervencionesPage() {
     },
     [ambitosSeleccionados],
   );
+
+  const searchContextoOptions = useMemo(() => {
+    const merged = [...CONTEXTOS_POR_AMBITO.escolar, ...CONTEXTOS_POR_AMBITO.sociocultural];
+    const filtered = !searchAmbito
+      ? merged
+      : merged.filter((option) => {
+          if (option.value === "otros") return true;
+          return AMBITO_BY_CONTEXTO[option.value] === searchAmbito;
+        });
+    const unique = new Map<ContextoEspecifico, (typeof merged)[number]>();
+    for (const item of filtered) {
+      if (!unique.has(item.value)) {
+        unique.set(item.value, item);
+      }
+    }
+    return Array.from(unique.values());
+  }, [searchAmbito]);
 
   const groupedInterventions = useMemo<IntervencionAgrupada[]>(() => {
     const groups = new Map<string, IntervencionAgrupada>();
@@ -316,13 +335,20 @@ export default function IntervencionesPage() {
     }
   }, [contextoOptions, contextosSeleccionados]);
 
-  const fetchCases = async (initials = "", center = "") => {
+  const fetchCases = async (
+    query = "",
+    center = "",
+    ambito: "" | AmbitoIntervencion = "",
+    contextos: ContextoEspecifico[] = [],
+  ) => {
     setLoadingCases(true);
     setError("");
     try {
       const params = new URLSearchParams();
-      if (initials.trim()) params.set("q", initials.trim());
+      if (query.trim()) params.set("q", query.trim());
       if (center.trim()) params.set("centro", center.trim());
+      if (ambito) params.set("ambito", ambito);
+      if (contextos.length > 0) params.set("contextos", contextos.join(","));
       const res = await fetch(`/api/intervenciones/casos?${params.toString()}`);
       const data = await res.json();
       if (!res.ok || !data.success) {
@@ -419,9 +445,19 @@ export default function IntervencionesPage() {
     if (!selectedCaseId) setShowCaseTools(true);
   }, [selectedCaseId]);
 
+  useEffect(() => {
+    if (!searchContextos.length) return;
+    const valid = searchContextos.filter((item) =>
+      searchContextoOptions.some((option) => option.value === item),
+    );
+    if (valid.length !== searchContextos.length) {
+      setSearchContextos(valid);
+    }
+  }, [searchAmbito, searchContextoOptions, searchContextos]);
+
   const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
-    await fetchCases(searchInitials, searchCenter);
+    await fetchCases(searchQuery, searchCenter, searchAmbito, searchContextos);
   };
 
   const handleCreateCase = async (e: FormEvent) => {
@@ -458,7 +494,7 @@ export default function IntervencionesPage() {
         throw new Error(data.error || "No se pudo crear el caso");
       }
 
-      await fetchCases(normalizedInitials, normalizedCenter);
+      await fetchCases(searchQuery, searchCenter, searchAmbito, searchContextos);
       setSelectedCaseId(data.caso.id);
       setActiveTab("registrar");
       setNewCaseInitials("");
@@ -519,7 +555,7 @@ export default function IntervencionesPage() {
         throw new Error(data.error || "No se pudo actualizar el caso");
       }
 
-      await fetchCases(searchInitials, searchCenter);
+      await fetchCases(searchQuery, searchCenter, searchAmbito, searchContextos);
       setEditingCase(null);
       toast.success("Caso actualizado correctamente.");
     } catch (err) {
@@ -768,6 +804,15 @@ export default function IntervencionesPage() {
     });
   };
 
+  const toggleSearchContexto = (value: ContextoEspecifico) => {
+    setSearchContextos((current) => {
+      if (current.includes(value)) {
+        return current.filter((item) => item !== value);
+      }
+      return [...current, value];
+    });
+  };
+
   const toggleEditAmbito = (value: AmbitoIntervencion) => {
     setEditInterventionAmbitos((current) => {
       if (current.includes(value)) {
@@ -987,17 +1032,68 @@ export default function IntervencionesPage() {
                 <CardTitle className="text-base">Buscar casos</CardTitle>
               </CardHeader>
               <CardContent>
-                <form className="space-y-2" onSubmit={handleSearch}>
+                <form className="space-y-3" onSubmit={handleSearch}>
                   <Input
-                    value={searchInitials}
-                    onChange={(e) => setSearchInitials(e.target.value)}
-                    placeholder="Filtrar por iniciales"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Texto: alumno, centro, nota, ambito..."
                   />
                   <Input
                     value={searchCenter}
                     onChange={(e) => setSearchCenter(e.target.value)}
                     placeholder="Filtrar por centro"
                   />
+                  <Select
+                    value={searchAmbito || "all"}
+                    onValueChange={(value: "all" | AmbitoIntervencion) =>
+                      setSearchAmbito(value === "all" ? "" : value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Filtrar por ámbito" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos los ámbitos</SelectItem>
+                      <SelectItem value="escolar">Escolar</SelectItem>
+                      <SelectItem value="sociocultural">Sociocultural</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <div className="rounded-md border border-gray-200 p-2">
+                    <div className="mb-2 text-xs font-medium text-gray-700">
+                      Contexto (multi-selección)
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {searchContextoOptions.map((item) => {
+                        const isActive = searchContextos.includes(item.value);
+                        return (
+                          <Button
+                            key={`search-${item.value}`}
+                            type="button"
+                            size="sm"
+                            variant={isActive ? "default" : "outline"}
+                            className="h-7 text-xs"
+                            onClick={() => toggleSearchContexto(item.value)}
+                          >
+                            {item.label}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSearchCenter("");
+                      setSearchAmbito("");
+                      setSearchContextos([]);
+                      void fetchCases();
+                    }}
+                  >
+                    Limpiar filtros
+                  </Button>
                   <Button
                     type="submit"
                     variant="outline"

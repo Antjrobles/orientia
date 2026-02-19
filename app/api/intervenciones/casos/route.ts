@@ -82,6 +82,10 @@ function firstZodIssue(error: z.ZodError) {
   return error.issues[0]?.message || "Datos inválidos";
 }
 
+function includesText(value: string, query: string) {
+  return value.toLocaleLowerCase("es").includes(query.toLocaleLowerCase("es"));
+}
+
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -95,12 +99,17 @@ export async function GET(request: NextRequest) {
     const { searchParams } = request.nextUrl;
     const q = (searchParams.get("q") || "").trim();
     const center = (searchParams.get("centro") || "").trim();
+    const ambito = (searchParams.get("ambito") || "").trim();
+    const contextos = (searchParams.get("contextos") || "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
     const limit = Math.min(
-      50,
+      200,
       Math.max(1, Number(searchParams.get("limit") || "20")),
     );
 
-    let query = supabase
+    const { data: baseCases, error: casesError } = await supabase
       .from("casos_intervencion")
       .select(
         "id, iniciales_alumno, centro_nombre, slug_busqueda, created_at, updated_at",
@@ -109,19 +118,8 @@ export async function GET(request: NextRequest) {
       .order("updated_at", { ascending: false })
       .limit(limit);
 
-    if (q.length > 0) {
-      const escaped = q.replace(/%/g, "\\%").replace(/_/g, "\\_");
-      query = query.ilike("iniciales_alumno", `%${escaped}%`);
-    }
-
-    if (center.length > 0) {
-      const escaped = center.replace(/%/g, "\\%").replace(/_/g, "\\_");
-      query = query.ilike("centro_nombre", `%${escaped}%`);
-    }
-
-    const { data, error } = await query;
-    if (error) {
-      if (isMissingTableError(error)) {
+    if (casesError) {
+      if (isMissingTableError(casesError)) {
         return NextResponse.json(
           {
             success: false,
@@ -137,7 +135,86 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ success: true, casos: data || [] });
+    const needsInterventionFiltering =
+      Boolean(ambito) || contextos.length > 0 || q.length > 0;
+
+    const interventionsByCase = new Map<string, Array<Record<string, string>>>();
+    if (needsInterventionFiltering) {
+      let interventionsQuery = supabase
+        .from("intervenciones")
+        .select(
+          "caso_id, ambito, subambito, titulo, texto_original, texto_redactado_ia",
+        )
+        .eq("autor_id", session.user.id);
+
+      if (ambito) {
+        interventionsQuery = interventionsQuery.eq("ambito", ambito);
+      }
+      if (contextos.length === 1) {
+        interventionsQuery = interventionsQuery.eq("subambito", contextos[0]);
+      } else if (contextos.length > 1) {
+        interventionsQuery = interventionsQuery.in("subambito", contextos);
+      }
+
+      const { data: interventionRows, error: interventionsError } =
+        await interventionsQuery.limit(2000);
+
+      if (interventionsError) {
+        if (isMissingTableError(interventionsError)) {
+          return NextResponse.json(
+            {
+              success: false,
+              error:
+                "Falta la tabla 'intervenciones'. Aplica el esquema de Intervenciones en Supabase.",
+            },
+            { status: 503 },
+          );
+        }
+        return NextResponse.json(
+          { success: false, error: "No se pudo aplicar el filtro de intervenciones." },
+          { status: 500 },
+        );
+      }
+
+      for (const row of interventionRows || []) {
+        const key = row.caso_id as string;
+        const existing = interventionsByCase.get(key) || [];
+        existing.push(row as Record<string, string>);
+        interventionsByCase.set(key, existing);
+      }
+    }
+
+    const filteredCases = (baseCases || []).filter((item) => {
+      if (center && !includesText(item.centro_nombre, center)) {
+        return false;
+      }
+
+      const caseInterventions = interventionsByCase.get(item.id) || [];
+      if ((ambito || contextos.length > 0) && caseInterventions.length === 0) {
+        return false;
+      }
+
+      if (!q) return true;
+
+      const qMatchInCase =
+        includesText(item.iniciales_alumno, q) ||
+        includesText(item.centro_nombre, q) ||
+        includesText(item.slug_busqueda || "", q);
+      if (qMatchInCase) return true;
+
+      return caseInterventions.some((row) => {
+        const values = [
+          row.ambito || "",
+          row.subambito || "",
+          row.titulo || "",
+          row.texto_original || "",
+          row.texto_redactado_ia || "",
+        ];
+        return values.some((value) => includesText(value, q));
+      });
+    });
+
+    return NextResponse.json({ success: true, casos: filteredCases });
   } catch {
     return NextResponse.json(
       { success: false, error: "Error interno del servidor" },
