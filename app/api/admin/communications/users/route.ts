@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { createClient } from "@supabase/supabase-js";
 import { authOptions } from "@/lib/auth";
+import { getOptOutEmailSet } from "@/lib/communications-optout";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -25,6 +26,7 @@ export async function GET(request: NextRequest) {
   const q = (searchParams.get("q") || "").trim();
   const role = (searchParams.get("role") || "all").trim();
   const verified = (searchParams.get("verified") || "all").trim();
+  const comms = (searchParams.get("comms") || "all").trim();
 
   let query = supabase
     .from("users")
@@ -50,18 +52,31 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     return NextResponse.json(
-      { success: false, error: "No se pudieron cargar las usuarias." },
+      { success: false, error: "No se pudieron cargar los contactos." },
       { status: 500 },
     );
   }
 
-  const users = (data || []).map((item) => ({
-    id: item.id as string,
-    name: (item.name as string | null) ?? null,
-    email: (item.email as string | null) ?? null,
-    role: (item.role as "admin" | "usuario") ?? "usuario",
-    emailVerified: (item.emailVerified as string | null) ?? null,
-  }));
+  const optOutSet = await getOptOutEmailSet();
+
+  const users = (data || [])
+    .map((item) => {
+      const email = (item.email as string | null)?.trim().toLowerCase() || null;
+      const communicationsOptOut = email ? optOutSet.has(email) : false;
+      return {
+        id: item.id as string,
+        name: (item.name as string | null) ?? null,
+        email,
+        role: (item.role as "admin" | "usuario") ?? "usuario",
+        emailVerified: (item.emailVerified as string | null) ?? null,
+        communicationsOptOut,
+      };
+    })
+    .filter((item) => {
+      if (comms === "active") return !item.communicationsOptOut;
+      if (comms === "optout") return item.communicationsOptOut;
+      return true;
+    });
 
   return NextResponse.json({
     success: true,
@@ -69,4 +84,3 @@ export async function GET(request: NextRequest) {
     total: users.length,
   });
 }
-

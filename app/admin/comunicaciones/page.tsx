@@ -23,6 +23,7 @@ type Recipient = {
   email: string | null;
   role: "admin" | "usuario";
   emailVerified: string | null;
+  communicationsOptOut?: boolean;
 };
 
 const DEFAULT_SUBJECT = "Estado de Orientia";
@@ -52,6 +53,7 @@ export default function AdminComunicacionesPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [verifiedFilter, setVerifiedFilter] = useState("all");
+  const [commsFilter, setCommsFilter] = useState("active");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const [subject, setSubject] = useState(DEFAULT_SUBJECT);
@@ -64,6 +66,7 @@ export default function AdminComunicacionesPage() {
         q: search.trim(),
         role: roleFilter,
         verified: verifiedFilter,
+        comms: commsFilter,
       });
       const response = await fetch(
         `/api/admin/communications/users?${params.toString()}`,
@@ -98,10 +101,15 @@ export default function AdminComunicacionesPage() {
   useEffect(() => {
     void loadUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roleFilter, verifiedFilter]);
+  }, [roleFilter, verifiedFilter, commsFilter]);
 
   const selectableUsers = useMemo(
-    () => users.filter((u) => Boolean(u.email && String(u.email).trim().length > 0)),
+    () =>
+      users.filter(
+        (u) =>
+          Boolean(u.email && String(u.email).trim().length > 0) &&
+          !u.communicationsOptOut,
+      ),
     [users],
   );
 
@@ -132,7 +140,7 @@ export default function AdminComunicacionesPage() {
 
   const sendCampaign = async () => {
     if (selectedCount === 0) {
-      toast.error("Selecciona al menos una destinataria.");
+      toast.error("Selecciona al menos un contacto.");
       return;
     }
     if (subject.trim().length < 3) {
@@ -163,11 +171,11 @@ export default function AdminComunicacionesPage() {
 
       if (data.failed > 0) {
         toast.warning("Envío parcial", {
-          description: `Enviados: ${data.sent}. Fallidos: ${data.failed}.`,
+          description: `Enviados: ${data.sent}. Fallidos: ${data.failed}. Excluidos por baja: ${data.skippedOptOut ?? 0}.`,
         });
       } else {
         toast.success("Comunicación enviada", {
-          description: `Enviada a ${data.sent} destinatarias.`,
+          description: `Enviada a ${data.sent} contactos.`,
         });
       }
     } catch (error) {
@@ -191,7 +199,7 @@ export default function AdminComunicacionesPage() {
               Comunicaciones
             </h1>
             <p className="text-sm text-muted-foreground">
-              Filtra usuarias registradas y envía comunicados con Plunk.
+              Filtra usuarios registrados y envía comunicaciones con Plunk.
             </p>
           </div>
           <Badge variant="secondary" className="px-3 py-1">
@@ -205,11 +213,11 @@ export default function AdminComunicacionesPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-emerald-600" />
-                Destinatarias
+                Contactos
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid gap-3 md:grid-cols-3">
+              <div className="grid gap-3 md:grid-cols-4">
                 <div className="md:col-span-1">
                   <Select value={roleFilter} onValueChange={setRoleFilter}>
                     <SelectTrigger>
@@ -217,7 +225,7 @@ export default function AdminComunicacionesPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos los roles</SelectItem>
-                      <SelectItem value="usuario">Solo usuarias</SelectItem>
+                      <SelectItem value="usuario">Solo usuarios</SelectItem>
                       <SelectItem value="admin">Solo admin</SelectItem>
                     </SelectContent>
                   </Select>
@@ -231,6 +239,18 @@ export default function AdminComunicacionesPage() {
                       <SelectItem value="all">Todas</SelectItem>
                       <SelectItem value="verified">Email verificado</SelectItem>
                       <SelectItem value="unverified">Sin verificar</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="md:col-span-1">
+                  <Select value={commsFilter} onValueChange={setCommsFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Comunicaciones" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="active">Reciben comunicaciones</SelectItem>
+                      <SelectItem value="optout">Baja de comunicaciones</SelectItem>
+                      <SelectItem value="all">Todos</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -269,23 +289,24 @@ export default function AdminComunicacionesPage() {
                     Seleccionar visibles
                   </label>
                   <span>
-                    {selectedCount} seleccionadas de {selectableUsers.length}
+                    {selectedCount} seleccionados de {selectableUsers.length}
                   </span>
                 </div>
                 <div className="max-h-[420px] overflow-auto">
                   {loadingUsers ? (
                     <div className="px-3 py-8 text-center text-sm text-muted-foreground">
-                      Cargando listado...
+                      Cargando contactos...
                     </div>
                   ) : users.length === 0 ? (
                     <div className="px-3 py-8 text-center text-sm text-muted-foreground">
-                      No hay usuarias para los filtros seleccionados.
+                      No hay contactos para los filtros seleccionados.
                     </div>
                   ) : (
                     users.map((user) => {
                       const checked = selectedIds.has(user.id);
                       const hasEmail = Boolean(user.email);
                       const verified = Boolean(user.emailVerified);
+                      const blockedForComms = Boolean(user.communicationsOptOut);
                       return (
                         <div
                           key={user.id}
@@ -294,7 +315,7 @@ export default function AdminComunicacionesPage() {
                           <label className="flex min-w-0 flex-1 cursor-pointer items-start gap-3">
                             <Checkbox
                               checked={checked}
-                              disabled={!hasEmail}
+                              disabled={!hasEmail || blockedForComms}
                               onCheckedChange={(next) =>
                                 toggleOne(user.id, Boolean(next))
                               }
@@ -322,6 +343,16 @@ export default function AdminComunicacionesPage() {
                             >
                               {verified ? "Verificada" : "No verificada"}
                             </Badge>
+                            <Badge
+                              variant="outline"
+                              className={
+                                user.communicationsOptOut
+                                  ? "border-gray-200 bg-gray-50 text-gray-700"
+                                  : "border-emerald-200 bg-emerald-50 text-emerald-700"
+                              }
+                            >
+                              {user.communicationsOptOut ? "Baja" : "Activa"}
+                            </Badge>
                           </div>
                         </div>
                       );
@@ -334,7 +365,7 @@ export default function AdminComunicacionesPage() {
 
           <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
             <CardHeader>
-              <CardTitle>Redactar comunicado</CardTitle>
+              <CardTitle>Redactar comunicación</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <Input
@@ -345,7 +376,7 @@ export default function AdminComunicacionesPage() {
               <Textarea
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
-                placeholder="Mensaje del comunicado"
+                placeholder="Mensaje de la comunicación"
                 rows={16}
                 className="resize-y"
               />
@@ -369,7 +400,7 @@ export default function AdminComunicacionesPage() {
                   <Send className="mr-2 h-4 w-4" />
                   {sending
                     ? "Enviando..."
-                    : `Enviar a ${selectedCount} destinatarias`}
+                    : `Enviar a ${selectedCount} contactos`}
                 </Button>
               </div>
             </CardContent>
@@ -379,4 +410,3 @@ export default function AdminComunicacionesPage() {
     </div>
   );
 }
-
