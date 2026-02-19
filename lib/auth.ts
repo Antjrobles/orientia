@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import AppleProvider from "next-auth/providers/apple";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
+import type { Provider } from "next-auth/providers";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
@@ -21,13 +22,17 @@ function normalizeEmail(value: string) {
   return value.trim().toLowerCase();
 }
 
-function toHeaders(input: Headers | Record<string, any> | undefined) {
+type HeaderInput = Headers | Record<string, string | string[] | undefined> | undefined;
+
+function toHeaders(input: HeaderInput) {
   if (!input) return new Headers();
   if (input instanceof Headers) return input;
   return new Headers(input);
 }
 
-function getRequestOrigin(req: { headers?: Headers | Record<string, any> } | undefined) {
+function getRequestOrigin(
+  req: { headers?: Headers | Record<string, string | string[] | undefined> } | undefined,
+) {
   if (!req) return process.env.NEXTAUTH_URL || "";
   const headers = toHeaders(req.headers);
   const proto = headers.get("x-forwarded-proto") || "https";
@@ -37,7 +42,9 @@ function getRequestOrigin(req: { headers?: Headers | Record<string, any> } | und
   return `${proto}://${host}`;
 }
 
-function getDeviceIdFromReq(req: { headers?: Headers | Record<string, any> } | undefined) {
+function getDeviceIdFromReq(
+  req: { headers?: Headers | Record<string, string | string[] | undefined> } | undefined,
+) {
   if (!req) return null;
   const cookie = toHeaders(req.headers).get("cookie");
   return getCookieFromHeader(cookie, DEVICE_COOKIE_NAME);
@@ -48,7 +55,7 @@ function hashToken(token: string) {
 }
 
 // Construye la lista de proveedores de forma condicional según env vars
-const providers: any[] = [];
+const providers: Provider[] = [];
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   providers.push(
@@ -213,7 +220,6 @@ export const authOptions: AuthOptions = {
     async signIn({ user, account }) {
       if (account?.provider === "google" || account?.provider === "facebook") {
         if (!user.email) {
-          console.error("No se encontró un email en el perfil de Google.");
           return false; // Bloquea el inicio de sesión si no hay email
         }
         const email = normalizeEmail(user.email);
@@ -244,11 +250,7 @@ export const authOptions: AuthOptions = {
 
             if (insertError) throw insertError;
           }
-        } catch (error) {
-          console.error(
-            `Error al guardar/actualizar el usuario de ${account?.provider} en la BD:`,
-            error,
-          );
+        } catch {
           return false; // Bloquea el inicio de sesión si hay un error de base de datos
         }
       }

@@ -27,9 +27,10 @@ export function defaultConsent(): ConsentState {
 
 export function detectGPC(): boolean {
   try {
+    const nav = navigator as Navigator & { globalPrivacyControl?: boolean };
     return (
       typeof navigator !== "undefined" &&
-      (navigator as any).globalPrivacyControl === true
+      nav.globalPrivacyControl === true
     );
   } catch {
     return false;
@@ -98,6 +99,6 @@ export function removeNonEssentialCookies() {
 
 export function broadcastConsent(state: ConsentState) {
   if (typeof window === "undefined") return;
-  (window as any).__consent__ = state;
+  (window as Window & { __consent__?: ConsentState }).__consent__ = state;
   window.dispatchEvent(new CustomEvent("consent:updated", { detail: state }));
 }

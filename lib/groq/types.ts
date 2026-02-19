@@ -23,14 +23,14 @@ export interface ApiResponse {
   success: boolean;
   report?: string;
   error?: string;
-  details?: any;
+  details?: unknown;
 }
 
 export class GroqApiError extends Error {
   constructor(
     message: string,
     public statusCode?: number,
-    public originalError?: any,
+    public originalError?: unknown,
   ) {
     super(message);
     this.name = "GroqApiError";

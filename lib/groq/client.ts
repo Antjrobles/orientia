@@ -6,7 +6,7 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-export interface GenerateReportParams extends StudentData {}
+export type GenerateReportParams = StudentData;
 
 export async function generatePsychopedagogicalReport(
   params: GenerateReportParams,
@@ -37,29 +37,35 @@ export async function generatePsychopedagogicalReport(
     }
 
     return content;
-  } catch (error: any) {
-    console.error("Error generating report:", error);
+  } catch (error: unknown) {
     throw handleGroqError(error);
   }
 }
 
-export function handleGroqError(error: any): GroqApiError {
+type GroqLikeError = {
+  status?: number;
+  code?: string;
+};
+
+export function handleGroqError(error: unknown): GroqApiError {
   if (error instanceof GroqApiError) {
     return error;
   }
 
-  if (error.status === 429) {
+  const err = (error as GroqLikeError) || {};
+
+  if (err.status === 429) {
     return new GroqApiError(
       "Límite de solicitudes excedido. Intenta más tarde.",
       429,
     );
   }
 
-  if (error.status === 401) {
+  if (err.status === 401) {
     return new GroqApiError("Error de autenticación con la API de Groq", 401);
   }
 
-  if (error.code === "ENOTFOUND" || error.code === "ECONNREFUSED") {
+  if (err.code === "ENOTFOUND" || err.code === "ECONNREFUSED") {
     return new GroqApiError("Error de conexión con la API de Groq", 503);
   }
 

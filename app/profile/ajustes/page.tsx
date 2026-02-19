@@ -13,6 +13,7 @@ import {
   Mail,
   MapPin,
   Pencil,
+  Printer,
   Trash2,
   Save,
   ShieldCheck,
@@ -410,6 +411,53 @@ export default function AjustesPerfilPage() {
 
   const buildDocUrl = (path: string, download = false) =>
     `/api/profile/personal-docs/file?path=${encodeURIComponent(path)}${download ? "&download=1" : ""}`;
+
+  const handlePrintPreview = () => {
+    if (!previewDoc) return;
+    const ext = getExtension(previewDoc.name);
+    const isTextLike = ["txt", "md", "rtf"].includes(ext);
+    const printableHtml =
+      ext === "docx"
+        ? previewHtml
+        : isTextLike
+          ? `<pre style="white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace;font-size:12px;line-height:1.5;">${(previewText || "").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>`
+          : "";
+    if (!printableHtml) {
+      toast.error("No hay contenido imprimible disponible todavía.");
+      return;
+    }
+
+    const printWindow = window.open("", "_blank", "width=900,height=700");
+    if (!printWindow) return;
+    const markup = `
+      <!doctype html>
+      <html lang="es">
+      <head>
+        <meta charset="utf-8" />
+        <title>${previewDoc.name}</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 24px; color: #111; }
+          h1 { font-size: 16px; margin: 0 0 16px 0; }
+          article { font-size: 13px; line-height: 1.6; }
+        </style>
+      </head>
+      <body>
+        <h1>${previewDoc.name.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+        <article>${printableHtml}</article>
+      </body>
+      </html>
+    `;
+    printWindow.document.open();
+    printWindow.document.write(markup);
+    printWindow.document.close();
+    const doPrint = () => {
+      if (printWindow.closed) return;
+      printWindow.focus();
+      printWindow.print();
+    };
+    printWindow.onload = doPrint;
+    setTimeout(doPrint, 350);
+  };
 
   return (
     <div className="w-full px-4 pb-12 pt-8 sm:px-6 lg:px-8">
@@ -827,18 +875,36 @@ export default function AjustesPerfilPage() {
                           <p className="truncate text-sm font-semibold text-emerald-900">
                             Vista previa: {previewDoc.name}
                           </p>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setPreviewDoc(null);
-                              setPreviewText("");
-                              setPreviewHtml("");
-                              setPreviewError("");
-                            }}
-                          >
-                            Cerrar
-                          </Button>
+                          <div className="flex items-center gap-2">
+                            {(() => {
+                              const ext = getExtension(previewDoc.name);
+                              const printable = ext === "docx" || ["txt", "md", "rtf"].includes(ext);
+                              const canPrint =
+                                printable &&
+                                !previewLoading &&
+                                !previewError &&
+                                ((ext === "docx" && Boolean(previewHtml)) ||
+                                  (ext !== "docx" && Boolean(previewText)));
+                              return canPrint ? (
+                                <Button variant="outline" size="sm" onClick={handlePrintPreview}>
+                                  <Printer className="mr-1.5 h-4 w-4" />
+                                  Imprimir
+                                </Button>
+                              ) : null;
+                            })()}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setPreviewDoc(null);
+                                setPreviewText("");
+                                setPreviewHtml("");
+                                setPreviewError("");
+                              }}
+                            >
+                              Cerrar
+                            </Button>
+                          </div>
                         </div>
                         {(() => {
                           const ext = getExtension(previewDoc.name);
