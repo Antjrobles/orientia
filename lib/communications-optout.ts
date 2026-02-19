@@ -110,3 +110,18 @@ export async function addOptOutEmail(input: {
   return { ok: true as const, alreadyExisted: false as const };
 }
 
+export async function removeOptOutEmail(input: { email: string }) {
+  const email = normalizeEmail(input.email);
+  if (!email) return { ok: false as const, reason: "invalid_email" };
+
+  const entries = await readOptOutEntries();
+  const nextEntries = entries.filter((entry) => entry.email !== email);
+  const removed = nextEntries.length !== entries.length;
+
+  const ok = await writeOptOutEntries(nextEntries);
+  if (!ok) {
+    return { ok: false as const, reason: "persist_failed" };
+  }
+
+  return { ok: true as const, removed };
+}
