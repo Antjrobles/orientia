@@ -98,6 +98,7 @@ export default function AjustesPerfilPage() {
   const [docs, setDocs] = useState<PersonalDoc[]>([]);
   const [previewDoc, setPreviewDoc] = useState<PersonalDoc | null>(null);
   const [previewText, setPreviewText] = useState("");
+  const [previewHtml, setPreviewHtml] = useState("");
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState("");
   const [docQuery, setDocQuery] = useState("");
@@ -355,9 +356,11 @@ export default function AjustesPerfilPage() {
     setPreviewDoc(doc);
     setPreviewError("");
     setPreviewText("");
+    setPreviewHtml("");
     const ext = getExtension(doc.name);
     const isTextLike = ["txt", "md", "rtf"].includes(ext);
     const isPdf = ext === "pdf";
+    const isDocx = ext === "docx";
     if (isPdf) {
       setPreviewLoading(false);
       return;
@@ -365,6 +368,23 @@ export default function AjustesPerfilPage() {
 
     setPreviewLoading(true);
     try {
+      if (isDocx) {
+        const previewRes = await fetch(
+          `/api/profile/personal-docs/preview?path=${encodeURIComponent(doc.path)}`,
+          { cache: "no-store" },
+        );
+        const previewData = await previewRes.json();
+        if (!previewRes.ok || !previewData.success) {
+          throw new Error(
+            previewData.detail
+              ? `${previewData.error || "No se pudo cargar la vista previa DOCX."} (${previewData.detail})`
+              : previewData.error || "No se pudo cargar la vista previa DOCX.",
+          );
+        }
+        setPreviewHtml(typeof previewData.html === "string" ? previewData.html : "");
+        return;
+      }
+
       const response = await fetch(
         `/api/profile/personal-docs/file?path=${encodeURIComponent(doc.path)}`,
         { cache: "no-store" },
@@ -813,6 +833,7 @@ export default function AjustesPerfilPage() {
                             onClick={() => {
                               setPreviewDoc(null);
                               setPreviewText("");
+                              setPreviewHtml("");
                               setPreviewError("");
                             }}
                           >
@@ -858,6 +879,31 @@ export default function AjustesPerfilPage() {
                               <pre className="max-h-[460px] overflow-auto whitespace-pre-wrap rounded-md border border-emerald-100 bg-white p-3 text-xs text-gray-800">
                                 {previewText || "Documento vacio."}
                               </pre>
+                            );
+                          }
+                          if (ext === "docx") {
+                            if (previewLoading) {
+                              return (
+                                <div className="flex items-center gap-2 py-4 text-sm text-muted-foreground">
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                  Convirtiendo DOCX para vista previa...
+                                </div>
+                              );
+                            }
+                            if (previewError) {
+                              return <p className="text-sm text-red-600">{previewError}</p>;
+                            }
+                            return (
+                              <div className="max-h-[460px] overflow-auto rounded-md border border-emerald-100 bg-white p-4">
+                                <article
+                                  className="prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-800"
+                                  dangerouslySetInnerHTML={{
+                                    __html:
+                                      previewHtml ||
+                                      "<p>No se pudo generar contenido de vista previa.</p>",
+                                  }}
+                                />
+                              </div>
                             );
                           }
                           return (
