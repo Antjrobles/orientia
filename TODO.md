@@ -264,7 +264,7 @@
 
 ## 🎨 UI/UX
 
-- [ ] Implementar modo oscuro completo
+- [x] Implementar modo oscuro completo
 - [ ] Agregar onboarding interactivo para nuevos usuarios
 - [ ] Implementar tour guiado de funcionalidades
 - [ ] Agregar atajos de teclado globales
@@ -286,6 +286,8 @@
 - [ ] Agregar tooltips contextuales en formularios complejos
 - [ ] Implementar responsive design optimizado para tablets
 - [ ] Agregar temas personalizables de color
+- [x] Permitir selección de tema claro/oscuro por usuario desde Preferencias
+- [x] Corregir inconsistencias visuales del tema oscuro en áreas privadas (`/profile/*` y `/admin/*`)
 - [ ] Implementar diseño adaptable a preferencias de accesibilidad
 - [ ] Agregar modo de alto contraste
 - [ ] Implementar soporte completo para lectores de pantalla
