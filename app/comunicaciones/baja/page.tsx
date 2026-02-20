@@ -50,44 +50,45 @@ export default function BajaComunicacionesPage() {
   }, [token]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-xl border-emerald-100/70 bg-white/95 shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-xl text-gray-900">
-            Gestión de comunicaciones
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {status === "loading" && (
-            <p className="text-sm text-gray-600">{message}</p>
-          )}
-          {status === "success" && (
-            <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
-              <div className="mb-2 flex items-center gap-2 font-semibold">
-                <CheckCircle2 className="h-4 w-4" />
-                Solicitud completada
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-gray-50">
+      <div className="w-full px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+        <Card className="w-full border-emerald-100/70 bg-white/95 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-xl text-gray-900">
+              Gestión de comunicaciones
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {status === "loading" && (
+              <p className="text-sm text-gray-600">{message}</p>
+            )}
+            {status === "success" && (
+              <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+                <div className="mb-2 flex items-center gap-2 font-semibold">
+                  <CheckCircle2 className="h-4 w-4" />
+                  Solicitud completada
+                </div>
+                <p>{message}</p>
               </div>
-              <p>{message}</p>
-            </div>
-          )}
-          {status === "error" && (
-            <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-              <div className="mb-2 flex items-center gap-2 font-semibold">
-                <AlertCircle className="h-4 w-4" />
-                No se pudo completar la baja
+            )}
+            {status === "error" && (
+              <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                <div className="mb-2 flex items-center gap-2 font-semibold">
+                  <AlertCircle className="h-4 w-4" />
+                  No se pudo completar la baja
+                </div>
+                <p>{message}</p>
               </div>
-              <p>{message}</p>
-            </div>
-          )}
+            )}
 
-          <div className="pt-2">
-            <Button asChild variant="outline">
-              <Link href="/">Volver a Orientia</Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="pt-2">
+              <Button asChild variant="outline">
+                <Link href="/">Volver a Orientia</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
-

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Mail, Search, Send, Users } from "lucide-react";
+import { Mail, Search, Send, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -49,9 +49,6 @@ export default function AdminComunicacionesPage() {
   const [users, setUsers] = useState<Recipient[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [sending, setSending] = useState(false);
-  const [updatingUserIds, setUpdatingUserIds] = useState<Record<string, boolean>>(
-    {},
-  );
 
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
@@ -193,65 +190,9 @@ export default function AdminComunicacionesPage() {
     }
   };
 
-  const updateUserCommunicationPreference = async (
-    userId: string,
-    receiveCommunications: boolean,
-  ) => {
-    setUpdatingUserIds((current) => ({ ...current, [userId]: true }));
-    try {
-      const response = await fetch("/api/admin/communications/preferences", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, receiveCommunications }),
-      });
-      const data = await response.json();
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || "No se pudo actualizar la preferencia.");
-      }
-
-      setUsers((current) => {
-        const updated = current.map((user) =>
-          user.id === userId
-            ? { ...user, communicationsOptOut: data.communicationsOptOut }
-            : user,
-        );
-        if (commsFilter === "active") {
-          return updated.filter((user) => !user.communicationsOptOut);
-        }
-        if (commsFilter === "optout") {
-          return updated.filter((user) => user.communicationsOptOut);
-        }
-        return updated;
-      });
-
-      if (!receiveCommunications) {
-        setSelectedIds((current) => {
-          const next = new Set(current);
-          next.delete(userId);
-          return next;
-        });
-      }
-
-      toast.success("Preferencia actualizada");
-    } catch (error) {
-      toast.error("No se pudo actualizar", {
-        description:
-          error instanceof Error
-            ? error.message
-            : "No se pudo actualizar la preferencia.",
-      });
-    } finally {
-      setUpdatingUserIds((current) => {
-        const next = { ...current };
-        delete next[userId];
-        return next;
-      });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-gray-50">
-      <div className="mx-auto w-full max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+      <div className="w-full px-4 pb-12 pt-8 sm:px-6 lg:px-8">
         <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -366,7 +307,6 @@ export default function AdminComunicacionesPage() {
                       const hasEmail = Boolean(user.email);
                       const verified = Boolean(user.emailVerified);
                       const blockedForComms = Boolean(user.communicationsOptOut);
-                      const isUpdating = Boolean(updatingUserIds[user.id]);
                       return (
                         <div
                           key={user.id}
@@ -413,29 +353,6 @@ export default function AdminComunicacionesPage() {
                             >
                               {user.communicationsOptOut ? "Baja" : "Activa"}
                             </Badge>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              disabled={!hasEmail || isUpdating}
-                              onClick={() =>
-                                updateUserCommunicationPreference(
-                                  user.id,
-                                  Boolean(user.communicationsOptOut),
-                                )
-                              }
-                            >
-                              {isUpdating ? (
-                                <>
-                                  <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                                  Guardando...
-                                </>
-                              ) : user.communicationsOptOut ? (
-                                "Activar notificaciones"
-                              ) : (
-                                "Desactivar notificaciones"
-                              )}
-                            </Button>
                           </div>
                         </div>
                       );

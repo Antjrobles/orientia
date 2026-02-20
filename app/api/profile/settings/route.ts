@@ -3,6 +3,11 @@ import { z } from "zod";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
+import {
+  addOptOutEmail,
+  getOptOutEmailSet,
+  removeOptOutEmail,
+} from "@/lib/communications-optout";
 
 const settingsSchema = z.object({
   fullName: z.string().trim().min(2).max(120),
@@ -178,10 +183,14 @@ export async function GET() {
 
   const dbSettings = mapUserRowToSettings(data as UserRow);
   const storageSettings = await readStorageSettings(session.user.id);
+  const optOutSet = await getOptOutEmailSet();
+  const email = dbSettings.email.trim().toLowerCase();
+  const notificationsEnabled = email ? !optOutSet.has(email) : true;
   const merged = {
     ...dbSettings,
     ...(storageSettings || {}),
     email: dbSettings.email,
+    emailNotifications: notificationsEnabled,
     fullName:
       (storageSettings?.fullName && storageSettings.fullName.trim()) ||
       dbSettings.fullName,
@@ -314,6 +323,29 @@ export async function PUT(request: Request) {
       { success: false, error: "Se guardo parcialmente. No se pudo persistir la configuracion avanzada." },
       { status: 500 },
     );
+  }
+
+  const userEmail = String((row.email as string | undefined) || "")
+    .trim()
+    .toLowerCase();
+  if (userEmail) {
+    const prefResult = next.emailNotifications
+      ? await removeOptOutEmail({ email: userEmail })
+      : await addOptOutEmail({
+          email: userEmail,
+          reason: "profile_preference",
+          source: "profile_settings",
+        });
+
+    if (!prefResult.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "No se pudo actualizar la preferencia de comunicaciones.",
+        },
+        { status: 500 },
+      );
+    }
   }
 
   const { data: refreshedUser } = await supabase

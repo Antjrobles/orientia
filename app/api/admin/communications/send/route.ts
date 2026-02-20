@@ -32,14 +32,14 @@ function toHtmlBody(message: string, unsubscribeUrl: string) {
     <div style="margin:0;padding:0;background:#e8f7ef;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
         <tr>
-          <td style="background:linear-gradient(120deg,#047857,#10b981);padding:14px 20px;">
+          <td style="background:#ffffff;border-top:6px solid #059669;padding:12px 20px;border-bottom:1px solid #d1fae5;">
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
               <tr>
                 <td style="vertical-align:middle;">
-                  <img src="https://www.orientia.es/icons/logo-250.png" alt="Orientia" width="180" style="display:block;border:0;outline:none;text-decoration:none;" />
+                  <img src="https://www.orientia.es/icons/logo-250.png" alt="Orientia" width="220" style="display:block;border:0;outline:none;text-decoration:none;" />
                 </td>
                 <td style="vertical-align:middle;text-align:right;">
-                  <span style="display:inline-block;background:rgba(255,255,255,0.18);color:#ecfdf5;font-size:12px;font-weight:700;letter-spacing:.02em;padding:8px 12px;border-radius:999px;">
+                  <span style="display:inline-block;background:#ecfdf5;color:#047857;font-size:12px;font-weight:700;letter-spacing:.02em;padding:8px 12px;border-radius:999px;border:1px solid #a7f3d0;">
                     COMUNICACIÓN OFICIAL
                   </span>
                 </td>
