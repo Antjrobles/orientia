@@ -22,6 +22,9 @@ export type User = {
   reportsCount?: number;
   lastReportAt?: string | null;
   trustedDevicesCount?: number;
+  created_at?: string | null;
+  signup_at?: string | null;
+  inserted_at?: string | null;
 };
 
 // Componente reutilizable para cabeceras de columna con ordenación
@@ -148,7 +151,13 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title="Alta" />
     ),
     cell: ({ row }) => {
-      const value = row.getValue("createdAt") as string | null | undefined;
+      const user = row.original as User;
+      const value =
+        (row.getValue("createdAt") as string | null | undefined) ??
+        user.created_at ??
+        user.signup_at ??
+        user.inserted_at ??
+        null;
       if (!value) return <span className="text-sm text-muted-foreground">-</span>;
       const date = new Date(value);
       const label = Number.isNaN(date.getTime())

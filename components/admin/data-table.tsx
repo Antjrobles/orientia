@@ -119,7 +119,10 @@ export function DataTable<
         </div>
       </div>
       <div className="rounded-md border">
-        <Table className="w-full table-fixed">
+        <Table
+          className="w-full"
+          style={{ width: table.getTotalSize(), minWidth: "100%" }}
+        >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -127,7 +130,10 @@ export function DataTable<
                   <TableHead
                     key={header.id}
                     className={`${headPadding} relative`}
-                    style={{ width: header.getSize() }}
+                    style={{
+                      width: header.getSize(),
+                      minWidth: header.getSize(),
+                    }}
                   >
                     {header.isPlaceholder
                       ? null
@@ -139,10 +145,11 @@ export function DataTable<
                       <div
                         onMouseDown={header.getResizeHandler()}
                         onTouchStart={header.getResizeHandler()}
-                        className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none transition-colors ${
+                        onDoubleClick={() => header.column.resetSize()}
+                        className={`absolute right-0 top-0 z-20 h-full w-2 cursor-col-resize select-none touch-none transition-colors ${
                           header.column.getIsResizing()
                             ? "bg-emerald-500"
-                            : "bg-transparent hover:bg-emerald-300"
+                            : "bg-transparent hover:bg-emerald-300/70"
                         }`}
                       />
                     )}
@@ -163,7 +170,10 @@ export function DataTable<
                     <TableCell
                       key={cell.id}
                       className={cellPadding}
-                      style={{ width: cell.column.getSize() }}
+                      style={{
+                        width: cell.column.getSize(),
+                        minWidth: cell.column.getSize(),
+                      }}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,

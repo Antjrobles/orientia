@@ -46,6 +46,27 @@ interface InformeReciente {
   creado_en: string;
 }
 
+type UserWithPossibleSignupFields = {
+  created_at?: string | null;
+  createdAt?: string | null;
+  signup_at?: string | null;
+  signupAt?: string | null;
+  inserted_at?: string | null;
+  insertedAt?: string | null;
+};
+
+function resolveSignupDate(user: UserWithPossibleSignupFields): string | null {
+  return (
+    user.created_at ??
+    user.createdAt ??
+    user.signup_at ??
+    user.signupAt ??
+    user.inserted_at ??
+    user.insertedAt ??
+    null
+  );
+}
+
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
 
@@ -125,10 +146,7 @@ export default async function AdminPage() {
 
   const usersWithStats = (allUsers || []).map((user) => {
     const stats = reportStats.get(user.id);
-    const signupDate =
-      (user as { created_at?: string | null }).created_at ??
-      (user as { createdAt?: string | null }).createdAt ??
-      null;
+    const signupDate = resolveSignupDate(user as UserWithPossibleSignupFields);
     return {
       ...user,
       createdAt: signupDate,
