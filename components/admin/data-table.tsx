@@ -129,7 +129,7 @@ export function DataTable<
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={`${headPadding} relative`}
+                    className={`${headPadding} relative select-none`}
                     style={{
                       width: header.getSize(),
                       minWidth: header.getSize(),
@@ -142,16 +142,20 @@ export function DataTable<
                           header.getContext(),
                         )}
                     {header.column.getCanResize() && (
-                      <div
-                        onMouseDown={header.getResizeHandler()}
-                        onTouchStart={header.getResizeHandler()}
-                        onDoubleClick={() => header.column.resetSize()}
-                        className={`absolute right-0 top-0 z-20 h-full w-2 cursor-col-resize select-none touch-none transition-colors ${
-                          header.column.getIsResizing()
-                            ? "bg-emerald-500"
-                            : "bg-transparent hover:bg-emerald-300/70"
-                        }`}
-                      />
+                      <>
+                        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-px bg-emerald-200/80" />
+                        <div
+                          onMouseDown={header.getResizeHandler()}
+                          onTouchStart={header.getResizeHandler()}
+                          onDoubleClick={() => header.column.resetSize()}
+                          className={`absolute right-0 top-0 z-20 h-full w-3 -translate-x-1/2 cursor-col-resize select-none touch-none ${
+                            header.column.getIsResizing()
+                              ? "bg-emerald-500/30"
+                              : "bg-transparent hover:bg-emerald-300/30"
+                          }`}
+                          aria-label={`Redimensionar columna ${String(header.column.columnDef.header ?? header.id)}`}
+                        />
+                      </>
                     )}
                   </TableHead>
                 ))}
