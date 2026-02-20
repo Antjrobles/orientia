@@ -38,15 +38,17 @@ export default function PreferenciasPage() {
     const load = async () => {
       setLoading(true);
       try {
-        const response = await fetch("/api/profile/settings", { cache: "no-store" });
+        const response = await fetch("/api/profile/preferences", {
+          cache: "no-store",
+        });
         const data = await response.json();
         if (!response.ok || !data.success) {
           throw new Error(data.error || "No se pudieron cargar las preferencias.");
         }
         const next: PreferencesState = {
-          emailNotifications: Boolean(data.settings?.emailNotifications ?? true),
-          draftReminders: Boolean(data.settings?.draftReminders ?? true),
-          weeklySummary: Boolean(data.settings?.weeklySummary ?? false),
+          emailNotifications: Boolean(data.preferences?.emailNotifications ?? true),
+          draftReminders: Boolean(data.preferences?.draftReminders ?? true),
+          weeklySummary: Boolean(data.preferences?.weeklySummary ?? false),
         };
         setPreferences(next);
         setInitial(next);
@@ -68,25 +70,10 @@ export default function PreferenciasPage() {
   const save = async () => {
     setSaving(true);
     try {
-      const currentResponse = await fetch("/api/profile/settings", {
-        cache: "no-store",
-      });
-      const currentData = await currentResponse.json();
-      if (!currentResponse.ok || !currentData.success) {
-        throw new Error(currentData.error || "No se pudieron cargar los ajustes.");
-      }
-
-      const payload = {
-        ...currentData.settings,
-        emailNotifications: preferences.emailNotifications,
-        draftReminders: preferences.draftReminders,
-        weeklySummary: preferences.weeklySummary,
-      };
-
-      const response = await fetch("/api/profile/settings", {
+      const response = await fetch("/api/profile/preferences", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(preferences),
       });
       const data = await response.json();
 
@@ -95,9 +82,9 @@ export default function PreferenciasPage() {
       }
 
       const next: PreferencesState = {
-        emailNotifications: Boolean(data.settings?.emailNotifications ?? true),
-        draftReminders: Boolean(data.settings?.draftReminders ?? true),
-        weeklySummary: Boolean(data.settings?.weeklySummary ?? false),
+        emailNotifications: Boolean(data.preferences?.emailNotifications ?? true),
+        draftReminders: Boolean(data.preferences?.draftReminders ?? true),
+        weeklySummary: Boolean(data.preferences?.weeklySummary ?? false),
       };
       setPreferences(next);
       setInitial(next);
@@ -233,4 +220,3 @@ export default function PreferenciasPage() {
     </div>
   );
 }
-

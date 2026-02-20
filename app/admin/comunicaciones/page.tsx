@@ -45,7 +45,7 @@ export default function AdminComunicacionesPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [verifiedFilter, setVerifiedFilter] = useState("all");
-  const [commsFilter, setCommsFilter] = useState("active");
+  const [commsFilter, setCommsFilter] = useState("all");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const [subject, setSubject] = useState(DEFAULT_SUBJECT);
