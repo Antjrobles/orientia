@@ -26,7 +26,7 @@ function normalizeTheme(value: unknown): ThemePreference {
 export default function PreferenciasPage() {
   const { theme, setTheme } = useTheme();
   const didLoadRef = useRef(false);
-  const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [preferences, setPreferences] = useState<PreferencesState>({
     emailNotifications: true,
@@ -62,18 +62,26 @@ export default function PreferenciasPage() {
     didLoadRef.current = true;
 
     const load = async () => {
-      setLoading(true);
+      const localStoredTheme = normalizeTheme(window.localStorage.getItem("theme"));
+      setTheme(localStoredTheme);
+      applyTheme(localStoredTheme);
+      setPreferences((current) => ({ ...current, theme: localStoredTheme }));
+      setInitial((current) => ({ ...current, theme: localStoredTheme }));
+
+      setSyncing(true);
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 4500);
       try {
         const response = await fetch("/api/profile/preferences", {
           cache: "no-store",
+          signal: controller.signal,
         });
         const data = await response.json();
         if (!response.ok || !data.success) {
           throw new Error(data.error || "No se pudieron cargar las preferencias.");
         }
-        const localStoredTheme = window.localStorage.getItem("theme");
         const effectiveTheme = normalizeTheme(
-          localStoredTheme ?? data.preferences?.theme,
+          window.localStorage.getItem("theme") ?? data.preferences?.theme,
         );
 
         const next: PreferencesState = {
@@ -87,14 +95,19 @@ export default function PreferenciasPage() {
         setPreferences(next);
         setInitial(next);
       } catch (error) {
-        toast.error("Preferencias", {
-          description:
-            error instanceof Error
-              ? error.message
-              : "No se pudieron cargar las preferencias.",
-        });
+        const isAbortError =
+          error instanceof DOMException && error.name === "AbortError";
+        if (!isAbortError) {
+          toast.error("Preferencias", {
+            description:
+              error instanceof Error
+                ? error.message
+                : "No se pudieron cargar las preferencias.",
+          });
+        }
       } finally {
-        setLoading(false);
+        window.clearTimeout(timeout);
+        setSyncing(false);
       }
     };
 
@@ -163,13 +176,13 @@ export default function PreferenciasPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          {loading ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Cargando preferencias...
-            </div>
-          ) : (
-            <>
+          <>
+              {syncing ? (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Sincronizando preferencias...
+                </div>
+              ) : null}
               <div className="flex items-start justify-between gap-3 rounded-md border border-border p-3">
                 <div className="space-y-1">
                   <Label htmlFor="theme-preference" className="text-sm font-medium">
@@ -298,15 +311,14 @@ export default function PreferenciasPage() {
                 </Badge>
                 <span>Estas preferencias se aplican a tu cuenta.</span>
               </div>
-            </>
-          )}
+          </>
         </CardContent>
       </Card>
 
       <div className="flex justify-end">
         <Button
           onClick={save}
-          disabled={loading || saving || !isDirty}
+          disabled={saving || !isDirty}
         >
           {saving ? (
             <>

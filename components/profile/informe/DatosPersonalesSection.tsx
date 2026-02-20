@@ -92,9 +92,28 @@ export function DatosPersonalesSection({
                 </Badge>
               )}
             </span>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
-              Información básica del alumno
-            </p>
+            <div className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:flex items-center gap-2">
+              <p>Información básica del alumno</p>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    className="inline-flex items-center cursor-help"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }}
+                  >
+                    <Info className="h-3.5 w-3.5 text-slate-500" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="top" align="start">
+                  <p className="max-w-xs">
+                    Identidad anonimizada, etapa de escolarización y datos base
+                    para iniciar el informe psicopedagógico.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         </div>
       </AccordionTrigger>

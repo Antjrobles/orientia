@@ -59,20 +59,65 @@ function toTheme(value: unknown): z.infer<typeof themeSchema> {
 }
 
 async function ensurePrivateBucket() {
+  const CACHE_WINDOW_MS = 5 * 60 * 1000;
+  const now = Date.now();
+  if (
+    (globalThis as typeof globalThis & { __profileBucketCache?: { ok: boolean; error?: string; checkedAt: number } })
+      .__profileBucketCache &&
+    now -
+      ((globalThis as typeof globalThis & { __profileBucketCache?: { ok: boolean; error?: string; checkedAt: number } })
+        .__profileBucketCache?.checkedAt ?? 0) <
+      CACHE_WINDOW_MS
+  ) {
+    const cached =
+      (globalThis as typeof globalThis & {
+        __profileBucketCache?: { ok: boolean; error?: string; checkedAt: number };
+      }).__profileBucketCache!;
+    return cached.ok
+      ? { ok: true as const }
+      : { ok: false as const, error: cached.error ?? "No se pudo verificar el bucket." };
+  }
+
   const { data: buckets, error: listError } = await supabase.storage.listBuckets();
-  if (listError) return { ok: false as const, error: listError.message };
+  if (listError) {
+    (globalThis as typeof globalThis & { __profileBucketCache?: { ok: boolean; error?: string; checkedAt: number } })
+      .__profileBucketCache = {
+      ok: false,
+      error: listError.message,
+      checkedAt: now,
+    };
+    return { ok: false as const, error: listError.message };
+  }
 
   const exists = (buckets || []).some((bucket) => bucket.name === PROFILE_BUCKET);
-  if (exists) return { ok: true as const };
+  if (exists) {
+    (globalThis as typeof globalThis & { __profileBucketCache?: { ok: boolean; error?: string; checkedAt: number } })
+      .__profileBucketCache = {
+      ok: true,
+      checkedAt: now,
+    };
+    return { ok: true as const };
+  }
 
   const { error: createError } = await supabase.storage.createBucket(PROFILE_BUCKET, {
     public: false,
     fileSizeLimit: 10 * 1024 * 1024,
   });
   if (createError && !createError.message.toLowerCase().includes("already exists")) {
+    (globalThis as typeof globalThis & { __profileBucketCache?: { ok: boolean; error?: string; checkedAt: number } })
+      .__profileBucketCache = {
+      ok: false,
+      error: createError.message,
+      checkedAt: now,
+    };
     return { ok: false as const, error: createError.message };
   }
 
+  (globalThis as typeof globalThis & { __profileBucketCache?: { ok: boolean; error?: string; checkedAt: number } })
+    .__profileBucketCache = {
+    ok: true,
+    checkedAt: now,
+  };
   return { ok: true as const };
 }
 

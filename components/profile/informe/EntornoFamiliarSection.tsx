@@ -79,9 +79,28 @@ export function EntornoFamiliarSection({
                 </Badge>
               )}
             </span>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
-              Contexto familiar y social del alumno
-            </p>
+            <div className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:flex items-center gap-2">
+              <p>Contexto familiar y social del alumno</p>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    className="inline-flex items-center cursor-help"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }}
+                  >
+                    <Info className="h-3.5 w-3.5 text-slate-500" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="top" align="start">
+                  <p className="max-w-xs">
+                    Ayuda a identificar factores de protección y riesgo del
+                    entorno familiar para coordinar respuestas con el centro.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         </div>
       </AccordionTrigger>

@@ -16,7 +16,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Users,
   CheckCircle2,
@@ -87,9 +86,28 @@ export function OrientacionesFamiliaSection({
                 </Badge>
               )}
             </span>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
-              Guía para representantes legales
-            </p>
+            <div className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:flex items-center gap-2">
+              <p>Guía para representantes legales</p>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    className="inline-flex items-center cursor-help"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }}
+                  >
+                    <Info className="h-3.5 w-3.5 text-slate-500" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="top" align="start">
+                  <p className="max-w-xs">
+                    Pautas prácticas para que familia y centro actúen de forma
+                    coordinada en casa, aula y seguimiento.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         </div>
       </AccordionTrigger>

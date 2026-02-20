@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import React, { useEffect } from "react";
 import AutoLogout from "@/components/security/AutoLogout";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import GlobalCommandPalette from "@/components/navigation/GlobalCommandPalette";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -33,6 +34,7 @@ export default function Providers({ children, session }: ProvidersProps) {
       >
         {/* Sistema de seguridad: cierra sesión automáticamente tras 30 min de inactividad */}
         <AutoLogout />
+        <GlobalCommandPalette />
         {children}
       </ThemeProvider>
     </SessionProvider>

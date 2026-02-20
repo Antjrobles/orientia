@@ -79,9 +79,28 @@ export function ContextoEscolarSection({
                 </Badge>
               )}
             </span>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
-              Información del entorno educativo
-            </p>
+            <div className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:flex items-center gap-2">
+              <p>Información del entorno educativo</p>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    className="inline-flex items-center cursor-help"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }}
+                  >
+                    <Info className="h-3.5 w-3.5 text-slate-500" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="top" align="start">
+                  <p className="max-w-xs">
+                    Incluye variables del centro y del aula que influyen en el
+                    aprendizaje: recursos, organización y clima.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         </div>
       </AccordionTrigger>

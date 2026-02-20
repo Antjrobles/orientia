@@ -126,9 +126,28 @@ export function InformacionAlumnoSection({
                 </Badge>
               )}
             </span>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:block">
-              Desarrollo, autonomía, comunicación y otros aspectos clave
-            </p>
+            <div className="text-xs sm:text-sm text-slate-500 mt-0.5 hidden sm:flex items-center gap-2">
+              <p>Desarrollo, autonomía, comunicación y otros aspectos clave</p>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    className="inline-flex items-center cursor-help"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }}
+                  >
+                    <Info className="h-3.5 w-3.5 text-slate-500" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="top" align="start">
+                  <p className="max-w-xs">
+                    Describe funcionamiento global del alumno/a para vincular
+                    fortalezas y barreras con medidas educativas ajustadas.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         </div>
       </AccordionTrigger>

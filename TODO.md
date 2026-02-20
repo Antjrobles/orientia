@@ -271,7 +271,7 @@
 - [ ] Implementar drag & drop para reordenar secciones
 - [ ] Agregar vista previa en tiempo real mientras se edita
 - [ ] Implementar breadcrumbs mejorados con navegación rápida
-- [ ] Agregar búsqueda global (Cmd+K)
+- [x] Agregar búsqueda global (Cmd+K)
 - [ ] Implementar notificaciones en tiempo real (WebSockets)
 - [ ] Agregar animaciones y transiciones pulidas
 - [ ] Implementar skeleton loaders en todas las vistas
@@ -283,7 +283,7 @@
 - [x] Mejorar accesibilidad visual en admin (focus states visibles)
 - [x] Ajustar microcopy y botones con iconos en admin
 - [x] Footer con tipografia y espaciado mas coherentes
-- [ ] Agregar tooltips contextuales en formularios complejos
+- [x] Agregar tooltips contextuales en formularios complejos
 - [ ] Implementar responsive design optimizado para tablets
 - [ ] Agregar temas personalizables de color
 - [x] Permitir selección de tema claro/oscuro por usuario desde Preferencias
