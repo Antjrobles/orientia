@@ -43,6 +43,8 @@ export function DataTable<
   const table = useReactTable({
     data,
     columns,
+    enableColumnResizing: true,
+    columnResizeMode: "onChange",
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -117,18 +119,33 @@ export function DataTable<
         </div>
       </div>
       <div className="rounded-md border">
-        <Table>
+        <Table className="w-full table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className={headPadding}>
+                  <TableHead
+                    key={header.id}
+                    className={`${headPadding} relative`}
+                    style={{ width: header.getSize() }}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
+                    {header.column.getCanResize() && (
+                      <div
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none transition-colors ${
+                          header.column.getIsResizing()
+                            ? "bg-emerald-500"
+                            : "bg-transparent hover:bg-emerald-300"
+                        }`}
+                      />
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -143,7 +160,11 @@ export function DataTable<
                   className="transition-colors hover:bg-emerald-50/60 focus-within:bg-emerald-50/70"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className={cellPadding}>
+                    <TableCell
+                      key={cell.id}
+                      className={cellPadding}
+                      style={{ width: cell.column.getSize() }}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

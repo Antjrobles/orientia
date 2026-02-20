@@ -64,7 +64,7 @@ export default async function AdminPage() {
       .order("creado_en", { ascending: false }),
     supabase
       .from("users")
-      .select("id, name, email, image, role, emailVerified")
+      .select("id, name, email, image, role, emailVerified, created_at")
       .order("name", { ascending: true }),
     supabase.from("trusted_devices").select("user_id"),
   ]);
@@ -127,6 +127,7 @@ export default async function AdminPage() {
     const stats = reportStats.get(user.id);
     return {
       ...user,
+      createdAt: (user as { created_at?: string | null }).created_at ?? null,
       reportsCount: stats?.count ?? 0,
       lastReportAt: stats?.lastReportAt ?? null,
       trustedDevicesCount: trustedDevicesCount[user.id] ?? 0,

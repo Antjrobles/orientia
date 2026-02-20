@@ -18,6 +18,7 @@ export type User = {
   image: string | null;
   role: "admin" | "usuario";
   emailVerified?: string | null;
+  createdAt?: string | null;
   reportsCount?: number;
   lastReportAt?: string | null;
   trustedDevicesCount?: number;
@@ -64,6 +65,9 @@ export const columns: ColumnDef<User>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
+    enableResizing: false,
+    size: 52,
+    minSize: 52,
   },
   {
     accessorKey: "email",
@@ -87,6 +91,8 @@ export const columns: ColumnDef<User>[] = [
         </div>
       );
     },
+    size: 320,
+    minSize: 240,
   },
   {
     accessorKey: "role",
@@ -112,6 +118,8 @@ export const columns: ColumnDef<User>[] = [
         </Badge>
       );
     },
+    size: 130,
+    minSize: 110,
   },
   {
     accessorKey: "emailVerified",
@@ -131,6 +139,25 @@ export const columns: ColumnDef<User>[] = [
         </Badge>
       );
     },
+    size: 150,
+    minSize: 130,
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Alta" />
+    ),
+    cell: ({ row }) => {
+      const value = row.getValue("createdAt") as string | null | undefined;
+      if (!value) return <span className="text-sm text-muted-foreground">-</span>;
+      const date = new Date(value);
+      const label = Number.isNaN(date.getTime())
+        ? "-"
+        : date.toLocaleDateString("es-ES");
+      return <span className="text-sm">{label}</span>;
+    },
+    size: 130,
+    minSize: 120,
   },
   {
     accessorKey: "reportsCount",
@@ -139,6 +166,8 @@ export const columns: ColumnDef<User>[] = [
       const count = row.getValue("reportsCount") as number | undefined;
       return <span className="text-sm font-medium">{count ?? 0}</span>;
     },
+    size: 105,
+    minSize: 90,
   },
   {
     accessorKey: "lastReportAt",
@@ -152,13 +181,16 @@ export const columns: ColumnDef<User>[] = [
         : date.toLocaleDateString("es-ES");
       return <span className="text-sm">{label}</span>;
     },
+    size: 140,
+    minSize: 120,
   },
-  // --- COLUMNA ELIMINADA ---
-  // Se ha quitado la columna 'created_at' porque no existe en la tabla 'users'.
   {
     id: "actions",
     cell: ({ row }) => {
       return <UserActions user={row.original} />;
     },
+    enableResizing: false,
+    size: 84,
+    minSize: 84,
   },
 ];
