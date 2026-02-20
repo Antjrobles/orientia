@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   ColumnDef,
+  ColumnVisibilityState,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -22,11 +23,31 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SearchX } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { SearchX, SlidersHorizontal } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+}
+
+function getColumnLabel(columnId: string): string {
+  const labels: Record<string, string> = {
+    email: "Usuario",
+    role: "Rol",
+    emailVerified: "Email verificado",
+    createdAt: "Alta",
+    reportsCount: "Informes",
+    lastReportAt: "Ultimo informe",
+    actions: "Acciones",
+  };
+  return labels[columnId] ?? columnId;
 }
 
 export function DataTable<
@@ -36,6 +57,8 @@ export function DataTable<
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState(""); // Usamos un estado simple para el filtro global
   const [rowSelection, setRowSelection] = React.useState({});
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<ColumnVisibilityState>({});
   const [density, setDensity] = React.useState<"comfortable" | "compact">(
     "comfortable",
   );
@@ -51,10 +74,12 @@ export function DataTable<
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
       sorting,
       rowSelection,
       globalFilter,
+      columnVisibility,
     },
     globalFilterFn: (row, columnId, filterValue) => {
       const name = (row.original.name ?? "").toLowerCase();
@@ -116,6 +141,32 @@ export function DataTable<
               Denso
             </Button>
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 gap-2 text-xs">
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                Columnas
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>Mostrar / ocultar</DropdownMenuLabel>
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(Boolean(value))
+                    }
+                  >
+                    {getColumnLabel(column.id)}
+                  </DropdownMenuCheckboxItem>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       <div className="rounded-md border">

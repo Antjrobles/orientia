@@ -195,9 +195,11 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     id: "actions",
+    header: "Acciones",
     cell: ({ row }) => {
       return <UserActions user={row.original} />;
     },
+    enableHiding: false,
     enableResizing: false,
     size: 84,
     minSize: 84,
