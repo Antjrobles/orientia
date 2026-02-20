@@ -27,22 +27,14 @@ type Recipient = {
 };
 
 const DEFAULT_SUBJECT = "Orientia";
-const DEFAULT_MESSAGE = `Buenos días:
+const DEFAULT_MESSAGE = `Gracias por confiar en Orientia.
 
-Gracias por su registro y por la confianza depositada en Orientia.
+Queremos compartir una breve actualización sobre la evolución de la plataforma. Durante estas semanas se están incorporando mejoras orientadas a reforzar la calidad técnica de los informes psicopedagógicos, facilitar la organización y el seguimiento de casos, y mejorar la estabilidad general del servicio.
 
-Les escribimos para trasladar una actualización sobre mejoras en la plataforma. Seguimos incorporando ajustes orientados a facilitar el trabajo técnico en orientación educativa y a reforzar la calidad del servicio.
+El objetivo es que cada avance tenga un impacto real en el trabajo diario de orientación educativa y en la coordinación con el equipo docente y las familias.
 
-En esta línea, estamos priorizando:
-- calidad técnica y utilidad de los informes psicopedagógicos;
-- organización y seguimiento de casos;
-- estabilidad, seguridad y claridad de uso.
+Si lo consideran oportuno, pueden responder a este correo con incidencias, sugerencias o necesidades concretas. Todas las aportaciones se revisan y se valoran para priorizar próximos desarrollos.
 
-Si lo consideran oportuno, pueden enviar feedback, incidencias o sugerencias de mejora respondiendo a este correo. Todas las aportaciones se revisarán para priorizar próximos avances.
-
-Si desean recibir aviso de nuevas funcionalidades, pueden indicarlo en su respuesta.
-
-Atentamente,
 Equipo de Orientia`;
 
 export default function AdminComunicacionesPage() {
