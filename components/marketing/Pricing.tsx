@@ -68,18 +68,18 @@ export default function Pricing() {
   return (
     <section
       id="pricing"
-      className="py-20 lg:py-24 bg-gray-50"
+      className="bg-background py-20 lg:py-24"
       aria-labelledby="pricing-title"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="text-center mb-12">
           <h2
             id="pricing-title"
-            className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4"
+            className="mb-4 text-3xl font-bold text-foreground lg:text-4xl"
           >
             Planes de Precios Flexibles
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
             Elige el plan que mejor se adapte a tus necesidades. Comienza gratis
             y escala cuando lo necesites.
           </p>
@@ -91,7 +91,7 @@ export default function Pricing() {
                 "px-4 py-2 rounded-md text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2",
                 billingCycle === "monthly"
                   ? "bg-green-600 text-white shadow"
-                  : "bg-white text-gray-700 hover:bg-gray-100 border",
+                  : "border border-border bg-card text-foreground hover:bg-accent",
               )}
               aria-pressed={billingCycle === "monthly"}
             >
@@ -101,11 +101,11 @@ export default function Pricing() {
               <button
                 onClick={() => setBillingCycle("yearly")}
                 className={cn(
-                  "px-4 py-2 rounded-md text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2",
-                  billingCycle === "yearly"
-                    ? "bg-green-600 text-white shadow"
-                    : "bg-white text-gray-700 hover:bg-gray-100 border",
-                )}
+                "px-4 py-2 rounded-md text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2",
+                billingCycle === "yearly"
+                  ? "bg-green-600 text-white shadow"
+                  : "border border-border bg-card text-foreground hover:bg-accent",
+              )}
                 aria-pressed={billingCycle === "yearly"}
               >
                 Facturación Anual
@@ -127,10 +127,10 @@ export default function Pricing() {
               <div
                 key={plan.name}
                 className={cn(
-                  "relative flex flex-col h-full bg-white rounded-2xl p-8 border transition-all duration-300",
+                  "relative flex h-full flex-col rounded-2xl border bg-card p-8 transition-all duration-300",
                   plan.isFeatured
                     ? "border-green-600 border-2 transform lg:scale-105 shadow-xl shadow-green-600/20 ring-2 ring-green-600/10"
-                    : "border-gray-200 shadow-lg",
+                    : "border-border shadow-lg",
                 )}
               >
                 {plan.isFeatured && (
@@ -140,20 +140,20 @@ export default function Pricing() {
                 )}
 
                 <div className="flex-grow">
-                  <h3 className="text-2xl font-semibold text-gray-900">
+                  <h3 className="text-2xl font-semibold text-foreground">
                     {plan.name}
                   </h3>
-                  <p className="mt-2 text-gray-500 min-h-[6rem]">
+                  <p className="mt-2 min-h-[6rem] text-muted-foreground">
                     {plan.description}
                   </p>
 
                   <div className="mt-6 flex items-end min-h-[4.5rem]">
                     <div>
-                      <span className="text-4xl font-bold text-gray-900">
+                      <span className="text-4xl font-bold text-foreground">
                         {price}
                       </span>
                       {period && (
-                        <span className="text-lg font-medium text-gray-500 ml-1">
+                        <span className="ml-1 text-lg font-medium text-muted-foreground">
                           {period}
                         </span>
                       )}
@@ -167,7 +167,7 @@ export default function Pricing() {
                           className="h-5 w-5 text-green-500 mr-3 mt-1 flex-shrink-0"
                           aria-hidden="true"
                         />
-                        <span className="text-gray-600">{feature}</span>
+                        <span className="text-muted-foreground">{feature}</span>
                       </li>
                     ))}
                   </ul>

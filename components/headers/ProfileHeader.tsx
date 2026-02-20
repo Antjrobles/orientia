@@ -35,7 +35,7 @@ export default function ProfileHeader() {
   return (
     <>
       <header
-        className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50"
+        className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm"
         role="banner"
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -48,7 +48,17 @@ export default function ProfileHeader() {
                   alt="Logo Orientia"
                   width={150}
                   height={40}
-                  className="transform transition-transform hover:scale-105 mt-8"
+                  className="mt-8 transform transition-transform hover:scale-105 dark:hidden"
+                  style={{ height: "auto" }}
+                  priority
+                />
+                <Image
+                  src="/icons/logo4-dark.svg"
+                  alt="Logo Orientia"
+                  width={150}
+                  height={40}
+                  className="mt-8 hidden transform transition-transform hover:scale-105 dark:block"
+                  style={{ height: "auto" }}
                   priority
                 />
               </Link>
@@ -65,8 +75,8 @@ export default function ProfileHeader() {
                 className={cn(
                   "px-3 py-2 rounded-md text-sm font-medium transition-colors",
                   pathname === "/profile"
-                    ? "text-green-600 bg-green-50 font-semibold"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+                    ? "bg-primary/15 text-primary font-semibold"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
                 )}
               >
                 Panel Principal
@@ -76,8 +86,8 @@ export default function ProfileHeader() {
                 className={cn(
                   "px-3 py-2 rounded-md text-sm font-medium transition-colors",
                   pathname.startsWith("/profile/generar-informe")
-                    ? "text-green-600 bg-green-50 font-semibold"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+                    ? "bg-primary/15 text-primary font-semibold"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
                 )}
               >
                 Nuevo Informe
@@ -87,8 +97,8 @@ export default function ProfileHeader() {
                 className={cn(
                   "px-3 py-2 rounded-md text-sm font-medium transition-colors",
                   pathname.startsWith("/profile/informes")
-                    ? "text-green-600 bg-green-50 font-semibold"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+                    ? "bg-primary/15 text-primary font-semibold"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
                 )}
               >
                 Mis Informes
@@ -98,8 +108,8 @@ export default function ProfileHeader() {
                 className={cn(
                   "px-3 py-2 rounded-md text-sm font-medium transition-colors",
                   pathname.startsWith("/profile/intervenciones")
-                    ? "text-green-600 bg-green-50 font-semibold"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+                    ? "bg-primary/15 text-primary font-semibold"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
                 )}
               >
                 Intervenciones
@@ -110,8 +120,8 @@ export default function ProfileHeader() {
                   className={cn(
                     "inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors",
                     pathname.startsWith("/admin")
-                      ? "text-red-600 bg-red-50 font-semibold"
-                      : "text-red-600 hover:bg-red-50 hover:text-red-700",
+                      ? "bg-destructive/15 text-destructive font-semibold"
+                      : "text-destructive/90 hover:bg-destructive/10 hover:text-destructive",
                   )}
                 >
                   <Shield className="w-4 h-4 mr-1" />
@@ -127,7 +137,7 @@ export default function ProfileHeader() {
 
             {/* Botón menú móvil (derecha) */}
             <button
-              className="md:hidden p-2 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 ml-auto"
+              className="ml-auto rounded p-2 text-foreground hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring md:hidden"
               aria-label="Abrir menú"
               onClick={() => setMobileMenuOpen(true)}
             >
@@ -147,16 +157,16 @@ export default function ProfileHeader() {
             aria-hidden="true"
           />
           {/* Panel lateral */}
-          <div className="fixed inset-y-0 left-0 w-full max-w-sm bg-white shadow-xl transform transition-transform">
+          <div className="fixed inset-y-0 left-0 w-full max-w-sm transform border-r border-border bg-card shadow-xl transition-transform">
             <div className="flex flex-col h-full">
               {/* Cabecera menú móvil */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Menú</h2>
+              <div className="flex items-center justify-between border-b border-border p-4">
+                <h2 className="text-lg font-semibold text-foreground">Menú</h2>
                 <button
-                  className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="rounded-md p-2 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <X className="h-6 w-6 text-gray-600" />
+                  <X className="h-6 w-6 text-muted-foreground" />
                 </button>
               </div>
 
@@ -166,10 +176,10 @@ export default function ProfileHeader() {
                   <Link
                     href="/profile"
                     className={cn(
-                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
+                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-border",
                       pathname === "/profile"
-                        ? "text-green-600 bg-green-50 font-semibold"
-                        : "text-gray-700 hover:bg-gray-50",
+                        ? "bg-primary/15 text-primary font-semibold"
+                        : "border-border text-muted-foreground hover:bg-accent hover:text-foreground",
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -179,10 +189,10 @@ export default function ProfileHeader() {
                   <Link
                     href="/profile/generar-informe"
                     className={cn(
-                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
+                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-border",
                       pathname.startsWith("/profile/generar-informe")
-                        ? "text-green-600 bg-green-50 font-semibold"
-                        : "text-gray-700 hover:bg-gray-50",
+                        ? "bg-primary/15 text-primary font-semibold"
+                        : "border-border text-muted-foreground hover:bg-accent hover:text-foreground",
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -192,10 +202,10 @@ export default function ProfileHeader() {
                   <Link
                     href="/profile/informes"
                     className={cn(
-                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
+                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-border",
                       pathname.startsWith("/profile/informes")
-                        ? "text-green-600 bg-green-50 font-semibold"
-                        : "text-gray-700 hover:bg-gray-50",
+                        ? "bg-primary/15 text-primary font-semibold"
+                        : "border-border text-muted-foreground hover:bg-accent hover:text-foreground",
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -205,10 +215,10 @@ export default function ProfileHeader() {
                   <Link
                     href="/profile/intervenciones"
                     className={cn(
-                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
+                      "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-border",
                       pathname.startsWith("/profile/intervenciones")
-                        ? "text-green-600 bg-green-50 font-semibold"
-                        : "text-gray-700 hover:bg-gray-50",
+                        ? "bg-primary/15 text-primary font-semibold"
+                        : "border-border text-muted-foreground hover:bg-accent hover:text-foreground",
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -219,10 +229,10 @@ export default function ProfileHeader() {
                     <Link
                       href="/admin"
                       className={cn(
-                        "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-gray-100",
+                        "flex items-center px-4 py-4 text-base font-medium transition-colors border-b border-border",
                         pathname.startsWith("/admin")
-                          ? "text-red-600 bg-red-50 font-semibold"
-                          : "text-red-600 hover:bg-red-50",
+                          ? "bg-destructive/15 text-destructive font-semibold"
+                          : "border-border text-destructive/90 hover:bg-destructive/10 hover:text-destructive",
                       )}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -234,7 +244,7 @@ export default function ProfileHeader() {
               </div>
 
               {/* Botones usuario */}
-              <div className="border-t border-gray-200 p-4">
+              <div className="border-t border-border p-4">
                 <AuthButtons />
               </div>
             </div>

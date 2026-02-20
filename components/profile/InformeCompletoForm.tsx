@@ -62,8 +62,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <Card className="border-0 bg-gray-50 w-full max-w-full overflow-x-hidden">
-        <CardHeader className="border-b border-slate-200 p-4 sm:p-6">
+      <Card className="w-full max-w-full overflow-x-hidden border border-border bg-card">
+        <CardHeader className="border-b border-border p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <CardTitle className="text-lg sm:text-xl">
               Secciones del Informe
@@ -73,7 +73,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
               variant="outline"
               size="sm"
               onClick={() => setOpen([])}
-              className="text-gray-600"
+              className="text-muted-foreground"
             >
               <Minimize2 className="h-4 w-4 mr-2" /> Contraer todo
             </Button>
@@ -82,16 +82,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
             <div className="flex justify-between items-center mb-1">
               <Label
                 htmlFor="form-progress"
-                className="text-sm font-medium text-slate-600"
+                className="text-sm font-medium text-muted-foreground"
               >
                 Progreso de secciones requeridas
               </Label>
-              <span className="text-sm font-semibold text-slate-800">{`${completedSectionsCount} de ${totalCompletable}`}</span>
+              <span className="text-sm font-semibold text-foreground">{`${completedSectionsCount} de ${totalCompletable}`}</span>
             </div>
             <Progress
               id="form-progress"
               value={progressPercentage}
-              className="w-full bg-slate-200 [&>div]:bg-blue-600"
+              className="w-full bg-muted [&>div]:bg-primary"
             />
           </div>
         </CardHeader>
@@ -223,12 +223,12 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                 toggleCollapsible={toggleCollapsible}
               />
             </Accordion>
-            <div className="bg-gradient-to-r from-slate-50 to-slate-100 border-t border-slate-200 p-4 sm:p-6 mt-6">
+            <div className="mt-6 border-t border-border bg-gradient-to-r from-muted/60 to-muted/30 p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="bg-green-600 hover:bg-green-700 p-6"
+                  className="bg-green-600 p-6 hover:bg-green-700"
                 >
                   {isLoading ? "Generando..." : "🚀 Generar Informe"}
                 </Button>
@@ -238,14 +238,14 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     variant="outline"
                     onClick={handleClear}
                     disabled={isLoading}
-                    className="border-slate-300 text-slate-600 hover:bg-slate-50 px-4 sm:px-6 w-full sm:w-auto"
+                    className="w-full border-border px-4 text-muted-foreground hover:bg-accent hover:text-foreground sm:w-auto sm:px-6"
                   >
                     Limpiar Todo
                   </Button>
                   <Button
                     type="button"
                     onClick={() => handleSaveDraft()}
-                    className="bg-slate-600 hover:bg-slate-700 text-white px-4 sm:px-6 shadow-sm w-full sm:w-auto"
+                    className="w-full bg-slate-700 px-4 text-white shadow-sm hover:bg-slate-600 sm:w-auto sm:px-6"
                   >
                     💾 Guardar Borrador
                   </Button>

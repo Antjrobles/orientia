@@ -73,9 +73,9 @@ export default function Hero() {
                   <div className="h-4 bg-gray-200 rounded w-3/4"></div>
                   <div className="h-4 bg-gray-200 rounded w-full"></div>
                   <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                  <div className="h-8 bg-green-100 rounded flex items-center justify-center">
+                  <div className="flex h-8 items-center justify-center rounded bg-green-100 dark:bg-accent">
                     <Brain className="h-4 w-4 text-green-600 mr-2" />
-                    <span className="text-green-700 text-sm font-medium">
+                    <span className="text-sm font-medium text-green-700 dark:text-foreground">
                       IA Generando...
                     </span>
                   </div>

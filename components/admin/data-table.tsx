@@ -123,7 +123,7 @@ export function DataTable<
           <span>
             {filteredRows} de {totalRows} usuarios
           </span>
-          <div className="flex items-center gap-1 rounded-md border border-emerald-100 bg-emerald-50/60 p-1">
+          <div className="flex items-center gap-1 rounded-md border border-emerald-500/40 bg-emerald-500/10 p-1">
             <Button
               variant={density === "comfortable" ? "secondary" : "ghost"}
               size="sm"
@@ -194,7 +194,7 @@ export function DataTable<
                         )}
                     {header.column.getCanResize() && (
                       <>
-                        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-px bg-emerald-200/80" />
+                        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-px bg-emerald-500/30" />
                         <div
                           onMouseDown={header.getResizeHandler()}
                           onTouchStart={header.getResizeHandler()}
@@ -204,7 +204,7 @@ export function DataTable<
                               ? "bg-emerald-500/30"
                               : "bg-transparent hover:bg-emerald-300/30"
                           }`}
-                          aria-label={`Redimensionar columna ${String(header.column.columnDef.header ?? header.id)}`}
+                          aria-label={`Redimensionar columna ${getColumnLabel(header.column.id)}`}
                         />
                       </>
                     )}
@@ -219,7 +219,7 @@ export function DataTable<
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="transition-colors hover:bg-emerald-50/60 focus-within:bg-emerald-50/70"
+                  className="transition-colors hover:bg-emerald-500/10 focus-within:bg-emerald-500/15"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -245,10 +245,10 @@ export function DataTable<
                   className="h-24 text-center"
                 >
                   <div className="flex flex-col items-center justify-center gap-2 py-6 text-center">
-                    <div className="rounded-full bg-emerald-50 p-3 text-emerald-600">
+                    <div className="rounded-full bg-emerald-500/10 p-3 text-emerald-300">
                       <SearchX className="h-5 w-5" />
                     </div>
-                    <div className="text-sm font-semibold text-gray-900">
+                    <div className="text-sm font-semibold text-foreground">
                       {emptyTitle}
                     </div>
                     <div className="text-xs text-muted-foreground">

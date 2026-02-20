@@ -52,11 +52,11 @@ async function ProfileContent() {
   const firstName = session.user.name?.split(" ")[0] || "usuario";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="space-y-8 text-center bg-gray-50">
+    <div className="mx-auto max-w-7xl bg-background px-4 sm:px-6 lg:px-8">
+      <div className="space-y-8 text-center">
         {/* Cabecera de Bienvenida */}
-        <div className="text-center space-y-2 bg-gray-50">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 text-center">
+        <div className="space-y-2 text-center">
+          <h1 className="text-center text-3xl font-bold tracking-tight text-foreground">
             ¡Bienvenido de nuevo, {firstName}!
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -77,8 +77,8 @@ async function ProfileContent() {
                 <CardTitle
                   className={`text-sm font-bold ${
                     stat.variant === "warning"
-                      ? "text-green-600"
-                      : "text-gray-900"
+                      ? "text-primary"
+                      : "text-foreground"
                   }`}
                 >
                   {stat.title}
@@ -97,14 +97,14 @@ async function ProfileContent() {
 
         {/* Actividad Reciente */}
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center">
+          <h2 className="mb-4 text-center text-xl font-semibold text-foreground">
             Actividad Reciente
           </h2>
           <Card>
             <CardContent className="p-6">
               <div className="text-center py-10 border-2 border-dashed rounded-lg">
-                <p className="text-gray-500">Aún no hay informes recientes.</p>
-                <p className="text-sm text-gray-400 mt-2">
+                <p className="text-muted-foreground">Aún no hay informes recientes.</p>
+                <p className="mt-2 text-sm text-muted-foreground/80">
                   Cuando crees un informe, aparecerá aquí.
                 </p>
               </div>

@@ -1,0 +1,19 @@
+project:
+  name: orientia
+  language: typescript
+  framework: nodejs
+
+directories:
+  source: .
+  tests: testsprite_tests
+
+commands:
+  install: npm install
+  build: npm run build
+  test: npm run lint
+
+ignore:
+  - node_modules
+  - dist
+  - .git
+  - .next

@@ -29,9 +29,9 @@ export function AnalyticsChart({ data, className }: Props) {
   });
 
   return (
-    <Card className={cn("border-emerald-100/70 bg-white/90 shadow-sm", className)}>
+    <Card className={cn("border-border bg-card shadow-sm", className)}>
       <CardHeader>
-        <CardTitle className="text-base font-semibold text-emerald-900/80">
+        <CardTitle className="text-base font-semibold text-emerald-300">
           Actividad semanal
         </CardTitle>
       </CardHeader>

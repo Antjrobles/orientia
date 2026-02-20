@@ -183,11 +183,11 @@ export default function AdminComunicacionesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-gray-50">
+    <div className="min-h-screen bg-background">
       <div className="w-full px-4 pb-12 pt-8 sm:px-6 lg:px-8">
         <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
               Comunicaciones
             </h1>
             <p className="text-sm text-muted-foreground">
@@ -201,7 +201,7 @@ export default function AdminComunicacionesPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1.2fr,1fr]">
-          <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+          <Card className="border-border bg-card shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-emerald-600" />
@@ -271,8 +271,8 @@ export default function AdminComunicacionesPage() {
                 }}
               />
 
-              <div className="rounded-md border border-emerald-100">
-                <div className="flex items-center justify-between border-b border-emerald-100 bg-emerald-50/60 px-3 py-2 text-xs text-emerald-900">
+              <div className="rounded-md border border-emerald-500/40">
+                <div className="flex items-center justify-between border-b border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
                   <label className="inline-flex items-center gap-2 font-medium">
                     <Checkbox
                       checked={allVisibleSelected}
@@ -302,7 +302,7 @@ export default function AdminComunicacionesPage() {
                       return (
                         <div
                           key={user.id}
-                          className="flex items-center justify-between gap-3 border-b border-emerald-50 px-3 py-2 last:border-b-0"
+                          className="flex items-center justify-between gap-3 border-b border-border px-3 py-2 last:border-b-0"
                         >
                           <label className="flex min-w-0 flex-1 cursor-pointer items-start gap-3">
                             <Checkbox
@@ -313,7 +313,7 @@ export default function AdminComunicacionesPage() {
                               }
                             />
                             <span className="min-w-0 text-sm">
-                              <span className="block truncate font-medium text-gray-900">
+                              <span className="block truncate font-medium text-foreground">
                                 {user.name || "Sin nombre"}
                               </span>
                               <span className="block truncate text-muted-foreground">
@@ -329,8 +329,8 @@ export default function AdminComunicacionesPage() {
                               variant="outline"
                               className={
                                 verified
-                                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                                  : "border-amber-200 bg-amber-50 text-amber-700"
+                                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                                  : "border-amber-500/40 bg-amber-500/10 text-amber-300"
                               }
                             >
                               {verified ? "Verificada" : "No verificada"}
@@ -339,8 +339,8 @@ export default function AdminComunicacionesPage() {
                               variant="outline"
                               className={
                                 user.communicationsOptOut
-                                  ? "border-gray-200 bg-gray-50 text-gray-700"
-                                  : "border-emerald-200 bg-emerald-50 text-emerald-700"
+                                  ? "border-border bg-muted text-muted-foreground"
+                                  : "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
                               }
                             >
                               {user.communicationsOptOut ? "Baja" : "Activa"}
@@ -355,7 +355,7 @@ export default function AdminComunicacionesPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+          <Card className="border-border bg-card shadow-sm">
             <CardHeader>
               <CardTitle>Redactar comunicación</CardTitle>
             </CardHeader>

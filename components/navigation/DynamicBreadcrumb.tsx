@@ -52,13 +52,13 @@ export default function DynamicBreadcrumb() {
   // Don't show breadcrumb on home page
   if (pathname === "/") {
     return (
-      <div className="min-h-11 px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-start sm:items-center justify-start">
+      <div className="min-h-11 flex items-start justify-start border-b border-border bg-background/70 px-4 py-2 sm:items-center">
         <nav aria-label="Breadcrumb" className="w-full min-w-0">
-          <ol className="flex flex-wrap items-center gap-1 text-xs text-gray-600 sm:gap-2 sm:text-sm">
+          <ol className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground sm:gap-2 sm:text-sm">
             <li>
               <Link
                 href="/"
-                className="hover:text-green-600 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 rounded"
+                className="flex items-center rounded hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <Home className="w-4 h-4 mr-1" />
                 Inicio
@@ -67,7 +67,7 @@ export default function DynamicBreadcrumb() {
             <li aria-hidden="true">
               <ChevronRight className="w-4 h-4" />
             </li>
-            <li className="text-gray-900 break-words" aria-current="page">
+            <li className="break-words text-foreground" aria-current="page">
               Sistema de Informes Psicopedagógicos
             </li>
           </ol>
@@ -93,9 +93,9 @@ export default function DynamicBreadcrumb() {
   });
 
   return (
-    <div className="min-h-11 px-4 py-2 border-b border-gray-200 bg-gray-50 flex items-start sm:items-center justify-start">
+    <div className="min-h-11 flex items-start justify-start border-b border-border bg-background/70 px-4 py-2 sm:items-center">
       <nav aria-label="Breadcrumb" className="w-full min-w-0">
-        <ol className="flex flex-wrap items-center gap-1 text-xs text-gray-600 sm:gap-2 sm:text-sm">
+        <ol className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground sm:gap-2 sm:text-sm">
           {breadcrumbItems.map((item, index) => {
             const isFirst = index === 0;
             const isLast = index === breadcrumbItems.length - 1;
@@ -113,7 +113,7 @@ export default function DynamicBreadcrumb() {
                 )}
                 {isLast ? (
                   <span
-                    className="text-gray-900 flex items-center min-w-0 break-words"
+                    className="flex min-w-0 items-center break-words text-foreground"
                     aria-current="page"
                   >
                     {isFirst && <Home className="w-4 h-4 mr-1" />}
@@ -122,7 +122,7 @@ export default function DynamicBreadcrumb() {
                 ) : (
                   <Link
                     href={item.href}
-                    className="hover:text-green-600 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 rounded"
+                    className="flex items-center rounded hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
                     {isFirst && <Home className="w-4 h-4 mr-1" />}
                     {item.label}

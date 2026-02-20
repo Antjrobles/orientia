@@ -110,8 +110,8 @@ export default function AndaluciaSchoolSelector({ onSelectSchool }: Props) {
   const canApply = Boolean(school);
 
   return (
-    <div className="rounded-lg border border-emerald-200/80 bg-emerald-50/40 p-3">
-      <div className="mb-3 flex items-center gap-2 text-sm font-medium text-emerald-800">
+    <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-3">
+      <div className="mb-3 flex items-center gap-2 text-sm font-medium text-emerald-300">
         <MapPinned className="h-4 w-4" />
         Completar centro desde catalogo de Andalucia
       </div>
@@ -197,7 +197,7 @@ export default function AndaluciaSchoolSelector({ onSelectSchool }: Props) {
             <Button
               type="button"
               variant="outline"
-              className="w-full border-emerald-300 text-emerald-800 hover:bg-emerald-100"
+              className="w-full border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200"
               onClick={() =>
                 onSelectSchool({
                   schoolName: school,

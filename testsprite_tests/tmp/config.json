@@ -1,0 +1,20 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3000",
+  "executionArgs": {
+    "projectName": "orientia",
+    "projectPath": "c:/Users/arobl/Documents/Github/orientia",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_URL": "",
+      "API_KEY": "",
+      "TUNNEL_PROXY": "",
+      "TESTSPRITE_URL": "",
+      "TS_API_ENDPOINT": ""
+    }
+  },
+  "serverPort": 64277
+}

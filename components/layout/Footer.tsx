@@ -52,7 +52,14 @@ export default function Footer() {
                   alt="Logo de Orientia"
                   width={48}
                   height={48}
-                  className="drop-shadow-lg"
+                  className="drop-shadow-lg dark:hidden"
+                />
+                <Image
+                  src="/icons/logo2-dark.svg"
+                  alt="Logo de Orientia"
+                  width={48}
+                  height={48}
+                  className="hidden drop-shadow-lg dark:block"
                 />
                 <div>
                   {/* 2. Accesibilidad: Jerarquía de encabezados correcta (p en lugar de h2) */}

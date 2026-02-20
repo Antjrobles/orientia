@@ -108,8 +108,8 @@ export const columns: ColumnDef<User>[] = [
           variant="outline"
           className={`capitalize border ${
             isAdmin
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-emerald-200 bg-emerald-50 text-emerald-700"
+              ? "border-red-500/40 bg-red-500/10 text-red-300"
+              : "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
           }`}
         >
           <span
@@ -134,8 +134,8 @@ export const columns: ColumnDef<User>[] = [
           variant="outline"
           className={`border ${
             verified
-              ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-              : "border-amber-200 bg-amber-50 text-amber-700"
+              ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+              : "border-amber-500/40 bg-amber-500/10 text-amber-300"
           }`}
         >
           {verified ? "Verificado" : "Sin verificar"}

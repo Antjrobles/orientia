@@ -971,7 +971,7 @@ export default function IntervencionesPage() {
   return (
     <div className="w-full px-4 pb-12 pt-8 sm:px-6 lg:px-8">
       <header className="mb-6">
-        <h1 className="text-[clamp(1.5rem,4vw,2rem)] font-bold tracking-tight text-gray-900">
+        <h1 className="text-[clamp(1.5rem,4vw,2rem)] font-bold tracking-tight text-foreground">
           Intervenciones
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -986,22 +986,22 @@ export default function IntervencionesPage() {
         </div>
       )}
       <section className="space-y-5">
-        <div className="rounded-xl border border-emerald-200/70 bg-emerald-50/30">
+        <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/10">
           <div className="flex items-center justify-between px-4 py-3">
-            <span className="text-sm font-semibold text-emerald-900">Gestión de casos</span>
+            <span className="text-sm font-semibold text-emerald-300">Gestión de casos</span>
             <Button
               type="button"
               size="sm"
               variant="outline"
-              className="border-emerald-300 bg-white text-emerald-800 hover:bg-emerald-100"
+              className="border-emerald-500/50 bg-card text-emerald-300 hover:bg-emerald-500/20"
               onClick={() => setShowCaseTools((prev) => !prev)}
             >
               {showCaseTools ? "Ocultar crear/buscar" : "Mostrar crear/buscar"}
             </Button>
           </div>
           {showCaseTools && (
-            <div className="grid gap-4 border-t border-emerald-200/70 p-4 lg:grid-cols-2">
-            <Card className="border-emerald-200">
+            <div className="grid gap-4 border-t border-emerald-500/40 p-4 lg:grid-cols-2">
+            <Card className="border-border bg-card">
               <CardHeader>
                 <CardTitle className="text-base">Crear nuevo caso</CardTitle>
               </CardHeader>
@@ -1027,7 +1027,7 @@ export default function IntervencionesPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-border bg-card">
               <CardHeader>
                 <CardTitle className="text-base">Buscar casos</CardTitle>
               </CardHeader>
@@ -1058,8 +1058,8 @@ export default function IntervencionesPage() {
                       <SelectItem value="sociocultural">Sociocultural</SelectItem>
                     </SelectContent>
                   </Select>
-                  <div className="rounded-md border border-gray-200 p-2">
-                    <div className="mb-2 text-xs font-medium text-gray-700">
+                  <div className="rounded-md border border-border p-2">
+                    <div className="mb-2 text-xs font-medium text-foreground">
                       Contexto (multi-selección)
                     </div>
                     <div className="flex flex-wrap gap-1.5">
@@ -1111,7 +1111,7 @@ export default function IntervencionesPage() {
         </div>
 
         {selectedCase && (
-          <div className="flex flex-wrap items-center justify-center gap-3 rounded-lg border border-emerald-300 bg-emerald-100/70 px-4 py-3 text-sm text-emerald-950">
+          <div className="flex flex-wrap items-center justify-center gap-3 rounded-lg border border-emerald-500/50 bg-emerald-500/15 px-4 py-3 text-sm text-emerald-200">
             <span className="font-semibold uppercase tracking-wide">Caso activo</span>
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
             <span className="font-bold">{selectedCase.iniciales_alumno}</span>
@@ -1120,7 +1120,7 @@ export default function IntervencionesPage() {
               type="button"
               size="sm"
               variant="outline"
-              className="border-emerald-400 bg-white text-emerald-900 hover:bg-emerald-50"
+              className="border-emerald-500/50 bg-card text-emerald-300 hover:bg-emerald-500/20"
               onClick={() => {
                 setSelectedCaseId("");
                 setInterventions([]);
@@ -1134,7 +1134,7 @@ export default function IntervencionesPage() {
 
         <main>
           <Card className="w-full">
-            <CardHeader className="border-b border-gray-200">
+            <CardHeader className="border-b border-border">
               <CardTitle className="text-base">Espacio de trabajo</CardTitle>
             </CardHeader>
             <CardContent className="pt-5">
@@ -1165,7 +1165,7 @@ export default function IntervencionesPage() {
                           <label className="mb-1 block text-sm font-medium">
                             Ámbitos (multi-selección)
                           </label>
-                          <div className="flex flex-wrap gap-2 rounded-md border border-gray-200 p-2.5">
+                          <div className="flex flex-wrap gap-2 rounded-md border border-border p-2.5">
                             {(["escolar", "sociocultural"] as AmbitoIntervencion[]).map((item) => {
                               const isActive = ambitosSeleccionados.includes(item);
                               return (
@@ -1189,11 +1189,11 @@ export default function IntervencionesPage() {
                           Contextos específicos (multi-selección)
                         </label>
                         {contextoOptions.length === 0 ? (
-                          <div className="rounded-md border border-dashed border-gray-300 px-3 py-2 text-sm text-muted-foreground">
+                          <div className="rounded-md border border-dashed border-border px-3 py-2 text-sm text-muted-foreground">
                             Selecciona primero el ámbito.
                           </div>
                         ) : (
-                          <div className="flex flex-wrap gap-2 rounded-md border border-gray-200 p-3">
+                          <div className="flex flex-wrap gap-2 rounded-md border border-border p-3">
                             {contextoOptions.map((item) => {
                               const isActive = contextosSeleccionados.includes(item.value);
                               return (
@@ -1268,19 +1268,19 @@ export default function IntervencionesPage() {
                               <span className="pointer-events-none absolute bottom-0 left-4 top-0 w-px bg-emerald-300" />
                               {section.items.map((item) => (
                                 <li key={item.groupKey} className="relative">
-                                  <span className="absolute -left-[30px] top-6 h-4 w-4 rounded-full border-2 border-emerald-600 bg-white shadow-sm" />
+                                  <span className="absolute -left-[30px] top-6 h-4 w-4 rounded-full border-2 border-emerald-500 bg-card shadow-sm" />
 
-                                  <article className="overflow-hidden rounded-xl border border-emerald-200 bg-white shadow-sm transition-all hover:shadow-md">
-                                    <div className="border-b border-emerald-100 bg-emerald-50/70 px-5 py-3.5">
+                                  <article className="overflow-hidden rounded-xl border border-emerald-500/40 bg-card shadow-sm transition-all hover:shadow-md">
+                                    <div className="border-b border-emerald-500/30 bg-emerald-500/10 px-5 py-3.5">
                                       <div className="flex flex-wrap items-start justify-between gap-2">
                                         <div className="flex flex-wrap items-center gap-2">
-                                          <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-800">
+                                          <span className="rounded-md bg-emerald-500/20 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-300">
                                             {item.ambito}
                                           </span>
                                           {item.subambitos.map((sub) => (
                                             <span
                                               key={`${item.groupKey}-${sub}`}
-                                              className="rounded-md border border-emerald-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-emerald-900"
+                                              className="rounded-md border border-emerald-500/40 bg-card px-2 py-0.5 text-[11px] font-semibold text-emerald-300"
                                             >
                                               {labelContexto(sub)}
                                             </span>
@@ -1292,7 +1292,7 @@ export default function IntervencionesPage() {
                                               type="button"
                                               size="sm"
                                               variant="outline"
-                                              className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                                              className="border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/15"
                                               onClick={() => startEditIntervention(item)}
                                             >
                                               <Pencil className="mr-1.5 h-3.5 w-3.5" />
@@ -1312,7 +1312,7 @@ export default function IntervencionesPage() {
                                           </div>
                                         )}
                                       </div>
-                                      <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-emerald-700/80">
+                                        <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-emerald-300/90">
                                         <CalendarDays className="h-3.5 w-3.5" />
                                         {item.subambitos.length} contexto
                                         {item.subambitos.length > 1 ? "s" : ""}
@@ -1323,7 +1323,7 @@ export default function IntervencionesPage() {
                                         <div className="space-y-3">
                                           <div className="grid gap-3 sm:grid-cols-3">
                                             <div>
-                                              <label className="mb-1 block text-xs font-medium text-gray-700">
+                                              <label className="mb-1 block text-xs font-medium text-foreground">
                                                 Fecha
                                               </label>
                                               <Input
@@ -1335,10 +1335,10 @@ export default function IntervencionesPage() {
                                               />
                                             </div>
                                             <div>
-                                              <label className="mb-1 block text-xs font-medium text-gray-700">
+                                              <label className="mb-1 block text-xs font-medium text-foreground">
                                                 Ámbitos
                                               </label>
-                                              <div className="flex flex-wrap gap-1.5 rounded-md border border-gray-200 p-2">
+                                              <div className="flex flex-wrap gap-1.5 rounded-md border border-border p-2">
                                                 {(["escolar", "sociocultural"] as AmbitoIntervencion[]).map((amb) => {
                                                   const isActive = editInterventionAmbitos.includes(amb);
                                                   return (
@@ -1369,15 +1369,15 @@ export default function IntervencionesPage() {
                                               </div>
                                             </div>
                                             <div>
-                                              <label className="mb-1 block text-xs font-medium text-gray-700">
+                                              <label className="mb-1 block text-xs font-medium text-foreground">
                                                 Contextos (multi-selección)
                                               </label>
                                               {editInterventionAmbitos.length === 0 ? (
-                                                <div className="rounded-md border border-dashed border-gray-300 px-3 py-2 text-xs text-muted-foreground">
+                                                <div className="rounded-md border border-dashed border-border px-3 py-2 text-xs text-muted-foreground">
                                                   Selecciona primero el ámbito.
                                                 </div>
                                               ) : (
-                                                <div className="flex flex-wrap gap-1.5 rounded-md border border-gray-200 p-2">
+                                                <div className="flex flex-wrap gap-1.5 rounded-md border border-border p-2">
                                                   {editContextoOptions.map((option) => {
                                                     const isActive = editInterventionContexts.includes(
                                                       option.value,
@@ -1435,10 +1435,10 @@ export default function IntervencionesPage() {
                                         </div>
                                       ) : (
                                         <>
-                                          <h3 className="text-[15px] font-semibold leading-snug text-gray-950">
+                                          <h3 className="text-[15px] font-semibold leading-snug text-foreground">
                                             {item.titulo}
                                           </h3>
-                                          <p className="mt-2 whitespace-pre-line text-sm leading-6 text-gray-700">
+                                          <p className="mt-2 whitespace-pre-line text-sm leading-6 text-muted-foreground">
                                             {item.texto_redactado_ia || item.texto_original}
                                           </p>
                                         </>
@@ -1460,9 +1460,9 @@ export default function IntervencionesPage() {
         </main>
       </section>
 
-      <section className="mt-6 rounded-xl border border-gray-200 bg-white">
-        <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
-          <h2 className="text-sm font-semibold text-gray-900">Listado de casos</h2>
+      <section className="mt-6 rounded-xl border border-border bg-card">
+        <div className="flex items-center justify-between border-b border-border px-4 py-3">
+          <h2 className="text-sm font-semibold text-foreground">Listado de casos</h2>
           <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground">{sortedCases.length} casos</span>
             <Select
@@ -1497,7 +1497,7 @@ export default function IntervencionesPage() {
         </div>
 
         <div className="max-h-[460px] overflow-y-auto">
-          <ul className="divide-y divide-gray-200">
+          <ul className="divide-y divide-border">
             {sortedCases.length === 0 ? (
               <li className="px-4 py-4 text-sm text-muted-foreground">No hay casos todavía.</li>
             ) : (
@@ -1508,8 +1508,8 @@ export default function IntervencionesPage() {
                     key={item.id}
                     className={`group relative px-4 py-3 transition-all ${
                       isSelected
-                        ? "bg-emerald-100/80"
-                        : "bg-white hover:bg-emerald-50 hover:shadow-sm"
+                        ? "bg-emerald-500/15"
+                        : "bg-card hover:bg-emerald-500/10 hover:shadow-sm"
                     }`}
                   >
                     <span
@@ -1529,12 +1529,12 @@ export default function IntervencionesPage() {
                       >
                         <div
                           className={`inline-flex items-center gap-3 text-sm font-semibold ${
-                            isSelected ? "text-emerald-900" : "text-gray-900"
+                            isSelected ? "text-emerald-300" : "text-foreground"
                           }`}
                         >
                           <UserRound
                             className={`h-4 w-4 ${
-                              isSelected ? "text-emerald-700" : "text-gray-500"
+                              isSelected ? "text-emerald-300" : "text-muted-foreground"
                             }`}
                           />
                           {item.iniciales_alumno}
@@ -1550,7 +1550,7 @@ export default function IntervencionesPage() {
                           type="button"
                           size="sm"
                           variant="outline"
-                          className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                          className="border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/15"
                           onClick={() => openEditCase(item)}
                         >
                           <Pencil className="mr-1.5 h-3.5 w-3.5" />

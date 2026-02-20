@@ -26,42 +26,43 @@ export default function ErrorView({
   secondaryAction,
 }: ErrorViewProps) {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-emerald-50 text-gray-900">
+    <main className="relative min-h-screen overflow-hidden bg-muted/40 text-foreground">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(120deg, rgba(5,150,105,0.10), rgba(4,120,87,0.10))",
+              "linear-gradient(120deg, hsl(var(--primary) / 0.10), hsl(var(--secondary) / 0.18))",
           }}
         />
         <div
           className="absolute inset-0 opacity-[0.10]"
           style={{
-            backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)",
+            backgroundImage:
+              "radial-gradient(hsl(var(--background)) 1px, transparent 1px)",
             backgroundSize: "12px 12px",
           }}
         />
       </div>
 
       <section className="relative mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-center gap-10 px-6 py-16">
-        <div className="w-full max-w-lg overflow-hidden rounded-2xl border border-emerald-200/50 bg-white/90 shadow-sm backdrop-blur-sm">
+        <div className="w-full max-w-lg overflow-hidden rounded-2xl border border-border/60 bg-card/90 shadow-sm backdrop-blur-sm">
           <div className="px-6 pt-6">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
               {icon === "shield" && (
-                <Shield className="h-7 w-7 text-emerald-700" />
+                <Shield className="h-7 w-7 text-primary" />
               )}
-              {icon === "home" && <Home className="h-7 w-7 text-emerald-700" />}
+              {icon === "home" && <Home className="h-7 w-7 text-primary" />}
             </div>
             <div className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-300/30 bg-white/70 px-3 py-1.5 text-xs font-medium text-emerald-700">
+              <div className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-background/80 px-3 py-1.5 text-xs font-medium text-primary">
                 <span className="font-mono">{code}</span>
               </div>
-              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-gray-900">
+              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-foreground">
                 {title}
               </h1>
               {description && (
-                <p className="mt-2 text-gray-700">{description}</p>
+                <p className="mt-2 text-muted-foreground">{description}</p>
               )}
             </div>
           </div>
@@ -72,7 +73,7 @@ export default function ErrorView({
                 (secondaryAction.type === "link" ? (
                   <Link
                     href={secondaryAction.href}
-                    className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                    className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
                   >
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     {secondaryAction.label}
@@ -80,7 +81,7 @@ export default function ErrorView({
                 ) : (
                   <button
                     onClick={() => history.back()}
-                    className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                    className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
                   >
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     {secondaryAction.label}
@@ -90,7 +91,7 @@ export default function ErrorView({
               {primaryAction && primaryAction.type === "link" && (
                 <Link
                   href={primaryAction.href}
-                  className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
+                  className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   {primaryAction.label}
                 </Link>
@@ -98,7 +99,7 @@ export default function ErrorView({
             </div>
           </div>
 
-          <div className="border-t border-emerald-200/30 bg-emerald-50/50 px-6 py-3 text-center text-xs text-emerald-700">
+          <div className="border-t border-border/60 bg-muted/40 px-6 py-3 text-center text-xs text-muted-foreground">
             <span className="font-mono">{code}</span>
           </div>
         </div>

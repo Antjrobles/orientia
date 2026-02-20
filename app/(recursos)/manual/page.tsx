@@ -1,5 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
+import ResourcePageShell from "@/components/layout/ResourcePageShell";
 
 export const metadata: Metadata = {
   title: "Manual de uso",
@@ -14,21 +15,14 @@ export const metadata: Metadata = {
 
 export default function ManualPage() {
   return (
-    <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-      <div className="bg-white p-8 sm:p-10 rounded-xl shadow-xl">
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-6 text-center sm:text-left">
-          Manual
-        </h1>
-        <p className="text-sm text-gray-500 mb-8">
-          Guía práctica para sacar el máximo partido a Orientia.
-        </p>
-        <div className="prose prose-lg max-w-none">
-          <p>
-            Estamos preparando el manual de uso con ejemplos y buenas prácticas.
-            Muy pronto estará disponible.
-          </p>
-        </div>
-      </div>
-    </div>
+    <ResourcePageShell
+      title="Manual"
+      description="Guía práctica para sacar el máximo partido a Orientia."
+    >
+      <p>
+        Estamos preparando el manual de uso con ejemplos y buenas prácticas. Muy
+        pronto estará disponible.
+      </p>
+    </ResourcePageShell>
   );
 }

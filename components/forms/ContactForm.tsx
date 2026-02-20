@@ -443,15 +443,15 @@ const ContactForm: React.FC = () => {
       id="contacto"
       onFocusCapture={ensureLocationsLoaded}
       onPointerEnter={ensureLocationsLoaded}
-      className="py-8 sm:py-10 bg-primary-300 text-white scroll-mt-16"
+      className="scroll-mt-16 bg-green-700 py-8 text-white sm:py-10 dark:bg-slate-900"
     >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-6 sm:mb-8">
-            <h2 className="text-[clamp(1.5rem,5.5vw,2.25rem)] leading-tight text-black font-bold mb-3 sm:mb-4">
+            <h2 className="mb-3 text-[clamp(1.5rem,5.5vw,2.25rem)] font-bold leading-tight text-white sm:mb-4">
               Comienza a transformar tus clases hoy mismo
             </h2>
-            <p className="text-[clamp(1rem,3.8vw,1.25rem)] text-gray-700 mb-3 sm:mb-4">
+            <p className="mb-3 text-[clamp(1rem,3.8vw,1.25rem)] text-green-100 sm:mb-4">
               Únete a miles de profesores en Andalucía que ya están mejorando la
               experiencia educativa de sus alumnos
             </p>

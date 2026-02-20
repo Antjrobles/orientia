@@ -192,7 +192,7 @@ export default async function AdminPage() {
     session?.user?.name ?? session?.user?.email ?? "Administrador";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-gray-50">
+    <div className="min-h-screen bg-background">
       <div className="flex w-full flex-col gap-8 px-4 pb-12 pt-8 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div className="space-y-2">
@@ -202,7 +202,7 @@ export default async function AdminPage() {
                 Actualizado {format(new Date(), "dd/MM/yyyy")}
               </span>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
               Panel de administracion
             </h1>
             <p className="text-sm text-muted-foreground">
@@ -235,7 +235,7 @@ export default async function AdminPage() {
         </div>
 
         {supabasePaused && (
-          <Alert className="border-amber-200 bg-amber-50 text-amber-900">
+          <Alert className="border-amber-500/50 bg-amber-500/10 text-amber-200">
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Base de datos pausada</AlertTitle>
             <AlertDescription>
@@ -252,15 +252,15 @@ export default async function AdminPage() {
           informesEnProgreso={informesEnProgreso}
         />
 
-        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-emerald-700/70">
+        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-emerald-300/80">
           <span>Resumen</span>
-          <span className="h-px flex-1 bg-emerald-100" />
+          <span className="h-px flex-1 bg-emerald-500/30" />
         </div>
         <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
           <AnalyticsChart data={datosGrafico} />
-          <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+          <Card className="border-border bg-card shadow-sm">
             <CardHeader>
-              <CardTitle className="text-base font-semibold text-emerald-900/80">
+              <CardTitle className="text-base font-semibold text-emerald-300">
                 Estado del sistema
               </CardTitle>
               <CardDescription>Indicadores rapidos de actividad.</CardDescription>
@@ -270,7 +270,7 @@ export default async function AdminPage() {
                 <span className="text-sm text-muted-foreground">
                   Informes ultimos 7 dias
                 </span>
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="text-2xl font-bold text-foreground">
                   {informesUltimaSemana}
                 </span>
               </div>
@@ -279,22 +279,22 @@ export default async function AdminPage() {
                   Tasa de completado
                 </span>
                 <div className="flex items-center gap-2">
-                  <div className="h-2 w-24 rounded-full bg-emerald-100">
+                  <div className="h-2 w-24 rounded-full bg-emerald-500/20">
                     <div
                       className="h-2 rounded-full bg-emerald-500"
                       style={{ width: `${completionRate}%` }}
                     />
                   </div>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-semibold text-foreground">
                     {completionRate}%
                   </span>
                 </div>
               </div>
-              <div className="rounded-lg border border-emerald-100 bg-emerald-50/60 p-3 text-sm">
-                <div className="font-medium text-emerald-900">
+              <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-3 text-sm">
+                <div className="font-medium text-emerald-300">
                   Ultimo informe
                 </div>
-                <div className="text-emerald-800">
+                <div className="text-emerald-200">
                   {ultimoInforme
                     ? `${ultimoInforme.informacion_alumno?.nombre_apellidos || "Sin nombre"} - ${ultimoInformeFecha}`
                     : "Sin registros recientes"}
@@ -304,12 +304,12 @@ export default async function AdminPage() {
           </Card>
         </div>
 
-        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-emerald-700/70">
+        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-emerald-300/80">
           <span>Actividad</span>
-          <span className="h-px flex-1 bg-emerald-100" />
+          <span className="h-px flex-1 bg-emerald-500/30" />
         </div>
         <div id="recientes" className="grid gap-8 lg:grid-cols-2">
-          <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+          <Card className="border-border bg-card shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between gap-4">
               <div>
                 <CardTitle>Informes recientes</CardTitle>
@@ -336,7 +336,7 @@ export default async function AdminPage() {
                 {informesRecientesSeguros.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={3} className="py-6 text-center">
-                      <div className="text-sm font-semibold text-gray-900">
+                      <div className="text-sm font-semibold text-foreground">
                         Sin informes recientes
                       </div>
                       <div className="text-xs text-muted-foreground">
@@ -372,7 +372,7 @@ export default async function AdminPage() {
           </CardContent>
         </Card>
 
-          <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+          <Card className="border-border bg-card shadow-sm">
             <CardHeader>
               <CardTitle>Estadisticas rapidas</CardTitle>
               <CardDescription>Resumen de actividad reciente.</CardDescription>
@@ -388,7 +388,7 @@ export default async function AdminPage() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Completados</span>
-                <span className="text-2xl font-bold text-emerald-600">
+                <span className="text-2xl font-bold text-emerald-300">
                   {informesCompletados}
                 </span>
               </div>
@@ -402,13 +402,13 @@ export default async function AdminPage() {
           </Card>
         </div>
 
-        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-emerald-700/70">
+        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-emerald-300/80">
           <span>Usuarios</span>
-          <span className="h-px flex-1 bg-emerald-100" />
+          <span className="h-px flex-1 bg-emerald-500/30" />
         </div>
         <Card
           id="usuarios"
-          className="border-emerald-100/70 bg-white/90 shadow-sm"
+          className="border-border bg-card shadow-sm"
         >
           <CardHeader>
             <CardTitle>Gestion de usuarios</CardTitle>

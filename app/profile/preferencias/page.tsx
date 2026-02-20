@@ -1,40 +1,66 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Bell, Loader2, Mail } from "lucide-react";
+import { Bell, Loader2, Mail, MoonStar, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 
+type ThemePreference = "light" | "dark";
+
 type PreferencesState = {
   emailNotifications: boolean;
   draftReminders: boolean;
   weeklySummary: boolean;
+  theme: ThemePreference;
 };
 
+function normalizeTheme(value: unknown): ThemePreference {
+  return value === "dark" ? "dark" : "light";
+}
+
 export default function PreferenciasPage() {
+  const { theme, setTheme } = useTheme();
+  const didLoadRef = useRef(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [preferences, setPreferences] = useState<PreferencesState>({
     emailNotifications: true,
     draftReminders: true,
     weeklySummary: false,
+    theme: "light",
   });
   const [initial, setInitial] = useState<PreferencesState>({
     emailNotifications: true,
     draftReminders: true,
     weeklySummary: false,
+    theme: "light",
   });
 
   const isDirty =
     preferences.emailNotifications !== initial.emailNotifications ||
     preferences.draftReminders !== initial.draftReminders ||
-    preferences.weeklySummary !== initial.weeklySummary;
+    preferences.weeklySummary !== initial.weeklySummary ||
+    preferences.theme !== initial.theme;
+
+  const applyTheme = (choice: ThemePreference) => {
+    const root = document.documentElement;
+
+    root.classList.toggle("dark", choice === "dark");
+    root.style.colorScheme = choice;
+    window.localStorage.setItem("theme", choice);
+  };
 
   useEffect(() => {
+    if (didLoadRef.current) {
+      return;
+    }
+    didLoadRef.current = true;
+
     const load = async () => {
       setLoading(true);
       try {
@@ -45,11 +71,19 @@ export default function PreferenciasPage() {
         if (!response.ok || !data.success) {
           throw new Error(data.error || "No se pudieron cargar las preferencias.");
         }
+        const localStoredTheme = window.localStorage.getItem("theme");
+        const effectiveTheme = normalizeTheme(
+          localStoredTheme ?? data.preferences?.theme,
+        );
+
         const next: PreferencesState = {
           emailNotifications: Boolean(data.preferences?.emailNotifications ?? true),
           draftReminders: Boolean(data.preferences?.draftReminders ?? true),
           weeklySummary: Boolean(data.preferences?.weeklySummary ?? false),
+          theme: effectiveTheme,
         };
+        setTheme(next.theme);
+        applyTheme(next.theme);
         setPreferences(next);
         setInitial(next);
       } catch (error) {
@@ -65,7 +99,7 @@ export default function PreferenciasPage() {
     };
 
     void load();
-  }, []);
+  }, [setTheme]);
 
   const save = async () => {
     setSaving(true);
@@ -85,11 +119,21 @@ export default function PreferenciasPage() {
         emailNotifications: Boolean(data.preferences?.emailNotifications ?? true),
         draftReminders: Boolean(data.preferences?.draftReminders ?? true),
         weeklySummary: Boolean(data.preferences?.weeklySummary ?? false),
+        theme: (["light", "dark"].includes(data.preferences?.theme)
+          ? data.preferences.theme
+          : "light") as ThemePreference,
       };
+      setTheme(next.theme);
+      applyTheme(next.theme);
       setPreferences(next);
       setInitial(next);
 
       toast.success("Preferencias guardadas");
+      if (Array.isArray(data.warnings) && data.warnings.length > 0) {
+        toast.warning("Guardado parcial", {
+          description: data.warnings[0],
+        });
+      }
     } catch (error) {
       toast.error("Error al guardar", {
         description:
@@ -105,16 +149,16 @@ export default function PreferenciasPage() {
   return (
     <div className="flex w-full flex-col gap-6 px-4 pb-12 pt-8 sm:px-6 lg:px-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Preferencias</h1>
+        <h1 className="text-2xl font-bold text-foreground">Preferencias</h1>
         <p className="text-sm text-muted-foreground">
           Gestiona tus notificaciones y comunicaciones.
         </p>
       </div>
 
-      <Card className="border-emerald-100/70 bg-white/90 shadow-sm">
+      <Card className="border-border/70 bg-card/90 shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Bell className="h-4 w-4 text-emerald-600" />
+            <Bell className="h-4 w-4 text-primary" />
             Notificaciones
           </CardTitle>
         </CardHeader>
@@ -126,7 +170,57 @@ export default function PreferenciasPage() {
             </div>
           ) : (
             <>
-              <div className="flex items-start justify-between gap-3 rounded-md border border-emerald-100 p-3">
+              <div className="flex items-start justify-between gap-3 rounded-md border border-border p-3">
+                <div className="space-y-1">
+                  <Label htmlFor="theme-preference" className="text-sm font-medium">
+                    Apariencia de la app
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Elige tema claro u oscuro.
+                  </p>
+                </div>
+                <div className="flex min-w-[220px] flex-col gap-2">
+                  <div
+                    id="theme-preference"
+                    className="grid grid-cols-2 rounded-md border border-input bg-background p-1"
+                  >
+                    {(
+                      [
+                        { value: "light", label: "Claro" },
+                        { value: "dark", label: "Oscuro" },
+                      ] as const
+                    ).map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => {
+                          setTheme(option.value);
+                          applyTheme(option.value);
+                          setPreferences((current) => ({
+                            ...current,
+                            theme: option.value,
+                          }));
+                        }}
+                        className={
+                          preferences.theme === option.value
+                            ? "rounded-sm bg-primary px-2 py-1 text-xs font-semibold text-primary-foreground"
+                            : "rounded-sm px-2 py-1 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                        }
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    Activo:{" "}
+                    <span className="font-medium text-foreground">
+                      {theme === "dark" ? "Oscuro" : "Claro"}
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start justify-between gap-3 rounded-md border border-border p-3">
                 <div className="space-y-1">
                   <Label htmlFor="comm-orientia" className="text-sm font-medium">
                     Comunicaciones de Orientia
@@ -147,7 +241,7 @@ export default function PreferenciasPage() {
                 />
               </div>
 
-              <div className="flex items-start justify-between gap-3 rounded-md border border-emerald-100 p-3">
+              <div className="flex items-start justify-between gap-3 rounded-md border border-border p-3">
                 <div className="space-y-1">
                   <Label htmlFor="draft-reminders" className="text-sm font-medium">
                     Recordatorios de borradores
@@ -168,7 +262,7 @@ export default function PreferenciasPage() {
                 />
               </div>
 
-              <div className="flex items-start justify-between gap-3 rounded-md border border-emerald-100 p-3">
+              <div className="flex items-start justify-between gap-3 rounded-md border border-border p-3">
                 <div className="space-y-1">
                   <Label htmlFor="weekly-summary" className="text-sm font-medium">
                     Resumen semanal
@@ -191,6 +285,14 @@ export default function PreferenciasPage() {
 
               <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                 <Badge variant="secondary">
+                  <MoonStar className="mr-1 h-3.5 w-3.5" />
+                  Tema
+                </Badge>
+                <Badge variant="secondary">
+                  <Sun className="mr-1 h-3.5 w-3.5" />
+                  {preferences.theme === "dark" ? "Oscuro" : "Claro"}
+                </Badge>
+                <Badge variant="secondary">
                   <Mail className="mr-1 h-3.5 w-3.5" />
                   Email
                 </Badge>
@@ -205,7 +307,6 @@ export default function PreferenciasPage() {
         <Button
           onClick={save}
           disabled={loading || saving || !isDirty}
-          className="bg-green-600 hover:bg-green-700"
         >
           {saving ? (
             <>

@@ -43,10 +43,17 @@ export default function LoginPage() {
   const [justRegistered, setJustRegistered] = useState(false);
   const [verificationSent, setVerificationSent] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRequired = process.env.NODE_ENV !== "development";
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [resendStatus, setResendStatus] = useState<string | null>(null);
   const isDeviceVerificationError = error.includes("verificar este dispositivo");
   const autoResendAttempted = useRef(false);
+
+  useEffect(() => {
+    if (!turnstileRequired) {
+      setTurnstileToken("dev-bypass");
+    }
+  }, [turnstileRequired]);
 
   useEffect(() => {
     if (searchParams?.get("registered") === "true") {
@@ -165,7 +172,7 @@ export default function LoginPage() {
     setVerificationSent(null);
     setResendStatus(null);
 
-    if (!turnstileToken) {
+    if (turnstileRequired && !turnstileToken) {
       setError("Por favor, completa la verificación de seguridad.");
       setLoading(false);
       return;
@@ -332,15 +339,17 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <TurnstileWidget
-                onSuccess={(token) => setTurnstileToken(token)}
-                onError={() => setTurnstileToken(null)}
-                onExpire={() => setTurnstileToken(null)}
-              />
+              {turnstileRequired ? (
+                <TurnstileWidget
+                  onSuccess={(token) => setTurnstileToken(token)}
+                  onError={() => setTurnstileToken(null)}
+                  onExpire={() => setTurnstileToken(null)}
+                />
+              ) : null}
 
               <Button
                 type="submit"
-                disabled={loading || !turnstileToken}
+                disabled={loading || (turnstileRequired && !turnstileToken)}
                 className="w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (

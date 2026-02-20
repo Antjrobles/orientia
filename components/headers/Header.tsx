@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 
 // Lazy load: AuthButtons carga next-auth + DropdownMenu + iconos pesados
 const AuthButtons = dynamic(() => import("@/components/auth/AuthButtons"), {
-  loading: () => <div className="h-9 w-20 bg-gray-200 animate-pulse rounded" />,
+  loading: () => <div className="h-9 w-20 animate-pulse rounded bg-muted" />,
   ssr: false
 });
 
@@ -56,10 +56,10 @@ export default function Header() {
     <>
       <header
         className={cn(
-          "border-b border-gray-200 sticky top-0 z-50 transition-all duration-300",
+          "sticky top-0 z-50 border-b border-border transition-all duration-300",
           scrolled
-            ? "bg-white shadow-sm"
-            : "bg-white/80 backdrop-blur-sm"
+            ? "bg-background shadow-sm"
+            : "bg-background/80 backdrop-blur-sm"
         )}
         style={{
           willChange: scrolled ? "auto" : "backdrop-filter",
@@ -77,7 +77,17 @@ export default function Header() {
                   alt="Logo Orientia"
                   width={150}
                   height={40}
-                  className="transform transition-transform hover:scale-105 mt-8"
+                  className="mt-8 transform transition-transform hover:scale-105 dark:hidden"
+                  style={{ height: "auto" }}
+                  priority
+                />
+                <Image
+                  src="/icons/logo4-dark.svg"
+                  alt="Logo Orientia"
+                  width={150}
+                  height={40}
+                  className="mt-8 hidden transform transition-transform hover:scale-105 dark:block"
+                  style={{ height: "auto" }}
                   priority
                 />
               </Link>
@@ -91,38 +101,38 @@ export default function Header() {
             >
               <Link
                 href="#inicio"
-                className="px-3 py-2 rounded-md text-sm font-semibold text-green-600 bg-green-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+                className="rounded-md bg-primary/10 px-3 py-2 text-sm font-semibold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 aria-current="page"
               >
                 Inicio
               </Link>
               <Link
                 href="#caracteristicas"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 Características
               </Link>
               <Link
                 href="#beneficios"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 Beneficios
               </Link>
               <Link
                 href="#seguridad"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 Seguridad
               </Link>
               <Link
                 href="#pricing"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 Precios
               </Link>
               <Link
                 href="#contacto"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 Contacto
               </Link>
@@ -135,7 +145,7 @@ export default function Header() {
 
             {/* Botón menú móvil (derecha) */}
             <button
-              className="md:hidden p-2 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 ml-auto"
+              className="ml-auto rounded p-2 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring md:hidden"
               aria-label="Abrir menú"
               onClick={() => setMobileMenuOpen(true)}
             >
@@ -158,20 +168,20 @@ export default function Header() {
           {/* Panel del menú */}
           <div
             className={cn(
-              "fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out",
+              "fixed inset-y-0 right-0 w-full max-w-sm transform bg-card shadow-xl transition-transform duration-300 ease-in-out",
               mobileMenuOpen ? "translate-x-0" : "translate-x-full",
             )}
           >
             <div className="flex flex-col h-full">
               {/* Header del menú */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Menú</h2>
+              <div className="flex items-center justify-between border-b border-border p-4">
+                <h2 className="text-lg font-semibold text-foreground">Menú</h2>
                 <button
-                  className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="rounded-md p-2 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
                   aria-label="Cerrar menú"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <X className="h-6 w-6 text-gray-600" />
+                  <X className="h-6 w-6 text-muted-foreground" />
                 </button>
               </div>
 
@@ -184,42 +194,42 @@ export default function Header() {
                 >
                   <Link
                     href="#inicio"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-green-600 bg-green-50 transition-colors"
+                    className="block rounded-md bg-primary/10 px-4 py-3 text-base font-medium text-primary transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Inicio
                   </Link>
                   <Link
                     href="#caracteristicas"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Características
                   </Link>
                   <Link
                     href="#beneficios"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Beneficios
                   </Link>
                   <Link
                     href="#seguridad"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Seguridad
                   </Link>
                   <Link
                     href="#pricing"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Precios
                   </Link>
                   <Link
                     href="#contacto"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Contacto
@@ -228,7 +238,7 @@ export default function Header() {
               </div>
 
               {/* Footer del menú con botones de autenticación */}
-              <div className="border-t border-gray-200 p-4">
+              <div className="border-t border-border p-4">
                 <AuthButtons />
               </div>
             </div>

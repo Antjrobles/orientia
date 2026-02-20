@@ -1,5 +1,4 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
@@ -8,7 +7,6 @@ import AuthButtons from "@/components/auth/AuthButtons";
 import { cn } from "@/lib/utils";
 
 export default function LegalHeader() {
-  const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Prevenir scroll cuando el menú móvil está abierto
@@ -28,7 +26,7 @@ export default function LegalHeader() {
   return (
     <>
       <header
-        className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50"
+        className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm"
         role="banner"
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -41,7 +39,17 @@ export default function LegalHeader() {
                   alt="Logo Orientia"
                   width={150}
                   height={40}
-                  className="transform transition-transform hover:scale-105 mt-8"
+                  className="mt-8 transform transition-transform hover:scale-105 dark:hidden"
+                  style={{ height: "auto" }}
+                  priority
+                />
+                <Image
+                  src="/icons/logo4-dark.svg"
+                  alt="Logo Orientia"
+                  width={150}
+                  height={40}
+                  className="mt-8 hidden transform transition-transform hover:scale-105 dark:block"
+                  style={{ height: "auto" }}
                   priority
                 />
               </Link>
@@ -55,44 +63,44 @@ export default function LegalHeader() {
             >
               <Link
                 href="/"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 aria-current="page"
               >
                 Inicio
               </Link>
               <Link
                 href="/privacidad"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 Privacidad
               </Link>
               <Link
                 href="/terminos"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 Términos
               </Link>
               <Link
                 href="/cookies"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 Cookies
               </Link>
               <Link
                 href="/accesibilidad"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 Accesibilidad
               </Link>
               <Link
                 href="/rgpd"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 RGPD
               </Link>
               <Link
                 href="/eliminacion-de-datos-de-usuario"
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors whitespace-nowrap"
+                className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 Eliminación de Datos
               </Link>
@@ -105,7 +113,7 @@ export default function LegalHeader() {
 
             {/* Botón menú móvil (derecha) */}
             <button
-              className="md:hidden p-2 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 ml-auto"
+              className="ml-auto rounded p-2 text-foreground hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring md:hidden"
               aria-label="Abrir menú"
               onClick={() => setMobileMenuOpen(true)}
             >
@@ -128,20 +136,21 @@ export default function LegalHeader() {
           {/* Panel del menú */}
           <div
             className={cn(
-              "fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out",
+              "fixed inset-y-0 right-0 w-full max-w-sm shadow-xl transform transition-transform duration-300 ease-in-out",
+              "border-l border-border bg-card",
               mobileMenuOpen ? "translate-x-0" : "translate-x-full",
             )}
           >
             <div className="flex flex-col h-full">
               {/* Header del menú */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Menú</h2>
+              <div className="flex items-center justify-between border-b border-border p-4">
+                <h2 className="text-lg font-semibold text-foreground">Menú</h2>
                 <button
-                  className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="rounded-md p-2 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
                   aria-label="Cerrar menú"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <X className="h-6 w-6 text-gray-600" />
+                  <X className="h-6 w-6 text-muted-foreground" />
                 </button>
               </div>
 
@@ -154,7 +163,7 @@ export default function LegalHeader() {
                 >
                   <Link
                     href="/"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
                     aria-current="page"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -162,42 +171,42 @@ export default function LegalHeader() {
                   </Link>
                   <Link
                     href="/privacidad"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Privacidad
                   </Link>
                   <Link
                     href="/terminos"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Términos
                   </Link>
                   <Link
                     href="/cookies"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Cookies
                   </Link>
                   <Link
                     href="/accesibilidad"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Accesibilidad
                   </Link>
                   <Link
                     href="/rgpd"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     RGPD
                   </Link>
                   <Link
                     href="/eliminacion-de-datos-de-usuario"
-                    className="block px-4 py-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    className="block rounded-md px-4 py-3 text-base font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Eliminación de Datos
@@ -206,7 +215,7 @@ export default function LegalHeader() {
               </div>
 
               {/* Footer del menú con botones de autenticación */}
-              <div className="border-t border-gray-200 p-4">
+              <div className="border-t border-border p-4">
                 <AuthButtons />
               </div>
             </div>

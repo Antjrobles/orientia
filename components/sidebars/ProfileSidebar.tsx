@@ -105,18 +105,22 @@ export function ProfileSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" scroll="page" className="border-r bg-white">
-      <SidebarHeader className="relative z-[60] h-11 px-4 border-b border-gray-200 bg-gray-50 flex items-center justify-end">
+    <Sidebar
+      collapsible="icon"
+      scroll="page"
+      className="border-r border-border bg-sidebar"
+    >
+      <SidebarHeader className="relative z-[60] flex h-11 items-center justify-end border-b border-border bg-muted/40 px-4">
         <SidebarTrigger
           aria-label="Contraer sidebar"
-          className="h-8 w-8 rounded-md text-gray-600 hover:bg-gray-100"
+          className="h-8 w-8 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
         />
       </SidebarHeader>
       <SidebarContent className="px-2 pt-2">
         <SidebarMenu className="space-y-3">
           {sidebarGroups.map((group) => (
             <SidebarGroup key={group.label} className="p-0">
-              <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wide text-gray-400">
+              <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wide text-muted-foreground">
                 {group.label}
               </SidebarGroupLabel>
               <SidebarGroupContent className="space-y-1">
@@ -139,7 +143,7 @@ export function ProfileSidebar() {
                         <Link
                           href={item.href}
                           onClick={handleMobileNavClick}
-                          className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 data-[active=true]:bg-green-50 data-[active=true]:text-green-600 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0"
+                          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground data-[active=true]:bg-primary/10 data-[active=true]:text-primary group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:px-0"
                         >
                           <Icon className="h-4 w-4" />
                           <span className="group-data-[collapsible=icon]:hidden">
@@ -155,7 +159,7 @@ export function ProfileSidebar() {
           ))}
           {isAdmin && (
             <SidebarGroup className="p-0">
-              <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wide text-gray-400">
+              <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wide text-muted-foreground">
                 Admin
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -168,7 +172,7 @@ export function ProfileSidebar() {
                     <Link
                       href="/admin"
                       onClick={handleMobileNavClick}
-                      className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-red-600 hover:bg-red-50 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0"
+                      className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:px-0"
                     >
                       <Shield className="h-4 w-4" />
                       <span className="group-data-[collapsible=icon]:hidden">
@@ -186,7 +190,7 @@ export function ProfileSidebar() {
                     <Link
                       href="/admin/comunicaciones"
                       onClick={handleMobileNavClick}
-                      className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md text-red-600 hover:bg-red-50 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0"
+                      className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:px-0"
                     >
                       <Mail className="h-4 w-4" />
                       <span className="group-data-[collapsible=icon]:hidden">

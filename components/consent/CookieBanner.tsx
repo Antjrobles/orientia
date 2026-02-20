@@ -21,10 +21,10 @@ export default function CookieBanner() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50">
-      <div className="mx-auto max-w-5xl rounded-t-2xl border border-gray-200 bg-white p-4 shadow-xl">
+      <div className="mx-auto max-w-5xl rounded-t-2xl border border-border bg-card p-4 shadow-xl">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
           <div className="flex-1">
-            <p className="text-sm text-gray-800">
+            <p className="text-sm text-foreground">
               Usamos cookies necesarias para el funcionamiento del sitio y, con
               tu consentimiento, cookies de preferencias, analítica y
               rendimiento. Puedes cambiar tu elección en cualquier momento desde{" "}
@@ -47,7 +47,7 @@ export default function CookieBanner() {
                   ].map((c) => (
                     <label
                       key={c.key}
-                      className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-2 text-sm"
+                      className="flex items-center gap-2 rounded-lg border border-border bg-background p-2 text-sm"
                     >
                       <input
                         type="checkbox"
@@ -58,9 +58,9 @@ export default function CookieBanner() {
                             [c.key]: e.target.checked,
                           } as any)
                         }
-                        className="h-4 w-4 rounded border-gray-300"
+                        className="h-4 w-4 rounded border-input bg-background"
                       />
-                      <span className="text-gray-800">{c.label}</span>
+                      <span className="text-foreground">{c.label}</span>
                     </label>
                   ))}
                 </div>
@@ -70,7 +70,7 @@ export default function CookieBanner() {
                       save(draft);
                       toast.success("Preferencias guardadas");
                     }}
-                    className="rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200"
+                    className="rounded-lg bg-accent px-3 py-2 text-sm font-medium text-foreground hover:bg-accent/80"
                   >
                     Guardar preferencias
                   </button>
@@ -84,7 +84,7 @@ export default function CookieBanner() {
                 rejectNonEssential();
                 toast.success("Preferencias rechazadas");
               }}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50"
+              className="rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent"
             >
               Rechazar todo
             </button>
@@ -99,7 +99,7 @@ export default function CookieBanner() {
             </button>
             <button
               onClick={() => setOpen((v) => !v)}
-              className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-foreground hover:bg-accent/80"
             >
               {open ? "Ocultar" : "Configurar"}
             </button>

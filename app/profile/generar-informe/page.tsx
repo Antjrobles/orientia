@@ -114,12 +114,12 @@ export default function GenerarInformePage() {
   };
 
   return (
-    <div className="w-full px-4 py-4 sm:px-6 sm:py-6 lg:px-8 space-y-4 sm:space-y-6 bg-gray-50 overflow-x-hidden">
+    <div className="w-full space-y-4 overflow-x-hidden bg-background px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="mb-2 text-2xl font-bold text-foreground sm:text-3xl">
           Generar Informe Psicopedagógico
         </h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Complete el formulario para generar un informe
         </p>
       </div>

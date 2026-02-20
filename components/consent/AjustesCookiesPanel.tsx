@@ -64,25 +64,25 @@ export default function AjustesCookiesPanel() {
         ).map((cat) => (
           <label
             key={cat.key}
-            className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4"
+            className="flex items-start gap-3 rounded-lg border border-border bg-card/90 p-4"
           >
             <input
               type="checkbox"
-              className="mt-1 h-4 w-4 rounded border-gray-300"
+              className="mt-1 h-4 w-4 rounded border-input bg-background"
               checked={(local as any)[cat.key] as boolean}
               onChange={(e) => update(cat.key, e.target.checked)}
               disabled={cat.key === "necessary"}
             />
             <span>
-              <span className="block text-sm font-semibold text-gray-900">
+              <span className="block text-sm font-semibold text-foreground">
                 {cat.label}{" "}
                 {cat.key === "necessary" && (
-                  <em className="ml-1 text-xs font-normal text-gray-500">
+                  <em className="ml-1 text-xs font-normal text-muted-foreground">
                     (obligatorias)
                   </em>
                 )}
               </span>
-              <span className="block text-sm text-gray-600">{cat.desc}</span>
+              <span className="block text-sm text-muted-foreground">{cat.desc}</span>
             </span>
           </label>
         ))}
@@ -94,7 +94,7 @@ export default function AjustesCookiesPanel() {
             rejectNonEssential();
             toast.success("Preferencias rechazadas (no necesarias)");
           }}
-          className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50"
+          className="rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent"
         >
           Rechazar no necesarias
         </button>
@@ -109,13 +109,13 @@ export default function AjustesCookiesPanel() {
         </button>
         <button
           onClick={onSave}
-          className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200"
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-foreground hover:bg-accent/80"
         >
           Guardar preferencias
         </button>
         <Link
           href="/"
-          className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 text-center"
+          className="rounded-lg border border-border bg-background px-4 py-2 text-center text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
         >
           Volver al inicio
         </Link>

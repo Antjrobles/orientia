@@ -462,17 +462,17 @@ export default function AjustesPerfilPage() {
   return (
     <div className="w-full px-4 pb-12 pt-8 sm:px-6 lg:px-8">
       <div className="space-y-6">
-        <section className="relative overflow-hidden rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 via-white to-emerald-50 p-5 sm:p-6">
-          <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-emerald-100/60 blur-3xl" />
+        <section className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-r from-emerald-500/10 via-card to-emerald-500/10 p-5 sm:p-6">
+          <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-emerald-500/15 blur-3xl" />
           <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="mb-2 flex flex-wrap items-center gap-2">
-                <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
+                <Badge className="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/20">
                   Ajustes de cuenta
                 </Badge>
                 <Badge variant="secondary">Perfil profesional</Badge>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
                 Perfil y configuracion
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -499,7 +499,7 @@ export default function AjustesPerfilPage() {
             ) : null}
 
             <div className="space-y-6">
-              <Card className="border-emerald-100/70 bg-white/95 shadow-sm">
+              <Card className="border-border bg-card shadow-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <UserCircle2 className="h-4 w-4 text-emerald-600" />
@@ -517,8 +517,8 @@ export default function AjustesPerfilPage() {
                     </Field>
                     <Field label="Email">
                       <div className="relative">
-                        <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                        <Input value={form.email} readOnly className="pl-9 bg-gray-50" />
+                        <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input value={form.email} readOnly className="bg-muted pl-9" />
                       </div>
                     </Field>
                     <Field label="Telefono">
@@ -563,7 +563,7 @@ export default function AjustesPerfilPage() {
                     </Field>
                     <Field label="Ubicacion">
                       <div className="relative">
-                        <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                        <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                           value={form.location}
                           onChange={(e) => setField("location", e.target.value)}
@@ -592,7 +592,7 @@ export default function AjustesPerfilPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-emerald-100/70 bg-white/95 shadow-sm">
+              <Card className="border-border bg-card shadow-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <ClipboardPenLine className="h-4 w-4 text-emerald-600" />
@@ -627,8 +627,8 @@ export default function AjustesPerfilPage() {
                   </div>
 
                   <div className="space-y-3">
-                    <div className="rounded-lg border border-gray-100 bg-gray-50/70 p-3">
-                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-600">
+                    <div className="rounded-lg border border-border bg-muted/60 p-3">
+                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         Informes
                       </p>
                       <div className="space-y-2">
@@ -653,8 +653,8 @@ export default function AjustesPerfilPage() {
                         />
                       </div>
                     </div>
-                    <div className="rounded-lg border border-gray-100 bg-gray-50/70 p-3">
-                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-600">
+                    <div className="rounded-lg border border-border bg-muted/60 p-3">
+                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         Notificaciones
                       </p>
                       <div className="space-y-2">
@@ -679,7 +679,7 @@ export default function AjustesPerfilPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-emerald-100/70 bg-white/95 shadow-sm">
+              <Card className="border-border bg-card shadow-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <FolderOpen className="h-4 w-4 text-emerald-600" />
@@ -687,7 +687,7 @@ export default function AjustesPerfilPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-emerald-400 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 transition hover:border-emerald-600 hover:bg-emerald-100 hover:text-emerald-900">
+                    <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-emerald-500/60 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-300 transition hover:border-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-200">
                       {uploadingDoc ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
@@ -718,7 +718,7 @@ export default function AjustesPerfilPage() {
                         Cargando documentos...
                       </div>
                     ) : docs.length === 0 ? (
-                      <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-muted-foreground">
+                      <div className="rounded-lg border border-border bg-muted/60 p-3 text-sm text-muted-foreground">
                         No hay documentos personales guardados.
                       </div>
                     ) : (
@@ -756,7 +756,7 @@ export default function AjustesPerfilPage() {
                         </div>
 
                         {visibleDocs.length === 0 ? (
-                          <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-muted-foreground">
+                          <div className="rounded-lg border border-border bg-muted/60 p-3 text-sm text-muted-foreground">
                             No hay resultados para la busqueda actual.
                           </div>
                         ) : null}
@@ -764,11 +764,11 @@ export default function AjustesPerfilPage() {
                         <div className="space-y-2">
                           {visibleDocs.map((doc) => (
                             <div key={doc.path}>
-                              <div className="flex items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white px-3 py-2">
+                              <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-card px-3 py-2">
                                 <div className="min-w-0">
                                   <div className="flex items-center gap-2">
                                     <FileText className="h-4 w-4 shrink-0 text-emerald-600" />
-                                    <p className="truncate text-sm font-medium text-gray-900">
+                                    <p className="truncate text-sm font-medium text-foreground">
                                       {doc.name}
                                     </p>
                                   </div>
@@ -783,7 +783,7 @@ export default function AjustesPerfilPage() {
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
+                                    className="h-8 w-8 text-muted-foreground hover:bg-accent hover:text-foreground"
                                     onClick={() => startRenameDoc(doc)}
                                     aria-label={`Renombrar ${doc.name}`}
                                     title="Renombrar"
@@ -793,7 +793,7 @@ export default function AjustesPerfilPage() {
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
+                                    className="h-8 w-8 text-muted-foreground hover:bg-accent hover:text-foreground"
                                     onClick={() => void handlePreviewDoc(doc)}
                                     aria-label={`Ver ${doc.name}`}
                                     title="Vista previa"
@@ -805,7 +805,7 @@ export default function AjustesPerfilPage() {
                                       href={buildDocUrl(doc.path)}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 text-gray-600 transition hover:border-emerald-300 hover:text-emerald-700"
+                                      className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground transition hover:border-emerald-400 hover:text-emerald-300"
                                       aria-label={`Abrir ${doc.name}`}
                                       title="Abrir"
                                     >
@@ -870,9 +870,9 @@ export default function AjustesPerfilPage() {
                     )}
 
                     {previewDoc ? (
-                      <div className="rounded-lg border border-emerald-200 bg-emerald-50/40 p-3">
+                      <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-3">
                         <div className="mb-2 flex items-center justify-between gap-2">
-                          <p className="truncate text-sm font-semibold text-emerald-900">
+                          <p className="truncate text-sm font-semibold text-emerald-300">
                             Vista previa: {previewDoc.name}
                           </p>
                           <div className="flex items-center gap-2">
@@ -913,9 +913,9 @@ export default function AjustesPerfilPage() {
                               <object
                                 data={buildDocUrl(previewDoc.path)}
                                 type="application/pdf"
-                                className="h-[460px] w-full rounded-md border border-emerald-100 bg-white"
+                                className="h-[460px] w-full rounded-md border border-border bg-card"
                               >
-                                <div className="rounded-md border border-emerald-100 bg-white p-3 text-sm text-muted-foreground">
+                                <div className="rounded-md border border-border bg-card p-3 text-sm text-muted-foreground">
                                   Tu navegador no permite vista embebida de PDF.
                                   <a
                                     href={buildDocUrl(previewDoc.path)}
@@ -942,7 +942,7 @@ export default function AjustesPerfilPage() {
                               return <p className="text-sm text-red-600">{previewError}</p>;
                             }
                             return (
-                              <pre className="max-h-[460px] overflow-auto whitespace-pre-wrap rounded-md border border-emerald-100 bg-white p-3 text-xs text-gray-800">
+                              <pre className="max-h-[460px] overflow-auto whitespace-pre-wrap rounded-md border border-border bg-card p-3 text-xs text-foreground">
                                 {previewText || "Documento vacio."}
                               </pre>
                             );
@@ -960,7 +960,7 @@ export default function AjustesPerfilPage() {
                               return <p className="text-sm text-red-600">{previewError}</p>;
                             }
                             return (
-                              <div className="max-h-[460px] overflow-auto rounded-md border border-emerald-100 bg-white p-4">
+                              <div className="max-h-[460px] overflow-auto rounded-md border border-border bg-card p-4">
                                 <article
                                   className="prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-800"
                                   dangerouslySetInnerHTML={{
@@ -973,7 +973,7 @@ export default function AjustesPerfilPage() {
                             );
                           }
                           return (
-                            <div className="rounded-md border border-emerald-100 bg-white p-3 text-sm text-muted-foreground">
+                            <div className="rounded-md border border-border bg-card p-3 text-sm text-muted-foreground">
                               Este formato no admite vista inline en navegador.
                               <a
                                 href={buildDocUrl(previewDoc.path)}
@@ -992,10 +992,10 @@ export default function AjustesPerfilPage() {
               </Card>
             </div>
 
-            <Card className="border-emerald-200 bg-white/95 shadow-sm">
+            <Card className="border-border bg-card shadow-sm">
               <CardContent className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Estado de cambios</p>
+                  <p className="text-sm font-medium text-foreground">Estado de cambios</p>
                   <p className="text-xs text-muted-foreground">
                     {isDirty
                       ? "Tienes cambios sin guardar."
@@ -1036,7 +1036,7 @@ export default function AjustesPerfilPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="space-y-2 text-sm">
-      <span className="font-medium text-gray-700">{label}</span>
+      <span className="font-medium text-foreground">{label}</span>
       {children}
     </label>
   );
@@ -1052,8 +1052,8 @@ function ToggleCompactRow({
   onCheckedChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-md border border-white bg-white px-3 py-2">
-      <span className="text-sm text-gray-700">{label}</span>
+    <div className="flex items-center justify-between gap-4 rounded-md border border-border bg-card px-3 py-2">
+      <span className="text-sm text-foreground">{label}</span>
       <Switch checked={checked} onCheckedChange={onCheckedChange} />
     </div>
   );

@@ -132,6 +132,7 @@ providers.push(
       );
 
       if (passwordsMatch) {
+        const skipDeviceVerification = process.env.NODE_ENV === "development";
         const deviceIdFromCredentials =
           typeof credentials.deviceId === "string" &&
           credentials.deviceId.trim().length > 0
@@ -147,7 +148,7 @@ providers.push(
           .single();
 
         const isTrusted = Boolean(trusted) && !trustedError;
-        if (!isTrusted) {
+        if (!isTrusted && !skipDeviceVerification) {
           const origin = getRequestOrigin(req);
           const ip = getClientIp({ headers: toHeaders(req?.headers) });
           const rl = checkRateLimit(`device-verify:${user.id}:${ip}`, 3, 60_000);

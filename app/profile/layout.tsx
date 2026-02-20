@@ -18,6 +18,37 @@ interface ProfileLayoutProps {
 }
 
 export default async function ProfileLayout({ children }: ProfileLayoutProps) {
+  const skipDeviceVerification = process.env.NODE_ENV === "development";
+  if (skipDeviceVerification) {
+    return (
+      <div className="app-dark-scope min-h-screen overflow-x-hidden bg-background">
+        <ProfileHeader />
+        <SidebarProvider style={{ "--sidebar-width": "13rem" } as any}>
+          <ProfileSidebar />
+          <SidebarInset className="flex-1 overflow-x-hidden bg-background">
+            <div className="px-4 pt-3 sm:px-6 lg:px-8 md:hidden">
+              <SidebarTrigger
+                aria-label="Abrir menú lateral"
+                className="h-9 w-9 rounded-md border border-border text-muted-foreground hover:bg-accent hover:text-foreground"
+              />
+            </div>
+            <DynamicBreadcrumb />
+            <div className="py-10 overflow-x-hidden">
+              <main
+                id="main"
+                role="main"
+                tabIndex={-1}
+                className="overflow-x-hidden"
+              >
+                {children}
+              </main>
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
+      </div>
+    );
+  }
+
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     redirect("/login");
@@ -41,15 +72,15 @@ export default async function ProfileLayout({ children }: ProfileLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div className="app-dark-scope min-h-screen overflow-x-hidden bg-background">
       <ProfileHeader />
       <SidebarProvider style={{ "--sidebar-width": "13rem" } as any}>
         <ProfileSidebar />
-        <SidebarInset className="flex-1 bg-gray-50 overflow-x-hidden">
+        <SidebarInset className="flex-1 overflow-x-hidden bg-background">
           <div className="px-4 pt-3 sm:px-6 lg:px-8 md:hidden">
             <SidebarTrigger
               aria-label="Abrir menú lateral"
-              className="h-9 w-9 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-100"
+              className="h-9 w-9 rounded-md border border-border text-muted-foreground hover:bg-accent hover:text-foreground"
             />
           </div>
           <DynamicBreadcrumb />

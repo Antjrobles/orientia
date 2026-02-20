@@ -48,21 +48,21 @@ export function ResumenCards({
       {tarjetas.map((tarjeta, i) => (
         <Card
           key={i}
-          className="border-emerald-100/70 bg-white/90 shadow-sm transition-shadow hover:shadow-md"
+          className="border-border bg-card shadow-sm transition-shadow hover:shadow-md"
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-emerald-900/80">
+            <CardTitle className="text-sm font-semibold text-emerald-300">
               {tarjeta.titulo}
             </CardTitle>
-            <div className="rounded-full bg-emerald-50 p-2">
+            <div className="rounded-full bg-emerald-500/10 p-2">
               {tarjeta.icono}
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-gray-900">
+            <div className="text-3xl font-bold text-foreground">
               {tarjeta.valor}
             </div>
-            <p className="text-xs font-medium text-emerald-700/80">
+            <p className="text-xs font-medium text-emerald-300/90">
               {tarjeta.descripcion}
             </p>
           </CardContent>
