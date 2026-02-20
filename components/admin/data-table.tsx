@@ -3,8 +3,8 @@
 import * as React from "react";
 import {
   ColumnDef,
-  ColumnVisibilityState,
   SortingState,
+  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -58,7 +58,7 @@ export function DataTable<
   const [globalFilter, setGlobalFilter] = React.useState(""); // Usamos un estado simple para el filtro global
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
-    React.useState<ColumnVisibilityState>({});
+    React.useState<VisibilityState>({});
   const [density, setDensity] = React.useState<"comfortable" | "compact">(
     "comfortable",
   );
