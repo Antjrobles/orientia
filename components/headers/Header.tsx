@@ -88,7 +88,6 @@ export default function Header() {
                   height={40}
                   className="mt-8 hidden transform transition-transform hover:scale-105 dark:block"
                   style={{ height: "auto" }}
-                  priority
                 />
               </Link>
             </div>

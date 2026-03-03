@@ -1,7 +1,6 @@
 import React from "react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { getServerSession } from "next-auth/next";
 import "./globals.css";
 import Providers from "@/components/providers/Providers";
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
@@ -10,7 +9,6 @@ import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { authOptions } from "../lib/auth";
 import UmamiAnalytics from "@/components/consent/UmamiAnalytics";
 import BackToTopButton from "@/components/navigation/BackToTopButton";
 
@@ -66,26 +64,19 @@ export const metadata: Metadata = {
     title: "Orientia — Sistema de Informes Psicopedagógicos con IA",
     description:
       "Genera informes psicopedagógicos profesionales con IA en minutos. Plantillas oficiales, cumple normativa andaluza y RGPD. +500 orientadores confían en Orientia.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Orientia — Sistema de Informes Psicopedagógicos con IA para orientadores educativos",
-      },
-    ],
+    // La imagen OG la genera app/opengraph-image.tsx automáticamente
   },
   twitter: {
     card: "summary_large_image",
     title: "Orientia — Sistema de Informes Psicopedagógicos con IA",
     description:
       "Genera informes psicopedagógicos profesionales con IA en minutos. Plantillas oficiales, cumple normativa andaluza y RGPD.",
-    images: ["/og-image.jpg"],
   },
   alternates: {
     canonical: "https://orientia.es",
     languages: {
       "es-ES": "https://orientia.es",
+      "x-default": "https://orientia.es",
     },
   },
   category: "education",
@@ -96,35 +87,22 @@ export const viewport: Viewport = {
   themeColor: "#16a34a",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
   return (
     <html lang="es" suppressHydrationWarning>
-      <head>
-        {/* Preload crítico para la fuente Inter - Mejora FCP (First Contentful Paint) */}
-        <link
-          rel="preconnect"
-          href="https://fonts.googleapis.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-      </head>
       <body className={inter.className} suppressHydrationWarning>
+        {/* next/font ya inyecta preconnects a Google Fonts automáticamente */}
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:text-gray-900 focus:shadow"
         >
           Saltar al contenido principal
         </a>
-        <Providers session={session}>
+        <Providers>
           <ConsentProvider>
             {children}
             <CookieBanner />

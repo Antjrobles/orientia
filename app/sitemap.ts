@@ -43,7 +43,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: number,
     changeFrequency: MetadataRoute.Sitemap[0]["changeFrequency"],
   ) => ({
-    url: `${baseUrl}${route}`,
+    // Sin trailing slash para coincidir con el canonical de layout.tsx
+    url: `${baseUrl}${route === "/" ? "" : route}`,
     lastModified: lastmod,
     changeFrequency,
     priority,

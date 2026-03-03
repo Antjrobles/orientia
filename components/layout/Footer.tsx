@@ -2,28 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Mail, Phone, Clock, MapPin, ExternalLink } from "lucide-react";
+import { organizationStructuredData } from "@/components/structured-data";
 
-// 1. SEO: Datos Estructurados (JSON-LD) para la organización
 const OrganizationSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Orientia",
-  url: "https://www.orientia.es", // Reemplazar con la URL real del sitio
-  logo: "https://www.orientia.es/icons/logo2.svg", // Reemplazar con la URL completa al logo
-  contactPoint: {
-    "@type": "ContactPoint",
-    telephone: "+34-955-064-000",
-    contactType: "customer support",
-    email: "info@orientia.es",
-  },
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Av. de la Innovación, s/n", // Dirección de ejemplo
-    addressLocality: "Sevilla",
-    postalCode: "41020",
-    addressRegion: "Andalucía",
-    addressCountry: "ES",
-  },
+  ...organizationStructuredData,
 };
 
 export default function Footer() {

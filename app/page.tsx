@@ -47,13 +47,13 @@ function SectionSkeleton() {
 }
 
 export const metadata: Metadata = {
-  title: "Sistema de Informes Psicopedagógicos",
+  title: "Sistema de Informes Psicopedagógicos con IA",
   description:
     "Plataforma para orientadores educativos. Genera informes psicopedagógicos profesionales con IA. Ahorra tiempo, garantiza calidad y cumple normativa.",
   openGraph: {
-    title: "Sistema de Informes Psicopedagógicos",
+    title: "Orientia — Sistema de Informes Psicopedagógicos con IA",
     description:
-      "Plataforma oficial para orientadores educativos. Genera informes con IA.",
+      "Genera informes psicopedagógicos con IA en minutos. Plantillas oficiales, cumple normativa andaluza y RGPD. Gratis para empezar.",
     url: "https://orientia.es",
     // La imagen OG la genera app/opengraph-image.tsx automáticamente
   },
@@ -83,13 +83,20 @@ export default function Page() {
                 name: "Plan Gratuito",
                 price: "0",
                 priceCurrency: "EUR",
+                url: "https://orientia.es/#pricing",
               },
               {
                 "@type": "Offer",
                 name: "Plan Profesional",
                 price: "4.99",
                 priceCurrency: "EUR",
-                billingDuration: "P1M",
+                url: "https://orientia.es/#pricing",
+                priceSpecification: {
+                  "@type": "UnitPriceSpecification",
+                  price: "4.99",
+                  priceCurrency: "EUR",
+                  billingDuration: "P1M",
+                },
               },
             ],
             provider: { "@id": "https://orientia.es/#organization" },
@@ -112,33 +119,6 @@ export default function Page() {
             name: "Orientia",
             url: "https://orientia.es",
             publisher: { "@id": "https://orientia.es/#organization" },
-            potentialAction: {
-              "@type": "SearchAction",
-              target: {
-                "@type": "EntryPoint",
-                urlTemplate: "https://orientia.es/?q={search_term_string}",
-              },
-              "query-input": "required name=search_term_string",
-            },
-          }),
-        }}
-      />
-
-      {/* BreadcrumbList schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              {
-                "@type": "ListItem",
-                position: 1,
-                name: "Inicio",
-                item: "https://orientia.es/",
-              },
-            ],
           }),
         }}
       />

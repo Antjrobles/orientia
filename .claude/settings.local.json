@@ -25,7 +25,10 @@
       "Bash(npm run analyze:*)",
       "Bash(start .nextanalyzeclient.html)",
       "Bash(start \"\" \"C:\\Users\\arobl\\Documents\\Github\\orientia\\.next\\analyze\\client.html\")",
-      "Bash(set ANALYZE=true)"
+      "Bash(set ANALYZE=true)",
+      "mcp__claude_ai_Vercel__list_teams",
+      "mcp__claude_ai_Vercel__list_projects",
+      "mcp__claude_ai_Vercel__list_deployments"
     ],
     "deny": [],
     "ask": []
