@@ -199,12 +199,17 @@ export default async function BlogPostPage({ params }: Props) {
             "@id": `https://orientia.es/blog/${post.slug}`,
             headline: post.titulo,
             description: post.descripcion,
+            image: `https://orientia.es/opengraph-image.png`,
             datePublished: post.fecha,
             dateModified: post.fechaActualizacion ?? post.fecha,
             inLanguage: "es-ES",
             url: `https://orientia.es/blog/${post.slug}`,
             publisher: { "@id": "https://orientia.es/#organization" },
-            author: { "@id": "https://orientia.es/#organization" },
+            author: {
+              "@type": "Person",
+              name: "Equipo Orientia",
+              url: "https://orientia.es/sobre-nosotros",
+            },
             mainEntityOfPage: {
               "@type": "WebPage",
               "@id": `https://orientia.es/blog/${post.slug}`,

@@ -33,16 +33,16 @@ const CTASection = dynamic(() => import("@/components/marketing/CTASection"), {
   loading: () => <SectionSkeleton />,
 });
 
-// Simple skeleton loader for sections
+// Simple skeleton loader that matches real section height to prevent CLS
 function SectionSkeleton() {
   return (
-    <div className="py-20 bg-gray-50 animate-pulse">
+    <div className="py-20 bg-gray-50 animate-pulse" style={{ minHeight: "480px" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-8 bg-gray-200 rounded w-1/3 mx-auto mb-4"></div>
         <div className="h-4 bg-gray-200 rounded w-2/3 mx-auto mb-12"></div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-48 bg-gray-200 rounded-lg"></div>
+            <div key={i} className="h-64 bg-gray-200 rounded-lg"></div>
           ))}
         </div>
       </div>
@@ -177,48 +177,15 @@ export default function Page() {
             url: "https://orientia.es",
             inLanguage: "es-ES",
             publisher: { "@id": "https://orientia.es/#organization" },
-            // FIX: Añadir SearchAction para Sitelinks Searchbox
             potentialAction: {
               "@type": "SearchAction",
               target: {
                 "@type": "EntryPoint",
                 urlTemplate:
-                  "https://orientia.es/soporte?q={search_term_string}",
+                  "https://orientia.es/faq?q={search_term_string}",
               },
               "query-input": "required name=search_term_string",
             },
-          }),
-        }}
-      />
-
-      {/*
-       * ─────────────────────────────────────────────────────────────────────
-       * 3. BreadcrumbList — Muestra la ruta de navegación en los resultados
-       *    de búsqueda (green breadcrumbs under the page title in SERPs).
-       *    https://developers.google.com/search/docs/appearance/structured-data/breadcrumb
-       * ─────────────────────────────────────────────────────────────────────
-       */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "@id": "https://orientia.es/#breadcrumb",
-            itemListElement: [
-              {
-                "@type": "ListItem",
-                position: 1,
-                name: "Inicio",
-                item: "https://orientia.es",
-              },
-              {
-                "@type": "ListItem",
-                position: 2,
-                name: "Sistema de Informes Psicopedagógicos",
-                item: "https://orientia.es",
-              },
-            ],
           }),
         }}
       />

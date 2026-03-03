@@ -14,6 +14,18 @@ e informes, y cumplimiento total de GDPR/LOPDGDD.
 ## Páginas principales
 
 - https://orientia.es
+- https://orientia.es/sobre-nosotros
+
+## Blog especializado
+
+- https://orientia.es/blog
+- https://orientia.es/blog/informe-psicopedagogico-neae-andalucia
+- https://orientia.es/blog/plantilla-evaluacion-psicopedagogica
+- https://orientia.es/blog/integracion-seneca-orientadores-educativos
+
+## Preguntas frecuentes
+
+- https://orientia.es/faq
 
 ## Información legal
 
@@ -26,5 +38,4 @@ e informes, y cumplimiento total de GDPR/LOPDGDD.
 ## Contacto
 
 - Email: privacidad@orientia.es
-- Responsable: Antonio José Robles Muñoz
 - Dirección: Av. de la Innovación, s/n, 41020 Sevilla, Andalucía, España

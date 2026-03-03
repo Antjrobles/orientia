@@ -40,9 +40,7 @@ export const organizationStructuredData = {
     caption: "Logo de Orientia",
   },
   // FIX: Añadir sameAs para reforzar la entidad en el Grafo de Conocimiento de Google
-  sameAs: [
-    "https://orientia.es",
-  ],
+  sameAs: [],
   contactPoint: {
     "@type": "ContactPoint",
     telephone: "+34955064000",

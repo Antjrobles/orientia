@@ -197,27 +197,7 @@ export default function FAQPage() {
         </div>
       </section>
 
-      {/* ── FAQPage schema ── */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "@id": "https://orientia.es/faq",
-            name: "Preguntas Frecuentes — Orientia",
-            url: "https://orientia.es/faq",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.pregunta,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.respuesta,
-              },
-            })),
-          }),
-        }}
-      />
+      {/* ── FAQPage schema eliminado: Google lo restringe a gov/health desde Aug 2023 ── */}
     </div>
   );
 }

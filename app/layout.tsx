@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [{ url: "/icons/favicon.ico", sizes: "any" }],
     shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    apple: "/icons/apple-touch-icon.png",
   },
   manifest: "/manifest.json",
   description:
@@ -94,9 +94,9 @@ export default function RootLayout({
               url: "https://orientia.es",
               logo: {
                 "@type": "ImageObject",
-                url: "https://orientia.es/icons/logo4.svg",
-                width: 150,
-                height: 40,
+                url: "https://orientia.es/icons/icon-512x512.png",
+                width: 512,
+                height: 512,
               },
               founder: {
                 "@type": "Person",

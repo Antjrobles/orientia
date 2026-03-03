@@ -11,12 +11,7 @@ function getBaseUrl() {
 
 /**
  * sitemap.xml moderno:
- * - rutas públicas y legales
- * - campos opcionales: changeFrequency, priority
- * - preparado para i18n y futuras rutas dinámicas
- *
- * NOTA: /manual, /faq, /soporte, /formacion tienen robots noindex
- * y se excluyen del sitemap hasta que tengan contenido real.
+ * - rutas públicas, blog y legales
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = getBaseUrl();
