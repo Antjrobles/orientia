@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useConsent } from "@/components/consent/ConsentProvider";
 
@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-export default function GoogleAnalytics() {
+function GoogleAnalyticsInner() {
   // Consentimiento desde el provider (usa la categoría 'analytics')
   const { consent, loaded } = useConsent();
   const pathname = usePathname() ?? "";
@@ -59,5 +59,13 @@ export default function GoogleAnalytics() {
         `}
       </Script>
     </>
+  );
+}
+
+export default function GoogleAnalytics() {
+  return (
+    <Suspense fallback={null}>
+      <GoogleAnalyticsInner />
+    </Suspense>
   );
 }

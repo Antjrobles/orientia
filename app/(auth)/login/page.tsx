@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
@@ -32,7 +32,7 @@ function setCookie(name: string, value: string) {
   document.cookie = `${name}=${value}; Path=/; Max-Age=31536000; SameSite=Lax`;
 }
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { status, data: session } = useSession();
@@ -429,5 +429,13 @@ export default function LoginPage() {
         </p>
       </div>
     </AuthCard>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginContent />
+    </Suspense>
   );
 }

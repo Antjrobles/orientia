@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle, AlertCircle } from "lucide-react";
@@ -9,7 +9,7 @@ import { AuthHeader } from "@/components/auth/AuthHeader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
-export default function VerifyDevicePage() {
+function VerifyDeviceContent() {
   const searchParams = useSearchParams();
   const token = searchParams?.get("token") || "";
   const [loading, setLoading] = useState(true);
@@ -75,5 +75,13 @@ export default function VerifyDevicePage() {
         </Alert>
       )}
     </AuthCard>
+  );
+}
+
+export default function VerifyDevicePage() {
+  return (
+    <Suspense fallback={null}>
+      <VerifyDeviceContent />
+    </Suspense>
   );
 }

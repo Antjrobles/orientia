@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AlertCircle, CheckCircle, Key, Sparkles } from "lucide-react";
@@ -20,7 +20,7 @@ const passwordRequirements = [
   { regex: /[^A-Za-z0-9]/ },
 ];
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const searchParams = useSearchParams();
   const token = useMemo(
     () => searchParams?.get("token") || "",
@@ -193,5 +193,13 @@ export default function ResetPasswordPage() {
         </form>
       )}
     </AuthCard>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 }

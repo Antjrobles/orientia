@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export default function BajaComunicacionesPage() {
+function BajaComunicacionesContent() {
   const searchParams = useSearchParams();
   const token = searchParams?.get("token") || "";
   const [status, setStatus] = useState<"loading" | "success" | "error">(
@@ -90,5 +90,13 @@ export default function BajaComunicacionesPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function BajaComunicacionesPage() {
+  return (
+    <Suspense fallback={null}>
+      <BajaComunicacionesContent />
+    </Suspense>
   );
 }
