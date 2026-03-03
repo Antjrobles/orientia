@@ -1,0 +1,30 @@
+# Orientia — Generador de Informes Psicopedagógicos con IA
+
+> Plataforma SaaS para orientadores educativos en Andalucía (España) que genera
+> informes psicopedagógicos profesionales con inteligencia artificial.
+> Cumple normativa de la Junta de Andalucía y RGPD.
+
+## Descripción
+
+Orientia es una herramienta de IA especializada en psicopedagogía que ayuda a los
+orientadores educativos de Andalucía a redactar informes psicopedagógicos en minutos.
+Incluye plantillas oficiales compatibles con Séneca, gestión centralizada de alumnos
+e informes, y cumplimiento total de GDPR/LOPDGDD.
+
+## Páginas principales
+
+- https://orientia.es
+
+## Información legal
+
+- https://orientia.es/privacidad
+- https://orientia.es/terminos
+- https://orientia.es/rgpd
+- https://orientia.es/cookies
+- https://orientia.es/accesibilidad
+
+## Contacto
+
+- Email: privacidad@orientia.es
+- Responsable: Antonio José Robles Muñoz
+- Dirección: Av. de la Innovación, s/n, 41020 Sevilla, Andalucía, España

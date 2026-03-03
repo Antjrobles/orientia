@@ -67,6 +67,7 @@ export default function Footer() {
               <nav aria-label="Recursos">
                 <ul className="space-y-2">
                   {[
+                    { href: "/blog", label: "Blog", external: false },
                     { href: "/manual", label: "Manual", external: false },
                     { href: "/faq", label: "FAQ", external: false },
                     { href: "/soporte", label: "Soporte", external: false },
@@ -118,6 +119,7 @@ export default function Footer() {
               <nav aria-label="Legal">
                 <ul className="space-y-2">
                   {[
+                    { href: "/sobre-nosotros", label: "Sobre nosotros" },
                     { href: "/privacidad", label: "Privacidad" },
                     { href: "/terminos", label: "Términos" },
                     { href: "/cookies", label: "Cookies" },

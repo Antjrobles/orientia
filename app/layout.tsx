@@ -33,17 +33,6 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   description:
     "Plataforma para orientadores educativos. Genera informes psicopedagógicos profesionales con asistencia de IA, optimizando tiempo y garantizando calidad técnica.",
-  keywords: [
-    "informes psicopedagógicos",
-    "orientadores educativos",
-    "inteligencia artificial",
-    "educación",
-    "psicopedagogía",
-    "orientación escolar",
-    "informes escolares",
-    "evaluación psicopedagógica",
-    "sistema educativo andaluz",
-  ],
   authors: [{ name: "Antonio José Robles Muñoz" }],
   robots: {
     index: true,
@@ -80,7 +69,6 @@ export const metadata: Metadata = {
     },
   },
   category: "education",
-  generator: "Antonio Robles",
 };
 
 export const viewport: Viewport = {
@@ -94,6 +82,43 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://orientia.es/#organization",
+              name: "Orientia",
+              url: "https://orientia.es",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://orientia.es/icons/logo4.svg",
+                width: 150,
+                height: 40,
+              },
+              founder: {
+                "@type": "Person",
+                name: "Antonio José Robles Muñoz",
+              },
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "Av. de la Innovación, s/n",
+                addressLocality: "Sevilla",
+                postalCode: "41020",
+                addressRegion: "Andalucía",
+                addressCountry: "ES",
+              },
+              contactPoint: {
+                "@type": "ContactPoint",
+                email: "privacidad@orientia.es",
+                contactType: "customer service",
+              },
+            }),
+          }}
+        />
+      </head>
       <body className={inter.className} suppressHydrationWarning>
         {/* next/font ya inyecta preconnects a Google Fonts automáticamente */}
         <a

@@ -27,6 +27,10 @@ const pathLabels: Record<string, string> = {
   // Admin pages
   admin: "Administración",
 
+  // Marketing pages
+  "sobre-nosotros": "Sobre nosotros",
+  blog: "Blog",
+
   // Resources pages
   faq: "Preguntas frecuentes",
   formacion: "Formación",
@@ -51,29 +55,7 @@ export default function DynamicBreadcrumb() {
 
   // Don't show breadcrumb on home page
   if (pathname === "/") {
-    return (
-      <div className="min-h-11 flex items-start justify-start border-b border-border bg-background/70 px-4 py-2 sm:items-center">
-        <nav aria-label="Breadcrumb" className="w-full min-w-0">
-          <ol className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground sm:gap-2 sm:text-sm">
-            <li>
-              <Link
-                href="/"
-                className="flex items-center rounded hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <Home className="w-4 h-4 mr-1" />
-                Inicio
-              </Link>
-            </li>
-            <li aria-hidden="true">
-              <ChevronRight className="w-4 h-4" />
-            </li>
-            <li className="break-words text-foreground" aria-current="page">
-              Sistema de Informes Psicopedagógicos
-            </li>
-          </ol>
-        </nav>
-      </div>
-    );
+    return null;
   }
 
   // Split pathname and create breadcrumb items
@@ -92,8 +74,24 @@ export default function DynamicBreadcrumb() {
     breadcrumbItems.push({ label, href: currentPath });
   });
 
+  const baseUrl = "https://orientia.es";
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbItems.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      item: `${baseUrl}${item.href}`,
+    })),
+  };
+
   return (
     <div className="min-h-11 flex items-start justify-start border-b border-border bg-background/70 px-4 py-2 sm:items-center">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <nav aria-label="Breadcrumb" className="w-full min-w-0">
         <ol className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground sm:gap-2 sm:text-sm">
           {breadcrumbItems.map((item, index) => {

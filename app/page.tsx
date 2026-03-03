@@ -7,6 +7,10 @@ import Header from "@/components/headers/Header";
 import DynamicBreadcrumb from "@/components/navigation/DynamicBreadcrumb";
 
 // Lazy load components below-the-fold for better initial load performance
+const Testimonials = dynamic(
+  () => import("@/components/marketing/Testimonials"),
+  { loading: () => <SectionSkeleton /> },
+);
 const Features = dynamic(() => import("@/components/marketing/Features"), {
   loading: () => <SectionSkeleton />,
 });
@@ -47,7 +51,7 @@ function SectionSkeleton() {
 }
 
 export const metadata: Metadata = {
-  title: "Sistema de Informes Psicopedagógicos con IA",
+  title: "Generador de Informes Psicopedagógicos con IA | Orientia",
   description:
     "Plataforma para orientadores educativos. Genera informes psicopedagógicos profesionales con IA. Ahorra tiempo, garantiza calidad y cumple normativa.",
   openGraph: {
@@ -245,6 +249,10 @@ export default function Page() {
 
         <Suspense fallback={<SectionSkeleton />}>
           <Pricing />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <Testimonials />
         </Suspense>
 
         <Suspense fallback={<SectionSkeleton />}>
