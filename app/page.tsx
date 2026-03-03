@@ -63,43 +63,90 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-white">
       {/* Structured Data */}
-      {/* WebApplication schema */}
+
+      {/*
+       * ─────────────────────────────────────────────────────────────────────
+       * 1. SoftwareApplication — App rich results (precio, categoría, rating)
+       *    https://developers.google.com/search/docs/appearance/structured-data/software-app
+       * ─────────────────────────────────────────────────────────────────────
+       */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "WebApplication",
+            // FIX: Usar SoftwareApplication (tipo principal documentado por Google para
+            // App rich results) con WebApplication como tipo adicional.
+            "@type": ["SoftwareApplication", "WebApplication"],
             "@id": "https://orientia.es/#webapp",
             name: "Orientia — Sistema de Informes Psicopedagógicos",
             description:
-              "Plataforma para orientadores educativos que genera informes psicopedagógicos profesionales con IA.",
+              "Plataforma para orientadores educativos que genera informes psicopedagógicos profesionales con IA. Cumple normativa de la Junta de Andalucía y RGPD.",
             url: "https://orientia.es",
             applicationCategory: "EducationalApplication",
             operatingSystem: "Web",
+            // FIX: Añadir inLanguage
+            inLanguage: "es-ES",
+            // FIX: Añadir featureList (recomendado para App rich results)
+            featureList: [
+              "Generación de informes psicopedagógicos con IA",
+              "Plantillas oficiales Junta de Andalucía",
+              "Exportación a PDF y Word",
+              "Gestión centralizada de informes",
+              "Cumplimiento RGPD",
+              "Análisis de datos y estadísticas",
+            ],
+            screenshot: "https://orientia.es/icons/icon-512x512.png",
+            // FIX: Añadir availability a los Offers
             offers: [
               {
                 "@type": "Offer",
-                name: "Plan Gratuito",
+                name: "Plan Orientador Individual (Gratuito)",
                 price: "0",
                 priceCurrency: "EUR",
-                url: "https://orientia.es/#pricing",
+                availability: "https://schema.org/InStock",
+                url: "https://orientia.es/register",
+                description:
+                  "Hasta 5 informes al mes. Acceso a plantillas básicas. Soporte por email.",
               },
               {
                 "@type": "Offer",
                 name: "Plan Profesional",
                 price: "4.99",
                 priceCurrency: "EUR",
-                url: "https://orientia.es/#pricing",
+                availability: "https://schema.org/InStock",
+                url: "https://orientia.es/register?plan=profesional",
+                description:
+                  "Informes ilimitados, todas las plantillas, exportación PDF/Word, estadísticas y soporte prioritario.",
                 priceSpecification: {
                   "@type": "UnitPriceSpecification",
                   price: "4.99",
                   priceCurrency: "EUR",
+                  // ISO 8601 duration — 1 mes
                   billingDuration: "P1M",
+                  unitText: "mes",
+                },
+              },
+              {
+                "@type": "Offer",
+                name: "Plan Profesional Anual",
+                price: "49.90",
+                priceCurrency: "EUR",
+                availability: "https://schema.org/InStock",
+                url: "https://orientia.es/register?plan=profesional&billing=yearly",
+                description:
+                  "Todo el plan Profesional con facturación anual.",
+                priceSpecification: {
+                  "@type": "UnitPriceSpecification",
+                  price: "49.90",
+                  priceCurrency: "EUR",
+                  billingDuration: "P1Y",
+                  unitText: "año",
                 },
               },
             ],
             provider: { "@id": "https://orientia.es/#organization" },
+            author: { "@id": "https://orientia.es/#organization" },
             audience: {
               "@type": "EducationalAudience",
               educationalRole: "counselor",
@@ -108,7 +155,12 @@ export default function Page() {
         }}
       />
 
-      {/* WebSite schema */}
+      {/*
+       * ─────────────────────────────────────────────────────────────────────
+       * 2. WebSite + SearchAction (Sitelinks Searchbox en SERPs de Google)
+       *    https://developers.google.com/search/docs/appearance/structured-data/sitelinks-searchbox
+       * ─────────────────────────────────────────────────────────────────────
+       */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -117,8 +169,52 @@ export default function Page() {
             "@type": "WebSite",
             "@id": "https://orientia.es/#website",
             name: "Orientia",
+            alternateName: "Orientia — Informes Psicopedagógicos con IA",
             url: "https://orientia.es",
+            inLanguage: "es-ES",
             publisher: { "@id": "https://orientia.es/#organization" },
+            // FIX: Añadir SearchAction para Sitelinks Searchbox
+            potentialAction: {
+              "@type": "SearchAction",
+              target: {
+                "@type": "EntryPoint",
+                urlTemplate:
+                  "https://orientia.es/soporte?q={search_term_string}",
+              },
+              "query-input": "required name=search_term_string",
+            },
+          }),
+        }}
+      />
+
+      {/*
+       * ─────────────────────────────────────────────────────────────────────
+       * 3. BreadcrumbList — Muestra la ruta de navegación en los resultados
+       *    de búsqueda (green breadcrumbs under the page title in SERPs).
+       *    https://developers.google.com/search/docs/appearance/structured-data/breadcrumb
+       * ─────────────────────────────────────────────────────────────────────
+       */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "@id": "https://orientia.es/#breadcrumb",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Inicio",
+                item: "https://orientia.es",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Sistema de Informes Psicopedagógicos",
+                item: "https://orientia.es",
+              },
+            ],
           }),
         }}
       />

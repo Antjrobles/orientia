@@ -1,0 +1,301 @@
+{
+  "desktop": {
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "h1": [
+      {
+        "text": "Sistema de Informes Psicopedagógicos\nInteligente",
+        "visible_above_fold": true,
+        "top": 231,
+        "bottom": 375,
+        "fontSize": "48px"
+      }
+    ],
+    "ctas": [
+      {
+        "tag": "A",
+        "text": "Inicio",
+        "href": "https://orientia.es/#inicio",
+        "above_fold": true,
+        "w": 60,
+        "h": 36,
+        "top": 14
+      },
+      {
+        "tag": "A",
+        "text": "Características",
+        "href": "https://orientia.es/#caracteristicas",
+        "above_fold": true,
+        "w": 125,
+        "h": 36,
+        "top": 14
+      },
+      {
+        "tag": "A",
+        "text": "Beneficios",
+        "href": "https://orientia.es/#beneficios",
+        "above_fold": true,
+        "w": 95,
+        "h": 36,
+        "top": 14
+      },
+      {
+        "tag": "A",
+        "text": "Seguridad",
+        "href": "https://orientia.es/#seguridad",
+        "above_fold": true,
+        "w": 93,
+        "h": 36,
+        "top": 14
+      },
+      {
+        "tag": "A",
+        "text": "Precios",
+        "href": "https://orientia.es/#pricing",
+        "above_fold": true,
+        "w": 74,
+        "h": 36,
+        "top": 14
+      },
+      {
+        "tag": "A",
+        "text": "Contacto",
+        "href": "https://orientia.es/#contacto",
+        "above_fold": true,
+        "w": 85,
+        "h": 36,
+        "top": 14
+      },
+      {
+        "tag": "A",
+        "text": "Inicio",
+        "href": "https://orientia.es/",
+        "above_fold": true,
+        "w": 55,
+        "h": 20,
+        "top": 77
+      },
+      {
+        "tag": "A",
+        "text": "Comenzar Ahora",
+        "href": "https://orientia.es/register",
+        "above_fold": true,
+        "w": 210,
+        "h": 44,
+        "top": 529
+      },
+      {
+        "tag": "A",
+        "text": "Ajustes de Cookies",
+        "href": "https://orientia.es/ajustes-cookies",
+        "above_fold": true,
+        "w": 127,
+        "h": 17,
+        "top": 764
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Acceder",
+        "href": null,
+        "above_fold": true,
+        "w": 138,
+        "h": 50,
+        "top": 7
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Registrarse",
+        "href": null,
+        "above_fold": true,
+        "w": 110,
+        "h": 40,
+        "top": 12
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Comenzar Ahora",
+        "href": null,
+        "above_fold": true,
+        "w": 210,
+        "h": 44,
+        "top": 529
+      }
+    ],
+    "logos": [
+      {
+        "src": "https://orientia.es/icons/logo4.svg",
+        "alt": "Logo Orientia",
+        "w": 150,
+        "h": 150,
+        "top": -27,
+        "above_fold": false
+      },
+      {
+        "src": "https://orientia.es/icons/logo4-dark.svg",
+        "alt": "Logo Orientia",
+        "w": 0,
+        "h": 0,
+        "top": 0,
+        "above_fold": true
+      },
+      {
+        "src": "https://orientia.es/icons/logo2.svg",
+        "alt": "Logo de Orientia",
+        "w": 48,
+        "h": 48,
+        "top": 5491,
+        "above_fold": false
+      },
+      {
+        "src": "https://orientia.es/icons/logo2-dark.svg",
+        "alt": "Logo de Orientia",
+        "w": 0,
+        "h": 0,
+        "top": 0,
+        "above_fold": true
+      }
+    ],
+    "lcp_candidates": [],
+    "has_horizontal_scroll": false,
+    "scroll_width": 1280,
+    "nav": {
+      "visible": true,
+      "height": 36,
+      "above_fold": true
+    },
+    "body_font_size_px": 16,
+    "page_title": "Sistema de Informes Psicopedagógicos con IA",
+    "meta_description": "Plataforma para orientadores educativos. Genera informes psicopedagógicos profesionales con IA. Ahorra tiempo, garantiza calidad y cumple normativa.",
+    "og_title": "Orientia — Sistema de Informes Psicopedagógicos con IA",
+    "canonical": "https://orientia.es/"
+  },
+  "mobile": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "h1": [
+      {
+        "text": "Sistema de Informes Psicopedagógicos\nInteligente",
+        "visible_above_fold": true,
+        "top": 231,
+        "bottom": 411,
+        "fontSize": "36px"
+      }
+    ],
+    "ctas": [
+      {
+        "tag": "A",
+        "text": "Inicio",
+        "href": "https://orientia.es/",
+        "above_fold": true,
+        "w": 50,
+        "h": 16,
+        "top": 73
+      },
+      {
+        "tag": "A",
+        "text": "Comenzar Ahora",
+        "href": "https://orientia.es/register",
+        "above_fold": true,
+        "w": 210,
+        "h": 44,
+        "top": 597
+      },
+      {
+        "tag": "A",
+        "text": "Ajustes de Cookies",
+        "href": "https://orientia.es/ajustes-cookies",
+        "above_fold": true,
+        "w": 342,
+        "h": 37,
+        "top": 650
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Comenzar Ahora",
+        "href": null,
+        "above_fold": true,
+        "w": 210,
+        "h": 44,
+        "top": 597
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Rechazar todo",
+        "href": null,
+        "above_fold": true,
+        "w": 356,
+        "h": 38,
+        "top": 701
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Aceptar todo",
+        "href": null,
+        "above_fold": true,
+        "w": 356,
+        "h": 36,
+        "top": 747
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Configurar",
+        "href": null,
+        "above_fold": true,
+        "w": 356,
+        "h": 36,
+        "top": 791
+      }
+    ],
+    "logos": [
+      {
+        "src": "https://orientia.es/icons/logo4.svg",
+        "alt": "Logo Orientia",
+        "w": 150,
+        "h": 150,
+        "top": -27,
+        "above_fold": false
+      },
+      {
+        "src": "https://orientia.es/icons/logo4-dark.svg",
+        "alt": "Logo Orientia",
+        "w": 0,
+        "h": 0,
+        "top": 0,
+        "above_fold": true
+      },
+      {
+        "src": "https://orientia.es/icons/logo2.svg",
+        "alt": "Logo de Orientia",
+        "w": 48,
+        "h": 48,
+        "top": 9676,
+        "above_fold": false
+      },
+      {
+        "src": "https://orientia.es/icons/logo2-dark.svg",
+        "alt": "Logo de Orientia",
+        "w": 0,
+        "h": 0,
+        "top": 0,
+        "above_fold": true
+      }
+    ],
+    "lcp_candidates": [],
+    "has_horizontal_scroll": false,
+    "scroll_width": 390,
+    "nav": {
+      "visible": false,
+      "height": 0,
+      "above_fold": true
+    },
+    "body_font_size_px": 16,
+    "page_title": "Sistema de Informes Psicopedagógicos con IA",
+    "meta_description": "Plataforma para orientadores educativos. Genera informes psicopedagógicos profesionales con IA. Ahorra tiempo, garantiza calidad y cumple normativa.",
+    "og_title": "Orientia — Sistema de Informes Psicopedagógicos con IA",
+    "canonical": "https://orientia.es/"
+  }
+}

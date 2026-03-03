@@ -26,15 +26,20 @@ type Recipient = {
   communicationsOptOut?: boolean;
 };
 
-const DEFAULT_SUBJECT = "Orientia";
-const DEFAULT_MESSAGE = `Gracias por confiar en Orientia.
+const DEFAULT_SUBJECT = "Comunicación de Orientia";
+const DEFAULT_MESSAGE = `Hola,
 
-Queremos compartir una breve actualización sobre la evolución de la plataforma. Durante estas semanas se están incorporando mejoras orientadas a reforzar la calidad técnica de los informes psicopedagógicos, facilitar la organización y el seguimiento de casos, y mejorar la estabilidad general del servicio.
+Queremos compartir contigo una actualización completa sobre el trabajo que estamos realizando en Orientia y sobre cómo estos avances pueden ayudarte en el día a día del centro.
 
-El objetivo es que cada avance tenga un impacto real en el trabajo diario de orientación educativa y en la coordinación con el equipo docente y las familias.
+Durante este último periodo hemos dedicado el esfuerzo principal a mejorar la claridad de los informes psicopedagógicos, reforzar la estabilidad general de la plataforma y simplificar la experiencia de uso en los flujos más frecuentes. El objetivo de estos cambios es reducir fricción operativa y facilitar que el equipo de orientación pueda trabajar con mayor continuidad y menos interrupciones.
 
-Si lo consideran oportuno, pueden responder a este correo con incidencias, sugerencias o necesidades concretas. Todas las aportaciones se revisan y se valoran para priorizar próximos desarrollos.
+También estamos revisando de forma continua aspectos de rendimiento y consistencia para que la herramienta responda mejor en escenarios de uso intensivo, especialmente cuando se gestionan varios casos de forma simultánea. Queremos que Orientia sea un apoyo fiable para la planificación, el seguimiento y la coordinación con el resto del equipo educativo.
 
+Nuestro compromiso es que cada mejora tenga impacto real en la práctica profesional, no solo en lo técnico. Por eso seguimos priorizando funcionalidades que aporten valor directo en la evaluación, la intervención y la documentación del trabajo orientador.
+
+Si quieres, puedes responder a este correo con sugerencias, incidencias o necesidades concretas de tu centro. Revisamos cada aportación para definir prioridades y próximos desarrollos con criterio pedagógico y operativo.
+
+Un saludo,
 Equipo de Orientia`;
 
 export default function AdminComunicacionesPage() {
