@@ -22,10 +22,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.orientia.es"),
+  metadataBase: new URL("https://orientia.es"),
   title: {
-    default: "Sistema de Informes Psicopedagógicos",
-    template: "%s | Sistema de Informes Psicopedagógicos",
+    default: "Orientia — Sistema de Informes Psicopedagógicos con IA",
+    template: "%s | Orientia",
   },
   icons: {
     icon: [{ url: "/icons/favicon.ico", sizes: "any" }],
@@ -61,34 +61,31 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_ES",
-    url: "https://www.orientia.es",
-    siteName: "Sistema de Informes Psicopedagógicos",
-    title: "Sistema de Informes Psicopedagógicos",
+    url: "https://orientia.es",
+    siteName: "Orientia",
+    title: "Orientia — Sistema de Informes Psicopedagógicos con IA",
     description:
-      "Plataforma oficial para orientadores educativos. Genera informes psicopedagógicos con IA, optimiza tiempo y garantiza calidad profesional.",
+      "Genera informes psicopedagógicos profesionales con IA en minutos. Plantillas oficiales, cumple normativa andaluza y RGPD. +500 orientadores confían en Orientia.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Sistema de Informes Psicopedagógicos - ",
+        alt: "Orientia — Sistema de Informes Psicopedagógicos con IA para orientadores educativos",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sistema de Informes Psicopedagógicos",
+    title: "Orientia — Sistema de Informes Psicopedagógicos con IA",
     description:
-      "Plataforma oficial para orientadores educativos. Genera informes psicopedagógicos con IA.",
-    images: ["/twitter-image.jpg"],
-  },
-  verification: {
-    google: "google-site-verification-code",
+      "Genera informes psicopedagógicos profesionales con IA en minutos. Plantillas oficiales, cumple normativa andaluza y RGPD.",
+    images: ["/og-image.jpg"],
   },
   alternates: {
-    canonical: "https://www.orientia.es",
+    canonical: "https://orientia.es",
     languages: {
-      "es-ES": "https://www.orientia.es",
+      "es-ES": "https://orientia.es",
     },
   },
   category: "education",

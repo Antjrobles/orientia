@@ -20,12 +20,7 @@ export default function PrivacidadPage() {
           Política de Privacidad
         </h1>
         <p className="text-sm text-gray-500 mb-8">
-          Última actualización:{" "}
-          {new Date().toLocaleDateString("es-ES", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+          Última actualización: 3 de marzo de 2026
         </p>
 
         {/* Índice navegable */}
@@ -118,11 +113,10 @@ export default function PrivacidadPage() {
             1. Quién es el responsable del tratamiento
           </h2>
           <p>
-            <strong>Responsable:</strong> ORIENTIA, [Nombre fiscal o persona
-            jurídica] (<em>“Orientia”</em>)<br />
-            <strong>NIF/CIF:</strong> [NIF/CIF]
+            <strong>Responsable:</strong> Antonio José Robles Muñoz (<em>”Orientia”</em>)<br />
+            <strong>NIF:</strong> {/* TODO: añadir NIF */}
             <br />
-            <strong>Domicilio:</strong> [Dirección postal], [CP] [Ciudad],
+            <strong>Domicilio:</strong> Av. de la Innovación, s/n, 41020 Sevilla,
             Andalucía, España
             <br />
             <strong>Email privacidad:</strong>{" "}
@@ -447,8 +441,7 @@ export default function PrivacidadPage() {
               .
             </li>
             <li>
-              <strong>Dirección postal:</strong> [Dirección postal], [CP]
-              [Ciudad], Andalucía, España.
+              <strong>Dirección postal:</strong> Av. de la Innovación, s/n, 41020 Sevilla, Andalucía, España.
             </li>
           </ul>
           <div className="mt-12 p-6 bg-gray-50 border border-gray-200 rounded-lg">

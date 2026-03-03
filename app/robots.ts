@@ -4,7 +4,7 @@ function getBaseUrl() {
   const raw =
     process.env.NEXT_PUBLIC_SITE_URL ||
     process.env.NEXTAUTH_URL ||
-    "https://www.orientia.es";
+    "https://orientia.es";
   return raw.endsWith("/") ? raw.slice(0, -1) : raw;
 }
 
@@ -31,10 +31,8 @@ export default function robots(): MetadataRoute.Robots {
           "/centros",
           "/admin",
           "/not-permitted",
-          // Rutas técnicas que no aportan valor SEO
+          // Rutas de API (no indexables)
           "/api",
-          "/_next",
-          "/static",
           // Páginas con querystrings (si tu buscador usa /buscar?q=…, deja esta línea comentada)
           // '/*?*',
         ],

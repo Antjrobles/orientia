@@ -60,9 +60,31 @@ const nextConfig = {
     return config;
   },
 
+  // Redirección www → non-www (dominio canónico)
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.orientia.es" }],
+        destination: "https://orientia.es/:path*",
+        permanent: true,
+      },
+    ];
+  },
+
   // Headers de seguridad y performance
   async headers() {
     return [
+      // Caché para páginas estáticas (legal y recursos)
+      {
+        source: "/(privacidad|terminos|cookies|accesibilidad|rgpd|eliminacion-de-datos-de-usuario|manual|faq|soporte|formacion)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=86400",
+          },
+        ],
+      },
       {
         source: "/:path*",
         headers: [

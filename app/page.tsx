@@ -54,15 +54,8 @@ export const metadata: Metadata = {
     title: "Sistema de Informes Psicopedagógicos",
     description:
       "Plataforma oficial para orientadores educativos. Genera informes con IA.",
-    url: "https://www.orientia.es",
-    images: [
-      {
-        url: "/og-home.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Sistema de Informes Psicopedagógicos",
-      },
-    ],
+    url: "https://orientia.es",
+    // La imagen OG la genera app/opengraph-image.tsx automáticamente
   },
 };
 
@@ -70,31 +63,82 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-white">
       {/* Structured Data */}
+      {/* WebApplication schema */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            name: "Sistema de Informes Psicopedagógicos",
-            description: "Plataforma oficial para orientadores educativos",
-            url: "https://www.orientia.es",
+            "@id": "https://orientia.es/#webapp",
+            name: "Orientia — Sistema de Informes Psicopedagógicos",
+            description:
+              "Plataforma para orientadores educativos que genera informes psicopedagógicos profesionales con IA.",
+            url: "https://orientia.es",
             applicationCategory: "EducationalApplication",
             operatingSystem: "Web",
-            offers: {
-              "@type": "Offer",
-              price: "0",
-              priceCurrency: "EUR",
-            },
-            provider: {
-              "@type": "Organization",
-              name: "Antonio Robles",
-              url: "https://www.orientia.es",
-            },
+            offers: [
+              {
+                "@type": "Offer",
+                name: "Plan Gratuito",
+                price: "0",
+                priceCurrency: "EUR",
+              },
+              {
+                "@type": "Offer",
+                name: "Plan Profesional",
+                price: "4.99",
+                priceCurrency: "EUR",
+                billingDuration: "P1M",
+              },
+            ],
+            provider: { "@id": "https://orientia.es/#organization" },
             audience: {
               "@type": "EducationalAudience",
               educationalRole: "counselor",
             },
+          }),
+        }}
+      />
+
+      {/* WebSite schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://orientia.es/#website",
+            name: "Orientia",
+            url: "https://orientia.es",
+            publisher: { "@id": "https://orientia.es/#organization" },
+            potentialAction: {
+              "@type": "SearchAction",
+              target: {
+                "@type": "EntryPoint",
+                urlTemplate: "https://orientia.es/?q={search_term_string}",
+              },
+              "query-input": "required name=search_term_string",
+            },
+          }),
+        }}
+      />
+
+      {/* BreadcrumbList schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Inicio",
+                item: "https://orientia.es/",
+              },
+            ],
           }),
         }}
       />

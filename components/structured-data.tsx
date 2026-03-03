@@ -25,31 +25,36 @@ export function StructuredData({ type, data }: StructuredDataProps) {
 
 // Datos estructurados específicos para la organización
 export const organizationStructuredData = {
+  "@id": "https://orientia.es/#organization",
   name: "Orientia",
-  alternateName: "Consejería de Desarrollo Educativo y Formación Profesional",
-  url: "https://www.orientia.es",
-  logo: "https://orientia.es/icons/logo2.svg",
+  url: "https://orientia.es",
+  logo: {
+    "@type": "ImageObject",
+    url: "https://orientia.es/icons/logo2.svg",
+    width: 48,
+    height: 48,
+  },
   contactPoint: {
     "@type": "ContactPoint",
-    telephone: "+34-955-000-555",
-    contactType: "technical support",
+    telephone: "+34955064000",
+    email: "info@orientia.es",
+    contactType: "customer support",
     availableLanguage: "Spanish",
     areaServed: "ES-AN",
   },
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Edificio Torretriana",
+    streetAddress: "Av. de la Innovación, s/n",
     addressLocality: "Sevilla",
-    addressRegion: "Andalucía",
-    postalCode: "41071",
+    addressRegion: "ES-AN",
+    postalCode: "41020",
     addressCountry: "ES",
-    email: "antjrobles@gmail.es",
   },
-  sameAs: [
-    "https://www.facebook.com/",
-    "https://twitter.com/",
-    "https://www.youtube.com/user/",
-  ],
+  areaServed: {
+    "@type": "AdministrativeArea",
+    name: "Andalucía",
+    addressCountry: "ES",
+  },
 };
 
 // Datos estructurados para FAQ

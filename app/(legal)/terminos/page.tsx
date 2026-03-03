@@ -20,12 +20,7 @@ export default function TerminosCondicionesPage() {
           Términos y Condiciones de Servicio
         </h1>
         <p className="text-sm text-gray-500 mb-8">
-          Última actualización:{" "}
-          {new Date().toLocaleDateString("es-ES", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+          Última actualización: 3 de marzo de 2026
         </p>
 
         {/* Índice navegable */}
@@ -203,8 +198,7 @@ export default function TerminosCondicionesPage() {
           </h2>
           <ul className="list-disc list-outside ml-5 space-y-3">
             <li>
-              <strong>Orientia:</strong> ORIENTIA, [Nombre fiscal o persona
-              jurídica], NIF [NIF/CIF].
+              <strong>Orientia:</strong> Antonio José Robles Muñoz, NIF {/* TODO: añadir NIF */}.
             </li>
             <li>
               <strong>Usuario:</strong> Docente o personal autorizado que accede
@@ -622,7 +616,7 @@ export default function TerminosCondicionesPage() {
           <p>
             Estos Términos se rigen por la legislación española. Salvo norma
             imperativa en contrario, las partes se someten a los juzgados y
-            tribunales de [Málaga] para la resolución de conflictos. Si actúa
+            tribunales de Sevilla para la resolución de conflictos. Si actúa
             como consumidor, podrá acudir a los tribunales de su domicilio.
           </p>
 
@@ -652,8 +646,7 @@ export default function TerminosCondicionesPage() {
               </a>
             </li>
             <li>
-              <strong>Dirección postal:</strong> [Dirección], [CP] [Ciudad],
-              Andalucía, España
+              <strong>Dirección postal:</strong> Av. de la Innovación, s/n, 41020 Sevilla, Andalucía, España
             </li>
           </ul>
 

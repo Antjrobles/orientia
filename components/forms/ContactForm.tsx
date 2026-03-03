@@ -449,11 +449,11 @@ const ContactForm: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-6 sm:mb-8">
             <h2 className="mb-3 text-[clamp(1.5rem,5.5vw,2.25rem)] font-bold leading-tight text-white sm:mb-4">
-              Comienza a transformar tus clases hoy mismo
+              Comienza a optimizar tu trabajo hoy mismo
             </h2>
             <p className="mb-3 text-[clamp(1rem,3.8vw,1.25rem)] text-green-100 sm:mb-4">
-              Únete a miles de profesores en Andalucía que ya están mejorando la
-              experiencia educativa de sus alumnos
+              Únete a cientos de orientadores en Andalucía que ya generan
+              informes psicopedagógicos profesionales con IA
             </p>
           </div>
           {/* Subtle shadow and slightly less rounded corners for a modern feel */}
@@ -583,10 +583,10 @@ const ContactForm: React.FC = () => {
               ¿Prefieres hablar directamente con nosotros?
             </p>
             <a
-              href="tel:+34900123456"
+              href="tel:+34955064000"
               className="inline-flex items-center text-white font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600 rounded"
             >
-              Llámanos al 900 123 456 <ArrowRight className="ml-1 w-4 h-4" />
+              Llámanos al 955 064 000 <ArrowRight className="ml-1 w-4 h-4" />
             </a>
           </div>
         </div>
