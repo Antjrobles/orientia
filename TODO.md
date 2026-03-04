@@ -63,7 +63,7 @@
 - [ ] Agregar stored procedures para operaciones complejas
 - [ ] Implementar database observability (slow query logs)
 - [ ] Agregar encryption at rest para datos sensibles
-- [ ] Implementar row-level security (RLS) en Supabase
+- [x] Implementar row-level security (RLS) en Supabase
 - [ ] Agregar audit trail completo de cambios en BD
 - [ ] Implementar optimización automática de queries
 - [ ] Agregar monitoreo de performance de base de datos
@@ -747,7 +747,9 @@
 ### 🚨 PROBLEMAS CRÍTICOS - ALTA PRIORIDAD
 
 #### 1. Optimización de Imágenes ⚠️ CRÍTICO
+
 **Ubicación:** `next.config.mjs:2`
+
 - [x] Eliminar `images: { unoptimized: true }` de next.config.mjs
 - [x] Habilitar optimización automática de Next.js Image
 - [x] Configurar formatos AVIF y WebP en next.config
@@ -760,7 +762,9 @@
 - [x] **Impacto logrado:** Reducción de peso de imágenes ~60% (PNG→WebP), iconos PWA creados, backgrounds con gradientes CSS (0 KB)
 
 #### 2. JSON Grande Cargando Síncronamente ⚠️ ALTO IMPACTO
+
 **Ubicación:** `ContactForm.tsx:76` (372KB)
+
 - [x] Implementar lazy loading del componente ContactForm con dynamic import
 - [ ] Mover JSON a API con búsqueda paginada/autocompletado
 - [ ] Comprimir JSON y servir con gzip/brotli desde CDN
@@ -770,7 +774,9 @@
 - [x] **Impacto esperado:** Mejora de TTI en ~50%, reducción de bundle inicial 372KB
 
 #### 3. Client Components Innecesarios ⚠️ MEDIO IMPACTO
+
 **Ubicación:** `components/marketing/*`
+
 - [x] Convertir Hero.tsx a Server Component (eliminar "use client")
 - [x] Convertir Features.tsx a Server Component
 - [x] Convertir Benefits.tsx a Server Component
@@ -780,7 +786,9 @@
 - [x] **Impacto esperado:** Reducción de bundle JS ~30-40KB, mejor SSR
 
 #### 4. Importaciones No Utilizadas ⚠️ BAJO IMPACTO
+
 **Ubicación:** Múltiples archivos en components/marketing/
+
 - [x] Limpiar imports de iconos en Hero.tsx (solo usar los necesarios)
 - [x] Limpiar imports de iconos en Features.tsx
 - [x] Limpiar imports de iconos en Benefits.tsx
@@ -789,7 +797,9 @@
 - [x] **Impacto esperado:** Reducción de bundle ~5-10KB
 
 #### 5. Header con Backdrop-Blur ⚠️ MEDIO IMPACTO
+
 **Ubicación:** `Header.tsx:31`
+
 - [x] Agregar `will-change: backdrop-filter` para optimización GPU
 - [x] Implementar cambio dinámico a bg-white sólido después del scroll
 - [x] Usar scroll listener optimizado con requestAnimationFrame
@@ -800,6 +810,7 @@
 ### ⚡ OPTIMIZACIONES ADICIONALES - MEDIA PRIORIDAD
 
 #### Carga Inicial (LCP, FCP)
+
 - [x] Agregar preload para fuente Inter en layout.tsx
 - [x] Implementar preconnect para Google Fonts (recursos críticos)
 - [x] Lazy load de secciones below-the-fold con next/dynamic
@@ -812,6 +823,7 @@
 - [ ] Agregar priority a recursos críticos above-the-fold
 
 #### JavaScript Bundle
+
 - [x] Implementar code splitting por sección con dynamic()
 - [x] Agregar loading="lazy" a componentes pesados
 - [ ] Implementar prefetching inteligente de rutas
@@ -829,6 +841,7 @@
 - [x] Implementar tree-shaking agresivo
 
 #### Analytics y Scripts Externos
+
 - [x] Cargar GoogleAnalytics con lazyOnload (mejor que requestIdleCallback)
 - [x] Cargar UmamiAnalytics con lazyOnload (mejor que requestIdleCallback)
 - [x] Implementar defer para scripts no críticos (lazyOnload lo hace automáticamente)
@@ -836,6 +849,7 @@
 - [ ] Considerar mover scripts a Web Workers (no necesario con lazyOnload)
 
 #### CSS y Estilos
+
 - [ ] Simplificar gradient de transición en SecuritySection.tsx:160
 - [ ] Extraer gradients complejos a CSS personalizado
 - [ ] Agregar `transform: translateZ(0)` para GPU acceleration
@@ -844,6 +858,7 @@
 - [ ] Agregar CSS containment para mejorar rendering
 
 #### Compresión y CDN
+
 - [ ] Comprimir JSON de andalucia_centros_completo.json
 - [ ] Servir assets estáticos desde CDN
 - [ ] Habilitar compresión Brotli en servidor
@@ -853,6 +868,7 @@
 ### 🎨 MEJORAS DE UI/UX - BAJA PRIORIDAD
 
 #### Animaciones y Transiciones Sutiles
+
 - [ ] Implementar fade-in + slide-up al hacer scroll (IntersectionObserver)
 - [ ] Agregar stagger animations a Features cards
 - [ ] Implementar reveal secuencial de Benefits items
@@ -861,6 +877,7 @@
 - [ ] Agregar CSS `will-change` para animaciones
 
 #### Hover States Mejorados
+
 - [ ] Agregar `transform: scale(1.02)` sutil en cards hover
 - [ ] Implementar transition suave de 300ms
 - [ ] Agregar border color change en hover
@@ -868,6 +885,7 @@
 - [ ] Agregar shadow transition en hover states
 
 #### Micro-interacciones
+
 - [ ] Implementar rotación/bounce de iconos al hover sobre card
 - [ ] Agregar pulse animation a botones CTA
 - [ ] Implementar ripple effect en botones
@@ -875,12 +893,14 @@
 - [ ] Implementar smooth scroll behavior
 
 #### Formulario de Contacto
+
 - [x] Implementar progress bar visual del formulario
 - [x] Agregar validacion en tiempo real con feedback visual
 - [ ] Implementar estados de loading optimistas
 - [x] Agregar success animation al enviar
 
 #### Accesibilidad Visual
+
 - [x] Agregar focus indicators más visibles
 - [ ] Implementar skip navigation mejorado
 - [ ] Agregar motion reduction para prefers-reduced-motion
@@ -890,6 +910,7 @@
 ### 📊 MÉTRICAS Y MONITOREO
 
 #### Implementar Tracking
+
 - [ ] Configurar Web Vitals monitoring
 - [ ] Agregar Lighthouse CI en pipeline
 - [ ] Implementar RUM (Real User Monitoring)
@@ -897,6 +918,7 @@
 - [ ] Agregar dashboards de performance en tiempo real
 
 #### Objetivos de Performance (Antes → Después)
+
 - [ ] LCP: ~2.5s → ~1.2s (-52%) 🎯
 - [ ] FID: ~100ms → ~50ms (-50%) 🎯
 - [ ] CLS: ~0.1 → ~0.05 (-50%) 🎯
@@ -909,6 +931,7 @@
 ### 🔍 AUDITORÍAS Y TESTS
 
 #### Performance Audits
+
 - [ ] Ejecutar Lighthouse audit baseline
 - [ ] Ejecutar WebPageTest análisis
 - [ ] Realizar PageSpeed Insights test
@@ -917,6 +940,7 @@
 - [ ] Analizar CPU throttling en móviles
 
 #### Testing de Optimizaciones
+
 - [ ] Test A/B de lazy loading vs eager loading
 - [ ] Medir impacto de cada optimización individualmente
 - [ ] Test de performance en diferentes dispositivos
@@ -926,6 +950,7 @@
 ### 📝 DOCUMENTACIÓN
 
 #### Documentar Optimizaciones
+
 - [ ] Crear guía de mejores prácticas de performance
 - [ ] Documentar configuración de Next.js optimizada
 - [ ] Crear checklist de performance para nuevas features
@@ -950,24 +975,28 @@
 ### 🎯 ORDEN DE IMPLEMENTACIÓN RECOMENDADO
 
 #### Fase 1: Quick Wins (1-2 días)
+
 1. Habilitar optimización de imágenes de Next.js
 2. Limpiar importaciones no usadas
 3. Lazy load del ContactForm
 4. Convertir componentes a Server Components
 
 #### Fase 2: Impacto Medio (3-5 días)
+
 5. Optimizar header backdrop-blur
 6. Implementar code splitting con dynamic imports
 7. Optimizar JSON de localidades (API o compresión)
 8. Agregar Suspense boundaries
 
 #### Fase 3: Polish (1-2 días)
+
 9. Agregar scroll animations sutiles
 10. Mejorar hover states y micro-interacciones
 11. Implementar progress indicators
 12. Optimizar CSS y estilos
 
 #### Fase 4: Monitoreo (1 día)
+
 13. Configurar Web Vitals tracking
 14. Implementar Lighthouse CI
 15. Crear dashboards de performance
@@ -975,5 +1004,3 @@
 
 **Tiempo estimado total:** 6-10 días de trabajo
 **Impacto esperado:** Reducción de ~50% en tiempo de carga, mejora significativa en Core Web Vitals
-
-
