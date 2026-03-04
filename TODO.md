@@ -42,7 +42,7 @@
 ## 🗄️ Base de Datos y Backend
 
 - [ ] Migrar estructura de informes a tablas relacionales completas (eliminar JSONB)
-- [ ] Implementar soft deletes para informes y usuarios
+- [x] Implementar soft deletes para informes y usuarios
 - [ ] Agregar sistema de versionado de informes
 - [ ] Crear índices en columnas frecuentemente consultadas
 - [ ] Implementar paginación en todas las listas
