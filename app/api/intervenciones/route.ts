@@ -179,6 +179,7 @@ export async function GET(request: NextRequest) {
       )
       .eq("autor_id", session.user.id)
       .eq("caso_id", casoId)
+      .is("deleted_at", null)
       .order("fecha_intervencion", { ascending: false })
       .order("created_at", { ascending: false });
 
@@ -246,7 +247,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "Algún contexto específico no es válido para el ámbito seleccionado.",
+          error:
+            "Algún contexto específico no es válido para el ámbito seleccionado.",
         },
         { status: 400 },
       );
@@ -342,7 +344,8 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "El contexto específico no es válido para el ámbito seleccionado.",
+          error:
+            "El contexto específico no es válido para el ámbito seleccionado.",
         },
         { status: 400 },
       );
@@ -431,9 +434,10 @@ export async function DELETE(request: NextRequest) {
 
     const { data, error } = await supabase
       .from("intervenciones")
-      .delete()
+      .update({ deleted_at: new Date().toISOString() })
       .eq("id", parsed.id)
       .eq("autor_id", session.user.id)
+      .is("deleted_at", null)
       .select("id, caso_id")
       .single();
 

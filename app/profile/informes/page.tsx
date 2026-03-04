@@ -17,6 +17,7 @@ import {
   LayoutGrid,
   List,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,6 +80,38 @@ function InformesContent() {
     borradores: 0,
     otros: 0,
   });
+
+  const handleDelete = useCallback(async (id: string, nombre: string) => {
+    toast(`¿Eliminar informe de ${nombre || "este alumno"}?`, {
+      action: {
+        label: "Eliminar",
+        onClick: async () => {
+          const toastId = toast.loading("Eliminando informe...");
+          try {
+            const res = await fetch("/api/informes/delete", {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ id }),
+            });
+            const data = await res.json();
+            if (data.success) {
+              toast.success("Informe eliminado", {
+                id: toastId,
+                description: "Puedes recuperarlo desde la papelera.",
+              });
+              setInformes((prev) => prev.filter((inf) => inf.id !== id));
+              setTotal((prev) => Math.max(0, prev - 1));
+            } else {
+              toast.error("No se pudo eliminar el informe", { id: toastId });
+            }
+          } catch {
+            toast.error("Error al eliminar el informe", { id: toastId });
+          }
+        },
+      },
+      cancel: { label: "Cancelar", onClick: () => {} },
+    });
+  }, []);
 
   const fetchInformes = useCallback(async () => {
     if (!session) return;
@@ -163,7 +196,9 @@ function InformesContent() {
       informe.evaluacion_psicopedagogica?.informe_ia_generado,
     ];
     const totalChecks = checks.length;
-    const filled = checks.filter((value) => Boolean(value && String(value).trim())).length;
+    const filled = checks.filter((value) =>
+      Boolean(value && String(value).trim()),
+    ).length;
     return Math.round((filled / totalChecks) * 100);
   };
 
@@ -326,7 +361,10 @@ function InformesContent() {
                 </Select>
               </div>
               <div className="sm:w-40">
-                <Select value={vista} onValueChange={(value) => setVista(value as "cards" | "list")}>
+                <Select
+                  value={vista}
+                  onValueChange={(value) => setVista(value as "cards" | "list")}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Vista" />
                   </SelectTrigger>
@@ -369,7 +407,9 @@ function InformesContent() {
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               No se encontraron informes
             </h3>
-            <p className="text-gray-500">Intenta ajustar los filtros de busqueda</p>
+            <p className="text-gray-500">
+              Intenta ajustar los filtros de busqueda
+            </p>
             {(busqueda || filtroEstado !== "todos") && (
               <Button
                 variant="outline"
@@ -424,8 +464,8 @@ function InformesContent() {
                     <CardContent className="pt-0">
                       <div className="space-y-3">
                         <p className="text-sm text-gray-600 line-clamp-2">
-                          {informe.evaluacion_psicopedagogica?.motivo_consulta ||
-                            "Sin motivo especificado"}
+                          {informe.evaluacion_psicopedagogica
+                            ?.motivo_consulta || "Sin motivo especificado"}
                         </p>
 
                         {informe.estado === "borrador" && (
@@ -434,7 +474,10 @@ function InformesContent() {
                               <span>Progreso</span>
                               <span>{calcularProgreso(informe)}%</span>
                             </div>
-                            <Progress value={calcularProgreso(informe)} className="h-2" />
+                            <Progress
+                              value={calcularProgreso(informe)}
+                              className="h-2"
+                            />
                           </div>
                         )}
 
@@ -470,7 +513,14 @@ function InformesContent() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="text-red-600 hover:text-red-700"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() =>
+                              handleDelete(
+                                informe.id,
+                                informe.datos_identificativos?.alumno?.nombre ??
+                                  "",
+                              )
+                            }
                           >
                             <Trash2 className="h-3 w-3" />
                           </Button>
@@ -508,7 +558,10 @@ function InformesContent() {
                               <span>Progreso</span>
                               <span>{calcularProgreso(informe)}%</span>
                             </div>
-                            <Progress value={calcularProgreso(informe)} className="h-2" />
+                            <Progress
+                              value={calcularProgreso(informe)}
+                              className="h-2"
+                            />
                           </div>
                         )}
                         <p className="text-xs text-muted-foreground">
@@ -539,7 +592,14 @@ function InformesContent() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          onClick={() =>
+                            handleDelete(
+                              informe.id,
+                              informe.datos_identificativos?.alumno?.nombre ??
+                                "",
+                            )
+                          }
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>

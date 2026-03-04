@@ -115,6 +115,7 @@ export async function GET(request: NextRequest) {
         "id, iniciales_alumno, centro_nombre, slug_busqueda, created_at, updated_at",
       )
       .eq("autor_id", session.user.id)
+      .is("deleted_at", null)
       .order("updated_at", { ascending: false })
       .limit(limit);
 
@@ -138,14 +139,18 @@ export async function GET(request: NextRequest) {
     const needsInterventionFiltering =
       Boolean(ambito) || contextos.length > 0 || q.length > 0;
 
-    const interventionsByCase = new Map<string, Array<Record<string, string>>>();
+    const interventionsByCase = new Map<
+      string,
+      Array<Record<string, string>>
+    >();
     if (needsInterventionFiltering) {
       let interventionsQuery = supabase
         .from("intervenciones")
         .select(
           "caso_id, ambito, subambito, titulo, texto_original, texto_redactado_ia",
         )
-        .eq("autor_id", session.user.id);
+        .eq("autor_id", session.user.id)
+        .is("deleted_at", null);
 
       if (ambito) {
         interventionsQuery = interventionsQuery.eq("ambito", ambito);
@@ -171,7 +176,10 @@ export async function GET(request: NextRequest) {
           );
         }
         return NextResponse.json(
-          { success: false, error: "No se pudo aplicar el filtro de intervenciones." },
+          {
+            success: false,
+            error: "No se pudo aplicar el filtro de intervenciones.",
+          },
           { status: 500 },
         );
       }
@@ -294,15 +302,13 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabase
       .from("casos_intervencion")
-      .insert(
-        {
-          autor_id: session.user.id,
-          iniciales_alumno: iniciales,
-          centro_nombre: centro,
-          slug_busqueda: slug,
-          updated_at: new Date().toISOString(),
-        },
-      )
+      .insert({
+        autor_id: session.user.id,
+        iniciales_alumno: iniciales,
+        centro_nombre: centro,
+        slug_busqueda: slug,
+        updated_at: new Date().toISOString(),
+      })
       .select(
         "id, iniciales_alumno, centro_nombre, slug_busqueda, created_at, updated_at",
       )
@@ -410,7 +416,10 @@ export async function PATCH(request: NextRequest) {
       }
       if (isPermissionError(error)) {
         return NextResponse.json(
-          { success: false, error: "No tienes permisos para actualizar casos." },
+          {
+            success: false,
+            error: "No tienes permisos para actualizar casos.",
+          },
           { status: 403 },
         );
       }
@@ -450,9 +459,10 @@ export async function DELETE(request: NextRequest) {
 
     const { data, error } = await supabase
       .from("casos_intervencion")
-      .delete()
+      .update({ deleted_at: new Date().toISOString() })
       .eq("id", parsed.id)
       .eq("autor_id", session.user.id)
+      .is("deleted_at", null)
       .select("id");
 
     if (error) {
@@ -484,6 +494,14 @@ export async function DELETE(request: NextRequest) {
         { status: 404 },
       );
     }
+
+    // Soft delete en cascada: marcar también las intervenciones del caso
+    await supabase
+      .from("intervenciones")
+      .update({ deleted_at: new Date().toISOString() })
+      .eq("caso_id", parsed.id)
+      .eq("autor_id", session.user.id)
+      .is("deleted_at", null);
 
     return NextResponse.json({ success: true, deletedId: data[0].id });
   } catch (error) {

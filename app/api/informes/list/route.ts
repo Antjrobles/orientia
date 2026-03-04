@@ -26,7 +26,8 @@ export async function GET(request: NextRequest) {
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    const ordenColumna = orden === "actualizados" ? "actualizado_en" : "creado_en";
+    const ordenColumna =
+      orden === "actualizados" ? "actualizado_en" : "creado_en";
     const ordenAsc = orden === "antiguos";
 
     let query = supabase
@@ -35,7 +36,8 @@ export async function GET(request: NextRequest) {
         "id, estado, creado_en, actualizado_en, datos_identificativos, evaluacion_psicopedagogica",
         { count: "exact" },
       )
-      .eq("autor_id", session.user.id);
+      .eq("autor_id", session.user.id)
+      .is("deleted_at", null);
 
     if (estado !== "todos") {
       query = query.eq("estado", estado);
@@ -48,7 +50,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { data: informes, error, count } = await query
+    const {
+      data: informes,
+      error,
+      count,
+    } = await query
       .order(ordenColumna, { ascending: ordenAsc })
       .range(from, to);
 
@@ -68,17 +74,20 @@ export async function GET(request: NextRequest) {
       supabase
         .from("informes")
         .select("id", { count: "exact", head: true })
-        .eq("autor_id", session.user.id),
+        .eq("autor_id", session.user.id)
+        .is("deleted_at", null),
       supabase
         .from("informes")
         .select("id", { count: "exact", head: true })
         .eq("autor_id", session.user.id)
-        .eq("estado", "completado"),
+        .eq("estado", "completado")
+        .is("deleted_at", null),
       supabase
         .from("informes")
         .select("id", { count: "exact", head: true })
         .eq("autor_id", session.user.id)
-        .eq("estado", "borrador"),
+        .eq("estado", "borrador")
+        .is("deleted_at", null),
     ]);
 
     return NextResponse.json({
