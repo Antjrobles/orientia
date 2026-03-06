@@ -71,7 +71,11 @@ function LoginContent() {
         Configuration: "Error de configuración de autenticación.",
         DeviceVerificationRequired:
           "Hemos enviado un email para verificar este dispositivo. Revisa tu bandeja.",
-        CredentialsSignin: "No se pudo iniciar sesi¢n.",
+        CredentialsSignin: "No se pudo iniciar sesión.",
+        TooManyLoginAttempts:
+          "Demasiados intentos fallidos. Tu IP ha sido bloqueada temporalmente. Inténtalo de nuevo en 15 minutos.",
+        PasswordExpired:
+          "Tu contraseña ha expirado (90 días). Debes restablecerla para continuar.",
       };
       if (
         errorParam === "CredentialsSignin" &&
@@ -79,6 +83,22 @@ function LoginContent() {
       ) {
         setError(
           "Hemos enviado un email para verificar este dispositivo. Revisa tu bandeja.",
+        );
+        return;
+      }
+      if (
+        errorParam === "CredentialsSignin" &&
+        errorDescription === "PasswordExpired"
+      ) {
+        setError("Tu contraseña ha expirado (90 días). Debes restablecerla para continuar.");
+        return;
+      }
+      if (
+        errorParam === "CredentialsSignin" &&
+        errorDescription === "TooManyLoginAttempts"
+      ) {
+        setError(
+          "Demasiados intentos fallidos. Tu IP ha sido bloqueada temporalmente. Inténtalo de nuevo en 15 minutos.",
         );
         return;
       }
@@ -400,6 +420,12 @@ function LoginContent() {
                     }}
                   >
                     Reenviar verificación
+                  </Button>
+                )}
+
+                {error.includes("ha expirado") && (
+                  <Button asChild variant="outline" size="sm">
+                    <Link href="/forgot-password">Restablecer contraseña</Link>
                   </Button>
                 )}
 

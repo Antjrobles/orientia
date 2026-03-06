@@ -5,6 +5,7 @@ import crypto from "crypto";
 import { z } from "zod";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { validateTurnstileToken } from "@/lib/turnstile";
+import { buildPasswordChangedUpdate } from "@/lib/user-password-policy";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -121,6 +122,30 @@ export async function POST(request: Request) {
 
     if (tokenError) {
       console.error("Error al crear token:", tokenError);
+    }
+
+    // 6.1 Persistir fecha de cambio de contraseña para política de expiración (si hay columnas/metadatos disponibles)
+    try {
+      const { data: createdUser } = await supabase
+        .from("users")
+        .select("*")
+        .ilike("email", normalizedEmail)
+        .single();
+      if (createdUser) {
+        const passwordChangedAt = new Date().toISOString();
+        const updatePayload = buildPasswordChangedUpdate(
+          createdUser as Record<string, unknown>,
+          passwordChangedAt,
+        );
+        if (Object.keys(updatePayload).length > 0) {
+          await supabase
+            .from("users")
+            .update(updatePayload)
+            .ilike("email", normalizedEmail);
+        }
+      }
+    } catch {
+      // No bloqueamos el registro si falla esta sincronización
     }
 
     // 7. Enviar email de verificación

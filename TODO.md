@@ -7,13 +7,13 @@
 - [ ] Implementar sistema de auditoría y logging de acciones críticas
 - [x] Agregar CAPTCHA (Cloudflare Turnstile) en formularios de registro, login y contacto
 - [x] Agregar validación y rate limiting en formulario de contacto
-- [ ] Implementar detección de intentos de fuerza bruta con bloqueo temporal de IP
-- [ ] Agregar política de expiración de contraseñas (90 días)
+- [x] Implementar detección de intentos de fuerza bruta con bloqueo temporal de IP
+- [x] Agregar política de expiración de contraseñas (90 días)
 - [x] Implementar sistema de recuperación de contraseña con tokens temporales
 - [x] Agregar headers de seguridad (HSTS, X-XSS-Protection, Permissions-Policy, X-Frame-Options)
 - [ ] Implementar rotación automática de API keys
-- [ ] Agregar escaneo de vulnerabilidades automatizado (Dependabot, Snyk)
-- [ ] Implementar cifrado de datos sensibles en base de datos
+- [x] Agregar escaneo de vulnerabilidades automatizado (Dependabot, Snyk)
+- [x] Implementar cifrado de datos sensibles en base de datos
 - [ ] Agregar sistema de sesiones concurrentes limitadas
 - [x] Implementar política de contraseñas seguras (complejidad mínima)
 - [ ] Agregar detección de credenciales comprometidas (HaveIBeenPwned API)

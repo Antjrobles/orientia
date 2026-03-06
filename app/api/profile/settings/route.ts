@@ -4,6 +4,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import {
+  decryptSensitiveValue,
+  encryptSensitiveValue,
+  isDataEncryptionConfigured,
+} from "@/lib/data-encryption";
+import {
   addOptOutEmail,
   getOptOutEmailSet,
   removeOptOutEmail,
@@ -38,6 +43,15 @@ const METADATA_COLUMNS = [
 ] as const;
 const PROFILE_BUCKET = "profile-private";
 const SETTINGS_OBJECT = "settings/profile.json";
+const SENSITIVE_FIELDS = new Set<keyof SettingsPayload>([
+  "phone",
+  "professionalId",
+  "schoolName",
+  "position",
+  "specialization",
+  "location",
+  "signature",
+]);
 
 function hasColumn(row: UserRow, key: string) {
   return Object.prototype.hasOwnProperty.call(row, key);
@@ -47,6 +61,14 @@ function getFirstString(row: UserRow, keys: readonly string[]) {
   for (const key of keys) {
     const value = row[key];
     if (typeof value === "string") return value;
+  }
+  return "";
+}
+
+function getFirstSensitiveString(row: UserRow, keys: readonly string[]) {
+  for (const key of keys) {
+    const value = row[key];
+    if (typeof value === "string") return decryptSensitiveValue(value);
   }
   return "";
 }
@@ -70,21 +92,21 @@ function mapUserRowToSettings(row: UserRow) {
   return {
     fullName: getFirstString(row, ["name"]),
     email: getFirstString(row, ["email"]),
-    phone: getFirstString(row, ["phone", "telefono"]),
-    professionalId: getFirstString(row, [
+    phone: getFirstSensitiveString(row, ["phone", "telefono"]),
+    professionalId: getFirstSensitiveString(row, [
       "professional_license",
       "numero_colegiado",
       "colegiado",
     ]),
-    schoolName: getFirstString(row, [
+    schoolName: getFirstSensitiveString(row, [
       "school_name",
       "centro_nombre",
       "centro_educativo",
     ]),
-    position: getFirstString(row, ["job_title", "cargo"]),
-    specialization: getFirstString(row, ["specialty", "especialidad"]),
-    location: getFirstString(row, ["location", "ubicacion"]),
-    signature: getFirstString(row, [
+    position: getFirstSensitiveString(row, ["job_title", "cargo"]),
+    specialization: getFirstSensitiveString(row, ["specialty", "especialidad"]),
+    location: getFirstSensitiveString(row, ["location", "ubicacion"]),
+    signature: getFirstSensitiveString(row, [
       "professional_signature",
       "firma_profesional",
       "signature",
@@ -131,7 +153,16 @@ async function readStorageSettings(userId: string) {
     const text = await data.text();
     if (!text) return null;
     const parsed = JSON.parse(text) as Partial<SettingsPayload>;
-    return settingsSchema.partial().parse(parsed);
+    const validated = settingsSchema.partial().parse(parsed);
+
+    for (const field of SENSITIVE_FIELDS) {
+      const current = validated[field];
+      if (typeof current === "string") {
+        validated[field] = decryptSensitiveValue(current) as SettingsPayload[typeof field];
+      }
+    }
+
+    return validated;
   } catch {
     return null;
   }
@@ -139,7 +170,16 @@ async function readStorageSettings(userId: string) {
 
 async function writeStorageSettings(userId: string, settings: SettingsPayload) {
   const path = settingsPathForUser(userId);
-  const payload = JSON.stringify(settings);
+  const toPersist: SettingsPayload = { ...settings };
+
+  for (const field of SENSITIVE_FIELDS) {
+    const current = toPersist[field];
+    if (typeof current === "string") {
+      toPersist[field] = encryptSensitiveValue(current) as SettingsPayload[typeof field];
+    }
+  }
+
+  const payload = JSON.stringify(toPersist);
 
   const { error } = await supabase.storage
     .from(PROFILE_BUCKET)
@@ -252,26 +292,41 @@ export async function PUT(request: Request) {
 
   const next = parsed.data;
   const row = currentUser as UserRow;
+  const encryptionConfigured = isDataEncryptionConfigured();
+  if (!encryptionConfigured) {
+    return NextResponse.json(
+      {
+        success: false,
+        error:
+          "Falta configurar DATA_ENCRYPTION_KEY (o ENCRYPTION_KEY) para cifrar datos sensibles.",
+      },
+      { status: 500 },
+    );
+  }
+
   const updateData: Record<string, unknown> = {};
 
   if (hasColumn(row, "name")) updateData.name = next.fullName;
 
   const optionalMapping: Array<{ keys: string[]; value: string }> = [
-    { keys: ["phone", "telefono"], value: next.phone },
+    { keys: ["phone", "telefono"], value: encryptSensitiveValue(next.phone) },
     {
       keys: ["professional_license", "numero_colegiado", "colegiado"],
-      value: next.professionalId,
+      value: encryptSensitiveValue(next.professionalId),
     },
     {
       keys: ["school_name", "centro_nombre", "centro_educativo"],
-      value: next.schoolName,
+      value: encryptSensitiveValue(next.schoolName),
     },
-    { keys: ["job_title", "cargo"], value: next.position },
-    { keys: ["specialty", "especialidad"], value: next.specialization },
-    { keys: ["location", "ubicacion"], value: next.location },
+    { keys: ["job_title", "cargo"], value: encryptSensitiveValue(next.position) },
+    {
+      keys: ["specialty", "especialidad"],
+      value: encryptSensitiveValue(next.specialization),
+    },
+    { keys: ["location", "ubicacion"], value: encryptSensitiveValue(next.location) },
     {
       keys: ["professional_signature", "firma_profesional", "signature"],
-      value: next.signature,
+      value: encryptSensitiveValue(next.signature),
     },
   ];
 

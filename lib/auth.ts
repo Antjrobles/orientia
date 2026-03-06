@@ -8,7 +8,13 @@ import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import {
+  clearLoginFailures,
+  isLoginBlocked,
+  registerLoginFailure,
+} from "@/lib/brute-force";
 import { DEVICE_COOKIE_NAME, getCookieFromHeader } from "@/lib/device";
+import { isPasswordExpired } from "@/lib/user-password-policy";
 
 // Es una buena práctica crear el cliente de Supabase en un archivo separado
 // para poder reutilizarlo en otras partes de la aplicación (ej. en la API de registro).
@@ -109,6 +115,12 @@ providers.push(
       }
 
       const email = normalizeEmail(credentials.email);
+      const ip = getClientIp({ headers: toHeaders(req?.headers) });
+      const blocked = isLoginBlocked(ip, email);
+      if (blocked.blocked) {
+        throw new Error("TooManyLoginAttempts");
+      }
+
       const { data: user } = await supabase
         .from("users")
         .select("*, hashed_password, emailVerified") // Incluir emailVerified
@@ -116,11 +128,13 @@ providers.push(
         .single();
 
       if (!user || !user.hashed_password) {
+        registerLoginFailure(ip, email);
         return null;
       }
 
       // Verificar si el email está verificado (solo para usuarios con contraseña)
       if (!user.emailVerified) {
+        registerLoginFailure(ip, email);
         // Devolvemos null para provocar CredentialsSignin.
         // La UI hará una comprobación posterior para diferenciar email no verificado.
         return null;
@@ -132,6 +146,12 @@ providers.push(
       );
 
       if (passwordsMatch) {
+        if (isPasswordExpired(user as Record<string, unknown>)) {
+          throw new Error("PasswordExpired");
+        }
+
+        clearLoginFailures(ip, email);
+
         const skipDeviceVerification = process.env.NODE_ENV === "development";
         const deviceIdFromCredentials =
           typeof credentials.deviceId === "string" &&
@@ -150,7 +170,6 @@ providers.push(
         const isTrusted = Boolean(trusted) && !trustedError;
         if (!isTrusted && !skipDeviceVerification) {
           const origin = getRequestOrigin(req);
-          const ip = getClientIp({ headers: toHeaders(req?.headers) });
           const rl = checkRateLimit(`device-verify:${user.id}:${ip}`, 3, 60_000);
 
           if (rl.allowed && origin) {
@@ -191,6 +210,7 @@ providers.push(
         };
       }
 
+      registerLoginFailure(ip, email);
       return null;
     },
   }),

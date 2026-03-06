@@ -4,6 +4,7 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { supabase } from "@/lib/supabase";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { buildPasswordChangedUpdate } from "@/lib/user-password-policy";
 
 const passwordSchema = z
   .string()
@@ -83,11 +84,23 @@ export async function POST(request: NextRequest) {
     const email = String(tokenRow.identifier).trim().toLowerCase();
     const hashedPassword = await bcrypt.hash(parsed.data.password, 12);
 
+    const { data: currentUser } = await supabase
+      .from("users")
+      .select("*")
+      .ilike("email", email)
+      .single();
+
+    const nowIso = new Date().toISOString();
+    const passwordChangePayload = currentUser
+      ? buildPasswordChangedUpdate(currentUser as Record<string, unknown>, nowIso)
+      : {};
+
     const { error: updateUserError } = await supabase
       .from("users")
       .update({
         hashed_password: hashedPassword,
         emailVerified: new Date().toISOString(),
+        ...passwordChangePayload,
       })
       .ilike("email", email);
 
