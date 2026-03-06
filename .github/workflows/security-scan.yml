@@ -37,7 +37,7 @@ jobs:
 
       - name: Upload Snyk report
         if: ${{ env.SNYK_TOKEN != '' && always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: snyk-report
           path: snyk.sarif
