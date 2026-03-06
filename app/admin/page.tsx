@@ -193,8 +193,8 @@ export default async function AdminPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="flex w-full flex-col gap-8 px-4 pb-12 pt-8 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-start justify-between gap-6">
+      <div className="flex w-full flex-col gap-8 px-4 pb-12 pt-8 sm:px-6 md:px-7 lg:px-8">
+        <div className="flex flex-wrap items-start justify-between gap-4 md:gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Badge variant="secondary">Admin</Badge>
@@ -256,7 +256,7 @@ export default async function AdminPage() {
           <span>Resumen</span>
           <span className="h-px flex-1 bg-emerald-500/30" />
         </div>
-        <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-[2fr,1fr]">
           <AnalyticsChart data={datosGrafico} />
           <Card className="border-border bg-card shadow-sm">
             <CardHeader>
@@ -308,7 +308,7 @@ export default async function AdminPage() {
           <span>Actividad</span>
           <span className="h-px flex-1 bg-emerald-500/30" />
         </div>
-        <div id="recientes" className="grid gap-8 lg:grid-cols-2">
+        <div id="recientes" className="grid gap-8 md:grid-cols-2">
           <Card className="border-border bg-card shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between gap-4">
               <div>

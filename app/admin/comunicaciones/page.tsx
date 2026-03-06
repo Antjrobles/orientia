@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -189,7 +190,7 @@ export default function AdminComunicacionesPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="w-full px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+      <div className="w-full px-4 pb-12 pt-8 sm:px-6 md:px-7 lg:px-8">
         <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-foreground">
@@ -205,7 +206,7 @@ export default function AdminComunicacionesPage() {
           </Badge>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1.2fr,1fr]">
+        <div className="grid gap-6 md:grid-cols-[1.1fr,1fr] xl:grid-cols-[1.2fr,1fr]">
           <Card className="border-border bg-card shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -214,8 +215,8 @@ export default function AdminComunicacionesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid gap-3 md:grid-cols-4">
-                <div className="md:col-span-1">
+              <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+                <div className="md:col-span-1 lg:col-span-1">
                   <Select value={roleFilter} onValueChange={setRoleFilter}>
                     <SelectTrigger>
                       <SelectValue placeholder="Rol" />
@@ -227,7 +228,7 @@ export default function AdminComunicacionesPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="md:col-span-1">
+                <div className="md:col-span-1 lg:col-span-1">
                   <Select value={verifiedFilter} onValueChange={setVerifiedFilter}>
                     <SelectTrigger>
                       <SelectValue placeholder="Verificación" />
@@ -239,7 +240,7 @@ export default function AdminComunicacionesPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="md:col-span-1">
+                <div className="md:col-span-1 lg:col-span-1">
                   <Select value={commsFilter} onValueChange={setCommsFilter}>
                     <SelectTrigger>
                       <SelectValue placeholder="Comunicaciones" />
@@ -251,7 +252,7 @@ export default function AdminComunicacionesPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="md:col-span-1">
+                <div className="md:col-span-1 lg:col-span-1">
                   <Button
                     variant="outline"
                     className="w-full"
@@ -291,8 +292,25 @@ export default function AdminComunicacionesPage() {
                 </div>
                 <div className="max-h-[420px] overflow-auto">
                   {loadingUsers ? (
-                    <div className="px-3 py-8 text-center text-sm text-muted-foreground">
-                      Cargando contactos...
+                    <div className="space-y-2 px-3 py-4">
+                      {Array.from({ length: 7 }).map((_, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2"
+                        >
+                          <div className="flex items-center gap-3">
+                            <Skeleton className="h-4 w-4 rounded-sm" />
+                            <div className="space-y-1">
+                              <Skeleton className="h-4 w-36" />
+                              <Skeleton className="h-3 w-52" />
+                            </div>
+                          </div>
+                          <div className="flex gap-1">
+                            <Skeleton className="h-5 w-16 rounded-full" />
+                            <Skeleton className="h-5 w-20 rounded-full" />
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   ) : users.length === 0 ? (
                     <div className="px-3 py-8 text-center text-sm text-muted-foreground">

@@ -274,9 +274,9 @@
 - [x] Agregar búsqueda global (Cmd+K)
 - [ ] Implementar notificaciones en tiempo real (WebSockets)
 - [x] Agregar animaciones y transiciones pulidas
-- [ ] Implementar skeleton loaders en todas las vistas
+- [x] Implementar skeleton loaders en todas las vistas
 - [x] Mejorar estados vacios en admin (tablas y tarjetas)
-- [ ] Agregar skeletons en admin (tablas y tarjetas)
+- [x] Agregar skeletons en admin (tablas y tarjetas)
 - [x] Mejorar tabla de usuarios (chips de estado, rol y email verificado)
 - [x] Ajustar layout admin con secciones claras y jerarquia visual
 - [x] Agregar modo denso/normal para tabla de usuarios
@@ -284,7 +284,7 @@
 - [x] Ajustar microcopy y botones con iconos en admin
 - [x] Footer con tipografia y espaciado mas coherentes
 - [x] Agregar tooltips contextuales en formularios complejos
-- [ ] Implementar responsive design optimizado para tablets
+- [x] Implementar responsive design optimizado para tablets
 - [ ] Agregar temas personalizables de color
 - [x] Permitir selección de tema claro/oscuro por usuario desde Preferencias
 - [x] Corregir inconsistencias visuales del tema oscuro en áreas privadas (`/profile/*` y `/admin/*`)
