@@ -42,6 +42,18 @@ const requiredCollapsibleSections: Record<string, string[]> = {
   infoEntornoFamiliar: ["entornoFamiliar"],
 };
 
+const DEFAULT_SECTION_ORDER: SectionKey[] = [
+  "datosPersonales",
+  "datosEscolares",
+  "evaluacionPsicopedagogica",
+  "infoAlumno",
+  "contextoEscolar",
+  "entornoFamiliar",
+  "necesidadesApoyo",
+  "propuestaAtencion",
+  "orientacionesFamilia",
+];
+
 const INITIAL_COLLAPSIBLES: CollapsibleRecord = {
   dp: true,
   esc: false,
@@ -92,6 +104,8 @@ export function useInformeCompletoForm({
   });
 
   const [open, setOpen] = useState<SectionKey[]>([]);
+  const [sectionOrder, setSectionOrder] =
+    useState<SectionKey[]>(DEFAULT_SECTION_ORDER);
   const [openCollapsibles, setOpenCollapsibles] =
     useState<CollapsibleRecord>(INITIAL_COLLAPSIBLES);
   const [historiaEscolarOpen, setHistoriaEscolarOpen] = useState(true);
@@ -317,6 +331,53 @@ export function useInformeCompletoForm({
     [form],
   );
 
+  const handleToggleSection = useCallback((section: SectionKey) => {
+    setOpen((prev) =>
+      prev.includes(section)
+        ? prev.filter((item) => item !== section)
+        : [...prev, section],
+    );
+  }, []);
+
+  const moveSection = useCallback((fromIndex: number, toIndex: number) => {
+    setSectionOrder((prev) => {
+      if (
+        fromIndex < 0 ||
+        toIndex < 0 ||
+        fromIndex >= prev.length ||
+        toIndex >= prev.length ||
+        fromIndex === toIndex
+      ) {
+        return prev;
+      }
+
+      const next = [...prev];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+      return next;
+    });
+  }, []);
+
+  const resetSectionOrder = useCallback(() => {
+    setSectionOrder(DEFAULT_SECTION_ORDER);
+  }, []);
+
+  const triggerSubmit = useCallback(() => {
+    if (!form.curso?.trim() || !form.motivoConsulta?.trim()) {
+      toast.error("Por favor, completa los campos requeridos");
+      return;
+    }
+
+    const payload: StudentData = {
+      nombre: form.nombre,
+      curso: form.curso.trim(),
+      motivoConsulta: form.motivoConsulta.trim(),
+      observaciones: form.observaciones?.trim() || "",
+    };
+
+    onSubmit(payload);
+  }, [form, onSubmit]);
+
   const handleClear = useCallback(() => {
     const newCodes = {
       alumno: buildAnonCode("ALUM"),
@@ -354,28 +415,92 @@ export function useInformeCompletoForm({
   const handleSubmit = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault();
-      if (!form.curso?.trim() || !form.motivoConsulta?.trim()) {
-        toast.error("Por favor, completa los campos requeridos");
+      triggerSubmit();
+    },
+    [triggerSubmit],
+  );
+
+  useEffect(() => {
+    const isEditableTarget = (target: EventTarget | null) => {
+      if (!(target instanceof HTMLElement)) return false;
+      const tagName = target.tagName;
+      return (
+        target.isContentEditable ||
+        tagName === "INPUT" ||
+        tagName === "TEXTAREA" ||
+        tagName === "SELECT"
+      );
+    };
+
+    const handleGlobalShortcuts = (event: KeyboardEvent) => {
+      const withCommand = event.ctrlKey || event.metaKey;
+
+      if (withCommand && event.key.toLowerCase() === "s") {
+        event.preventDefault();
+        handleSaveDraft();
         return;
       }
 
-      const payload: StudentData = {
-        nombre: form.nombre,
-        curso: form.curso.trim(),
-        motivoConsulta: form.motivoConsulta.trim(),
-        observaciones: form.observaciones?.trim() || "",
-      };
+      if (withCommand && event.key === "Enter") {
+        event.preventDefault();
+        triggerSubmit();
+        return;
+      }
 
-      onSubmit(payload);
-    },
-    [form, onSubmit],
-  );
+      if (
+        withCommand &&
+        event.shiftKey &&
+        event.key.toLowerCase() === "backspace"
+      ) {
+        event.preventDefault();
+        handleClear();
+        return;
+      }
+
+      if (
+        event.altKey &&
+        event.shiftKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        event.code.startsWith("Digit")
+      ) {
+        const index = Number(event.code.replace("Digit", "")) - 1;
+        const section = sectionOrder[index];
+        if (!section) return;
+        event.preventDefault();
+        handleToggleSection(section);
+        return;
+      }
+
+      if (
+        event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        event.key.toLowerCase() === "r" &&
+        !isEditableTarget(event.target)
+      ) {
+        event.preventDefault();
+        resetSectionOrder();
+      }
+    };
+
+    window.addEventListener("keydown", handleGlobalShortcuts);
+    return () => window.removeEventListener("keydown", handleGlobalShortcuts);
+  }, [
+    handleClear,
+    handleSaveDraft,
+    handleToggleSection,
+    resetSectionOrder,
+    sectionOrder,
+    triggerSubmit,
+  ]);
 
   return {
     form,
     errors,
     open,
     setOpen,
+    sectionOrder,
     openCollapsibles,
     toggleCollapsible,
     historiaEscolarOpen,
@@ -399,6 +524,8 @@ export function useInformeCompletoForm({
     handleClear,
     handleSubmit,
     handleNivelActuacionesChange,
+    moveSection,
+    resetSectionOrder,
     isSectionComplete,
     isCollapsibleSectionComplete,
     completedSectionsCount,

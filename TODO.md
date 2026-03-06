@@ -267,8 +267,8 @@
 - [x] Implementar modo oscuro completo
 - [ ] Agregar onboarding interactivo para nuevos usuarios
 - [ ] Implementar tour guiado de funcionalidades
-- [ ] Agregar atajos de teclado globales
-- [ ] Implementar drag & drop para reordenar secciones
+- [x] Agregar atajos de teclado globales
+- [x] Implementar drag & drop para reordenar secciones
 - [ ] Agregar vista previa en tiempo real mientras se edita
 - [ ] Implementar breadcrumbs mejorados con navegación rápida
 - [x] Agregar búsqueda global (Cmd+K)

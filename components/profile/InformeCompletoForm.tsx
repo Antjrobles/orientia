@@ -1,11 +1,13 @@
 "use client";
 
+import { useState, type DragEvent } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Accordion } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Info, Minimize2 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { GripVertical, Info, Keyboard, Minimize2, RotateCcw } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { DatosPersonalesSection } from "./informe/DatosPersonalesSection";
@@ -19,18 +21,41 @@ import { PropuestaAtencionSection } from "./informe/PropuestaAtencionSection";
 import { OrientacionesFamiliaSection } from "./informe/OrientacionesFamiliaSection";
 import type { StudentData } from "@/lib/groq/types";
 import type { SectionKey } from "@/types/informe-completo";
+import { cn } from "@/lib/utils";
 import { useInformeCompletoForm } from "@/hooks/useInformeCompletoForm";
 
 interface Props {
   onSubmit: (data: StudentData) => void;
   isLoading: boolean;
 }
+
+const sectionLabels: Record<SectionKey, string> = {
+  datosPersonales: "Datos Personales",
+  datosEscolares: "Datos Escolares",
+  evaluacionPsicopedagogica: "Evaluación Psicopedagógica",
+  infoAlumno: "Información del Alumno/a",
+  contextoEscolar: "Contexto Escolar",
+  entornoFamiliar: "Entorno Familiar",
+  necesidadesApoyo: "Necesidades de Apoyo",
+  propuestaAtencion: "Propuesta de Atención",
+  orientacionesFamilia: "Orientaciones a la Familia",
+};
+
+const shortcuts = [
+  { keys: "Ctrl/Cmd + S", description: "Guardar borrador" },
+  { keys: "Ctrl/Cmd + Enter", description: "Generar informe" },
+  { keys: "Alt + Shift + 1..9", description: "Abrir/cerrar sección" },
+  { keys: "Alt + R", description: "Restablecer orden de secciones" },
+  { keys: "Ctrl/Cmd + Shift + Backspace", description: "Limpiar formulario" },
+] as const;
+
 export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
   const {
     form,
     errors,
     open,
     setOpen,
+    sectionOrder,
     openCollapsibles,
     toggleCollapsible,
     historiaEscolarOpen,
@@ -54,33 +79,248 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
     handleClear,
     handleSubmit,
     handleNivelActuacionesChange,
+    moveSection,
+    resetSectionOrder,
     isSectionComplete,
     isCollapsibleSectionComplete,
     completedSectionsCount,
     totalCompletable,
     progressPercentage,
   } = useInformeCompletoForm({ onSubmit });
+  const [draggedSection, setDraggedSection] = useState<SectionKey | null>(null);
+  const [dragOverSection, setDragOverSection] = useState<SectionKey | null>(null);
+
+  const handleDragStart = (
+    section: SectionKey,
+    event: DragEvent<HTMLButtonElement>,
+  ) => {
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", section);
+    setDraggedSection(section);
+  };
+
+  const handleDropOnSection = (targetSection: SectionKey) => {
+    if (!draggedSection || draggedSection === targetSection) {
+      setDragOverSection(null);
+      return;
+    }
+    const fromIndex = sectionOrder.indexOf(draggedSection);
+    const toIndex = sectionOrder.indexOf(targetSection);
+    moveSection(fromIndex, toIndex);
+    setDraggedSection(null);
+    setDragOverSection(null);
+  };
+
+  const renderSection = (sectionKey: SectionKey) => {
+    switch (sectionKey) {
+      case "datosPersonales":
+        return (
+          <DatosPersonalesSection
+            form={form}
+            errors={errors}
+            handleChange={handleChange}
+            handleFilesChange={handleFilesChange}
+            removeAdjunto={removeAdjunto}
+            handleSaveDraft={handleSaveDraft}
+            isSectionComplete={isSectionComplete}
+            isCollapsibleSectionComplete={isCollapsibleSectionComplete}
+            isIdentityOpen={openCollapsibles["dp"]}
+            onToggleIdentity={() => toggleCollapsible("dp")}
+          />
+        );
+      case "datosEscolares":
+        return (
+          <DatosEscolaresSection
+            form={form}
+            errors={errors}
+            handleChange={handleChange}
+            handleSaveDraft={handleSaveDraft}
+            isSectionComplete={isSectionComplete}
+            isCollapsibleSectionComplete={isCollapsibleSectionComplete}
+            openCollapsibles={openCollapsibles}
+            toggleCollapsible={toggleCollapsible}
+            historiaEscolarOpen={historiaEscolarOpen}
+            onHistoriaEscolarChange={setHistoriaEscolarOpen}
+            handleNivelActuacionesChange={handleNivelActuacionesChange}
+            editingMedida={editingMedida}
+            onEditingMedidaChange={setEditingMedida}
+          />
+        );
+      case "evaluacionPsicopedagogica":
+        return (
+          <EvaluacionPsicopedagogicaSection
+            form={form}
+            errors={errors}
+            handleChange={handleChange}
+            handleSaveDraft={handleSaveDraft}
+            isSectionComplete={isSectionComplete}
+            isCollapsibleSectionComplete={isCollapsibleSectionComplete}
+            openCollapsibles={openCollapsibles}
+            toggleCollapsible={toggleCollapsible}
+          />
+        );
+      case "infoAlumno":
+        return (
+          <InformacionAlumnoSection
+            form={form}
+            errors={errors}
+            handleChange={handleChange}
+            handleSaveDraft={handleSaveDraft}
+            isSectionComplete={isSectionComplete}
+            isCollapsibleSectionComplete={isCollapsibleSectionComplete}
+            openCollapsibles={openCollapsibles}
+            toggleCollapsible={toggleCollapsible}
+          />
+        );
+      case "contextoEscolar":
+        return (
+          <ContextoEscolarSection
+            form={form}
+            errors={errors}
+            handleChange={handleChange}
+            handleSaveDraft={handleSaveDraft}
+            isSectionComplete={isSectionComplete}
+            isCollapsibleSectionComplete={isCollapsibleSectionComplete}
+            openCollapsibles={openCollapsibles}
+            toggleCollapsible={toggleCollapsible}
+          />
+        );
+      case "entornoFamiliar":
+        return (
+          <EntornoFamiliarSection
+            form={form}
+            errors={errors}
+            handleChange={handleChange}
+            handleSaveDraft={handleSaveDraft}
+            isSectionComplete={isSectionComplete}
+            isCollapsibleSectionComplete={isCollapsibleSectionComplete}
+            openCollapsibles={openCollapsibles}
+            toggleCollapsible={toggleCollapsible}
+          />
+        );
+      case "necesidadesApoyo":
+        return (
+          <NecesidadesApoyoSection
+            form={form}
+            errors={errors}
+            handleChange={handleChange}
+            handleSaveDraft={handleSaveDraft}
+            isSectionComplete={isSectionComplete}
+            isCollapsibleSectionComplete={isCollapsibleSectionComplete}
+            openCollapsibles={openCollapsibles}
+            toggleCollapsible={toggleCollapsible}
+            necesidadTemp={necesidadTemp}
+            setNecesidadTemp={setNecesidadTemp}
+          />
+        );
+      case "propuestaAtencion":
+        return (
+          <PropuestaAtencionSection
+            form={form}
+            errors={errors}
+            handleChange={handleChange}
+            handleSaveDraft={handleSaveDraft}
+            isSectionComplete={isSectionComplete}
+            isCollapsibleSectionComplete={isCollapsibleSectionComplete}
+            openCollapsibles={openCollapsibles}
+            toggleCollapsible={toggleCollapsible}
+            recursoMaterialTemp={recursoMaterialTemp}
+            setRecursoMaterialTemp={setRecursoMaterialTemp}
+            profEspecialistaTemp={profEspecialistaTemp}
+            setProfEspecialistaTemp={setProfEspecialistaTemp}
+            personalNoDocenteTemp={personalNoDocenteTemp}
+            setPersonalNoDocenteTemp={setPersonalNoDocenteTemp}
+          />
+        );
+      case "orientacionesFamilia":
+        return (
+          <OrientacionesFamiliaSection
+            form={form}
+            errors={errors}
+            handleChange={handleChange}
+            handleSaveDraft={handleSaveDraft}
+            handleOrientacionesFiles={handleOrientacionesFiles}
+            removeOrientacionesAdjunto={removeOrientacionesAdjunto}
+            isSectionComplete={isSectionComplete}
+            isCollapsibleSectionComplete={isCollapsibleSectionComplete}
+            openCollapsibles={openCollapsibles}
+            toggleCollapsible={toggleCollapsible}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <TooltipProvider delayDuration={300}>
       <Card className="w-full max-w-full overflow-x-hidden border border-border bg-card">
         <CardHeader className="border-b border-border p-4 sm:p-6">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle className="text-lg sm:text-xl">
               Secciones del Informe
             </CardTitle>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setOpen([])}
-              className="text-muted-foreground"
-            >
-              <Minimize2 className="h-4 w-4 mr-2" /> Contraer todo
-            </Button>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="justify-start text-muted-foreground sm:justify-center"
+                  >
+                    <Keyboard className="mr-2 h-4 w-4" /> Atajos
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-[340px] p-3">
+                  <div className="space-y-2">
+                    <p className="text-sm font-semibold text-foreground">
+                      Atajos del formulario
+                    </p>
+                    <div className="space-y-1.5">
+                      {shortcuts.map((shortcut) => (
+                        <div
+                          key={shortcut.keys}
+                          className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)] items-center gap-2 rounded-md border border-border/70 bg-muted/40 px-2.5 py-2"
+                        >
+                          <kbd className="rounded border border-border bg-background px-1.5 py-1 text-[11px] font-semibold text-foreground">
+                            {shortcut.keys}
+                          </kbd>
+                          <span className="text-xs text-muted-foreground">
+                            {shortcut.description}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={resetSectionOrder}
+                className="text-muted-foreground"
+              >
+                <RotateCcw className="mr-2 h-4 w-4" /> Restablecer orden
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setOpen([])}
+                className="text-muted-foreground"
+              >
+                <Minimize2 className="mr-2 h-4 w-4" /> Contraer todo
+              </Button>
+            </div>
+          </div>
+          <div className="mt-2 rounded-md border border-dashed border-border/70 bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
+            Reordenación: arrastra el control de cada sección para adaptar el flujo
+            de trabajo.
           </div>
           <div className="mt-4">
-            <div className="flex justify-between items-center mb-1">
+            <div className="mb-1 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Label
                   htmlFor="form-progress"
@@ -99,8 +339,8 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    Las secciones se marcan como completadas cuando tienen los campos
-                    mínimos necesarios para generar el informe.
+                    Las secciones se marcan como completadas cuando tienen los
+                    campos mínimos necesarios para generar el informe.
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -121,128 +361,46 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
               onValueChange={(v) => setOpen(v as SectionKey[])}
               className="w-full"
             >
-              {/* Datos personales */}
-              <DatosPersonalesSection
-                form={form}
-                errors={errors}
-                handleChange={handleChange}
-                handleFilesChange={handleFilesChange}
-                removeAdjunto={removeAdjunto}
-                handleSaveDraft={handleSaveDraft}
-                isSectionComplete={isSectionComplete}
-                isCollapsibleSectionComplete={isCollapsibleSectionComplete}
-                isIdentityOpen={openCollapsibles["dp"]}
-                onToggleIdentity={() => toggleCollapsible("dp")}
-              />
-
-              {/* Datos escolares */}
-              <DatosEscolaresSection
-                form={form}
-                errors={errors}
-                handleChange={handleChange}
-                handleSaveDraft={handleSaveDraft}
-                isSectionComplete={isSectionComplete}
-                isCollapsibleSectionComplete={isCollapsibleSectionComplete}
-                openCollapsibles={openCollapsibles}
-                toggleCollapsible={toggleCollapsible}
-                historiaEscolarOpen={historiaEscolarOpen}
-                onHistoriaEscolarChange={setHistoriaEscolarOpen}
-                handleNivelActuacionesChange={handleNivelActuacionesChange}
-                editingMedida={editingMedida}
-                onEditingMedidaChange={setEditingMedida}
-              />
-
-              {/* Evaluación psicopedagógica */}
-              <EvaluacionPsicopedagogicaSection
-                form={form}
-                errors={errors}
-                handleChange={handleChange}
-                handleSaveDraft={handleSaveDraft}
-                isSectionComplete={isSectionComplete}
-                isCollapsibleSectionComplete={isCollapsibleSectionComplete}
-                openCollapsibles={openCollapsibles}
-                toggleCollapsible={toggleCollapsible}
-              />
-
-              {/* Información relevante del alumno/a */}
-              <InformacionAlumnoSection
-                form={form}
-                errors={errors}
-                handleChange={handleChange}
-                handleSaveDraft={handleSaveDraft}
-                isSectionComplete={isSectionComplete}
-                isCollapsibleSectionComplete={isCollapsibleSectionComplete}
-                openCollapsibles={openCollapsibles}
-                toggleCollapsible={toggleCollapsible}
-              />
-
-              <ContextoEscolarSection
-                form={form}
-                errors={errors}
-                handleChange={handleChange}
-                handleSaveDraft={handleSaveDraft}
-                isSectionComplete={isSectionComplete}
-                isCollapsibleSectionComplete={isCollapsibleSectionComplete}
-                openCollapsibles={openCollapsibles}
-                toggleCollapsible={toggleCollapsible}
-              />
-
-              <EntornoFamiliarSection
-                form={form}
-                errors={errors}
-                handleChange={handleChange}
-                handleSaveDraft={handleSaveDraft}
-                isSectionComplete={isSectionComplete}
-                isCollapsibleSectionComplete={isCollapsibleSectionComplete}
-                openCollapsibles={openCollapsibles}
-                toggleCollapsible={toggleCollapsible}
-              />
-
-              <NecesidadesApoyoSection
-                form={form}
-                errors={errors}
-                handleChange={handleChange}
-                handleSaveDraft={handleSaveDraft}
-                isSectionComplete={isSectionComplete}
-                isCollapsibleSectionComplete={isCollapsibleSectionComplete}
-                openCollapsibles={openCollapsibles}
-                toggleCollapsible={toggleCollapsible}
-                necesidadTemp={necesidadTemp}
-                setNecesidadTemp={setNecesidadTemp}
-              />
-
-              <PropuestaAtencionSection
-                form={form}
-                errors={errors}
-                handleChange={handleChange}
-                handleSaveDraft={handleSaveDraft}
-                isSectionComplete={isSectionComplete}
-                isCollapsibleSectionComplete={isCollapsibleSectionComplete}
-                openCollapsibles={openCollapsibles}
-                toggleCollapsible={toggleCollapsible}
-                recursoMaterialTemp={recursoMaterialTemp}
-                setRecursoMaterialTemp={setRecursoMaterialTemp}
-                profEspecialistaTemp={profEspecialistaTemp}
-                setProfEspecialistaTemp={setProfEspecialistaTemp}
-                personalNoDocenteTemp={personalNoDocenteTemp}
-                setPersonalNoDocenteTemp={setPersonalNoDocenteTemp}
-              />
-
-              <OrientacionesFamiliaSection
-                form={form}
-                errors={errors}
-                handleChange={handleChange}
-                handleSaveDraft={handleSaveDraft}
-                handleOrientacionesFiles={handleOrientacionesFiles}
-                removeOrientacionesAdjunto={removeOrientacionesAdjunto}
-                isSectionComplete={isSectionComplete}
-                isCollapsibleSectionComplete={isCollapsibleSectionComplete}
-                openCollapsibles={openCollapsibles}
-                toggleCollapsible={toggleCollapsible}
-              />
+              {sectionOrder.map((sectionKey) => (
+                <div
+                  key={sectionKey}
+                  className={cn(
+                    "rounded-lg transition-colors",
+                    dragOverSection === sectionKey &&
+                      draggedSection !== sectionKey &&
+                      "bg-primary/5 ring-2 ring-primary/25",
+                  )}
+                  onDragOver={(event) => {
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = "move";
+                  }}
+                  onDragEnter={() => setDragOverSection(sectionKey)}
+                  onDragLeave={() => setDragOverSection(null)}
+                  onDrop={() => handleDropOnSection(sectionKey)}
+                >
+                  <div className="flex items-center justify-end px-4 pt-2 sm:px-6">
+                    <button
+                      type="button"
+                      draggable
+                      onDragStart={(event) => handleDragStart(sectionKey, event)}
+                      onDragEnd={() => {
+                        setDraggedSection(null);
+                        setDragOverSection(null);
+                      }}
+                      className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"
+                      aria-label={`Arrastrar sección ${sectionLabels[sectionKey]}`}
+                      title={`Arrastrar sección ${sectionLabels[sectionKey]}`}
+                    >
+                      <GripVertical className="h-3 w-3" />
+                      Mover sección
+                    </button>
+                  </div>
+                  {renderSection(sectionKey)}
+                </div>
+              ))}
             </Accordion>
             <div className="mt-6 border-t border-border bg-gradient-to-r from-muted/60 to-muted/30 p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
@@ -257,7 +415,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                     Genera el informe completo con la información cargada.
                   </TooltipContent>
                 </Tooltip>
-                <div className="flex flex-col sm:flex-row items-center gap-3">
+                <div className="flex flex-col items-center gap-3 sm:flex-row">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
