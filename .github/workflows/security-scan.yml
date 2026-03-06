@@ -14,6 +14,8 @@ permissions:
 jobs:
   snyk:
     runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,15 +30,13 @@ jobs:
         run: npm ci
 
       - name: Run Snyk test
-        if: ${{ secrets.SNYK_TOKEN != '' }}
+        if: ${{ env.SNYK_TOKEN != '' }}
         uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: test --all-projects --severity-threshold=high --sarif-file-output=snyk.sarif
 
       - name: Upload Snyk report
-        if: ${{ secrets.SNYK_TOKEN != '' && always() }}
+        if: ${{ env.SNYK_TOKEN != '' && always() }}
         uses: actions/upload-artifact@v4
         with:
           name: snyk-report
@@ -44,5 +44,5 @@ jobs:
           if-no-files-found: ignore
 
       - name: Missing token notice
-        if: ${{ secrets.SNYK_TOKEN == '' }}
+        if: ${{ env.SNYK_TOKEN == '' }}
         run: echo "SNYK_TOKEN no configurado. Se omite el escaneo de Snyk."
