@@ -1,0 +1,48 @@
+name: Security Scan
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Snyk test
+        if: ${{ secrets.SNYK_TOKEN != '' }}
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: test --all-projects --severity-threshold=high --sarif-file-output=snyk.sarif
+
+      - name: Upload Snyk report
+        if: ${{ secrets.SNYK_TOKEN != '' && always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: snyk-report
+          path: snyk.sarif
+          if-no-files-found: ignore
+
+      - name: Missing token notice
+        if: ${{ secrets.SNYK_TOKEN == '' }}
+        run: echo "SNYK_TOKEN no configurado. Se omite el escaneo de Snyk."
