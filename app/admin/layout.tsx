@@ -12,6 +12,7 @@ import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import DynamicBreadcrumb from "@/components/navigation/DynamicBreadcrumb";
+import ContextualHelp from "@/components/navigation/ContextualHelp";
 
 export default async function AdminLayout({
   children,
@@ -49,6 +50,7 @@ export default async function AdminLayout({
               >
                 {children}
               </main>
+              <ContextualHelp />
             </div>
           </SidebarInset>
         </SidebarProvider>
@@ -95,6 +97,7 @@ export default async function AdminLayout({
             >
               {children}
             </main>
+            <ContextualHelp />
           </div>
         </SidebarInset>
       </SidebarProvider>

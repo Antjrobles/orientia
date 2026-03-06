@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Mail, Search, Send, Users } from "lucide-react";
+import { Loader2, Mail, Search, Send, Sparkles, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { FriendlyErrorAlert } from "@/components/ui/friendly-error-alert";
 import {
   Select,
   SelectContent,
@@ -47,6 +49,8 @@ export default function AdminComunicacionesPage() {
   const [users, setUsers] = useState<Recipient[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [sending, setSending] = useState(false);
+  const [optimisticNotice, setOptimisticNotice] = useState<string | null>(null);
+  const [friendlyError, setFriendlyError] = useState<string | null>(null);
 
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
@@ -59,6 +63,7 @@ export default function AdminComunicacionesPage() {
 
   const loadUsers = async () => {
     setLoadingUsers(true);
+    setFriendlyError(null);
     try {
       const params = new URLSearchParams({
         q: search.trim(),
@@ -87,9 +92,13 @@ export default function AdminComunicacionesPage() {
         return next;
       });
     } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "No se pudo cargar el listado de contactos.";
+      setFriendlyError(message);
       toast.error("Comunicaciones", {
-        description:
-          error instanceof Error ? error.message : "No se pudo cargar el listado.",
+        description: message,
       });
     } finally {
       setLoadingUsers(false);
@@ -150,15 +159,27 @@ export default function AdminComunicacionesPage() {
       return;
     }
 
+    const selectedSnapshot = new Set(selectedIds);
+    setOptimisticNotice(
+      `Preparando envío para ${selectedSnapshot.size} contacto${
+        selectedSnapshot.size > 1 ? "s" : ""
+      }...`,
+    );
+    setSelectedIds(new Set());
     setSending(true);
+    setFriendlyError(null);
     try {
+      const loadingToastId = toast.loading("Enviando comunicación", {
+        description: "Estamos preparando y distribuyendo el envío.",
+      });
+
       const response = await fetch("/api/admin/communications/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           subject: subject.trim(),
           message: message.trim(),
-          recipientIds: [...selectedIds],
+          recipientIds: [...selectedSnapshot],
         }),
       });
       const data = await response.json();
@@ -169,22 +190,30 @@ export default function AdminComunicacionesPage() {
 
       if (data.failed > 0) {
         toast.warning("Envío parcial", {
+          id: loadingToastId,
           description: `Enviados: ${data.sent}. Fallidos: ${data.failed}. Excluidos por baja: ${data.skippedOptOut ?? 0}.`,
         });
       } else {
         toast.success("Comunicación enviada", {
+          id: loadingToastId,
           description: `Enviada a ${data.sent} contactos.`,
         });
       }
+      setOptimisticNotice("Comunicación enviada correctamente.");
     } catch (error) {
+      setSelectedIds(selectedSnapshot);
+      const message =
+        error instanceof Error
+          ? error.message
+          : "No se pudo enviar la comunicación. Revisa la conexión e inténtalo de nuevo.";
+      setFriendlyError(message);
       toast.error("Error al enviar", {
-        description:
-          error instanceof Error
-            ? error.message
-            : "No se pudo enviar la comunicación.",
+        description: message,
       });
+      setOptimisticNotice(null);
     } finally {
       setSending(false);
+      window.setTimeout(() => setOptimisticNotice(null), 2200);
     }
   };
 
@@ -206,8 +235,28 @@ export default function AdminComunicacionesPage() {
           </Badge>
         </div>
 
+        {optimisticNotice && (
+          <Alert className="mb-4 border-emerald-500/40 bg-emerald-500/10 text-emerald-100">
+            <Sparkles className="h-4 w-4 text-emerald-300" />
+            <AlertTitle>Estado en curso</AlertTitle>
+            <AlertDescription>{optimisticNotice}</AlertDescription>
+          </Alert>
+        )}
+
+        {friendlyError && (
+          <div className="mb-4">
+            <FriendlyErrorAlert
+              title="No pudimos completar la operación"
+              message={friendlyError}
+              actionLabel="Reintentar carga"
+              onAction={() => void loadUsers()}
+              onDismiss={() => setFriendlyError(null)}
+            />
+          </div>
+        )}
+
         <div className="grid gap-6 md:grid-cols-[1.1fr,1fr] xl:grid-cols-[1.2fr,1fr]">
-          <Card className="border-border bg-card shadow-sm">
+          <Card className="border-border bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-emerald-600" />
@@ -325,7 +374,7 @@ export default function AdminComunicacionesPage() {
                       return (
                         <div
                           key={user.id}
-                          className="flex items-center justify-between gap-3 border-b border-border px-3 py-2 last:border-b-0"
+                          className="flex items-center justify-between gap-3 border-b border-border px-3 py-2 transition-all duration-150 hover:bg-accent/35 hover:pl-4 last:border-b-0"
                         >
                           <label className="flex min-w-0 flex-1 cursor-pointer items-start gap-3">
                             <Checkbox
@@ -378,7 +427,7 @@ export default function AdminComunicacionesPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-border bg-card shadow-sm">
+          <Card className="border-border bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
             <CardHeader>
               <CardTitle>Redactar comunicación</CardTitle>
             </CardHeader>
@@ -410,9 +459,13 @@ export default function AdminComunicacionesPage() {
                   type="button"
                   onClick={sendCampaign}
                   disabled={sending || selectedCount === 0}
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-emerald-600 transition-all duration-200 hover:bg-emerald-700 hover:shadow-md active:translate-y-0"
                 >
-                  <Send className="mr-2 h-4 w-4" />
+                  {sending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="mr-2 h-4 w-4" />
+                  )}
                   {sending
                     ? "Enviando..."
                     : `Enviar a ${selectedCount} contactos`}

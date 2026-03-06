@@ -6,7 +6,10 @@ import { toast } from "sonner";
 import { StudentData } from "@/lib/groq/types";
 import { InformeCompletoForm } from "@/components/profile/InformeCompletoForm";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { FriendlyErrorAlert } from "@/components/ui/friendly-error-alert";
 import dynamic from "next/dynamic";
+import { Loader2, Sparkles } from "lucide-react";
 
 // Code-split: react-markdown solo se carga cuando hay un informe generado
 const InformePreview = dynamic(
@@ -25,16 +28,24 @@ export default function GenerarInformePage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [generatedReport, setGeneratedReport] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [errorState, setErrorState] = useState<{
+    message: string;
+    context: "generate" | "save";
+  } | null>(null);
+  const [optimisticStatus, setOptimisticStatus] = useState<string | null>(null);
   const [currentFormData, setCurrentFormData] = useState<StudentData | null>(
     null,
   );
 
   const handleGenerateReport = async (formData: StudentData) => {
     setIsGenerating(true);
-    setError(null);
+    setErrorState(null);
     setGeneratedReport(null);
     setCurrentFormData(formData);
+    setOptimisticStatus("Preparando datos para generar el informe...");
+    const optimisticTimer = window.setTimeout(() => {
+      setOptimisticStatus("La IA está redactando el informe. Esto puede tardar unos segundos.");
+    }, 900);
 
     try {
       const response = await fetch("/api/groq/generate-report", {
@@ -49,13 +60,26 @@ export default function GenerarInformePage() {
 
       if (data.success && data.report) {
         setGeneratedReport(data.report);
+        setOptimisticStatus("Informe generado. Revisa el contenido antes de guardar.");
       } else {
-        setError(data.error || "Error desconocido al generar el informe");
+        setErrorState({
+          message:
+            data.error ||
+            "No pudimos generar el informe. Revisa los datos y vuelve a intentarlo.",
+          context: "generate",
+        });
+        setOptimisticStatus(null);
       }
     } catch (err) {
       console.error("Error al generar informe:", err);
-      setError("Error de conexión. Por favor, intenta de nuevo.");
+      setErrorState({
+        message:
+          "No se pudo conectar con el servicio de generación. Comprueba tu conexión e inténtalo de nuevo.",
+        context: "generate",
+      });
+      setOptimisticStatus(null);
     } finally {
+      window.clearTimeout(optimisticTimer);
       setIsGenerating(false);
     }
   };
@@ -69,7 +93,8 @@ export default function GenerarInformePage() {
     }
 
     setIsSaving(true);
-    setError(null);
+    setErrorState(null);
+    setOptimisticStatus("Guardando informe en tu historial...");
 
     try {
       const response = await fetch("/api/informes/create", {
@@ -96,6 +121,8 @@ export default function GenerarInformePage() {
         });
         setGeneratedReport(null);
         setCurrentFormData(null);
+        setOptimisticStatus("Informe guardado correctamente.");
+        window.setTimeout(() => setOptimisticStatus(null), 1800);
       } else {
         throw new Error(
           data.error || "Error desconocido al guardar el informe",
@@ -107,7 +134,11 @@ export default function GenerarInformePage() {
       toast.error("Error al guardar", {
         description: errorMessage,
       });
-      setError(errorMessage);
+      setErrorState({
+        message: errorMessage,
+        context: "save",
+      });
+      setOptimisticStatus(null);
     } finally {
       setIsSaving(false);
     }
@@ -123,6 +154,35 @@ export default function GenerarInformePage() {
           Complete el formulario para generar un informe
         </p>
       </div>
+
+      {optimisticStatus && (
+        <Alert className="border-emerald-500/40 bg-emerald-500/10 text-emerald-100">
+          <Sparkles className="h-4 w-4 text-emerald-300" />
+          <AlertTitle>Estado de la operación</AlertTitle>
+          <AlertDescription className="flex items-center gap-2">
+            {(isGenerating || isSaving) && <Loader2 className="h-4 w-4 animate-spin" />}
+            <span>{optimisticStatus}</span>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {errorState && (
+        <FriendlyErrorAlert
+          title="No pudimos completar la acción"
+          message={errorState.message}
+          actionLabel={errorState.context === "generate" ? "Reintentar generación" : "Reintentar guardado"}
+          onAction={() => {
+            if (errorState.context === "generate" && currentFormData) {
+              void handleGenerateReport(currentFormData);
+              return;
+            }
+            if (errorState.context === "save") {
+              void handleSaveInforme();
+            }
+          }}
+          onDismiss={() => setErrorState(null)}
+        />
+      )}
 
       {/* Mostrar formulario si no hay informe generado */}
       {!generatedReport && (
@@ -140,15 +200,22 @@ export default function GenerarInformePage() {
             <div className="flex gap-2 flex-wrap">
               <Button
                 variant="outline"
+                className="transition-all duration-200 hover:-translate-y-0.5"
                 onClick={() => {
                   setGeneratedReport(null);
                   setCurrentFormData(null);
-                  setError(null);
+                  setErrorState(null);
+                  setOptimisticStatus(null);
                 }}
               >
                 Crear Nuevo
               </Button>
-              <Button onClick={handleSaveInforme} disabled={isSaving} size="lg">
+              <Button
+                onClick={handleSaveInforme}
+                disabled={isSaving}
+                size="lg"
+                className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+              >
                 {isSaving ? "Guardando..." : "Guardar Informe"}
               </Button>
             </div>
@@ -157,7 +224,7 @@ export default function GenerarInformePage() {
           <InformePreview
             report={generatedReport}
             isLoading={false}
-            error={error}
+            error={errorState?.message ?? null}
           />
         </div>
       )}

@@ -9,6 +9,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import DynamicBreadcrumb from "@/components/navigation/DynamicBreadcrumb";
+import ContextualHelp from "@/components/navigation/ContextualHelp";
 import { authOptions } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { DEVICE_COOKIE_NAME } from "@/lib/device";
@@ -42,6 +43,7 @@ export default async function ProfileLayout({ children }: ProfileLayoutProps) {
               >
                 {children}
               </main>
+              <ContextualHelp />
             </div>
           </SidebarInset>
         </SidebarProvider>
@@ -93,6 +95,7 @@ export default async function ProfileLayout({ children }: ProfileLayoutProps) {
             >
               {children}
             </main>
+            <ContextualHelp />
           </div>
         </SidebarInset>
       </SidebarProvider>
