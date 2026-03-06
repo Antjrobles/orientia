@@ -288,10 +288,10 @@
 - [ ] Agregar temas personalizables de color
 - [x] Permitir selección de tema claro/oscuro por usuario desde Preferencias
 - [x] Corregir inconsistencias visuales del tema oscuro en áreas privadas (`/profile/*` y `/admin/*`)
-- [ ] Implementar diseño adaptable a preferencias de accesibilidad
-- [ ] Agregar modo de alto contraste
-- [ ] Implementar soporte completo para lectores de pantalla
-- [ ] Agregar navegación por teclado mejorada
+- [x] Implementar diseño adaptable a preferencias de accesibilidad
+- [x] Agregar modo de alto contraste
+- [x] Implementar soporte completo para lectores de pantalla
+- [x] Agregar navegación por teclado mejorada
 - [ ] Implementar zoom sin pérdida de funcionalidad
 - [ ] Agregar configuración de tamaño de fuente
 - [ ] Implementar reducción de movimiento para sensibilidad

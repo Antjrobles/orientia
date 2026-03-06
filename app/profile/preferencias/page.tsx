@@ -17,6 +17,8 @@ type PreferencesState = {
   draftReminders: boolean;
   weeklySummary: boolean;
   theme: ThemePreference;
+  highContrast: boolean;
+  keyboardNavigation: boolean;
 };
 
 function normalizeTheme(value: unknown): ThemePreference {
@@ -33,19 +35,25 @@ export default function PreferenciasPage() {
     draftReminders: true,
     weeklySummary: false,
     theme: "light",
+    highContrast: false,
+    keyboardNavigation: false,
   });
   const [initial, setInitial] = useState<PreferencesState>({
     emailNotifications: true,
     draftReminders: true,
     weeklySummary: false,
     theme: "light",
+    highContrast: false,
+    keyboardNavigation: false,
   });
 
   const isDirty =
     preferences.emailNotifications !== initial.emailNotifications ||
     preferences.draftReminders !== initial.draftReminders ||
     preferences.weeklySummary !== initial.weeklySummary ||
-    preferences.theme !== initial.theme;
+    preferences.theme !== initial.theme ||
+    preferences.highContrast !== initial.highContrast ||
+    preferences.keyboardNavigation !== initial.keyboardNavigation;
 
   const applyTheme = (choice: ThemePreference) => {
     const root = document.documentElement;
@@ -53,6 +61,23 @@ export default function PreferenciasPage() {
     root.classList.toggle("dark", choice === "dark");
     root.style.colorScheme = choice;
     window.localStorage.setItem("theme", choice);
+  };
+
+  const applyAccessibility = (next: Pick<
+    PreferencesState,
+    "highContrast" | "keyboardNavigation"
+  >) => {
+    const root = document.documentElement;
+    root.classList.toggle("high-contrast", next.highContrast);
+    root.classList.toggle("keyboard-navigation", next.keyboardNavigation);
+    window.localStorage.setItem(
+      "accessibility_high_contrast",
+      String(next.highContrast),
+    );
+    window.localStorage.setItem(
+      "accessibility_keyboard_navigation",
+      String(next.keyboardNavigation),
+    );
   };
 
   useEffect(() => {
@@ -63,10 +88,28 @@ export default function PreferenciasPage() {
 
     const load = async () => {
       const localStoredTheme = normalizeTheme(window.localStorage.getItem("theme"));
+      const localHighContrast =
+        window.localStorage.getItem("accessibility_high_contrast") === "true";
+      const localKeyboardNavigation =
+        window.localStorage.getItem("accessibility_keyboard_navigation") === "true";
       setTheme(localStoredTheme);
       applyTheme(localStoredTheme);
-      setPreferences((current) => ({ ...current, theme: localStoredTheme }));
-      setInitial((current) => ({ ...current, theme: localStoredTheme }));
+      applyAccessibility({
+        highContrast: localHighContrast,
+        keyboardNavigation: localKeyboardNavigation,
+      });
+      setPreferences((current) => ({
+        ...current,
+        theme: localStoredTheme,
+        highContrast: localHighContrast,
+        keyboardNavigation: localKeyboardNavigation,
+      }));
+      setInitial((current) => ({
+        ...current,
+        theme: localStoredTheme,
+        highContrast: localHighContrast,
+        keyboardNavigation: localKeyboardNavigation,
+      }));
 
       setSyncing(true);
       const controller = new AbortController();
@@ -89,9 +132,17 @@ export default function PreferenciasPage() {
           draftReminders: Boolean(data.preferences?.draftReminders ?? true),
           weeklySummary: Boolean(data.preferences?.weeklySummary ?? false),
           theme: effectiveTheme,
+          highContrast: Boolean(data.preferences?.highContrast ?? localHighContrast),
+          keyboardNavigation: Boolean(
+            data.preferences?.keyboardNavigation ?? localKeyboardNavigation,
+          ),
         };
         setTheme(next.theme);
         applyTheme(next.theme);
+        applyAccessibility({
+          highContrast: next.highContrast,
+          keyboardNavigation: next.keyboardNavigation,
+        });
         setPreferences(next);
         setInitial(next);
       } catch (error) {
@@ -135,9 +186,15 @@ export default function PreferenciasPage() {
         theme: (["light", "dark"].includes(data.preferences?.theme)
           ? data.preferences.theme
           : "light") as ThemePreference,
+        highContrast: Boolean(data.preferences?.highContrast ?? false),
+        keyboardNavigation: Boolean(data.preferences?.keyboardNavigation ?? false),
       };
       setTheme(next.theme);
       applyTheme(next.theme);
+      applyAccessibility({
+        highContrast: next.highContrast,
+        keyboardNavigation: next.keyboardNavigation,
+      });
       setPreferences(next);
       setInitial(next);
 
@@ -296,6 +353,56 @@ export default function PreferenciasPage() {
                 />
               </div>
 
+              <div className="flex items-start justify-between gap-3 rounded-md border border-border p-3">
+                <div className="space-y-1">
+                  <Label htmlFor="high-contrast" className="text-sm font-medium">
+                    Modo de alto contraste
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Refuerza contraste y legibilidad en toda la interfaz.
+                  </p>
+                </div>
+                <Switch
+                  id="high-contrast"
+                  checked={preferences.highContrast}
+                  onCheckedChange={(checked) => {
+                    applyAccessibility({
+                      highContrast: checked,
+                      keyboardNavigation: preferences.keyboardNavigation,
+                    });
+                    setPreferences((current) => ({
+                      ...current,
+                      highContrast: checked,
+                    }));
+                  }}
+                />
+              </div>
+
+              <div className="flex items-start justify-between gap-3 rounded-md border border-border p-3">
+                <div className="space-y-1">
+                  <Label htmlFor="keyboard-navigation" className="text-sm font-medium">
+                    Navegación por teclado mejorada
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Destaca mejor el foco y prioriza la navegación sin ratón.
+                  </p>
+                </div>
+                <Switch
+                  id="keyboard-navigation"
+                  checked={preferences.keyboardNavigation}
+                  onCheckedChange={(checked) => {
+                    applyAccessibility({
+                      highContrast: preferences.highContrast,
+                      keyboardNavigation: checked,
+                    });
+                    setPreferences((current) => ({
+                      ...current,
+                      keyboardNavigation: checked,
+                    }));
+                  }}
+                />
+              </div>
+
               <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                 <Badge variant="secondary">
                   <MoonStar className="mr-1 h-3.5 w-3.5" />
@@ -308,6 +415,14 @@ export default function PreferenciasPage() {
                 <Badge variant="secondary">
                   <Mail className="mr-1 h-3.5 w-3.5" />
                   Email
+                </Badge>
+                <Badge variant="secondary">
+                  {preferences.highContrast ? "Alto contraste" : "Contraste estándar"}
+                </Badge>
+                <Badge variant="secondary">
+                  {preferences.keyboardNavigation
+                    ? "Teclado mejorado"
+                    : "Teclado estándar"}
                 </Badge>
                 <span>Estas preferencias se aplican a tu cuenta.</span>
               </div>

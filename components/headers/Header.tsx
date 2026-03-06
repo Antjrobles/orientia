@@ -15,6 +15,7 @@ const AuthButtons = dynamic(() => import("@/components/auth/AuthButtons"), {
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const mobileMenuId = "header-mobile-menu";
 
   // Detectar scroll para optimizar backdrop-blur
   useEffect(() => {
@@ -51,6 +52,16 @@ export default function Header() {
       document.body.style.overflow = "unset";
     };
   }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, []);
 
   return (
     <>
@@ -146,6 +157,8 @@ export default function Header() {
             <button
               className="ml-auto rounded p-2 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring md:hidden"
               aria-label="Abrir menú"
+              aria-expanded={mobileMenuOpen}
+              aria-controls={mobileMenuId}
               onClick={() => setMobileMenuOpen(true)}
             >
               <Menu className="h-6 w-6" />
@@ -170,6 +183,10 @@ export default function Header() {
               "fixed inset-y-0 right-0 w-full max-w-sm transform bg-card shadow-xl transition-transform duration-300 ease-in-out",
               mobileMenuOpen ? "translate-x-0" : "translate-x-full",
             )}
+            id={mobileMenuId}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú de navegación móvil"
           >
             <div className="flex flex-col h-full">
               {/* Header del menú */}

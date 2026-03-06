@@ -11,6 +11,7 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import UmamiAnalytics from "@/components/consent/UmamiAnalytics";
 import BackToTopButton from "@/components/navigation/BackToTopButton";
+import ScreenReaderAnnouncer from "@/components/navigation/ScreenReaderAnnouncer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -129,6 +130,7 @@ export default function RootLayout({
         </a>
         <Providers>
           <ConsentProvider>
+            <ScreenReaderAnnouncer />
             {children}
             <CookieBanner />
             {/* Google Analytics solo carga si consent.analytics === true */}

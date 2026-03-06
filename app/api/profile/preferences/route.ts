@@ -19,6 +19,8 @@ const preferencesSchema = z.object({
   draftReminders: z.boolean(),
   weeklySummary: z.boolean(),
   theme: inputThemeSchema,
+  highContrast: z.boolean().default(false),
+  keyboardNavigation: z.boolean().default(false),
 });
 
 type UserRow = Record<string, unknown>;
@@ -149,6 +151,8 @@ async function mergeStoragePreferences(
     draftReminders: boolean;
     weeklySummary: boolean;
     theme: z.infer<typeof themeSchema>;
+    highContrast: boolean;
+    keyboardNavigation: boolean;
   },
 ) {
   const current = await readStoragePreferences(userId);
@@ -158,6 +162,8 @@ async function mergeStoragePreferences(
     draftReminders: next.draftReminders,
     weeklySummary: next.weeklySummary,
     theme: next.theme,
+    highContrast: next.highContrast,
+    keyboardNavigation: next.keyboardNavigation,
   };
 
   const path = settingsPathForUser(userId);
@@ -218,6 +224,14 @@ export async function GET() {
         false,
       ),
       theme: toTheme(metadata.theme ?? userThemeColumn ?? storagePrefs.theme),
+      highContrast: toBoolean(
+        metadata.highContrast ?? storagePrefs.highContrast,
+        false,
+      ),
+      keyboardNavigation: toBoolean(
+        metadata.keyboardNavigation ?? storagePrefs.keyboardNavigation,
+        false,
+      ),
     },
   });
 }
@@ -279,6 +293,8 @@ export async function PUT(request: Request) {
       weeklySummary: next.weeklySummary,
       emailNotifications: next.emailNotifications,
       theme: next.theme,
+      highContrast: next.highContrast,
+      keyboardNavigation: next.keyboardNavigation,
     };
   }
 
