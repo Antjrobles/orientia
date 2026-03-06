@@ -270,10 +270,10 @@
 - [x] Agregar atajos de teclado globales
 - [x] Implementar drag & drop para reordenar secciones
 - [ ] Agregar vista previa en tiempo real mientras se edita
-- [ ] Implementar breadcrumbs mejorados con navegación rápida
+- [x] Implementar breadcrumbs mejorados con navegación rápida
 - [x] Agregar búsqueda global (Cmd+K)
 - [ ] Implementar notificaciones en tiempo real (WebSockets)
-- [ ] Agregar animaciones y transiciones pulidas
+- [x] Agregar animaciones y transiciones pulidas
 - [ ] Implementar skeleton loaders en todas las vistas
 - [x] Mejorar estados vacios en admin (tablas y tarjetas)
 - [ ] Agregar skeletons en admin (tablas y tarjetas)

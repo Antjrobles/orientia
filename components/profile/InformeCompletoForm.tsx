@@ -361,15 +361,16 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
               onValueChange={(v) => setOpen(v as SectionKey[])}
               className="w-full"
             >
-              {sectionOrder.map((sectionKey) => (
+              {sectionOrder.map((sectionKey, index) => (
                 <div
                   key={sectionKey}
                   className={cn(
-                    "rounded-lg transition-colors",
+                    "rounded-lg transition-all duration-200 animate-in fade-in-0 slide-in-from-bottom-1 motion-reduce:animate-none",
                     dragOverSection === sectionKey &&
                       draggedSection !== sectionKey &&
                       "bg-primary/5 ring-2 ring-primary/25",
                   )}
+                  style={{ animationDelay: `${index * 28}ms` }}
                   onDragOver={(event) => {
                     event.preventDefault();
                     event.dataTransfer.dropEffect = "move";
@@ -387,7 +388,7 @@ export function InformeCompletoForm({ onSubmit, isLoading }: Props) {
                         setDraggedSection(null);
                         setDragOverSection(null);
                       }}
-                      className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"
+                      className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-xs text-muted-foreground transition-all duration-200 hover:bg-accent hover:text-foreground hover:-translate-y-0.5 hover:shadow-sm active:translate-y-0"
                       aria-label={`Arrastrar sección ${sectionLabels[sectionKey]}`}
                       title={`Arrastrar sección ${sectionLabels[sectionKey]}`}
                     >
