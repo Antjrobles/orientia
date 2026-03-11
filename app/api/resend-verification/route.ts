@@ -8,11 +8,15 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
+function hashVerificationToken(token: string) {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting por IP + por email
     const ip = getClientIp(request);
-    const rl = checkRateLimit(`resend:${ip}`, 10, 60_000);
+    const rl = await checkRateLimit(`resend:${ip}`, 10, 60_000);
     if (!rl.allowed) {
       return NextResponse.json(
         { success: false, error: "Demasiadas solicitudes" },
@@ -27,7 +31,7 @@ export async function POST(request: NextRequest) {
       );
     }
     const normalizedEmail = email.trim().toLowerCase();
-    const rlEmail = checkRateLimit(`resend-email:${email}`, 3, 60_000);
+    const rlEmail = await checkRateLimit(`resend-email:${email}`, 3, 60_000);
     if (!rlEmail.allowed) {
       return NextResponse.json(
         { success: false, error: "Demasiadas solicitudes para este email" },
@@ -49,14 +53,16 @@ export async function POST(request: NextRequest) {
 
     // Generar nuevo token (24h)
     const token = crypto.randomUUID();
+    const tokenHash = hashVerificationToken(token);
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     const { error: tokenError } = await supabase
       .from("verification_tokens")
       .insert({
         identifier: normalizedEmail,
-        token,
+        token_hash: tokenHash,
         expires,
+        used_at: null,
       });
 
     if (tokenError) {

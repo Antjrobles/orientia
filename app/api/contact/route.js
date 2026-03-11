@@ -79,7 +79,7 @@ export async function POST(request) {
       await request.json();
 
     const ip = getClientIp(request);
-    const rlIp = checkRateLimit(`contact:ip:${ip}`, 5, 10 * 60 * 1000);
+    const rlIp = await checkRateLimit(`contact:ip:${ip}`, 5, 10 * 60 * 1000);
     if (!rlIp.allowed) {
       return NextResponse.json(
         { message: "Demasiadas solicitudes desde esta IP. Inténtalo más tarde.", success: false },
@@ -103,7 +103,7 @@ export async function POST(request) {
       );
     }
     const normalizedEmail = validator.normalizeEmail(email) || email.trim().toLowerCase();
-    const rlEmail = checkRateLimit(`contact:email:${normalizedEmail}`, 3, 30 * 60 * 1000);
+    const rlEmail = await checkRateLimit(`contact:email:${normalizedEmail}`, 3, 30 * 60 * 1000);
     if (!rlEmail.allowed) {
       return NextResponse.json(
         { message: "Demasiados envíos para este email. Inténtalo más tarde.", success: false },

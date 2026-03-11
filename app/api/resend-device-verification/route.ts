@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     }
 
     const ip = getClientIp({ headers: request.headers });
-    const rl = checkRateLimit(`device-verify-resend:${email}:${ip}`, 3, 60_000);
+    const rl = await checkRateLimit(`device-verify-resend:${email}:${ip}`, 3, 60_000);
     if (!rl.allowed) {
       return NextResponse.json(
         {

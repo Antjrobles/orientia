@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import crypto from "crypto";
 import { supabase } from "@/lib/supabase";
-import { DEVICE_COOKIE_MAX_AGE, DEVICE_COOKIE_NAME } from "@/lib/device";
+import {
+  DEVICE_COOKIE_MAX_AGE,
+  DEVICE_COOKIE_NAME,
+  TRUSTED_DEVICE_COOKIE_NAME,
+  createTrustedDeviceCookieValue,
+} from "@/lib/device";
 
 const Schema = z.object({
   token: z.string().min(1, "Token requerido"),
@@ -25,22 +30,19 @@ export async function POST(request: NextRequest) {
 
     const tokenHash = hashToken(parsed.data.token);
 
+    const nowIso = new Date().toISOString();
+
     const { data: tokenRow, error: tokenError } = await supabase
       .from("device_verification_tokens")
-      .select("user_id, device_id, expires, used_at")
+      .update({ used_at: nowIso })
+      .select("user_id, device_id, expires")
       .eq("token_hash", tokenHash)
+      .is("used_at", null)
       .single();
 
     if (tokenError || !tokenRow) {
       return NextResponse.json(
         { success: false, error: "Token invalido o expirado" },
-        { status: 400 },
-      );
-    }
-
-    if (tokenRow.used_at) {
-      return NextResponse.json(
-        { success: false, error: "Este enlace ya fue usado" },
         { status: 400 },
       );
     }
@@ -52,16 +54,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await supabase.from("trusted_devices").insert({
+    await supabase.from("trusted_devices").upsert({
       user_id: tokenRow.user_id,
       device_id: tokenRow.device_id,
       last_seen_at: new Date().toISOString(),
-    });
-
-    await supabase
-      .from("device_verification_tokens")
-      .update({ used_at: new Date().toISOString() })
-      .eq("token_hash", tokenHash);
+    }, { onConflict: "user_id,device_id" });
 
     const response = NextResponse.json({
       success: true,
@@ -75,6 +72,20 @@ export async function POST(request: NextRequest) {
       maxAge: DEVICE_COOKIE_MAX_AGE,
       secure: process.env.NODE_ENV === "production",
     });
+    response.cookies.set(
+      TRUSTED_DEVICE_COOKIE_NAME,
+      createTrustedDeviceCookieValue({
+        userId: tokenRow.user_id,
+        deviceId: tokenRow.device_id,
+      }),
+      {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        maxAge: DEVICE_COOKIE_MAX_AGE,
+        secure: process.env.NODE_ENV === "production",
+      },
+    );
 
     return response;
   } catch {
@@ -84,4 +95,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

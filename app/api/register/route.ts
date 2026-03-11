@@ -29,11 +29,25 @@ const registerSchema = z.object({
   turnstileToken: z.string().min(1, "Token de seguridad requerido"),
 });
 
+function buildGenericRegisterResponse() {
+  return NextResponse.json(
+    {
+      message:
+        "Si el correo es válido, recibirás un email para completar el acceso a tu cuenta.",
+    },
+    { status: 201 },
+  );
+}
+
+function hashVerificationToken(token: string) {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
+
 export async function POST(request: Request) {
   try {
     // Rate limiting por IP (5 solicitudes por minuto)
     const ip = getClientIp(request);
-    const rl = checkRateLimit(`register:${ip}`, 5, 60_000);
+    const rl = await checkRateLimit(`register:${ip}`, 5, 60_000);
     if (!rl.allowed) {
       return NextResponse.json(
         { error: "Demasiadas solicitudes. Inténtalo de nuevo más tarde." },
@@ -52,6 +66,7 @@ export async function POST(request: Request) {
 
     const { name, email, password, turnstileToken } = validation.data;
     const normalizedEmail = email.trim().toLowerCase();
+    const genericResponse = buildGenericRegisterResponse();
 
     // Validar el token de Turnstile (CAPTCHA)
     const isValidCaptcha = await validateTurnstileToken(turnstileToken);
@@ -70,10 +85,7 @@ export async function POST(request: Request) {
       .single();
 
     if (existingUser) {
-      return NextResponse.json(
-        { error: "Ya existe un usuario con este email" },
-        { status: 409 },
-      ); // 409 Conflict
+      return genericResponse;
     }
 
     // Ignoramos el error específico que indica que no se encontró ninguna fila, que es lo esperado.
@@ -86,6 +98,7 @@ export async function POST(request: Request) {
 
     // 4. Generar token de verificación
     const verificationToken = crypto.randomUUID();
+    const verificationTokenHash = hashVerificationToken(verificationToken);
 
     // 5. Insertar el nuevo usuario en la base de datos
     const { error: insertError } = await supabase.from("users").insert({
@@ -105,7 +118,7 @@ export async function POST(request: Request) {
     }
 
     // 6. Guardar token de verificación (rate limit por email)
-    const rlEmail = checkRateLimit(`register-email:${email}`, 3, 60_000);
+    const rlEmail = await checkRateLimit(`register-email:${email}`, 3, 60_000);
     if (!rlEmail.allowed) {
       return NextResponse.json(
         { error: "Demasiados intentos para este email. Prueba más tarde." },
@@ -116,8 +129,9 @@ export async function POST(request: Request) {
       .from("verification_tokens")
       .insert({
         identifier: normalizedEmail,
-        token: verificationToken,
+        token_hash: verificationTokenHash,
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 horas
+        used_at: null,
       });
 
     if (tokenError) {
@@ -170,13 +184,7 @@ export async function POST(request: Request) {
     }
 
     // 8. Devolver una respuesta de éxito
-    return NextResponse.json(
-      {
-        message:
-          "Usuario creado correctamente. Revisa tu email para verificar tu cuenta.",
-      },
-      { status: 201 },
-    );
+    return genericResponse;
   } catch (error) {
     console.error("Error de registro:", error);
     return NextResponse.json(

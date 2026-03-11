@@ -12,7 +12,10 @@ import DynamicBreadcrumb from "@/components/navigation/DynamicBreadcrumb";
 import ContextualHelp from "@/components/navigation/ContextualHelp";
 import { authOptions } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { DEVICE_COOKIE_NAME } from "@/lib/device";
+import {
+  TRUSTED_DEVICE_COOKIE_NAME,
+  parseTrustedDeviceCookieValue,
+} from "@/lib/device";
 
 interface ProfileLayoutProps {
   children: React.ReactNode;
@@ -57,8 +60,9 @@ export default async function ProfileLayout({ children }: ProfileLayoutProps) {
   }
 
   const cookieStore = await cookies();
-  const deviceId = cookieStore.get(DEVICE_COOKIE_NAME)?.value;
-  if (!deviceId) {
+  const trustedCookieValue = cookieStore.get(TRUSTED_DEVICE_COOKIE_NAME)?.value;
+  const trustedCookie = parseTrustedDeviceCookieValue(trustedCookieValue, session.user.id);
+  if (!trustedCookie) {
     redirect("/login?error=DeviceVerificationRequired");
   }
 
@@ -66,7 +70,7 @@ export default async function ProfileLayout({ children }: ProfileLayoutProps) {
     .from("trusted_devices")
     .select("id")
     .eq("user_id", session.user.id)
-    .eq("device_id", deviceId)
+    .eq("device_id", trustedCookie.d)
     .single();
 
   if (!trusted) {

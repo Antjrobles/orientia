@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
+
+function hashVerificationToken(token: string) {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,11 +22,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Buscar el token en la base de datos
+    const tokenHash = hashVerificationToken(token);
+
+    const nowIso = new Date().toISOString();
+
+    // Consumo de un solo uso: marcamos el token como usado en la misma operación.
     const { data: tokenData, error: tokenError } = await supabase
       .from("verification_tokens")
-      .select("*")
-      .eq("token", token)
+      .update({ used_at: nowIso })
+      .select("identifier, expires")
+      .eq("token_hash", tokenHash)
+      .is("used_at", null)
       .single();
 
     if (tokenError || !tokenData) {
@@ -33,9 +44,6 @@ export async function POST(request: NextRequest) {
 
     // Verificar si el token ha expirado
     if (new Date() > new Date(tokenData.expires)) {
-      // Eliminar token expirado
-      await supabase.from("verification_tokens").delete().eq("token", token);
-
       return NextResponse.json(
         { success: false, expired: true, message: "Token expirado" },
         { status: 400 },
@@ -55,9 +63,6 @@ export async function POST(request: NextRequest) {
         { status: 500 },
       );
     }
-
-    // Eliminar el token usado
-    await supabase.from("verification_tokens").delete().eq("token", token);
 
     return NextResponse.json({
       success: true,

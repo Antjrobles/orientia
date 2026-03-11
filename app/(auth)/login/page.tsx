@@ -41,7 +41,6 @@ function LoginContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [justRegistered, setJustRegistered] = useState(false);
-  const [verificationSent, setVerificationSent] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRequired = process.env.NODE_ENV !== "development";
   const [deviceId, setDeviceId] = useState<string | null>(null);
@@ -76,6 +75,8 @@ function LoginContent() {
           "Demasiados intentos fallidos. Tu IP ha sido bloqueada temporalmente. Inténtalo de nuevo en 15 minutos.",
         PasswordExpired:
           "Tu contraseña ha expirado (90 días). Debes restablecerla para continuar.",
+        SecurityVerificationFailed:
+          "La verificación de seguridad ha fallado. Inténtalo de nuevo.",
       };
       if (
         errorParam === "CredentialsSignin" &&
@@ -100,6 +101,13 @@ function LoginContent() {
         setError(
           "Demasiados intentos fallidos. Tu IP ha sido bloqueada temporalmente. Inténtalo de nuevo en 15 minutos.",
         );
+        return;
+      }
+      if (
+        errorParam === "CredentialsSignin" &&
+        errorDescription === "SecurityVerificationFailed"
+      ) {
+        setError("La verificación de seguridad ha fallado. Inténtalo de nuevo.");
         return;
       }
       setError(map[errorParam] || "No se pudo iniciar sesión.");
@@ -189,7 +197,6 @@ function LoginContent() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setVerificationSent(null);
     setResendStatus(null);
 
     if (turnstileRequired && !turnstileToken) {
@@ -204,28 +211,13 @@ function LoginContent() {
       email,
       password,
       deviceId: deviceId ?? undefined,
+      turnstileToken: turnstileToken ?? undefined,
       callbackUrl,
     });
 
     setLoading(false);
 
     if (result?.error) {
-      try {
-        const resp = await fetch("/api/auth/check-email-verified", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        });
-        if (resp.ok) {
-          const data = await resp.json();
-          if (data.exists && !data.verified) {
-            setError(
-              "Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.",
-            );
-            return;
-          }
-        }
-      } catch {}
       setError("Email o contraseña incorrectos. Por favor, verifica tus datos.");
     }
   };
@@ -398,44 +390,10 @@ function LoginContent() {
                   </AlertDescription>
                 </Alert>
 
-                {error.includes("verificar tu email") && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={loading || !email}
-                    onClick={async () => {
-                      setVerificationSent(null);
-                      try {
-                        const res = await fetch("/api/resend-verification", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ email }),
-                        });
-                        if (res.ok) {
-                          setVerificationSent(
-                            "Hemos reenviado el email de verificación. Revisa tu bandeja.",
-                          );
-                        }
-                      } catch {}
-                    }}
-                  >
-                    Reenviar verificación
-                  </Button>
-                )}
-
                 {error.includes("ha expirado") && (
                   <Button asChild variant="outline" size="sm">
                     <Link href="/forgot-password">Restablecer contraseña</Link>
                   </Button>
-                )}
-
-                {verificationSent && (
-                  <Alert className="rounded-lg flex items-center gap-2 px-3 py-2">
-                    <CheckCircle className="h-4 w-4 text-emerald-600" />
-                    <AlertDescription className="text-emerald-700 text-sm font-medium">
-                      {verificationSent}
-                    </AlertDescription>
-                  </Alert>
                 )}
               </div>
             )}

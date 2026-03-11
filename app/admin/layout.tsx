@@ -7,7 +7,10 @@ import {
 } from "@/components/ui/sidebar";
 import { authOptions } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { DEVICE_COOKIE_NAME } from "@/lib/device";
+import {
+  TRUSTED_DEVICE_COOKIE_NAME,
+  parseTrustedDeviceCookieValue,
+} from "@/lib/device";
 import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -59,8 +62,9 @@ export default async function AdminLayout({
   }
 
   const cookieStore = await cookies();
-  const deviceId = cookieStore.get(DEVICE_COOKIE_NAME)?.value;
-  if (!deviceId) {
+  const trustedCookieValue = cookieStore.get(TRUSTED_DEVICE_COOKIE_NAME)?.value;
+  const trustedCookie = parseTrustedDeviceCookieValue(trustedCookieValue, session.user.id);
+  if (!trustedCookie) {
     redirect("/login?error=DeviceVerificationRequired");
   }
 
@@ -68,7 +72,7 @@ export default async function AdminLayout({
     .from("trusted_devices")
     .select("id")
     .eq("user_id", session.user.id)
-    .eq("device_id", deviceId)
+    .eq("device_id", trustedCookie.d)
     .single();
 
   if (!trusted) {

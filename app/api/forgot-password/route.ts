@@ -21,7 +21,7 @@ function hashToken(token: string) {
 export async function POST(request: NextRequest) {
   try {
     const ip = getClientIp(request);
-    const rl = checkRateLimit(`forgot:${ip}`, 5, 60_000);
+    const rl = await checkRateLimit(`forgot:${ip}`, 5, 60_000);
     if (!rl.allowed) {
       return NextResponse.json(
         { success: false, error: "Demasiadas solicitudes. Inténtalo más tarde." },
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     }
 
     const email = parsed.data.email.trim().toLowerCase();
-    const rlEmail = checkRateLimit(`forgot-email:${email}`, 3, 60_000);
+    const rlEmail = await checkRateLimit(`forgot-email:${email}`, 3, 60_000);
     if (!rlEmail.allowed) {
       return NextResponse.json(
         { success: false, error: "Demasiadas solicitudes. Inténtalo más tarde." },

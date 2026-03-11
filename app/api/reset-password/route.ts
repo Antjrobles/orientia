@@ -35,7 +35,7 @@ function hashToken(token: string) {
 export async function POST(request: NextRequest) {
   try {
     const ip = getClientIp(request);
-    const rl = checkRateLimit(`reset:${ip}`, 10, 60_000);
+    const rl = await checkRateLimit(`reset:${ip}`, 10, 60_000);
     if (!rl.allowed) {
       return NextResponse.json(
         { success: false, error: "Demasiadas solicitudes. Inténtalo más tarde." },
@@ -54,22 +54,19 @@ export async function POST(request: NextRequest) {
 
     const tokenHash = hashToken(parsed.data.token);
 
+    const nowIso = new Date().toISOString();
+
     const { data: tokenRow, error: tokenError } = await supabase
       .from("password_reset_tokens")
-      .select("identifier, expires, used_at")
+      .update({ used_at: nowIso })
+      .select("identifier, expires")
       .eq("token_hash", tokenHash)
+      .is("used_at", null)
       .single();
 
     if (tokenError || !tokenRow?.identifier) {
       return NextResponse.json(
         { success: false, error: "Token inválido o expirado" },
-        { status: 400 },
-      );
-    }
-
-    if (tokenRow.used_at) {
-      return NextResponse.json(
-        { success: false, error: "Este enlace ya fue usado. Solicita uno nuevo." },
         { status: 400 },
       );
     }
@@ -90,7 +87,6 @@ export async function POST(request: NextRequest) {
       .ilike("email", email)
       .single();
 
-    const nowIso = new Date().toISOString();
     const passwordChangePayload = currentUser
       ? buildPasswordChangedUpdate(currentUser as Record<string, unknown>, nowIso)
       : {};
@@ -110,12 +106,6 @@ export async function POST(request: NextRequest) {
         { status: 500 },
       );
     }
-
-    await supabase
-      .from("password_reset_tokens")
-      .update({ used_at: new Date().toISOString() })
-      .eq("token_hash", tokenHash);
-
     return NextResponse.json({
       success: true,
       message: "Contraseña actualizada correctamente. Ya puedes iniciar sesión.",

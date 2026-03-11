@@ -154,15 +154,16 @@ async function readStorageSettings(userId: string) {
     if (!text) return null;
     const parsed = JSON.parse(text) as Partial<SettingsPayload>;
     const validated = settingsSchema.partial().parse(parsed);
+    const decryptedSettings = { ...validated } as Partial<SettingsPayload>;
 
     for (const field of SENSITIVE_FIELDS) {
-      const current = validated[field];
+      const current = decryptedSettings[field];
       if (typeof current === "string") {
-        validated[field] = decryptSensitiveValue(current) as SettingsPayload[typeof field];
+        (decryptedSettings as Record<string, unknown>)[field] = decryptSensitiveValue(current);
       }
     }
 
-    return validated;
+    return decryptedSettings;
   } catch {
     return null;
   }
@@ -171,15 +172,16 @@ async function readStorageSettings(userId: string) {
 async function writeStorageSettings(userId: string, settings: SettingsPayload) {
   const path = settingsPathForUser(userId);
   const toPersist: SettingsPayload = { ...settings };
+  const encryptedSettings = { ...toPersist } as SettingsPayload;
 
   for (const field of SENSITIVE_FIELDS) {
-    const current = toPersist[field];
+    const current = encryptedSettings[field];
     if (typeof current === "string") {
-      toPersist[field] = encryptSensitiveValue(current) as SettingsPayload[typeof field];
+      (encryptedSettings as Record<string, unknown>)[field] = encryptSensitiveValue(current);
     }
   }
 
-  const payload = JSON.stringify(toPersist);
+  const payload = JSON.stringify(encryptedSettings);
 
   const { error } = await supabase.storage
     .from(PROFILE_BUCKET)
