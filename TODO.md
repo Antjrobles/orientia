@@ -39,6 +39,27 @@
 - [ ] Implementar seguridad a nivel de campo (field-level encryption)
 - [ ] Agregar firma digital de documentos críticos
 
+### Auth/login implementado
+
+- [x] Validar Turnstile server-side en login por credenciales
+- [x] Validar Turnstile server-side en registro
+- [x] Validar Turnstile server-side en recuperación de contraseña
+- [x] Neutralizar enumeración de cuentas en registro
+- [x] Neutralizar enumeración de cuentas en recuperación de contraseña
+- [x] Desactivar el endpoint que revelaba existencia/estado de email
+- [x] Hashear tokens de verificación de email
+- [x] Mantener tokens de reset con hash
+- [x] Mantener tokens de verificación de dispositivo con hash
+- [x] Consumir tokens de verificación de email como un solo uso
+- [x] Consumir tokens de reset-password como un solo uso
+- [x] Consumir tokens de verificación de dispositivo como un solo uso
+- [x] Endurecer dispositivos confiables con cookie firmada `HttpOnly`
+- [x] Aplicar verificación de dispositivo también a Google/Facebook/Apple
+- [x] Añadir soporte coherente para Apple en el aprovisionamiento OAuth
+- [x] Mover rate limiting y brute-force a almacenamiento compartido preparado para Supabase
+- [x] Añadir tests unitarios/integración del flujo de autenticación
+- [x] Añadir tests E2E de autenticación con Playwright
+
 ## 🗄️ Base de Datos y Backend
 
 - [ ] Migrar estructura de informes a tablas relacionales completas (eliminar JSONB)
