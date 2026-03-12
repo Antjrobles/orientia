@@ -29,18 +29,16 @@ type Recipient = {
   communicationsOptOut?: boolean;
 };
 
-const DEFAULT_SUBJECT = "Comunicación de Orientia";
-const DEFAULT_MESSAGE = `Hola,
+const DEFAULT_SUBJECT = "Orientia está en fase de desarrollo activo";
+const DEFAULT_MESSAGE = `Queremos agradecerte por formar parte de Orientia desde sus primeras etapas. Tu confianza en este proyecto significa mucho para nosotros y es uno de los motores que impulsa nuestro trabajo cada día.
 
-Queremos compartir contigo una actualización completa sobre el trabajo que estamos realizando en Orientia y sobre cómo estos avances pueden ayudarte en el día a día del centro.
+En este momento, la plataforma se encuentra en fase de desarrollo activo. Nuestro equipo trabaja de forma continua en incorporar nuevas funcionalidades, mejorar el rendimiento y afinar cada detalle de la experiencia de uso. Es posible que durante este periodo encuentres actualizaciones frecuentes o algún cambio en la interfaz: es señal de que avanzamos.
 
-Durante este último periodo hemos dedicado el esfuerzo principal a mejorar la claridad de los informes psicopedagógicos, reforzar la estabilidad general de la plataforma y simplificar la experiencia de uso en los flujos más frecuentes. El objetivo de estos cambios es reducir fricción operativa y facilitar que el equipo de orientación pueda trabajar con mayor continuidad y menos interrupciones.
+Tu participación como usuario en esta etapa temprana tiene un valor directo en la evolución del producto. Las necesidades y el contexto real de la práctica orientadora son nuestra principal referencia para priorizar qué desarrollar a continuación.
 
-También estamos revisando de forma continua aspectos de rendimiento y consistencia para que la herramienta responda mejor en escenarios de uso intensivo, especialmente cuando se gestionan varios casos de forma simultánea. Queremos que Orientia sea un apoyo fiable para la planificación, el seguimiento y la coordinación con el resto del equipo educativo.
+Si en algún momento detectas un problema, tienes una sugerencia o simplemente quieres compartir tu experiencia con la plataforma, responde directamente a este correo. Leemos y atendemos cada mensaje de forma personal.
 
-Nuestro compromiso es que cada mejora tenga impacto real en la práctica profesional, no solo en lo técnico. Por eso seguimos priorizando funcionalidades que aporten valor directo en la evaluación, la intervención y la documentación del trabajo orientador.
-
-Si quieres, puedes responder a este correo con sugerencias, incidencias o necesidades concretas de tu centro. Revisamos cada aportación para definir prioridades y próximos desarrollos con criterio pedagógico y operativo.
+Gracias por tu paciencia y por acompañarnos desde el principio.
 
 Un saludo,
 Equipo de Orientia`;

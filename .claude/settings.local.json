@@ -29,7 +29,16 @@
       "mcp__claude_ai_Vercel__list_teams",
       "mcp__claude_ai_Vercel__list_projects",
       "mcp__claude_ai_Vercel__list_deployments",
-      "mcp__chrome-devtools__list_pages"
+      "mcp__chrome-devtools__list_pages",
+      "Bash(grep -r \"communications-optout\\\\|communications-unsubscribe\" /c/Users/arobl/Documents/Github/orientia --include=\"*.ts\" --include=\"*.tsx\" --include=\"*.js\" ! -path \"*/node_modules/*\" ! -path \"*/.next/*\" -l)",
+      "Bash(grep -r \"PLUNK_API_KEY\" /c/Users/arobl/Documents/Github/orientia --include=\"*.ts\" --include=\"*.tsx\" --include=\"*.js\" ! -path \"*/node_modules/*\" ! -path \"*/.next/*\" -l)",
+      "mcp__chrome-devtools__new_page",
+      "mcp__chrome-devtools__evaluate_script",
+      "mcp__chrome-devtools__take_screenshot",
+      "Bash(cd \"C:\\\\Users\\\\arobl\\\\Documents\\\\Github\\\\orientia\" && node -e \"\nconst fs = require\\('fs'\\);\nconst content = fs.readFileSync\\('app/api/admin/communications/send/route.ts', 'utf8'\\);\n// Remove everything after the img closing /> on the logo line, up to and including </svg>\nconst fixed = content.replace\\(\n  /\\(<img src=\\\\\"\\\\$\\\\{homeUrl\\\\}\\\\/icons\\\\/logo4-email\\\\.svg\\\\\"[^>]*\\\\/>\\)<defs>[\\\\s\\\\S]*?<\\\\/svg>/,\n  '\\\\$1'\n\\);\nfs.writeFileSync\\('app/api/admin/communications/send/route.ts', fixed, 'utf8'\\);\nconsole.log\\('done'\\);\n\")",
+      "Bash(cd \"C:\\\\Users\\\\arobl\\\\Documents\\\\Github\\\\orientia\" && node -e \"\nconst fs = require\\('fs'\\);\nlet content = fs.readFileSync\\('app/api/admin/communications/send/route.ts', 'utf8'\\);\nconst lines = content.split\\('\\\\n'\\);\n// Find the line with logo4-email.svg and truncate it after the img closing tag\nfor \\(let i = 0; i < lines.length; i++\\) {\n  if \\(lines[i].includes\\('logo4-email.svg'\\) && lines[i].includes\\('<defs>'\\)\\) {\n    const imgEnd = lines[i].indexOf\\('/>'\\) + 2;\n    lines[i] = lines[i].substring\\(0, imgEnd\\);\n    console.log\\('Fixed line', i+1\\);\n    break;\n  }\n}\n// Also remove the standalone </svg> line if it exists right after\nfor \\(let i = 0; i < lines.length; i++\\) {\n  if \\(lines[i].trim\\(\\) === '</svg>' && i > 0 && lines[i-1].includes\\('logo4-email.svg'\\)\\) {\n    lines.splice\\(i, 1\\);\n    console.log\\('Removed extra </svg> at line', i+1\\);\n    break;\n  }\n}\nfs.writeFileSync\\('app/api/admin/communications/send/route.ts', lines.join\\('\\\\n'\\), 'utf8'\\);\nconsole.log\\('Done'\\);\n\")",
+      "Bash(where inkscape:*)",
+      "Bash(node -e \"\nconst sharp = require\\('sharp'\\);\nconst fs = require\\('fs'\\);\nconst svg = fs.readFileSync\\('public/icons/logo4-email.svg', 'utf8'\\);\nsharp\\(Buffer.from\\(svg\\)\\)\n  .resize\\(480, 156\\)\n  .png\\(\\)\n  .toFile\\('public/icons/logo-email.png', \\(err, info\\) => {\n    if \\(err\\) console.error\\('ERROR:', err.message\\);\n    else console.log\\('OK:', JSON.stringify\\(info\\)\\);\n  }\\);\n\")"
     ],
     "deny": [],
     "ask": []

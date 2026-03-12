@@ -54,68 +54,80 @@ function toHtmlBody(input: {
   const safeSubject = escapeHtml(subject);
   const safeRecipientName =
     recipientName && recipientName.trim().length > 0
-      ? escapeHtml(recipientName.trim())
+      ? escapeHtml(recipientName.trim().split(/\s+/)[0])
       : "";
   const messageHtml = formatMessageToHtml(message);
-  const preheader = "Novedades y mejoras en la plataforma de Orientia.";
+  const preheader = escapeHtml(subject);
 
   return `
-    <div style="margin:0;padding:0;background:#f8fafc;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0f172a;">
-      <span style="display:none!important;visibility:hidden;opacity:0;color:transparent;height:0;width:0;overflow:hidden;mso-hide:all;">
-        ${preheader}
-      </span>
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#f8fafc;">
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>${safeSubject}</title>
+    </head>
+    <body style="margin:0;padding:0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+      <span style="display:none!important;visibility:hidden;opacity:0;color:transparent;height:0;width:0;max-height:0;overflow:hidden;mso-hide:all;">${preheader}&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;</span>
+
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;background:#f3f4f6;">
         <tr>
-          <td style="padding:0 0 24px 0;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;background:#ffffff;">
+          <td align="center" style="padding:48px 16px 56px;">
+
+            <!-- Logo -->
+            <table role="presentation" width="560" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;width:100%;border-collapse:collapse;">
               <tr>
-                <td style="height:6px;line-height:6px;font-size:0;background:#16a34a;">&nbsp;</td>
+                <td align="center" style="padding-bottom:28px;">
+                  <img src="${homeUrl}/icons/logo-email.png" width="240" height="78" alt="Orientia" style="display:block;border:0;margin:0 auto;" />
+                </td>
               </tr>
+            </table>
+
+            <!-- Card -->
+            <table role="presentation" width="560" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;width:100%;border-collapse:collapse;background:#ffffff;border-radius:16px;box-shadow:0 1px 4px rgba(0,0,0,0.06),0 8px 32px rgba(0,0,0,0.08);">
               <tr>
-                <td style="padding:22px 34px 8px 34px;">
-                  <img src="https://www.orientia.es/icons/logo-250.png" alt="Orientia" width="170" style="display:block;border:0;outline:none;text-decoration:none;" />
+                <td style="padding:48px 48px 8px;">
+                  <h1 style="margin:0 0 28px;font-size:22px;font-weight:700;line-height:1.3;color:#111827;letter-spacing:-0.02em;">${safeSubject}</h1>
+                  <p style="margin:0 0 20px;font-size:15px;line-height:1.8;color:#374151;">
+                    ${safeRecipientName ? `Hola <strong style="color:#111827;">${safeRecipientName}</strong>,` : "Hola,"}
+                  </p>
+                  <div style="font-size:15px;line-height:1.8;color:#374151;">
+                    ${messageHtml.replace(/color:#1f2937/g, "color:#374151")}
+                  </div>
                 </td>
               </tr>
               <tr>
-                <td style="padding:8px 34px 12px 34px;">
-                  <h1 style="margin:0 0 18px 0;font-size:31px;line-height:1.22;color:#14532d;font-weight:800;">
-                    ${safeSubject}
-                  </h1>
-                  <p style="margin:0 0 16px 0;font-size:17px;line-height:1.7;color:#1f2937;">
-                    ${safeRecipientName ? `Hola ${safeRecipientName},` : "Hola,"}
-                  </p>
-                  ${messageHtml}
-                  <p style="margin:18px 0 0 0;font-size:16px;line-height:1.75;color:#1f2937;">
-                    Gracias por tu confianza.
-                  </p>
-                  <p style="margin:6px 0 0 0;font-size:16px;line-height:1.75;color:#1f2937;font-weight:700;">
-                    Equipo de Orientia
-                  </p>
-                  <table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin-top:18px;">
+                <td style="padding:24px 48px 40px;">
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
                     <tr>
                       <td style="background:#16a34a;border-radius:8px;">
-                        <a href="${homeUrl}" style="display:inline-block;padding:12px 20px;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;">
-                          Abrir Orientia
+                        <a href="${homeUrl}" style="display:inline-block;padding:14px 32px;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;letter-spacing:0.01em;">
+                          Acceder a Orientia
                         </a>
                       </td>
                     </tr>
                   </table>
                 </td>
               </tr>
+            </table>
+
+            <!-- Footer -->
+            <table role="presentation" width="560" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;width:100%;border-collapse:collapse;">
               <tr>
-                <td style="padding:18px 34px 24px 34px;background:#f0fdf4;border-top:1px solid #bbf7d0;">
-                  <p style="margin:0;font-size:12px;line-height:1.65;color:#166534;">
-                    Has recibido este correo porque formas parte de nuestra base de comunicaciones.
-                    Si prefieres no recibir más emails, puedes
-                    <a href="${unsubscribeUrl}" style="color:#166534;font-weight:700;text-decoration:underline;"> gestionar tu baja aquí</a>.
+                <td align="center" style="padding-top:28px;">
+                  <p style="margin:0;font-size:12px;line-height:1.7;color:#9ca3af;">
+                    Has recibido este correo porque formas parte de las comunicaciones de Orientia.<br/>
+                    <a href="${unsubscribeUrl}" style="color:#9ca3af;text-decoration:underline;">Cancelar suscripción</a>
                   </p>
                 </td>
               </tr>
             </table>
+
           </td>
         </tr>
       </table>
-    </div>
+    </body>
+    </html>
   `;
 }
 
