@@ -10,6 +10,7 @@ import {
 } from "@/lib/communications-optout";
 
 const themeSchema = z.enum(["light", "dark"]);
+const fontSizeSchema = z.enum(["normal", "large"]);
 const inputThemeSchema = z.enum(["light", "dark", "system"]).transform((value) =>
   value === "system" ? "light" : value,
 );
@@ -19,8 +20,10 @@ const preferencesSchema = z.object({
   draftReminders: z.boolean(),
   weeklySummary: z.boolean(),
   theme: inputThemeSchema,
+  fontSize: fontSizeSchema.default("normal"),
   highContrast: z.boolean().default(false),
   keyboardNavigation: z.boolean().default(false),
+  reducedMotion: z.boolean().default(false),
 });
 
 type UserRow = Record<string, unknown>;
@@ -58,6 +61,12 @@ function toTheme(value: unknown): z.infer<typeof themeSchema> {
   return themeSchema.safeParse(value).success
     ? (value as z.infer<typeof themeSchema>)
     : "light";
+}
+
+function toFontSize(value: unknown): z.infer<typeof fontSizeSchema> {
+  return fontSizeSchema.safeParse(value).success
+    ? (value as z.infer<typeof fontSizeSchema>)
+    : "normal";
 }
 
 async function ensurePrivateBucket() {
@@ -151,8 +160,10 @@ async function mergeStoragePreferences(
     draftReminders: boolean;
     weeklySummary: boolean;
     theme: z.infer<typeof themeSchema>;
+    fontSize: z.infer<typeof fontSizeSchema>;
     highContrast: boolean;
     keyboardNavigation: boolean;
+    reducedMotion: boolean;
   },
 ) {
   const current = await readStoragePreferences(userId);
@@ -162,8 +173,10 @@ async function mergeStoragePreferences(
     draftReminders: next.draftReminders,
     weeklySummary: next.weeklySummary,
     theme: next.theme,
+    fontSize: next.fontSize,
     highContrast: next.highContrast,
     keyboardNavigation: next.keyboardNavigation,
+    reducedMotion: next.reducedMotion,
   };
 
   const path = settingsPathForUser(userId);
@@ -224,12 +237,17 @@ export async function GET() {
         false,
       ),
       theme: toTheme(metadata.theme ?? userThemeColumn ?? storagePrefs.theme),
+      fontSize: toFontSize(metadata.fontSize ?? storagePrefs.fontSize),
       highContrast: toBoolean(
         metadata.highContrast ?? storagePrefs.highContrast,
         false,
       ),
       keyboardNavigation: toBoolean(
         metadata.keyboardNavigation ?? storagePrefs.keyboardNavigation,
+        false,
+      ),
+      reducedMotion: toBoolean(
+        metadata.reducedMotion ?? storagePrefs.reducedMotion,
         false,
       ),
     },
@@ -293,8 +311,10 @@ export async function PUT(request: Request) {
       weeklySummary: next.weeklySummary,
       emailNotifications: next.emailNotifications,
       theme: next.theme,
+      fontSize: next.fontSize,
       highContrast: next.highContrast,
       keyboardNavigation: next.keyboardNavigation,
+      reducedMotion: next.reducedMotion,
     };
   }
 

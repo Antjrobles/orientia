@@ -299,6 +299,7 @@
 - [x] Mejorar estados vacios en admin (tablas y tarjetas)
 - [x] Agregar skeletons en admin (tablas y tarjetas)
 - [x] Mejorar tabla de usuarios (chips de estado, rol y email verificado)
+- [x] Mostrar campo de alta en la tabla de usuarios de admin
 - [x] Ajustar layout admin con secciones claras y jerarquia visual
 - [x] Agregar modo denso/normal para tabla de usuarios
 - [x] Mejorar accesibilidad visual en admin (focus states visibles)
@@ -314,8 +315,8 @@
 - [x] Implementar soporte completo para lectores de pantalla
 - [x] Agregar navegación por teclado mejorada
 - [ ] Implementar zoom sin pérdida de funcionalidad
-- [ ] Agregar configuración de tamaño de fuente
-- [ ] Implementar reducción de movimiento para sensibilidad
+- [x] Agregar configuración de tamaño de fuente
+- [x] Implementar reducción de movimiento para sensibilidad
 - [ ] Agregar vista de impresión optimizada
 - [ ] Implementar modo de presentación para reuniones
 - [ ] Agregar panel de comandos rápidos (command palette)

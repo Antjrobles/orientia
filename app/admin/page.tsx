@@ -46,25 +46,71 @@ interface InformeReciente {
   creado_en: string;
 }
 
-type UserWithPossibleSignupFields = {
+type UserWithPossibleSignupFields = Record<string, unknown> & {
   created_at?: string | null;
   createdAt?: string | null;
   signup_at?: string | null;
   signupAt?: string | null;
   inserted_at?: string | null;
   insertedAt?: string | null;
+  registered_at?: string | null;
+  registeredAt?: string | null;
+  signup_date?: string | null;
+  signupDate?: string | null;
+  fecha_alta?: string | null;
+  emailVerified?: string | null;
 };
 
-function resolveSignupDate(user: UserWithPossibleSignupFields): string | null {
-  return (
-    user.created_at ??
-    user.createdAt ??
-    user.signup_at ??
-    user.signupAt ??
-    user.inserted_at ??
-    user.insertedAt ??
-    null
-  );
+function readMetadataDate(
+  value: unknown,
+  keys: readonly string[],
+): string | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+
+  const record = value as Record<string, unknown>;
+  for (const key of keys) {
+    const candidate = record[key];
+    if (typeof candidate === "string" && candidate.trim().length > 0) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
+function resolveSignupDate(
+  user: UserWithPossibleSignupFields,
+  fallbackDate?: string | null,
+): string | null {
+  const keys = [
+    "created_at",
+    "createdAt",
+    "signup_at",
+    "signupAt",
+    "inserted_at",
+    "insertedAt",
+    "registered_at",
+    "registeredAt",
+    "signup_date",
+    "signupDate",
+    "fecha_alta",
+    "emailVerified",
+  ] as const;
+
+  for (const key of keys) {
+    const value = user[key];
+    if (typeof value === "string" && value.trim().length > 0) {
+      return value;
+    }
+  }
+
+  const metadataKeys = ["metadata", "settings", "settings_json", "profile_settings"] as const;
+  for (const metadataKey of metadataKeys) {
+    const metadataDate = readMetadataDate(user[metadataKey], keys);
+    if (metadataDate) return metadataDate;
+  }
+
+  return fallbackDate ?? null;
 }
 
 export default async function AdminPage() {
@@ -87,7 +133,7 @@ export default async function AdminPage() {
       .from("users")
       .select("*")
       .order("name", { ascending: true }),
-    supabase.from("trusted_devices").select("user_id"),
+    supabase.from("trusted_devices").select("user_id, created_at"),
   ]);
 
   if (
@@ -114,19 +160,33 @@ export default async function AdminPage() {
   ].some(isSupabasePausedError);
 
   const informesRecientesSeguros = (allReports || []) as InformeReciente[];
-  const trustedDevices = (allTrustedDevices || []) as { user_id: string }[];
+  const trustedDevices = (allTrustedDevices || []) as {
+    user_id: string;
+    created_at?: string | null;
+  }[];
 
-  const reportStats = new Map<string, { count: number; lastReportAt?: string }>();
+  const reportStats = new Map<
+    string,
+    { count: number; lastReportAt?: string; firstReportAt?: string }
+  >();
   informesRecientesSeguros.forEach((informe) => {
     const current = reportStats.get(informe.autor_id);
     if (!current) {
       reportStats.set(informe.autor_id, {
         count: 1,
+        firstReportAt: informe.creado_en,
         lastReportAt: informe.creado_en,
       });
       return;
     }
     current.count += 1;
+    if (
+      informe.creado_en &&
+      (!current.firstReportAt ||
+        new Date(informe.creado_en) < new Date(current.firstReportAt))
+    ) {
+      current.firstReportAt = informe.creado_en;
+    }
     if (
       informe.creado_en &&
       (!current.lastReportAt ||
@@ -144,9 +204,24 @@ export default async function AdminPage() {
     {} as Record<string, number>,
   );
 
+  const trustedDevicesFirstSeen = trustedDevices.reduce(
+    (acc, item) => {
+      if (!item.created_at) return acc;
+      const current = acc[item.user_id];
+      if (!current || new Date(item.created_at) < new Date(current)) {
+        acc[item.user_id] = item.created_at;
+      }
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
+
   const usersWithStats = (allUsers || []).map((user) => {
     const stats = reportStats.get(user.id);
-    const signupDate = resolveSignupDate(user as UserWithPossibleSignupFields);
+    const signupDate = resolveSignupDate(
+      user as UserWithPossibleSignupFields,
+      stats?.firstReportAt ?? trustedDevicesFirstSeen[user.id] ?? null,
+    );
     return {
       ...user,
       createdAt: signupDate,

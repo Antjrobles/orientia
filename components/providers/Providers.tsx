@@ -42,10 +42,17 @@ function AccessibilityPreferenceSync() {
         const keyboardNavigation = Boolean(
           data.preferences?.keyboardNavigation ?? false,
         );
+        const reducedMotion = Boolean(data.preferences?.reducedMotion ?? false);
+        const fontSize = data.preferences?.fontSize === "large" ? "large" : "normal";
         document.documentElement.classList.toggle("high-contrast", highContrast);
         document.documentElement.classList.toggle(
           "keyboard-navigation",
           keyboardNavigation,
+        );
+        document.documentElement.classList.toggle("reduced-motion", reducedMotion);
+        document.documentElement.classList.toggle(
+          "font-size-large",
+          fontSize === "large",
         );
         window.localStorage.setItem(
           "accessibility_high_contrast",
@@ -55,6 +62,11 @@ function AccessibilityPreferenceSync() {
           "accessibility_keyboard_navigation",
           String(keyboardNavigation),
         );
+        window.localStorage.setItem(
+          "accessibility_reduced_motion",
+          String(reducedMotion),
+        );
+        window.localStorage.setItem("accessibility_font_size", fontSize);
       } catch {
         // Ignora errores de sincronización no críticos
       }
@@ -83,11 +95,17 @@ export default function Providers({ children }: ProvidersProps) {
       window.localStorage.getItem("accessibility_high_contrast") === "true";
     const keyboardNavigation =
       window.localStorage.getItem("accessibility_keyboard_navigation") === "true";
+    const reducedMotion =
+      window.localStorage.getItem("accessibility_reduced_motion") === "true";
+    const fontSize =
+      window.localStorage.getItem("accessibility_font_size") === "large";
     document.documentElement.classList.toggle("high-contrast", highContrast);
     document.documentElement.classList.toggle(
       "keyboard-navigation",
       keyboardNavigation,
     );
+    document.documentElement.classList.toggle("reduced-motion", reducedMotion);
+    document.documentElement.classList.toggle("font-size-large", fontSize);
   }, []);
 
   useEffect(() => {

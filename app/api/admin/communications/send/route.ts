@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
 
   for (const recipient of eligibleRecipients) {
     const token = createUnsubscribeToken(recipient.email);
-    const baseUrl = request.nextUrl.origin;
+    const baseUrl = (process.env.NEXTAUTH_URL || request.nextUrl.origin).replace(/\/$/, "");
     const unsubscribeUrl = `${baseUrl}/comunicaciones/baja?token=${encodeURIComponent(token)}`;
     const html = toHtmlBody({
       message,
